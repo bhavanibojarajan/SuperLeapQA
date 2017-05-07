@@ -1,0 +1,31 @@
+group 'com.holmusk'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    jcenter()
+
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+}
+
+dependencies {
+    compile project(':XTestKit')
+
+    compile "org.apache.commons:commons-exec:+"
+    compile "commons-io:commons-io:+"
+    compile "org.jetbrains:annotations-java5:+"
+    compile "io.reactivex.rxjava2:rxjava:+"
+    compile "io.appium:java-client:+"
+    compile "org.testng:testng:+"
+    compile "org.mockito:mockito-core:+"
+    compile "org.swiften:JavaUtilities:+"
+}
