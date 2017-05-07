@@ -7,4 +7,7 @@ public interface AppDelayType {
     default long splashDelay() {
         return 5000;
     }
+    default long splashSwipeScreenDelay() {
+        return 5000;
+    }
 }
