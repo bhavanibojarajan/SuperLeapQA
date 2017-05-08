@@ -3,6 +3,7 @@ package com.holmusk.SuperLeapQA.onboarding.welcome;
 import com.holmusk.SuperLeapQA.base.BaseValidationType;
 import io.reactivex.Flowable;
 import io.reactivex.annotations.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.engine.base.BaseEngine;
@@ -17,18 +18,31 @@ import org.swiften.xtestkit.engine.base.param.UnidirectionalSwipeParam;
  */
 public interface WelcomeValidationType extends BaseValidationType {
     /**
+     * Get the register button on the welcome screen.
+     * @return A {@link Flowable} instance.
+     */
+    @NotNull
+    default Flowable<WebElement> rxWelcomeRegisterButton() {
+        return currentEngine().rxElementContainingText("welcome_title_register");
+    }
+
+    /**
+     * Get the sign in button on the welcome screen.
+     * @return A {@link Flowable} instance.
+     */
+    @NotNull
+    default Flowable<WebElement> rxWelcomeSignInButton() {
+        return currentEngine().rxElementContainingText("welcome_title_signIn");
+    }
+
+    /**
      * Validate that all views are present in splash screen.
      * @return A {@link Flowable} instance.
      */
     @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxValidateWelcomeScreen() {
-        final BaseEngine<?> ENGINE = currentEngine();
-
         return Flowable
-            .concat(
-                ENGINE.rxElementsContainingText("welcome_title_signIn"),
-                ENGINE.rxElementsContainingText("welcome_title_register")
-            )
+            .concat(rxWelcomeSignInButton(), rxWelcomeRegisterButton())
             .all(ObjectUtil::nonNull)
             .map(a -> true)
             .toFlowable();

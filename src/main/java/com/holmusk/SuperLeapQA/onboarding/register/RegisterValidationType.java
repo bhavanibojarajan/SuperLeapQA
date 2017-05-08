@@ -18,7 +18,56 @@ public interface RegisterValidationType extends
     WelcomeValidationType
 {
     /**
-     * Validate all views present in the register screen.
+     * Get the parent sign up button.
+     * @return A {@link Flowable} instance.
+     */
+    @NotNull
+    default Flowable<WebElement> rxParentSignUpButton() {
+        BaseEngine<?> engine = currentEngine();
+        PlatformType platform = engine.platform();
+
+        if (platform.equals(Platform.ANDROID)) {
+            return engine.rxElementContainingID("btnRegChild");
+        } else {
+            return Flowable.empty();
+        }
+    }
+
+    /**
+     * Get the self sign up button.
+     * @return A {@link Flowable} instance.
+     */
+    @NotNull
+    default Flowable<WebElement> rxTeenSignUpButton() {
+        BaseEngine<?> engine = currentEngine();
+        PlatformType platform = engine.platform();
+
+        if (platform.equals(Platform.ANDROID)) {
+            return engine.rxElementContainingID("btnRegSelf");
+        } else {
+            return Flowable.empty();
+        }
+    }
+
+    /**
+     * Get the back button's title label.
+     * @return A {@link Flowable} instance.
+     */
+    @NotNull
+    default Flowable<WebElement> rxBackButtonTitleLabel() {
+        BaseEngine<?> engine = currentEngine();
+        PlatformType platform = engine.platform();
+
+        if (platform.equals(Platform.ANDROID)) {
+            String title = "register_title_whichOneBestDescribes";
+            return engine.rxElementContainingText(title);
+        } else {
+            return Flowable.empty();
+        }
+    }
+
+    /**
+     * Validate the register screen.
      * @return A {@link Flowable} instance.
      */
     @NotNull
@@ -34,30 +83,12 @@ public interface RegisterValidationType extends
                 ENGINE.rxElementContainingText("register_title_iRegisterForSelf"),
                 ENGINE.rxElementContainingText("register_title_or"),
                 ENGINE.rxElementContainingText("register_title_initiativeByHPB"),
-                rxValidateBackButtonTitle()
+                rxParentSignUpButton(),
+                rxTeenSignUpButton(),
+                rxBackButtonTitleLabel()
             )
             .all(ObjectUtil::nonNull)
             .toFlowable()
             .map(a -> true);
-    }
-
-    /**
-     * Validate the back button's title.
-     * @return A {@link Flowable} instance.
-     */
-    @NotNull
-    default Flowable<Boolean> rxValidateBackButtonTitle() {
-        BaseEngine<?> engine = currentEngine();
-        PlatformType platform = engine.platform();
-        Flowable<WebElement> source;
-
-        if (platform.equals(Platform.ANDROID)) {
-            String title = "register_title_whichOneBestDescribes";
-            source = engine.rxElementContainingText(title);
-        } else {
-            return Flowable.empty();
-        }
-
-        return source.map(a -> true);
     }
 }

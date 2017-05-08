@@ -4,19 +4,23 @@ import com.holmusk.SuperLeapQA.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeInteractionType;
 import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeValidationType;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
+import io.reactivex.Completable;
 import io.reactivex.subscribers.TestSubscriber;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+
+import java.util.Date;
 
 /**
  * Created by haipham on 5/7/17.
  */
 public final class UIRegisterTest extends UIBaseTest implements
     WelcomeInteractionType,
-    WelcomeValidationType,
     RegisterInteractionType,
-    RegisterValidationType
+    ParentSignUpInteractionType,
+    ParentSignUpValidationType
 {
     @Factory(
         dataProviderClass = TestRunner.class,
@@ -35,8 +39,49 @@ public final class UIRegisterTest extends UIBaseTest implements
         // When
         rx_splash_register()
             .flatMap(a -> rxValidateRegisterScreen())
+
+            /* Make sure the back button works */
             .flatMap(a -> rxNavigateBackWithBackButton())
             .flatMap(a -> rxValidateWelcomeScreen())
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void test_parentSignUpScreen_shouldContainCorrectElements() {
+        // Setup
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_splash_parentSignUp()
+            .flatMap(a -> rxValidateParentSignUpScreen())
+
+            /* Make sure the back button works */
+            .flatMap(a -> rxNavigateBackWithBackButton())
+            .flatMap(a -> rxValidateRegisterScreen())
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void test_parentSignUpDoBSelection_shouldWork() {
+        // Setup
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_splash_parentSignUp()
+            .flatMap(a -> rxOpenDoBDialog())
+            .flatMap(a -> currentEngine().rxHasDate(Date::new))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

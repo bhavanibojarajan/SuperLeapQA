@@ -14,19 +14,17 @@ import java.util.concurrent.TimeUnit;
  */
 public interface RegisterInteractionType extends
     BaseInteractionType,
-    WelcomeInteractionType
+    WelcomeInteractionType,
+    RegisterValidationType
 {
     /**
      * Navigate from welcome to register screen, assuming the user is already
-     * in the welcome screen.
+     * on the welcome screen.
      * @return A {@link Flowable} instance.
      */
     @NotNull
     default Flowable<Boolean> rx_welcome_register() {
-        BaseEngine<?> engine = currentEngine();
-
-        return engine
-            .rxElementContainingText("welcome_title_register")
+        return rxWelcomeRegisterButton()
             .flatMapCompletable(a -> Completable.fromAction(a::click))
             .<Boolean>toFlowable()
             .defaultIfEmpty(true)

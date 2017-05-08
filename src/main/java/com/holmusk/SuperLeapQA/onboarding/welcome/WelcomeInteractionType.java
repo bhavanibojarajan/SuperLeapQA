@@ -12,7 +12,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * Splash screen navigation.
  */
-public interface WelcomeInteractionType extends BaseInteractionType {
+public interface WelcomeInteractionType extends
+    BaseInteractionType,
+    WelcomeValidationType
+{
     /**
      * Wait for splash screen to finish and navigate to welcome screen.
      * @return A {@link Flowable} instance.

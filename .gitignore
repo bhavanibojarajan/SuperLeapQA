@@ -8,6 +8,7 @@ gradle.properties
 artifacts/
 classes/
 /out
+test-output/
 
 # Ignore Gradle GUI config
 gradle-app.setting
