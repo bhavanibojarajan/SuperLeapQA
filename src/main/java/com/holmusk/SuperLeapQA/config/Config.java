@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.config;
 
 import org.jetbrains.annotations.NotNull;
-import org.swiften.xtestkit.engine.base.PlatformEngine;
+import org.swiften.xtestkit.engine.base.BaseEngine;
 import org.swiften.xtestkit.engine.mobile.Automation;
 import org.swiften.xtestkit.engine.base.TestMode;
 import org.swiften.xtestkit.engine.mobile.android.AndroidEngine;
@@ -18,7 +18,7 @@ public final class Config {
     @NotNull
     private static final String APP_PACKAGE;
     @NotNull private static final String ANDROID_APP_ACTIVITY;
-    @NotNull private static final List<PlatformEngine> ENGINES;
+    @NotNull private static final List<BaseEngine> ENGINES;
     @NotNull public static final TestKit TEST_KIT;
 
     static {

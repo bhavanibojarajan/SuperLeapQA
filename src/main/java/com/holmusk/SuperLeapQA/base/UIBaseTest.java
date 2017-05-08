@@ -68,7 +68,7 @@ public class UIBaseTest implements BaseInteractionType, BaseValidationType {
 
     @BeforeClass
     public void beforeClass() {
-        /* Calling beforeClass() here ensures that each PlatformEngine will
+        /* Calling beforeClass() here ensures that each BaseEngine will
          * only start the test environment once */
         TEST_KIT.beforeClass(beforeClassParam());
     }

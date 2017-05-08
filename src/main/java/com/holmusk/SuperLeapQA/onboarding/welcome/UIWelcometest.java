@@ -1,11 +1,8 @@
-package com.holmusk.SuperLeapQA.onboarding.splash;
+package com.holmusk.SuperLeapQA.onboarding.welcome;
 
 import com.holmusk.SuperLeapQA.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
-import io.reactivex.observers.TestObserver;
 import io.reactivex.subscribers.TestSubscriber;
-import org.openqa.selenium.By;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
@@ -13,15 +10,15 @@ import org.testng.annotations.Test;
 /**
  * Created by haipham on 5/7/17.
  */
-public class UIOnboardingTest extends UIBaseTest implements
-    OnboardingInteractionType,
-    OnboardingValidationType
+public class UIWelcometest extends UIBaseTest implements
+    WelcomeInteractionType,
+    WelcomeValidationType
 {
     @Factory(
         dataProviderClass = TestRunner.class,
         dataProvider = "dataProvider"
     )
-    public UIOnboardingTest(int index) {
+    public UIWelcometest(int index) {
         super(index);
     }
 
@@ -32,8 +29,8 @@ public class UIOnboardingTest extends UIBaseTest implements
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_splash_wait()
-            .flatMap(a -> rxValidateViews())
+        rx_splash_welcome()
+            .flatMap(a -> rxValidateWelcomeScreen())
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
