@@ -27,9 +27,7 @@ public interface BaseInteractionType extends
     @NotNull
     default Flowable<Boolean> rxNavigateBackWithBackButton() {
         return rxBackButton()
-            .flatMapCompletable(a -> Completable.fromAction(a::click))
-            .<Boolean>toFlowable()
-            .defaultIfEmpty(true)
+            .flatMap(currentEngine()::rxClick)
             .delay(generalDelay(), TimeUnit.MILLISECONDS);
     }
 }

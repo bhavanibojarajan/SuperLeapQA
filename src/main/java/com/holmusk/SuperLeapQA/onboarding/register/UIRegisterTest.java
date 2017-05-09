@@ -13,6 +13,7 @@ import org.testng.annotations.Test;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by haipham on 5/7/17.
@@ -81,7 +82,6 @@ public final class UIRegisterTest extends UIBaseTest implements
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.set(Calendar.YEAR, 2010);
         Date date = calendar.getTime();
 
         // When

@@ -24,9 +24,7 @@ public interface RegisterInteractionType extends
     @NotNull
     default Flowable<Boolean> rx_welcome_register() {
         return rxWelcomeRegisterButton()
-            .flatMapCompletable(a -> Completable.fromAction(a::click))
-            .<Boolean>toFlowable()
-            .defaultIfEmpty(true)
+            .flatMap(currentEngine()::rxClick)
             .delay(generalDelay(), TimeUnit.MILLISECONDS);
     }
 

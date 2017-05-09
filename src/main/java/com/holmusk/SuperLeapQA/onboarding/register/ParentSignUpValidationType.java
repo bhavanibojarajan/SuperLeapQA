@@ -36,12 +36,12 @@ public interface ParentSignUpValidationType extends
 
             /* Open the DoB dialog and verify that all elements are there */
             .flatMap(a -> rxDoBEditableField())
-            .flatMapCompletable(a -> Completable.fromAction(a::click))
-            .<Boolean>toFlowable()
-            .defaultIfEmpty(true)
+            .flatMap(ENGINE::rxClick)
             .flatMap(a -> rxDoBElements())
             .all(ObjectUtil::nonNull)
             .toFlowable()
+            .flatMap(a -> rxValidateDoBDatePicker())
+            .delay(10000, TimeUnit.MILLISECONDS)
             .delay(generalDelay(), TimeUnit.MILLISECONDS)
 
             /* Dismiss the dialog by navigating back once */

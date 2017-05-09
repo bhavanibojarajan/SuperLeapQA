@@ -25,9 +25,7 @@ public interface CommonSignUpInteractionType extends
         final BaseEngine<?> ENGINE = currentEngine();
 
         return rxDoBEditableField()
-            .flatMapCompletable(a -> Completable.fromAction(a::click))
-            .<Boolean>toFlowable()
-            .defaultIfEmpty(true)
+            .flatMap(ENGINE::rxClick)
             .delay(generalDelay(), TimeUnit.MILLISECONDS)
             .flatMap(a -> ENGINE.rxImplicitlyWait(this::generalDelay));
     }
