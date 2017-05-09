@@ -7,9 +7,9 @@ package com.holmusk.SuperLeapQA.base;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.xtestkit.engine.base.BaseEngine;
-import org.swiften.xtestkit.engine.base.type.PlatformType;
-import org.swiften.xtestkit.engine.mobile.Platform;
+import org.swiften.xtestkit.base.BaseEngine;
+import org.swiften.xtestkit.base.type.PlatformType;
+import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.test.type.BaseTestType;
 
 /**

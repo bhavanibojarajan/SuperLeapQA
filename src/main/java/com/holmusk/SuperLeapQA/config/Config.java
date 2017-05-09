@@ -1,10 +1,10 @@
 package com.holmusk.SuperLeapQA.config;
 
 import org.jetbrains.annotations.NotNull;
-import org.swiften.xtestkit.engine.base.BaseEngine;
-import org.swiften.xtestkit.engine.mobile.Automation;
-import org.swiften.xtestkit.engine.base.TestMode;
-import org.swiften.xtestkit.engine.mobile.android.AndroidEngine;
+import org.swiften.xtestkit.base.BaseEngine;
+import org.swiften.xtestkit.mobile.Automation;
+import org.swiften.xtestkit.base.TestMode;
+import org.swiften.xtestkit.mobile.android.AndroidEngine;
 import org.swiften.xtestkit.kit.TestKit;
 
 import java.util.LinkedList;

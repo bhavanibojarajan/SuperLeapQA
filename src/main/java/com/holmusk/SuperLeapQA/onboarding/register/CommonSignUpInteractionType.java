@@ -4,7 +4,7 @@ import com.holmusk.SuperLeapQA.base.BaseInteractionType;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.xtestkit.engine.base.BaseEngine;
+import org.swiften.xtestkit.base.BaseEngine;
 
 import java.util.concurrent.TimeUnit;
 

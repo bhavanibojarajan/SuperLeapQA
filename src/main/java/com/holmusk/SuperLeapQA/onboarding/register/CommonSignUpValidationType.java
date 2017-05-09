@@ -4,7 +4,7 @@ import com.holmusk.SuperLeapQA.base.BaseInteractionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.xtestkit.engine.base.BaseEngine;
+import org.swiften.xtestkit.base.BaseEngine;
 
 /**
  * Created by haipham on 5/8/17.

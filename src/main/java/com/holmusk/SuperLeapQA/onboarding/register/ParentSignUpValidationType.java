@@ -3,11 +3,9 @@ package com.holmusk.SuperLeapQA.onboarding.register;
 import com.holmusk.SuperLeapQA.base.BaseValidationType;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
-import org.apache.xpath.operations.Bool;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.ObjectUtil;
-import org.swiften.xtestkit.engine.base.BaseEngine;
+import org.swiften.xtestkit.base.BaseEngine;
 
 import java.util.concurrent.TimeUnit;
 

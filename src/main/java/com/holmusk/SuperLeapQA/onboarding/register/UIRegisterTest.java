@@ -11,6 +11,7 @@ import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -78,10 +79,15 @@ public final class UIRegisterTest extends UIBaseTest implements
         // Setup
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.YEAR, 2010);
+        Date date = calendar.getTime();
+
         // When
         rx_splash_parentSignUp()
             .flatMap(a -> rxOpenDoBDialog())
-            .flatMap(a -> currentEngine().rxHasDate(Date::new))
+            .flatMap(a -> currentEngine().rxSelectDate(() -> date))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

@@ -6,8 +6,8 @@ import io.reactivex.annotations.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.ObjectUtil;
-import org.swiften.xtestkit.engine.base.BaseEngine;
-import org.swiften.xtestkit.engine.base.param.UnidirectionalSwipeParam;
+import org.swiften.xtestkit.base.BaseEngine;
+import org.swiften.xtestkit.base.param.UnidirectionalSwipeParam;
 
 /**
  * Created by haipham on 5/7/17.
