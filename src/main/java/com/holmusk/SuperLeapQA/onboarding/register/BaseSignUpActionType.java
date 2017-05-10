@@ -2,6 +2,8 @@ package com.holmusk.SuperLeapQA.onboarding.register;
 
 import com.holmusk.SuperLeapQA.base.BaseActionType;
 import com.holmusk.SuperLeapQA.model.Gender;
+import com.holmusk.SuperLeapQA.model.Height;
+import com.holmusk.SuperLeapQA.model.Weight;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -160,6 +162,49 @@ public interface BaseSignUpActionType extends
     }
 
     /**
+     * Select a {@link Gender}.
+     * @param gender A {@link Gender} instance.
+     * @return A {@link Flowable} instance.
+     * @see #rxGenderPicker(Gender)
+     */
+    @NotNull
+    default Flowable<Boolean> rxSelectGender(@NotNull Gender gender) {
+        return rxGenderPicker(gender).flatMap(engine()::rxClick);
+    }
+
+    /**
+     * Select a {@link Height} mode.
+     * @param mode A {@link Height} instance.
+     * @return A {@link Flowable} instance.
+     * @see #rxHeightModePicker(Height)
+     */
+    @NotNull
+    default Flowable<Boolean> rxSelectHeightMode(@NotNull Height mode) {
+        return rxHeightModePicker(mode).flatMap(engine()::rxClick);
+    }
+
+    /**
+     * Select a {@link Weight} mode.
+     * @param mode A {@link Weight} mode.
+     * @return A {@link Flowable} instance.
+     * @see #rxWeightModePicker(Weight)
+     */
+    @NotNull
+    default Flowable<Boolean> rxSelectWeightMode(@NotNull Weight mode) {
+        return rxWeightModePicker(mode).flatMap(engine()::rxClick);
+    }
+
+    /**
+     * Validate that the acceptable age inputs can be correctly interacted
+     * with, for e.g, certain inputs should show a dialog with choices.
+     * @return A {@link Flowable} instance.
+     */
+    @NotNull
+    default Flowable<Boolean> rxValidateAcceptableAgeInputsInteraction() {
+        return Flowable.empty();
+    }
+
+    /**
      * Enter random inputs to test input validation.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxClick(WebElement)
@@ -177,7 +222,6 @@ public interface BaseSignUpActionType extends
                 rxGenderPicker(gender).flatMap(ENGINE::rxClick)
             )
             .all(BooleanUtil::isTrue)
-            .toFlowable()
-            .doOnNext(a -> LogUtil.println(ENGINE.driver().getPageSource()));
+            .toFlowable();
     }
 }

@@ -45,4 +45,59 @@ public enum Height {
                 return "";
         }
     }
+
+    /**
+     * Convert a height value to cm.
+     * @param value A {@link Double} value.
+     * @return A {@link Double} value.
+     */
+    public double cm(double value) {
+        switch (this) {
+            case FT:
+                return value / 0.0328084d;
+
+            default:
+                return value;
+        }
+    }
+
+    /**
+     * Get a height value's {@link String} representation in cm.
+     * @param value A {@link Double} value.
+     * @return A {@link String} value.
+     * @see #cm(double)
+     */
+    @NotNull
+    public String cmString(double value) {
+        return String.format("%d cm", (int)cm(value));
+    }
+
+    /**
+     * Convert a height value to ft.
+     * @param value A {@link Double} value.
+     * @return A {@link Double} value.
+     */
+    public double ft(double value) {
+        switch (this) {
+            case FT:
+                return value;
+
+            default:
+                return value * 0.0328084d;
+        }
+    }
+
+    /**
+     * Get a height value's {@link String} representation in ft.
+     * @param value A {@link Double} value.
+     * @return A {@link String} value.
+     * @see #ft(double)
+     */
+    @NotNull
+    public String ftString(double value) {
+        double ft = ft(value);
+        double base = Math.floor(ft);
+        double remain = ft - base;
+        return String.format("%1$d'%2$.2f\"", (int)base, remain);
+    }
 }
