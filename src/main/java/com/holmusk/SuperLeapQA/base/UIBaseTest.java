@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by haipham on 4/4/17.
  */
-public class UIBaseTest implements BaseInteractionType, BaseValidationType {
+public class UIBaseTest implements BaseActionType, BaseValidationType {
     @NotNull
     @DataProvider
     public static Iterator<Object[]> dataProvider() {

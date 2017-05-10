@@ -1,11 +1,15 @@
 package com.holmusk.SuperLeapQA.onboarding.register;
 
-import com.holmusk.SuperLeapQA.base.BaseInteractionType;
+import com.holmusk.SuperLeapQA.base.BaseActionType;
+import com.holmusk.SuperLeapQA.model.Gender;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
+import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.collection.CollectionTestUtil;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
-import org.swiften.xtestkit.base.element.action.date.CalendarElement;
 import org.swiften.xtestkit.base.element.action.date.type.DateType;
 import org.swiften.xtestkit.base.type.PlatformErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
@@ -19,15 +23,33 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by haipham on 5/8/17.
  */
-public interface CommonRegisterInteractionType extends
-    BaseInteractionType,
-    CommonRegisterValidationType,
+public interface BaseSignUpActionType extends
+    BaseActionType,
+    BaseSignUpValidationType,
     PlatformErrorType
 {
+    /**
+     * Navigate to the acceptable age input screen by selecting a DoB that
+     * results in an age that lies within {@link #acceptableAgeRange()}.
+     * @return A {@link Flowable} instance.
+     * @see #rxSelectDoBToBeOfAge(int)
+     * @see #rxConfirmDoB()
+     */
+    @NotNull
+    default Flowable<Boolean> rx_DoBPicker_acceptableAgeInput() {
+        List<Integer> range = acceptableAgeRange();
+        final int AGE = CollectionTestUtil.randomElement(range);
+
+        return rxOpenDoBPicker()
+            .flatMap(a -> rxSelectDoBToBeOfAge(AGE))
+            .flatMap(a -> rxConfirmDoB());
+    }
+
     /**
      * Open the DoB dialog in the parent sign up screen. This can be used both
      * for parent sign up and teen sign up.
      * @return A {@link Flowable} instance.
+     * @see #rxDoBEditableField()
      */
     @NotNull
     default Flowable<Boolean> rxOpenDoBPicker() {
@@ -45,6 +67,7 @@ public interface CommonRegisterInteractionType extends
      * the next screen, so if we want to check whether the date was properly
      * stored in the DoB text field, we need to navigate back once.
      * @return A {@link Flowable} instance.
+     * @see BaseEngine#rxElementContainingText(String)
      */
     @NotNull
     default Flowable<Boolean> rxConfirmDoB() {
@@ -64,7 +87,6 @@ public interface CommonRegisterInteractionType extends
      * @param DATE A {@link Date} instance.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxSelectDate(DateType)
-     * @see #rxConfirmDoB()
      */
     @NotNull
     default Flowable<Boolean> rxSelectDoB(@NotNull final Date DATE) {
@@ -80,8 +102,13 @@ public interface CommonRegisterInteractionType extends
     @NotNull
     default Flowable<Boolean> rxSelectDoBToBeOfAge(int age) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH, -1);
-        calendar.set(Calendar.YEAR, -age);
+        calendar.add(Calendar.YEAR, -age);
+
+        /* We need to add 1 to the day field to avoid the birthday. E.g.
+         * if the current date is 10/05/2017 and we want the user to be 4
+         * years-old, we need to select 11/05/2013 - any lower than that then
+         * the user would be 5+ years-old */
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
         return rxSelectDoB(calendar.getTime());
     }
 
@@ -93,10 +120,14 @@ public interface CommonRegisterInteractionType extends
      * @param AGES A {@link List} of {@link Integer}.
      * @return A {@link Flowable} instance.
      * @see #acceptableAgeRange()
+     * @see #rxOpenDoBPicker()
+     * @see #rxValidateAcceptableAgeScreen()
+     * @see #rxValidateUnacceptableAgeScreen()
+     * @see #rxNavigateBackWithBackButton()
      */
     @NotNull
     default Flowable<Boolean> rxValidateDoBs(@NotNull final List<Integer> AGES) {
-        final List<Integer> ACCEPTABLE = acceptableAgeRange();
+        final List<Integer> RANGE = acceptableAgeRange();
         final int LENGTH = AGES.size();
 
         class IterateDoBs {
@@ -105,14 +136,14 @@ public interface CommonRegisterInteractionType extends
             Flowable<Boolean> repeat(final int INDEX) {
                 if (INDEX < LENGTH) {
                     final int AGE = AGES.get(INDEX);
-                    final boolean VALID = ACCEPTABLE.contains(AGE);
+                    final boolean VALID = RANGE.contains(AGE);
 
                     return rxOpenDoBPicker()
                         .flatMap(a -> rxSelectDoBToBeOfAge(AGE))
                         .flatMap(a -> rxConfirmDoB())
                         .flatMap(a -> {
                             if (VALID) {
-                                return Flowable.just(true);
+                                return rxValidateAcceptableAgeScreen();
                             } else {
                                 return rxValidateUnacceptableAgeScreen();
                             }
@@ -126,5 +157,27 @@ public interface CommonRegisterInteractionType extends
         }
 
         return new IterateDoBs().repeat(0);
+    }
+
+    /**
+     * Enter random inputs to test input validation.
+     * @return A {@link Flowable} instance.
+     * @see BaseEngine#rxClick(WebElement)
+     * @see CollectionTestUtil#randomElement(Object[])
+     * @see #rxGenderPicker(Gender)
+     */
+    @NotNull
+    @SuppressWarnings("unchecked")
+    default Flowable<Boolean> rxEnterRandomInputs() {
+        final BaseEngine<?> ENGINE = engine();
+        Gender gender = CollectionTestUtil.randomElement(Gender.values());
+
+        return Flowable
+            .concatArray(
+                rxGenderPicker(gender).flatMap(ENGINE::rxClick)
+            )
+            .all(BooleanUtil::isTrue)
+            .toFlowable()
+            .doOnNext(a -> LogUtil.println(ENGINE.driver().getPageSource()));
     }
 }

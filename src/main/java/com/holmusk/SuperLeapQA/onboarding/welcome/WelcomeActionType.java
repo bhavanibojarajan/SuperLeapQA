@@ -1,6 +1,6 @@
 package com.holmusk.SuperLeapQA.onboarding.welcome;
 
-import com.holmusk.SuperLeapQA.base.BaseInteractionType;
+import com.holmusk.SuperLeapQA.base.BaseActionType;
 import io.reactivex.Flowable;
 
 import java.util.concurrent.TimeUnit;
@@ -12,8 +12,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Splash screen navigation.
  */
-public interface WelcomeInteractionType extends
-    BaseInteractionType,
+public interface WelcomeActionType extends
+    BaseActionType,
     WelcomeValidationType
 {
     /**

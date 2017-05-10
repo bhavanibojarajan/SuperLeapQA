@@ -13,14 +13,17 @@ import java.util.concurrent.TimeUnit;
  */
 public interface ParentSignUpValidationType extends
     BaseValidationType,
-    CommonRegisterValidationType
+    BaseSignUpValidationType
 {
     /**
      * Validate the parent sign-up screen.
      * @return A {@link Flowable} instance.
+     * @see BaseEngine#rxElementContainingText(String)
+     * @see #rxDoBEditableField()
+     * @see #rxDoBElements()
      */
     @NotNull
-    default Flowable<Boolean> rxValidateParentSignUpScreen() {
+    default Flowable<Boolean> rxValidateParentDoBPickerScreen() {
         final BaseEngine<?> ENGINE = engine();
 
         return Flowable

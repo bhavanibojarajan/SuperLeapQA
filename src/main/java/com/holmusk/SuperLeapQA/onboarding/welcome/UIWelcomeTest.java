@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 /**
  * Created by haipham on 5/7/17.
  */
-public class UIWelcomeTest extends UIBaseTest implements WelcomeInteractionType {
+public class UIWelcomeTest extends UIBaseTest implements WelcomeActionType {
     @Factory(
         dataProviderClass = TestRunner.class,
         dataProvider = "dataProvider"

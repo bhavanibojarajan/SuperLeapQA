@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.onboarding.register;
 
-import com.holmusk.SuperLeapQA.base.BaseInteractionType;
-import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeInteractionType;
+import com.holmusk.SuperLeapQA.base.BaseActionType;
+import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,9 +10,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by haipham on 5/8/17.
  */
-public interface RegisterInteractionType extends
-    BaseInteractionType,
-    WelcomeInteractionType,
+public interface RegisterActionType extends
+    BaseActionType,
+    WelcomeActionType,
     RegisterValidationType
 {
     /**

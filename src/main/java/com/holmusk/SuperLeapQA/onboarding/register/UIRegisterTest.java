@@ -1,26 +1,19 @@
 package com.holmusk.SuperLeapQA.onboarding.register;
 
 import com.holmusk.SuperLeapQA.base.UIBaseTest;
-import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeInteractionType;
-import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeValidationType;
+import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeActionType;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
-import io.reactivex.Completable;
 import io.reactivex.subscribers.TestSubscriber;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by haipham on 5/7/17.
  */
 public final class UIRegisterTest extends UIBaseTest implements
-    WelcomeInteractionType,
-    RegisterInteractionType
+    WelcomeActionType,
+    RegisterActionType
 {
     @Factory(
         dataProviderClass = TestRunner.class,

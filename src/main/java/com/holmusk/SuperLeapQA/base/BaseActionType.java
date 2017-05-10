@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * Interfaces that extend this should declare methods that assist with app
  * navigation.
  */
-public interface BaseInteractionType extends
+public interface BaseActionType extends
     AppDelayType,
     BaseTestType,
     BaseLocatorErrorType,

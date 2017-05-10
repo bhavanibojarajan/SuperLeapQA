@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.onboarding.register;
 
 import com.holmusk.SuperLeapQA.base.UIBaseTest;
-import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeInteractionType;
+import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeActionType;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
 import io.reactivex.subscribers.TestSubscriber;
 import org.swiften.javautilities.number.NumberTestUtil;
@@ -11,14 +11,15 @@ import org.testng.annotations.Test;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by haipham on 5/10/17.
  */
 public final class UIParentSignUpTest extends UIBaseTest implements
-    WelcomeInteractionType,
-    RegisterInteractionType,
-    ParentSignUpInteractionType,
+    WelcomeActionType,
+    RegisterActionType,
+    ParentSignUpActionType,
     ParentSignUpValidationType
 {
     @Factory(
@@ -31,7 +32,7 @@ public final class UIParentSignUpTest extends UIBaseTest implements
 
     /**
      * @return An {@link Integer} value.
-     * @see CommonRegisterValidationType#minAcceptableAge()
+     * @see BaseSignUpValidationType#minAcceptableAge()
      */
     @Override
     public int minAcceptableAge() {
@@ -40,7 +41,7 @@ public final class UIParentSignUpTest extends UIBaseTest implements
 
     /**
      * @return An {@link Integer} value.
-     * @see CommonRegisterValidationType#maxAcceptableAge()
+     * @see BaseSignUpValidationType#maxAcceptableAge()
      */
     @Override
     public int maxAcceptableAge() {
@@ -49,13 +50,13 @@ public final class UIParentSignUpTest extends UIBaseTest implements
 
     @Test
     @SuppressWarnings("unchecked")
-    public void test_parentSignUpScreen_shouldContainCorrectElements() {
+    public void test_parentDoBPickerScreen_shouldContainCorrectElements() {
         // Setup
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_splash_parentSignUp()
-            .flatMap(a -> rxValidateParentSignUpScreen())
+        rx_splash_parentDoBPicker()
+            .flatMap(a -> rxValidateParentDoBPickerScreen())
 
             /* Make sure the back button works */
             .flatMap(a -> rxNavigateBackWithBackButton())
@@ -70,7 +71,7 @@ public final class UIParentSignUpTest extends UIBaseTest implements
 
     @Test
     @SuppressWarnings("unchecked")
-    public void test_parentSignUpDoB_shouldContainCorrectElements() {
+    public void test_parentDoBPickerDialog_shouldContainCorrectElements() {
         // Setup
         TestSubscriber subscriber = CustomTestSubscriber.create();
         Calendar calendar = Calendar.getInstance();
@@ -80,13 +81,13 @@ public final class UIParentSignUpTest extends UIBaseTest implements
         final Date DATE = calendar.getTime();
 
         // When
-        rx_splash_parentSignUp()
+        rx_splash_parentDoBPicker()
             .flatMap(a -> rxOpenDoBPicker())
             .flatMap(a -> rxSelectDoB(DATE))
             .flatMap(a -> rxConfirmDoB())
             .flatMap(a -> rxNavigateBackWithBackButton())
             .flatMap(a -> rxDoBEditableFieldHasDate(DATE))
-            .flatMap(a -> rxValidateParentSignUpScreen())
+            .flatMap(a -> rxValidateParentDoBPickerScreen())
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -97,12 +98,31 @@ public final class UIParentSignUpTest extends UIBaseTest implements
 
     @Test
     @SuppressWarnings("unchecked")
-    public void test_parentSignUpDoBSelection_shouldWork() {
+    public void test_parentDoBSelection_shouldWork() {
+        // Setup
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+        final List<Integer> AGES = ageOffsetFromAcceptableRange(2);
+
+        // When
+        rx_splash_parentDoBPicker()
+            .flatMap(a -> rxValidateDoBs(AGES))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void test_parentSignUpInputs_shouldBeCorrectlyValidated() {
         // Setup
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_splash_parentSignUp()
+        rx_splash_acceptableAgeInput()
+            .flatMap(a -> rxEnterRandomInputs())
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
