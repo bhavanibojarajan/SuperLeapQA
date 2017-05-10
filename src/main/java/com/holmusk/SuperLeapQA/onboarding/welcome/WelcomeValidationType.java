@@ -23,7 +23,7 @@ public interface WelcomeValidationType extends BaseValidationType {
      */
     @NotNull
     default Flowable<WebElement> rxWelcomeRegisterButton() {
-        return currentEngine().rxElementContainingText("welcome_title_register");
+        return engine().rxElementContainingText("welcome_title_register");
     }
 
     /**
@@ -32,7 +32,7 @@ public interface WelcomeValidationType extends BaseValidationType {
      */
     @NotNull
     default Flowable<WebElement> rxWelcomeSignInButton() {
-        return currentEngine().rxElementContainingText("welcome_title_signIn");
+        return engine().rxElementContainingText("welcome_title_signIn");
     }
 
     /**
@@ -55,7 +55,7 @@ public interface WelcomeValidationType extends BaseValidationType {
     @NonNull
     @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxValidateSwipes() {
-        final BaseEngine<?> ENGINE = currentEngine();
+        final BaseEngine<?> ENGINE = engine();
 
         final String[][] MESSAGES = new String[][] {
             {

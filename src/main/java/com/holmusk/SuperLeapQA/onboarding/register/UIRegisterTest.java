@@ -20,9 +20,7 @@ import java.util.concurrent.TimeUnit;
  */
 public final class UIRegisterTest extends UIBaseTest implements
     WelcomeInteractionType,
-    RegisterInteractionType,
-    ParentSignUpInteractionType,
-    ParentSignUpValidationType
+    RegisterInteractionType
 {
     @Factory(
         dataProviderClass = TestRunner.class,
@@ -45,49 +43,6 @@ public final class UIRegisterTest extends UIBaseTest implements
             /* Make sure the back button works */
             .flatMap(a -> rxNavigateBackWithBackButton())
             .flatMap(a -> rxValidateWelcomeScreen())
-            .subscribe(subscriber);
-
-        subscriber.awaitTerminalEvent();
-
-        // Then
-        assertCorrectness(subscriber);
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void test_parentSignUpScreen_shouldContainCorrectElements() {
-        // Setup
-        TestSubscriber subscriber = CustomTestSubscriber.create();
-
-        // When
-        rx_splash_parentSignUp()
-            .flatMap(a -> rxValidateParentSignUpScreen())
-
-            /* Make sure the back button works */
-            .flatMap(a -> rxNavigateBackWithBackButton())
-            .flatMap(a -> rxValidateRegisterScreen())
-            .subscribe(subscriber);
-
-        subscriber.awaitTerminalEvent();
-
-        // Then
-        assertCorrectness(subscriber);
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void test_parentSignUpDoBSelection_shouldWork() {
-        // Setup
-        TestSubscriber subscriber = CustomTestSubscriber.create();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        Date date = calendar.getTime();
-
-        // When
-        rx_splash_parentSignUp()
-            .flatMap(a -> rxOpenDoBDialog())
-            .flatMap(a -> currentEngine().rxSelectDate(() -> date))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

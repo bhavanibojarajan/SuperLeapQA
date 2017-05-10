@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 public interface ParentSignUpInteractionType extends
     BaseInteractionType,
     RegisterInteractionType,
-    CommonSignUpInteractionType,
+    CommonRegisterInteractionType,
     ParentSignUpValidationType
 {
     /**

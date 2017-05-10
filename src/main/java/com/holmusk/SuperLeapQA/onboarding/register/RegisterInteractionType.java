@@ -2,7 +2,6 @@ package com.holmusk.SuperLeapQA.onboarding.register;
 
 import com.holmusk.SuperLeapQA.base.BaseInteractionType;
 import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeInteractionType;
-import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +23,7 @@ public interface RegisterInteractionType extends
     @NotNull
     default Flowable<Boolean> rx_welcome_register() {
         return rxWelcomeRegisterButton()
-            .flatMap(currentEngine()::rxClick)
+            .flatMap(engine()::rxClick)
             .delay(generalDelay(), TimeUnit.MILLISECONDS);
     }
 

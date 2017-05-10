@@ -1,7 +1,6 @@
 package com.holmusk.SuperLeapQA.onboarding.register;
 
 import com.holmusk.SuperLeapQA.base.BaseValidationType;
-import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.object.ObjectUtil;
@@ -14,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  */
 public interface ParentSignUpValidationType extends
     BaseValidationType,
-    CommonSignUpValidationType
+    CommonRegisterValidationType
 {
     /**
      * Validate the parent sign-up screen.
@@ -22,7 +21,7 @@ public interface ParentSignUpValidationType extends
      */
     @NotNull
     default Flowable<Boolean> rxValidateParentSignUpScreen() {
-        final BaseEngine<?> ENGINE = currentEngine();
+        final BaseEngine<?> ENGINE = engine();
 
         return Flowable
             .concat(
@@ -40,8 +39,6 @@ public interface ParentSignUpValidationType extends
             .flatMap(a -> rxDoBElements())
             .all(ObjectUtil::nonNull)
             .toFlowable()
-            .flatMap(a -> rxValidateDoBDatePicker())
-            .delay(10000, TimeUnit.MILLISECONDS)
             .delay(generalDelay(), TimeUnit.MILLISECONDS)
 
             /* Dismiss the dialog by navigating back once */

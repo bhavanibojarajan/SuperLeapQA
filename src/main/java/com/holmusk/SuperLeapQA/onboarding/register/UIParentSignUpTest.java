@@ -1,0 +1,113 @@
+package com.holmusk.SuperLeapQA.onboarding.register;
+
+import com.holmusk.SuperLeapQA.base.UIBaseTest;
+import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeInteractionType;
+import com.holmusk.SuperLeapQA.runner.TestRunner;
+import io.reactivex.subscribers.TestSubscriber;
+import org.swiften.javautilities.number.NumberTestUtil;
+import org.swiften.javautilities.rx.CustomTestSubscriber;
+import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
+
+import java.util.Calendar;
+import java.util.Date;
+
+/**
+ * Created by haipham on 5/10/17.
+ */
+public final class UIParentSignUpTest extends UIBaseTest implements
+    WelcomeInteractionType,
+    RegisterInteractionType,
+    ParentSignUpInteractionType,
+    ParentSignUpValidationType
+{
+    @Factory(
+        dataProviderClass = TestRunner.class,
+        dataProvider = "dataProvider"
+    )
+    public UIParentSignUpTest(int index) {
+        super(index);
+    }
+
+    /**
+     * @return An {@link Integer} value.
+     * @see CommonRegisterValidationType#minAcceptableAge()
+     */
+    @Override
+    public int minAcceptableAge() {
+        return 5;
+    }
+
+    /**
+     * @return An {@link Integer} value.
+     * @see CommonRegisterValidationType#maxAcceptableAge()
+     */
+    @Override
+    public int maxAcceptableAge() {
+        return 6;
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void test_parentSignUpScreen_shouldContainCorrectElements() {
+        // Setup
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_splash_parentSignUp()
+            .flatMap(a -> rxValidateParentSignUpScreen())
+
+            /* Make sure the back button works */
+            .flatMap(a -> rxNavigateBackWithBackButton())
+            .flatMap(a -> rxValidateRegisterScreen())
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void test_parentSignUpDoB_shouldContainCorrectElements() {
+        // Setup
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, NumberTestUtil.randomBetween(1, 28));
+        calendar.set(Calendar.MONTH, NumberTestUtil.randomBetween(0, 11));
+        calendar.set(Calendar.YEAR, NumberTestUtil.randomBetween(2010, 2030));
+        final Date DATE = calendar.getTime();
+
+        // When
+        rx_splash_parentSignUp()
+            .flatMap(a -> rxOpenDoBPicker())
+            .flatMap(a -> rxSelectDoB(DATE))
+            .flatMap(a -> rxConfirmDoB())
+            .flatMap(a -> rxNavigateBackWithBackButton())
+            .flatMap(a -> rxDoBEditableFieldHasDate(DATE))
+            .flatMap(a -> rxValidateParentSignUpScreen())
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void test_parentSignUpDoBSelection_shouldWork() {
+        // Setup
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_splash_parentSignUp()
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+}

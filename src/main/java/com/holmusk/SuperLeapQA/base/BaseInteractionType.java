@@ -4,9 +4,11 @@ package com.holmusk.SuperLeapQA.base;
  * Created by haipham on 5/7/17.
  */
 
-import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.xtestkit.base.element.locator.general.type.BaseLocatorErrorType;
+import org.swiften.xtestkit.base.element.property.type.BaseElementInteractionErrorType;
+import org.swiften.xtestkit.base.type.PlatformErrorType;
 import org.swiften.xtestkit.test.type.BaseTestType;
 
 import java.util.concurrent.TimeUnit;
@@ -18,7 +20,9 @@ import java.util.concurrent.TimeUnit;
 public interface BaseInteractionType extends
     AppDelayType,
     BaseTestType,
-    BaseValidationType
+    BaseLocatorErrorType,
+    BaseValidationType,
+    PlatformErrorType
 {
     /**
      * Navigate backwards by clicking the back button.
@@ -27,7 +31,7 @@ public interface BaseInteractionType extends
     @NotNull
     default Flowable<Boolean> rxNavigateBackWithBackButton() {
         return rxBackButton()
-            .flatMap(currentEngine()::rxClick)
+            .flatMap(engine()::rxClick)
             .delay(generalDelay(), TimeUnit.MILLISECONDS);
     }
 }

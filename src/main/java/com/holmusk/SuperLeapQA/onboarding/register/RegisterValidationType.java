@@ -23,7 +23,7 @@ public interface RegisterValidationType extends
      */
     @NotNull
     default Flowable<WebElement> rxParentSignUpButton() {
-        BaseEngine<?> engine = currentEngine();
+        BaseEngine<?> engine = engine();
         PlatformType platform = engine.platform();
 
         if (platform.equals(Platform.ANDROID)) {
@@ -39,7 +39,7 @@ public interface RegisterValidationType extends
      */
     @NotNull
     default Flowable<WebElement> rxTeenSignUpButton() {
-        BaseEngine<?> engine = currentEngine();
+        BaseEngine<?> engine = engine();
         PlatformType platform = engine.platform();
 
         if (platform.equals(Platform.ANDROID)) {
@@ -55,7 +55,7 @@ public interface RegisterValidationType extends
      */
     @NotNull
     default Flowable<WebElement> rxBackButtonTitleLabel() {
-        BaseEngine<?> engine = currentEngine();
+        BaseEngine<?> engine = engine();
         PlatformType platform = engine.platform();
 
         if (platform.equals(Platform.ANDROID)) {
@@ -73,7 +73,7 @@ public interface RegisterValidationType extends
     @NotNull
     @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxValidateRegisterScreen() {
-        final BaseEngine<?> ENGINE = currentEngine();
+        final BaseEngine<?> ENGINE = engine();
 
         return Flowable
             .concatArray(

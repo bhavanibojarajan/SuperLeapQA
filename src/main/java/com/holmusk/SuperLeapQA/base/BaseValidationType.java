@@ -23,7 +23,7 @@ public interface BaseValidationType extends BaseTestType, AppDelayType {
      */
     @NotNull
     default Flowable<WebElement> rxBackButton() {
-        BaseEngine<?> engine = currentEngine();
+        BaseEngine<?> engine = engine();
         PlatformType platform = engine.platform();
 
         if (platform.equals(Platform.ANDROID)) {
