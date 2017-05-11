@@ -1,12 +1,9 @@
 package com.holmusk.SuperLeapQA.onboarding.register;
 
 import com.holmusk.SuperLeapQA.base.UIBaseTest;
-import com.holmusk.SuperLeapQA.model.Gender;
-import com.holmusk.SuperLeapQA.model.Height;
 import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeActionType;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
 import io.reactivex.subscribers.TestSubscriber;
-import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.testng.annotations.Factory;
@@ -89,7 +86,7 @@ public final class UIParentSignUpTest extends UIBaseTest implements
             .flatMap(a -> rxSelectDoB(DATE))
             .flatMap(a -> rxConfirmDoB())
             .flatMap(a -> rxNavigateBackWithBackButton())
-            .flatMap(a -> rxDoBEditableFieldHasDate(DATE))
+            .flatMap(a -> rxDoBEditFieldHasDate(DATE))
             .flatMap(a -> rxValidateParentDoBPickerScreen())
             .subscribe(subscriber);
 
@@ -122,17 +119,10 @@ public final class UIParentSignUpTest extends UIBaseTest implements
     public void test_parentSignUpInputs_shouldShowCorrectInputScreens() {
         // Setup
         TestSubscriber subscriber = CustomTestSubscriber.create();
-        final Gender GENDER = CollectionTestUtil.randomElement(Gender.values());
-//        final Height HEIGHT_MODE = CollectionTestUtil.randomElement(Height.values());
-        final Height HEIGHT_MODE = Height.FT;
-        final double HEIGHT = HEIGHT_MODE.randomSelectableHeight();
 
         // When
         rx_splash_acceptableAgeInput()
-            .flatMap(a -> rxSelectGender(GENDER))
-            .flatMap(a -> rxSelectHeightMode(HEIGHT_MODE))
-            .flatMap(a -> rxOpenHeightPickerWindow())
-            .flatMap(a -> rxSelectHeight(HEIGHT_MODE, HEIGHT))
+            .flatMap(a -> rxEnterRandomAcceptableAgeInputs())
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

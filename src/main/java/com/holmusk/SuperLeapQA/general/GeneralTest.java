@@ -1,6 +1,8 @@
 package com.holmusk.SuperLeapQA.general;
 
 import com.holmusk.SuperLeapQA.model.Height;
+import com.holmusk.SuperLeapQA.model.Weight;
+import org.apache.tools.ant.taskdefs.Zip;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zipped;
 import org.swiften.javautilities.log.LogUtil;
@@ -8,6 +10,7 @@ import org.swiften.javautilities.number.NumberTestUtil;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -23,7 +26,6 @@ public final class GeneralTest {
         String ftString = Height.CM.ftString(heightInCM);
 
         // Then
-        LogUtil.println(ftString);
         Assert.assertTrue(ftString.matches("\\d+'\\d+\""));
     }
 
@@ -53,6 +55,27 @@ public final class GeneralTest {
 
             // Then
             Assert.assertTrue(cms.contains(cm));
+        }
+    }
+
+    @Test
+    public void test_weightValueFromString_shouldWork() {
+        // Setup
+        List<Double> kgs = Weight.KG.selectableWeightRange();
+        List<Double> lbs = Weight.LBS.selectableWeightRange();
+        List<Zipped<Double,Double>> allZipped = CollectionUtil.zip(kgs, lbs);
+
+        for (Zipped<Double,Double> zipped : allZipped) {
+            // When
+            Assert.assertNotNull(zipped.FIRST);
+            Assert.assertNotNull(zipped.SECOND);
+            String kgString = Weight.KG.kgString(zipped.FIRST);
+            String lbString = Weight.LBS.lbsString(zipped.SECOND);
+
+            // Then
+            double kg = Weight.KG.weightValue(kgString);
+            double lb = Weight.LBS.weightValue(lbString);
+            LogUtil.println(kg, lb);
         }
     }
 }

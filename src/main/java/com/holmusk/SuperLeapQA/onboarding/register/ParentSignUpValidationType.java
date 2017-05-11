@@ -19,7 +19,7 @@ public interface ParentSignUpValidationType extends
      * Validate the parent sign-up screen.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String)
-     * @see #rxDoBEditableField()
+     * @see #rxDoBEditField()
      * @see #rxDoBElements()
      */
     @NotNull
@@ -30,14 +30,14 @@ public interface ParentSignUpValidationType extends
             .concat(
                 ENGINE.rxElementContainingText("parentSignUp_title_whatIsYourChild"),
                 ENGINE.rxElementContainingText("parentSignUp_title_dateOfBirth"),
-                rxDoBEditableField()
+                rxDoBEditField()
             )
             .all(ObjectUtil::nonNull)
             .<Boolean>toFlowable()
             .defaultIfEmpty(true)
 
             /* Open the DoB dialog and verify that all elements are there */
-            .flatMap(a -> rxDoBEditableField())
+            .flatMap(a -> rxDoBEditField())
             .flatMap(ENGINE::rxClick)
             .flatMap(a -> rxDoBElements())
             .all(ObjectUtil::nonNull)

@@ -3,12 +3,13 @@ package com.holmusk.SuperLeapQA.onboarding.register;
 import com.holmusk.SuperLeapQA.base.BaseActionType;
 import com.holmusk.SuperLeapQA.model.Gender;
 import com.holmusk.SuperLeapQA.model.Height;
+import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.Weight;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.CollectionTestUtil;
-import org.swiften.javautilities.log.LogUtil;
+import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.element.action.date.type.DateType;
@@ -54,13 +55,13 @@ public interface BaseSignUpActionType extends
      * Open the DoB dialog in the parent sign up screen. This can be used both
      * for parent sign up and teen sign up.
      * @return A {@link Flowable} instance.
-     * @see #rxDoBEditableField()
+     * @see #rxDoBEditField()
      */
     @NotNull
     default Flowable<Boolean> rxOpenDoBPicker() {
         final BaseEngine<?> ENGINE = engine();
 
-        return rxDoBEditableField()
+        return rxDoBEditField()
             .flatMap(ENGINE::rxClick)
             .delay(generalDelay(), TimeUnit.MILLISECONDS)
             .flatMap(a -> ENGINE.rxImplicitlyWait(this::generalDelay));
@@ -165,6 +166,31 @@ public interface BaseSignUpActionType extends
     }
 
     /**
+     * Select a random DoB, assuming the user is already in the DoB selection
+     * screen.
+     * @return A {@link Flowable} instance.
+     * @see #rxSelectDoB(Date)
+     * @see #rxConfirmDoB()
+     * @see #rxNavigateBackWithBackButton()
+     * @see #rxDoBEditFieldHasDate(Date)
+     */
+    @NotNull
+    default Flowable<Boolean> rxSelectRandomDoB() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, NumberTestUtil.randomBetween(1, 28));
+        calendar.set(Calendar.MONTH, NumberTestUtil.randomBetween(0, 11));
+        calendar.set(Calendar.YEAR, NumberTestUtil.randomBetween(2010, 2030));
+        final Date DATE = calendar.getTime();
+
+        // When
+        return rxOpenDoBPicker()
+            .flatMap(a -> rxSelectDoB(DATE))
+            .flatMap(a -> rxConfirmDoB())
+            .flatMap(a -> rxNavigateBackWithBackButton())
+            .flatMap(a -> rxDoBEditFieldHasDate(DATE));
+    }
+
+    /**
      * Select a {@link Gender}.
      * @param gender A {@link Gender} instance.
      * @return A {@link Flowable} instance.
@@ -241,7 +267,8 @@ public interface BaseSignUpActionType extends
             @Override
             public Flowable<Boolean> rxShouldKeepSwiping() {
                 return ENGINE
-                    .rxElementContainingText(TEXT_PARAM)
+                    .rxElementWithText(TEXT_PARAM)
+                    .filter(a -> ENGINE.getText(a).equals(HEIGHT_STR))
                     .flatMap(ENGINE::rxClick);
             }
 
@@ -270,5 +297,40 @@ public interface BaseSignUpActionType extends
     @NotNull
     default Flowable<Boolean> rxSelectWeightMode(@NotNull Weight mode) {
         return rxWeightModePicker(mode).flatMap(engine()::rxClick);
+    }
+
+    /**
+     * Enter random inputs for acceptable age screen, assuming the user is
+     * already in the acceptable age input screen.
+     * @return A {@link Flowable} instance.
+     * @see #rxSelectGender(Gender)
+     * @see #rxSelectHeightMode(Height)
+     * @see #rxOpenHeightPickerWindow()
+     * @see #rxEditFieldHasValue(TextInput, String)
+     */
+    @NotNull
+    @SuppressWarnings("unchecked")
+    default Flowable<Boolean> rxEnterRandomAcceptableAgeInputs() {
+        final double HEIGHT_CM = Height.CM.randomSelectableHeight();
+        final double HEIGHT_FT = Height.FT.randomSelectableHeight();
+        final String HEIGHT_CM_STR = Height.CM.heightString(HEIGHT_CM);
+        final String HEIGHT_CM_FT_STR = Height.CM.ftString(HEIGHT_CM);
+        final String HEIGHT_FT_STR = Height.FT.heightString(HEIGHT_FT);
+
+        return Flowable
+            .concatArray(
+                rxSelectGender(Gender.MALE)
+                    .flatMap(a -> rxSelectGender(Gender.FEMALE)),
+
+                rxSelectHeightMode(Height.CM)
+                    .flatMap(a -> rxOpenHeightPickerWindow())
+                    .flatMap(a -> rxSelectHeight(Height.CM, HEIGHT_CM))
+                    .flatMap(a -> rxEditFieldHasValue(TextInput.HEIGHT, HEIGHT_CM_STR))
+                    .flatMap(a -> rxSelectHeightMode(Height.FT))
+                    .flatMap(a -> rxEditFieldHasValue(TextInput.HEIGHT, HEIGHT_CM_FT_STR))
+                    .flatMap(a -> rxOpenHeightPickerWindow())
+                    .flatMap(a -> rxSelectHeight(Height.FT, HEIGHT_FT))
+                    .flatMap(a -> rxEditFieldHasValue(TextInput.HEIGHT, HEIGHT_FT_STR))
+            );
     }
 }

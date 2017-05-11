@@ -115,7 +115,7 @@ public enum Height implements ValueRangeConverterType<Double> {
     public String ftString(double value) {
         double ft = ft(value);
         double base = Math.floor(ft);
-        int remain = (int)Math.ceil((ft - base) * 12);
+        int remain = (int)Math.round(((ft - base) * 12));
 
         /* Since we use ceil for the remainder value, if it rounds up to 12,
          * we need to add 1 to base and reset remain to 0 - i.e. a full foot
@@ -151,7 +151,7 @@ public enum Height implements ValueRangeConverterType<Double> {
     }
 
     /**
-     * Get the height value by parsing a {@link String} representatino of
+     * Get the height value by parsing a {@link String} representation of
      * a height.
      * @param value A {@link String} value.
      * @return A {@link Double} value.
@@ -177,14 +177,9 @@ public enum Height implements ValueRangeConverterType<Double> {
 
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(value);
-
-        if (matcher.find()) {
-            double base = Double.valueOf(matcher.group(1));
-            double decimal = Double.valueOf(matcher.group(2));
-            return base + decimal / ratio;
-        } else {
-            return 0;
-        }
+        double base = matcher.find() ? Double.valueOf(matcher.group(1)) : 0;
+        double dec = matcher.groupCount() > 1 ? Double.valueOf(matcher.group(2)) : 0;
+        return base + dec / ratio;
     }
 
     /**
@@ -205,13 +200,15 @@ public enum Height implements ValueRangeConverterType<Double> {
     }
 
     /**
-     * Get the maximum selectable height.
+     * Get the maximum selectable height. Return a lower value to avoid
+     * {@link StackOverflowError} from too much scrolling.
      * @return A {@link Double} value.
      */
     public double maxSelectableHeight() {
         switch (this) {
             case CM:
-                return 250;
+//                return 250;
+                return 100;
 
             case FT:
                 return CM.ft(CM.maxSelectableHeight());

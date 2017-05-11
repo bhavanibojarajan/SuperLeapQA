@@ -4,6 +4,7 @@ import com.holmusk.SuperLeapQA.base.BaseActionType;
 import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
+import org.testng.annotations.Test;
 
 import java.util.concurrent.TimeUnit;
 

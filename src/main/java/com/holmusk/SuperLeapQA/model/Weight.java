@@ -1,9 +1,12 @@
 package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.util.type.ValueRangeConverterType;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by haipham on 5/10/17.
@@ -56,55 +59,55 @@ public enum Weight implements ValueRangeConverterType<Double> {
     }
 
     /**
-     * Convert a weight value to kg.
-     * @param value A {@link Double} value.
-     * @return A {@link Double} value.
-     */
-    public double kg(double value) {
-        switch (this) {
-            case LBS:
-                return value / 0.453592d;
-
-            default:
-                return value;
-        }
-    }
-
-    /**
      * Get a weight value's {@link String} representation in kg.
      * @param value A {@link Double} value.
      * @return A {@link String} value.
-     * @see #kg(double)
      */
     @NotNull
     public String kgString(double value) {
-        return String.format("%d kg", (int)kg(value));
-    }
-
-    /**
-     * Convert a weight value to lbs.
-     * @param value A {@link Double} value.
-     * @return A {@link Double} value.
-     */
-    public double lbs(double value) {
-        switch (this) {
-            case KG:
-                return value * 0.453592d;
-
-            default:
-                return value;
-        }
+        return String.format("%.1f kg", value);
     }
 
     /**
      * Get a weight value's {@link String} representation in lbs.
      * @param value A {@link Double} value.
      * @return A {@link String} value.
-     * @see #lbs(double)
      */
     @NotNull
     public String lbsString(double value) {
-        return String.format("%.2f", lbs(value));
+        return String.format("%d lbs", (int)value);
+    }
+
+    /**
+     * Get the weight value by parsing a {@link String} representation of
+     * a weight.
+     * @param value A {@link String} value.
+     * @return A {@link Double} value.
+     */
+    public double weightValue(@NotNull String value) {
+        String regex;
+        double ratio;
+
+        switch (this) {
+            case KG:
+                regex = "(\\d+).(\\d+) kg";
+                ratio = 10;
+                break;
+
+            case LBS:
+                regex = "(\\d+) lbs";
+                ratio = 1;
+                break;
+
+            default:
+                return 0;
+        }
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(value);
+        double base = matcher.find() ? Double.valueOf(matcher.group(1)) : 0;
+        double dec = matcher.groupCount() > 1 ? Double.valueOf(matcher.group(2)) : 0;
+        return base + dec / ratio;
     }
 
     /**
@@ -114,7 +117,7 @@ public enum Weight implements ValueRangeConverterType<Double> {
     public double minSelectableWeight() {
         switch (this) {
             case LBS:
-                return 0;
+                return 26;
 
             case KG:
                 return 10;
@@ -125,16 +128,19 @@ public enum Weight implements ValueRangeConverterType<Double> {
     }
 
     /**
-     * Get the maximum selectable weight.
+     * Get the maximum selectable weight. Return a lower value to avoid
+     * {@link StackOverflowError} from too much scrolling.
      * @return A {@link Double} value.
      */
     public double maxSelectableWeight() {
         switch (this) {
             case LBS:
-                return 0;
+//                return 485;
+                return 200;
 
             case KG:
-                return 219;
+//                return 220;
+                return 100;
 
             default:
                 return 0;
@@ -148,10 +154,10 @@ public enum Weight implements ValueRangeConverterType<Double> {
     public double selectableWeightStep() {
         switch (this) {
             case LBS:
-                return 0;
+                return 1;
 
             case KG:
-                return 1;
+                return 0.5;
 
             default:
                 return 0;

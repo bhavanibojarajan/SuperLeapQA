@@ -8,6 +8,7 @@ import com.holmusk.SuperLeapQA.model.Weight;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
@@ -94,7 +95,7 @@ public interface BaseSignUpValidationType extends BaseActionType {
      * @return A {@link Flowable} instance.
      */
     @NotNull
-    default Flowable<WebElement> rxDoBEditableField() {
+    default Flowable<WebElement> rxDoBEditField() {
         return engine()
             .rxAllEditableElements()
             .firstElement()
@@ -110,7 +111,7 @@ public interface BaseSignUpValidationType extends BaseActionType {
      * @see BaseEngine#rxElementContainingText(String)
      */
     @NotNull
-    default Flowable<Boolean> rxDoBEditableFieldHasDate(@NotNull Date date) {
+    default Flowable<Boolean> rxDoBEditFieldHasDate(@NotNull Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
         String string = formatter.format(date);
         return engine().rxElementContainingText(string).map(ObjectUtil::nonNull);
@@ -334,6 +335,23 @@ public interface BaseSignUpValidationType extends BaseActionType {
             )
             .all(ObjectUtil::nonNull)
             .toFlowable();
+    }
+
+    /**
+     * Check if an editable field has an input.
+     * @param input A {@link TextInput} instance.
+     * @param VALUE A {@link String} value.
+     * @return A {@link Flowable} instance.
+     * @see #rxEditFieldForInput(TextInput)
+     */
+    @NotNull
+    default Flowable<Boolean> rxEditFieldHasValue(@NotNull TextInput input,
+                                                  @NotNull final String VALUE) {
+        return rxEditFieldForInput(input)
+            .map(engine()::getText)
+            .filter(a -> a.equals(VALUE))
+            .switchIfEmpty(RxUtil.error(""))
+            .map(a -> true);
     }
     //endregion
 }
