@@ -13,11 +13,15 @@ import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.element.action.date.type.DateType;
+import org.swiften.xtestkit.base.element.action.general.model.Unidirection;
+import org.swiften.xtestkit.base.element.action.swipe.type.SwipeGestureType;
+import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatableType;
 import org.swiften.xtestkit.base.type.PlatformErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
 
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -181,6 +185,55 @@ public interface BaseSignUpActionType extends
     @NotNull
     default Flowable<Boolean> rxSelectHeightMode(@NotNull Height mode) {
         return rxHeightModePicker(mode).flatMap(engine()::rxClick);
+    }
+
+    /**
+     * Select a random height value, assuming the user is in the height
+     * selection screen.
+     * @param MODE A {@link Height} instance.
+     * @return A {@link Flowable} instance.
+     */
+    @NotNull
+    default Flowable<Double> rxSelectRandomHeight(@NotNull final Height MODE) {
+        final BaseEngine<?> ENGINE = engine();
+        List<Double> selectableRange = MODE.selectableHeightRange();
+        double height = CollectionTestUtil.randomElement(selectableRange);
+        final String HEIGHT = MODE.heightString(height);
+
+        SwipeRepeatableType repeater = new SwipeRepeatableType() {
+            @Override
+            public double elementSwipeRatio() {
+                return 0.9d;
+            }
+
+            @NotNull
+            @Override
+            public Flowable<Boolean> rxShouldKeepSwiping() {
+                return ENGINE
+                    .rxElementContainingText(HEIGHT)
+                    .flatMap(ENGINE::rxClick);
+            }
+
+            @NotNull
+            @Override
+            public Flowable<WebElement> rxElementToSwipe() {
+                return rxScrollableHeightSelectorView();
+            }
+
+            @NotNull
+            @Override
+            public Flowable<Unidirection> rxDirectionToSwipe() {
+                return null;
+            }
+
+            @NotNull
+            @Override
+            public Flowable<Boolean> rxSwipeOnce(@NotNull SwipeGestureType param) {
+                return null;
+            }
+        };
+
+        return Flowable.empty();
     }
 
     /**

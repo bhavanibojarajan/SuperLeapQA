@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.onboarding.register;
 
 import com.holmusk.SuperLeapQA.base.BaseActionType;
-import com.holmusk.SuperLeapQA.model.EditableInput;
+import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.Gender;
 import com.holmusk.SuperLeapQA.model.Height;
 import com.holmusk.SuperLeapQA.model.Weight;
@@ -11,8 +11,11 @@ import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
+import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
+import org.swiften.xtestkit.base.param.ByXPath;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkit.mobile.android.AndroidView;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -130,7 +133,7 @@ public interface BaseSignUpValidationType extends BaseActionType {
      * restrictions.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String)
-     * @see #rxEditFieldForInput(EditableInput)
+     * @see #rxEditFieldForInput(TextInput)
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -142,9 +145,9 @@ public interface BaseSignUpValidationType extends BaseActionType {
                 ENGINE.rxElementContainingText("register_title_weAreOnlyAccepting"),
                 ENGINE.rxElementContainingText(acceptableAgeRangeString()),
                 ENGINE.rxElementContainingText("+65"),
-                rxEditFieldForInput(EditableInput.NAME),
-                rxEditFieldForInput(EditableInput.PHONE),
-                rxEditFieldForInput(EditableInput.EMAIL)
+                rxEditFieldForInput(TextInput.NAME),
+                rxEditFieldForInput(TextInput.PHONE),
+                rxEditFieldForInput(TextInput.EMAIL)
             )
             .all(ObjectUtil::nonNull)
             .toFlowable();
@@ -164,13 +167,13 @@ public interface BaseSignUpValidationType extends BaseActionType {
 
     /**
      * Get the editable {@link WebElement} that corresponds to a
-     * {@link EditableInput}.
-     * @param input A {@link EditableInput} instance.
+     * {@link TextInput}.
+     * @param input A {@link TextInput} instance.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingID(String)
      */
     @NotNull
-    default Flowable<WebElement> rxEditFieldForInput(@NotNull EditableInput input) {
+    default Flowable<WebElement> rxEditFieldForInput(@NotNull TextInput input) {
         BaseEngine<?> engine = engine();
         PlatformType platform = engine.platform();
 
@@ -246,11 +249,67 @@ public interface BaseSignUpValidationType extends BaseActionType {
     }
 
     /**
+     * Open the height selector dialog.
+     * @return A {@link Flowable} instance.
+     * @see #rxEditFieldForInput(TextInput)
+     */
+    @NotNull
+    default Flowable<Boolean> rxOpenHeightSelectorWindow() {
+        return rxEditFieldForInput(TextInput.HEIGHT).flatMap(engine()::rxClick);
+    }
+
+    /**
+     * Get the scrollable height selector view, assuming the user is already
+     * in the height picker window.
+     * @return A {@link Flowable} instance.
+     * @see BaseEngine#rxElementContainingID(String)
+     */
+    @NotNull
+    default Flowable<WebElement> rxScrollableHeightSelectorView() {
+        BaseEngine<?> engine = engine();
+        PlatformType platform = engine.platform();
+
+        if (platform.equals(Platform.ANDROID)) {
+            return engine.rxElementContainingID("select_dialog_listview");
+        } else {
+            return RxUtil.error(NO_SUCH_ELEMENT);
+        }
+    }
+
+    /**
+     * Get all height value items within the scrollable view as emitted by
+     * {@link #rxScrollableHeightSelectorView()}, assuming the user is already
+     * in the height picker window.
+     * @return A {@link Flowable} instance.
+     */
+    @NotNull
+    default Flowable<WebElement> rxHeightSelectorItemViews() {
+        BaseEngine<?> engine = engine();
+        PlatformType platform = engine.platform();
+
+        if (platform.equals(Platform.ANDROID)) {
+            XPath xPath = engine.newXPathBuilder()
+                .ofClass(AndroidView.ViewType.TEXT_VIEW.className())
+                .containsID("text1")
+                .build();
+
+            ByXPath byXPath = ByXPath.builder()
+                .withXPath(xPath)
+                .withError(NO_SUCH_ELEMENT)
+                .build();
+
+            return engine.rxElementsByXPath(byXPath);
+        } else {
+            return RxUtil.error(NO_SUCH_ELEMENT);
+        }
+    }
+
+    /**
      * Validate the screen after the DoB picker whereby the user qualifies
      * for the program.
      * @return A {@link Flowable} instance.
      * @see #rxGenderPicker(Gender)
-     * @see #rxEditFieldForInput(EditableInput)
+     * @see #rxEditFieldForInput(TextInput)
      * @see #rxHeightModePicker(Height)
      * @see #rxWeightModePicker(Weight)
      * @see #rxRegisterConfirmButton()
@@ -262,14 +321,14 @@ public interface BaseSignUpValidationType extends BaseActionType {
             .concatArray(
                 rxGenderPicker(Gender.MALE),
                 rxGenderPicker(Gender.FEMALE),
-                rxEditFieldForInput(EditableInput.HEIGHT),
+                rxEditFieldForInput(TextInput.HEIGHT),
                 rxHeightModePicker(Height.FT),
                 rxHeightModePicker(Height.CM),
-                rxEditFieldForInput(EditableInput.WEIGHT),
+                rxEditFieldForInput(TextInput.WEIGHT),
                 rxWeightModePicker(Weight.LBS),
                 rxWeightModePicker(Weight.KG),
-                rxEditFieldForInput(EditableInput.ETHNICITY),
-                rxEditFieldForInput(EditableInput.COACH_PREFERENCE),
+                rxEditFieldForInput(TextInput.ETHNICITY),
+                rxEditFieldForInput(TextInput.COACH_PREFERENCE),
                 rxRegisterConfirmButton(),
                 rxParentAcceptableAgeInputTitleLabel()
             )

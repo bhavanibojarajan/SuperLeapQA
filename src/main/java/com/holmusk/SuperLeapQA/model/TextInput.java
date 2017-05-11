@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Created by haipham on 5/10/17.
  */
-public enum EditableInput {
+public enum TextInput {
     NAME,
     EMAIL,
     PHONE,

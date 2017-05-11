@@ -1,13 +1,22 @@
 package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
+import org.swiften.xtestkit.util.type.ValueRangeConverterType;
+
+import java.util.List;
 
 /**
  * Created by haipham on 5/10/17.
  */
-public enum  Weight {
+public enum Weight implements ValueRangeConverterType<Double> {
     LBS,
     KG;
+
+    @NotNull
+    @Override
+    public Converter<Double> converter() {
+        return a -> a;
+    }
 
     /**
      * Get the localizable title for the current {@link Weight}.
@@ -96,5 +105,73 @@ public enum  Weight {
     @NotNull
     public String lbsString(double value) {
         return String.format("%.2f", lbs(value));
+    }
+
+    /**
+     * Get the minimum selectable weight.
+     * @return A {@link Double} value.
+     */
+    public double minSelectableWeight() {
+        switch (this) {
+            case LBS:
+                return 0;
+
+            case KG:
+                return 10;
+
+            default:
+                return 0;
+        }
+    }
+
+    /**
+     * Get the maximum selectable weight.
+     * @return A {@link Double} value.
+     */
+    public double maxSelectableWeight() {
+        switch (this) {
+            case LBS:
+                return 0;
+
+            case KG:
+                return 219;
+
+            default:
+                return 0;
+        }
+    }
+
+    /**
+     * Get the selectable weight step.
+     * @return A {@link Double} value.
+     */
+    public double selectableWeightStep() {
+        switch (this) {
+            case LBS:
+                return 0;
+
+            case KG:
+                return 1;
+
+            default:
+                return 0;
+        }
+    }
+
+    /**
+     * Get the selectable weight range.
+     * @return A {@link List} of {@link Double}.
+     * @see #valueRange(Number, Number, Number)
+     * @see #minSelectableWeight()
+     * @see #maxSelectableWeight()
+     * @see #selectableWeightStep()
+     */
+    @NotNull
+    public List<Double> selectableWeightRange() {
+        return valueRange(
+            minSelectableWeight(),
+            maxSelectableWeight(),
+            selectableWeightStep()
+        );
     }
 }
