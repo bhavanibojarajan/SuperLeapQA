@@ -7,21 +7,20 @@ import com.holmusk.SuperLeapQA.model.Weight;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.element.action.date.type.DateType;
-import org.swiften.xtestkit.base.element.action.general.model.Unidirection;
-import org.swiften.xtestkit.base.element.action.swipe.type.SwipeGestureType;
+import org.swiften.xtestkit.base.element.action.swipe.type.SwipeType;
+import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatableSubElementType;
 import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatableType;
+import org.swiften.xtestkit.base.param.TextParam;
 import org.swiften.xtestkit.base.type.PlatformErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
 
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -188,52 +187,78 @@ public interface BaseSignUpActionType extends
     }
 
     /**
-     * Select a random height value, assuming the user is in the height
-     * selection screen.
+     * Select a height value, assuming the user is in the height selection
+     * screen. Be sure to call {@link #rxSelectHeightMode(Height)} and
+     * {@link #rxOpenHeightPickerWindow()} before calling this method.
      * @param MODE A {@link Height} instance.
+     * @param HEIGHT A {@link Double} value.
      * @return A {@link Flowable} instance.
+     * @see #rxHeightPickerItemViews()
      */
     @NotNull
-    default Flowable<Double> rxSelectRandomHeight(@NotNull final Height MODE) {
+    default Flowable<Boolean> rxSelectHeight(@NotNull final Height MODE,
+                                             final double HEIGHT) {
+        final BaseSignUpActionType THIS = this;
         final BaseEngine<?> ENGINE = engine();
-        List<Double> selectableRange = MODE.selectableHeightRange();
-        double height = CollectionTestUtil.randomElement(selectableRange);
-        final String HEIGHT = MODE.heightString(height);
+        final String HEIGHT_STR = MODE.heightString(HEIGHT);
 
-        SwipeRepeatableType repeater = new SwipeRepeatableType() {
+        final TextParam TEXT_PARAM = TextParam.builder()
+            .withText(HEIGHT_STR)
+            .withRetries(0)
+            .build();
+
+        SwipeRepeatableType repeater = new SwipeRepeatableSubElementType() {
+            @NotNull
+            @Override
+            public Flowable<?> rxCompareFirst(@NotNull WebElement element) {
+                return Flowable.just(element)
+                    .map(ENGINE::getText)
+                    .map(MODE::heightValue)
+                    .filter(a -> a > HEIGHT);
+            }
+
+            @NotNull
+            @Override
+            public Flowable<?> rxCompareLast(@NotNull WebElement element) {
+                return Flowable.just(element)
+                    .map(ENGINE::getText)
+                    .map(MODE::heightValue)
+                    .filter(a -> a < HEIGHT);
+            }
+
+            @NotNull
+            @Override
+            public Flowable<WebElement> rxScrollViewChildItems() {
+                return THIS.rxHeightPickerItemViews();
+            }
+
             @Override
             public double elementSwipeRatio() {
-                return 0.9d;
+                return 0.7d;
             }
 
             @NotNull
             @Override
             public Flowable<Boolean> rxShouldKeepSwiping() {
                 return ENGINE
-                    .rxElementContainingText(HEIGHT)
+                    .rxElementContainingText(TEXT_PARAM)
                     .flatMap(ENGINE::rxClick);
             }
 
             @NotNull
             @Override
-            public Flowable<WebElement> rxElementToSwipe() {
-                return rxScrollableHeightSelectorView();
+            public Flowable<WebElement> rxScrollableElementToSwipe() {
+                return rxScrollableHeightPickerView();
             }
 
             @NotNull
             @Override
-            public Flowable<Unidirection> rxDirectionToSwipe() {
-                return null;
-            }
-
-            @NotNull
-            @Override
-            public Flowable<Boolean> rxSwipeOnce(@NotNull SwipeGestureType param) {
-                return null;
+            public Flowable<Boolean> rxSwipeOnce(@NotNull SwipeType param) {
+                return ENGINE.rxSwipeOnce(param);
             }
         };
 
-        return Flowable.empty();
+        return repeater.rxRepeatSwipe();
     }
 
     /**
@@ -245,36 +270,5 @@ public interface BaseSignUpActionType extends
     @NotNull
     default Flowable<Boolean> rxSelectWeightMode(@NotNull Weight mode) {
         return rxWeightModePicker(mode).flatMap(engine()::rxClick);
-    }
-
-    /**
-     * Validate that the acceptable age inputs can be correctly interacted
-     * with, for e.g, certain inputs should show a dialog with choices.
-     * @return A {@link Flowable} instance.
-     */
-    @NotNull
-    default Flowable<Boolean> rxValidateAcceptableAgeInputsInteraction() {
-        return Flowable.empty();
-    }
-
-    /**
-     * Enter random inputs to test input validation.
-     * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxClick(WebElement)
-     * @see CollectionTestUtil#randomElement(Object[])
-     * @see #rxGenderPicker(Gender)
-     */
-    @NotNull
-    @SuppressWarnings("unchecked")
-    default Flowable<Boolean> rxEnterRandomInputs() {
-        final BaseEngine<?> ENGINE = engine();
-        Gender gender = CollectionTestUtil.randomElement(Gender.values());
-
-        return Flowable
-            .concatArray(
-                rxGenderPicker(gender).flatMap(ENGINE::rxClick)
-            )
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
     }
 }

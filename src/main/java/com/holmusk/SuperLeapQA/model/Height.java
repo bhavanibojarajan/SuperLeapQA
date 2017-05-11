@@ -2,6 +2,7 @@ package com.holmusk.SuperLeapQA.model;
 
 import org.apache.xerces.impl.xpath.regex.Match;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.util.type.ValueRangeConverterType;
 
@@ -114,8 +115,17 @@ public enum Height implements ValueRangeConverterType<Double> {
     public String ftString(double value) {
         double ft = ft(value);
         double base = Math.floor(ft);
-        double remain = (ft - base) * 12;
-        return String.format("%1$d'%2$d\"", (int)base, (int)Math.ceil(remain));
+        int remain = (int)Math.ceil((ft - base) * 12);
+
+        /* Since we use ceil for the remainder value, if it rounds up to 12,
+         * we need to add 1 to base and reset remain to 0 - i.e. a full foot
+         * from 12 inches */
+        if (remain % 12 == 0) {
+            base += remain / 12;
+            remain = 0;
+        }
+
+        return String.format("%1$d'%2$d\"", (int)base, remain);
     }
 
     /**
@@ -244,5 +254,15 @@ public enum Height implements ValueRangeConverterType<Double> {
             maxSelectableHeight(),
             selectableHeightStep()
         );
+    }
+
+    /**
+     * Get a random height from {@link #selectableHeightRange()}.
+     * @return A {@link Double} value.
+     * @see #selectableHeightRange()
+     */
+    public double randomSelectableHeight() {
+        List<Double> selectableRange = selectableHeightRange();
+        return CollectionTestUtil.randomElement(selectableRange);
     }
 }

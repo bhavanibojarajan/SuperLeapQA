@@ -254,7 +254,7 @@ public interface BaseSignUpValidationType extends BaseActionType {
      * @see #rxEditFieldForInput(TextInput)
      */
     @NotNull
-    default Flowable<Boolean> rxOpenHeightSelectorWindow() {
+    default Flowable<Boolean> rxOpenHeightPickerWindow() {
         return rxEditFieldForInput(TextInput.HEIGHT).flatMap(engine()::rxClick);
     }
 
@@ -265,7 +265,7 @@ public interface BaseSignUpValidationType extends BaseActionType {
      * @see BaseEngine#rxElementContainingID(String)
      */
     @NotNull
-    default Flowable<WebElement> rxScrollableHeightSelectorView() {
+    default Flowable<WebElement> rxScrollableHeightPickerView() {
         BaseEngine<?> engine = engine();
         PlatformType platform = engine.platform();
 
@@ -278,12 +278,12 @@ public interface BaseSignUpValidationType extends BaseActionType {
 
     /**
      * Get all height value items within the scrollable view as emitted by
-     * {@link #rxScrollableHeightSelectorView()}, assuming the user is already
+     * {@link #rxScrollableHeightPickerView()}, assuming the user is already
      * in the height picker window.
      * @return A {@link Flowable} instance.
      */
     @NotNull
-    default Flowable<WebElement> rxHeightSelectorItemViews() {
+    default Flowable<WebElement> rxHeightPickerItemViews() {
         BaseEngine<?> engine = engine();
         PlatformType platform = engine.platform();
 
