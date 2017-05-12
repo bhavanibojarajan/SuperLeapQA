@@ -1,10 +1,7 @@
 package com.holmusk.SuperLeapQA.onboarding.register;
 
 import com.holmusk.SuperLeapQA.base.BaseActionType;
-import com.holmusk.SuperLeapQA.model.Gender;
-import com.holmusk.SuperLeapQA.model.Height;
-import com.holmusk.SuperLeapQA.model.TextInput;
-import com.holmusk.SuperLeapQA.model.Weight;
+import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.SuperLeapQA.model.type.NumericSelectableInputType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
@@ -16,8 +13,7 @@ import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.element.action.date.type.DateType;
 import org.swiften.xtestkit.base.element.action.swipe.type.SwipeType;
-import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatableSubElementType;
-import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatableType;
+import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatComparisonType;
 import org.swiften.xtestkit.base.param.TextParam;
 import org.swiften.xtestkit.base.type.PlatformErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
@@ -235,7 +231,17 @@ public interface BaseSignUpActionType extends
             .withRetries(0)
             .build();
 
-        SwipeRepeatableType repeater = new SwipeRepeatableSubElementType() {
+        SwipeRepeatComparisonType repeater = new SwipeRepeatComparisonType() {
+            @NotNull
+            @Override
+            public Flowable<Integer> rxInitialDifference(@NotNull WebElement element) {
+                return Flowable.just(element)
+                    .map(ENGINE::getText)
+                    .map(MODE::numericValue)
+                    .map(a -> a - NUMERIC_VALUE)
+                    .map(Double::intValue);
+            }
+
             @NotNull
             @Override
             public Flowable<?> rxCompareFirst(@NotNull WebElement element) {
@@ -276,7 +282,7 @@ public interface BaseSignUpActionType extends
 
             @NotNull
             @Override
-            public Flowable<WebElement> rxScrollableElementToSwipe() {
+            public Flowable<WebElement> rxScrollableViewToSwipe() {
                 return rxScrollableInputPickerView(TextInput.HEIGHT);
             }
 
@@ -302,6 +308,38 @@ public interface BaseSignUpActionType extends
     }
 
     /**
+     * Select an {@link Ethnicity} for {@link TextInput#ETHNICITY}.
+     * @param E An {@link Ethnicity} instance.
+     * @return A {@link Flowable} instance.
+     * @see BaseEngine#rxElementContainingText(String)
+     * @see #rxOpenPickerWindow(TextInput)
+     */
+    @NotNull
+    default Flowable<Boolean> rxSelectEthnicity(@NotNull final Ethnicity E) {
+        final BaseEngine<?> ENGINE = engine();
+
+        return rxOpenPickerWindow(TextInput.ETHNICITY)
+            .flatMap(a -> ENGINE.rxElementContainingText(E.value()))
+            .flatMap(ENGINE::rxClick);
+    }
+
+    /**
+     * Select a {@link CoachPref} for {@link TextInput#COACH_PREFERENCE}.
+     * @param CP A {@link CoachPref} instance.
+     * @return A {@link Flowable} instance.
+     * @see BaseEngine#rxElementContainingText(String)
+     * @see #rxOpenPickerWindow(TextInput)
+     */
+    @NotNull
+    default Flowable<Boolean> rxSelectCoachPref(@NotNull final CoachPref CP) {
+        final BaseEngine<?> ENGINE = engine();
+
+        return rxOpenPickerWindow(TextInput.COACH_PREFERENCE)
+            .flatMap(a -> ENGINE.rxElementContainingText(CP.value()))
+            .flatMap(ENGINE::rxClick);
+    }
+
+    /**
      * Enter random inputs for acceptable age screen, assuming the user is
      * already in the acceptable age input screen.
      * @return A {@link Flowable} instance.
@@ -323,11 +361,15 @@ public interface BaseSignUpActionType extends
         final String WEIGHT_KG_STR = Weight.KG.stringValue(WEIGHT_KG);
         final String WEIGHT_KG_LB_STR = Weight.KG.lbString(WEIGHT_KG);
         final String WEIGHT_LB_STR = Weight.LB.stringValue(WEIGHT_LB);
+        final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
+        final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
 
         return Flowable
             .concatArray(
                 rxSelectGender(Gender.MALE),
                 rxSelectGender(Gender.FEMALE),
+                rxSelectEthnicity(ETH),
+                rxSelectCoachPref(CP),
 
                 rxSelectHeightMode(Height.CM)
                     .flatMap(a -> rxOpenPickerWindow(TextInput.HEIGHT))

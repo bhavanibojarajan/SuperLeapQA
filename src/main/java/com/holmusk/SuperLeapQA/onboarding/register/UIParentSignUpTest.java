@@ -4,6 +4,7 @@ import com.holmusk.SuperLeapQA.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeActionType;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
 import io.reactivex.subscribers.TestSubscriber;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.testng.annotations.Factory;
@@ -77,7 +78,7 @@ public final class UIParentSignUpTest extends UIBaseTest implements
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, NumberTestUtil.randomBetween(1, 28));
         calendar.set(Calendar.MONTH, NumberTestUtil.randomBetween(0, 11));
-        calendar.set(Calendar.YEAR, NumberTestUtil.randomBetween(2010, 2030));
+        calendar.set(Calendar.YEAR, NumberTestUtil.randomBetween(1970, 2000));
         final Date DATE = calendar.getTime();
 
         // When
