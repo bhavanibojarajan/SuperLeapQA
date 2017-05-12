@@ -250,23 +250,25 @@ public interface BaseSignUpValidationType extends BaseActionType {
     }
 
     /**
-     * Open the height selector dialog.
+     * Open the selector dialog for a {@link TextInput}.
+     * @param input A {@link TextInput} instance.
      * @return A {@link Flowable} instance.
      * @see #rxEditFieldForInput(TextInput)
      */
     @NotNull
-    default Flowable<Boolean> rxOpenHeightPickerWindow() {
-        return rxEditFieldForInput(TextInput.HEIGHT).flatMap(engine()::rxClick);
+    default Flowable<Boolean> rxOpenPickerWindow(@NotNull TextInput input) {
+        return rxEditFieldForInput(input).flatMap(engine()::rxClick);
     }
 
     /**
      * Get the scrollable height selector view, assuming the user is already
      * in the height picker window.
+     * @param input A {@link TextInput} instance.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingID(String)
      */
     @NotNull
-    default Flowable<WebElement> rxScrollableHeightPickerView() {
+    default Flowable<WebElement> rxScrollableInputPickerView(@NotNull TextInput input) {
         BaseEngine<?> engine = engine();
         PlatformType platform = engine.platform();
 
@@ -278,13 +280,15 @@ public interface BaseSignUpValidationType extends BaseActionType {
     }
 
     /**
-     * Get all height value items within the scrollable view as emitted by
-     * {@link #rxScrollableHeightPickerView()}, assuming the user is already
-     * in the height picker window.
+     * Get all input value items within the scrollable view as emitted by
+     * {@link #rxScrollableInputPickerView(TextInput)}, assuming the user
+     * is already in the picker window.
+     * @param input A {@link TextInput} instance.
      * @return A {@link Flowable} instance.
+     * @see BaseEngine#rxElementsByXPath(ByXPath)
      */
     @NotNull
-    default Flowable<WebElement> rxHeightPickerItemViews() {
+    default Flowable<WebElement> rxPickerItemViews(@NotNull TextInput input) {
         BaseEngine<?> engine = engine();
         PlatformType platform = engine.platform();
 
@@ -326,7 +330,7 @@ public interface BaseSignUpValidationType extends BaseActionType {
                 rxHeightModePicker(Height.FT),
                 rxHeightModePicker(Height.CM),
                 rxEditFieldForInput(TextInput.WEIGHT),
-                rxWeightModePicker(Weight.LBS),
+                rxWeightModePicker(Weight.LB),
                 rxWeightModePicker(Weight.KG),
                 rxEditFieldForInput(TextInput.ETHNICITY),
                 rxEditFieldForInput(TextInput.COACH_PREFERENCE),

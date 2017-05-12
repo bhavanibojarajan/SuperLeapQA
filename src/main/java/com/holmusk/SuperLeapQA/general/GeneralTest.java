@@ -2,15 +2,12 @@ package com.holmusk.SuperLeapQA.general;
 
 import com.holmusk.SuperLeapQA.model.Height;
 import com.holmusk.SuperLeapQA.model.Weight;
-import org.apache.tools.ant.taskdefs.Zip;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zipped;
 import org.swiften.javautilities.log.LogUtil;
-import org.swiften.javautilities.number.NumberTestUtil;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -45,13 +42,13 @@ public final class GeneralTest {
     @SuppressWarnings("unchecked")
     public void test_heightValueFromString_shouldWork() {
         // Setup
-        List<Double> cms = Height.CM.selectableHeightRange();
+        List<Double> cms = Height.CM.selectableNumericRange();
 
         for (Double cmVal : cms) {
-            String cmString = Height.CM.heightString(cmVal);
+            String cmString = Height.CM.stringValue(cmVal);
 
             // When
-            double cm = Height.CM.heightValue(cmString);
+            double cm = Height.CM.numericValue(cmString);
 
             // Then
             Assert.assertTrue(cms.contains(cm));
@@ -59,10 +56,22 @@ public final class GeneralTest {
     }
 
     @Test
+    public void test_weightModeToLB_shouldWork() {
+        // Setup
+        double weightInKg = 100;
+
+        // When
+        String lbString = Weight.KG.lbString(weightInKg);
+
+        // Then
+        Assert.assertTrue(lbString.matches("\\d+ lbs"));
+    }
+
+    @Test
     public void test_weightValueFromString_shouldWork() {
         // Setup
-        List<Double> kgs = Weight.KG.selectableWeightRange();
-        List<Double> lbs = Weight.LBS.selectableWeightRange();
+        List<Double> kgs = Weight.KG.selectableNumericRange();
+        List<Double> lbs = Weight.LB.selectableNumericRange();
         List<Zipped<Double,Double>> allZipped = CollectionUtil.zip(kgs, lbs);
 
         for (Zipped<Double,Double> zipped : allZipped) {
@@ -70,11 +79,11 @@ public final class GeneralTest {
             Assert.assertNotNull(zipped.FIRST);
             Assert.assertNotNull(zipped.SECOND);
             String kgString = Weight.KG.kgString(zipped.FIRST);
-            String lbString = Weight.LBS.lbsString(zipped.SECOND);
+            String lbString = Weight.LB.lbString(zipped.SECOND);
 
             // Then
-            double kg = Weight.KG.weightValue(kgString);
-            double lb = Weight.LBS.weightValue(lbString);
+            double kg = Weight.KG.numericValue(kgString);
+            double lb = Weight.LB.numericValue(lbString);
             LogUtil.println(kg, lb);
         }
     }

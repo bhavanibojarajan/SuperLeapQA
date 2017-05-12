@@ -1,18 +1,16 @@
 package com.holmusk.SuperLeapQA.model;
 
+import com.holmusk.SuperLeapQA.model.type.NumericSelectableInputType;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.log.LogUtil;
-import org.swiften.xtestkit.util.type.ValueRangeConverterType;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Weight implements ValueRangeConverterType<Double> {
-    LBS,
+public enum Weight implements NumericSelectableInputType {
+    LB,
     KG;
 
     @NotNull
@@ -28,7 +26,7 @@ public enum Weight implements ValueRangeConverterType<Double> {
     @NotNull
     public String localizable() {
         switch (this) {
-            case LBS:
+            case LB:
                 return "user_title_weight_lbs";
 
             case KG:
@@ -47,7 +45,7 @@ public enum Weight implements ValueRangeConverterType<Double> {
     @NotNull
     public String androidViewId() {
         switch (this) {
-            case LBS:
+            case LB:
                 return "btn_lb";
 
             case KG:
@@ -59,13 +57,49 @@ public enum Weight implements ValueRangeConverterType<Double> {
     }
 
     /**
+     * Convert a weight value to lb.
+     * @param value A {@link Double} value.
+     * @return A {@link Double} value.
+     */
+    public double lb(double value) {
+        switch (this) {
+            case LB:
+                return value;
+
+            case KG:
+                return value * 2.20462d;
+
+            default:
+                return 0;
+        }
+    }
+
+    /**
+     * Convert a weight value to kg.
+     * @param value A {@link Double} value.
+     * @return A {@link Double} value.
+     */
+    public double kg(double value) {
+        switch (this) {
+            case KG:
+                return value;
+
+            case LB:
+                return value * 0.453592d;
+
+            default:
+                return 0;
+        }
+    }
+
+    /**
      * Get a weight value's {@link String} representation in kg.
      * @param value A {@link Double} value.
      * @return A {@link String} value.
      */
     @NotNull
     public String kgString(double value) {
-        return String.format("%.1f kg", value);
+        return String.format("%.1f kg", kg(value));
     }
 
     /**
@@ -74,8 +108,8 @@ public enum Weight implements ValueRangeConverterType<Double> {
      * @return A {@link String} value.
      */
     @NotNull
-    public String lbsString(double value) {
-        return String.format("%d lbs", (int)value);
+    public String lbString(double value) {
+        return String.format("%d lbs", (int)Math.round(lb(value)));
     }
 
     /**
@@ -83,8 +117,10 @@ public enum Weight implements ValueRangeConverterType<Double> {
      * a weight.
      * @param value A {@link String} value.
      * @return A {@link Double} value.
+     * @see NumericSelectableInputType#numericValue(String)
      */
-    public double weightValue(@NotNull String value) {
+    @Override
+    public double numericValue(@NotNull String value) {
         String regex;
         double ratio;
 
@@ -94,7 +130,7 @@ public enum Weight implements ValueRangeConverterType<Double> {
                 ratio = 10;
                 break;
 
-            case LBS:
+            case LB:
                 regex = "(\\d+) lbs";
                 ratio = 1;
                 break;
@@ -111,12 +147,38 @@ public enum Weight implements ValueRangeConverterType<Double> {
     }
 
     /**
+     * Get the appropriately formatted weight {@link String}, depending on
+     * the type of {@link Weight}.
+     * @param value A {@link Double} value.
+     * @return A {@link String} value.
+     * @see #kgString(double)
+     * @see #lbString(double)
+     * @see NumericSelectableInputType#stringValue(double)
+     */
+    @NotNull
+    @Override
+    public String stringValue(double value) {
+        switch (this) {
+            case KG:
+                return kgString(value);
+
+            case LB:
+                return lbString(value);
+
+            default:
+                return "";
+        }
+    }
+
+    /**
      * Get the minimum selectable weight.
      * @return A {@link Double} value.
+     * @see NumericSelectableInputType#minSelectableNumericValue()
      */
-    public double minSelectableWeight() {
+    @Override
+    public double minSelectableNumericValue() {
         switch (this) {
-            case LBS:
+            case LB:
                 return 26;
 
             case KG:
@@ -131,10 +193,12 @@ public enum Weight implements ValueRangeConverterType<Double> {
      * Get the maximum selectable weight. Return a lower value to avoid
      * {@link StackOverflowError} from too much scrolling.
      * @return A {@link Double} value.
+     * @see NumericSelectableInputType#maxSelectableNumericValue()
      */
-    public double maxSelectableWeight() {
+    @Override
+    public double maxSelectableNumericValue() {
         switch (this) {
-            case LBS:
+            case LB:
 //                return 485;
                 return 200;
 
@@ -150,10 +214,12 @@ public enum Weight implements ValueRangeConverterType<Double> {
     /**
      * Get the selectable weight step.
      * @return A {@link Double} value.
+     * @see NumericSelectableInputType#selectableNumericValueStep()
      */
-    public double selectableWeightStep() {
+    @Override
+    public double selectableNumericValueStep() {
         switch (this) {
-            case LBS:
+            case LB:
                 return 1;
 
             case KG:
@@ -162,22 +228,5 @@ public enum Weight implements ValueRangeConverterType<Double> {
             default:
                 return 0;
         }
-    }
-
-    /**
-     * Get the selectable weight range.
-     * @return A {@link List} of {@link Double}.
-     * @see #valueRange(Number, Number, Number)
-     * @see #minSelectableWeight()
-     * @see #maxSelectableWeight()
-     * @see #selectableWeightStep()
-     */
-    @NotNull
-    public List<Double> selectableWeightRange() {
-        return valueRange(
-            minSelectableWeight(),
-            maxSelectableWeight(),
-            selectableWeightStep()
-        );
     }
 }

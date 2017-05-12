@@ -5,9 +5,11 @@ import com.holmusk.SuperLeapQA.model.Gender;
 import com.holmusk.SuperLeapQA.model.Height;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.Weight;
+import com.holmusk.SuperLeapQA.model.type.NumericSelectableInputType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.rx.RxUtil;
@@ -213,20 +215,20 @@ public interface BaseSignUpActionType extends
     }
 
     /**
-     * Select a height value, assuming the user is in the height selection
-     * screen. Be sure to call {@link #rxSelectHeightMode(Height)} and
-     * {@link #rxOpenHeightPickerWindow()} before calling this method.
-     * @param MODE A {@link Height} instance.
-     * @param HEIGHT A {@link Double} value.
+     * Select a value, assuming the user is in the value selection screen.
+     * @param MODE A {@link NumericSelectableInputType} instance.
+     * @param NUMERIC_VALUE A {@link Double} value.
      * @return A {@link Flowable} instance.
-     * @see #rxHeightPickerItemViews()
+     * @see #rxPickerItemViews(TextInput)
      */
     @NotNull
-    default Flowable<Boolean> rxSelectHeight(@NotNull final Height MODE,
-                                             final double HEIGHT) {
+    default Flowable<Boolean> rxSelectNumericInput(
+        @NotNull final NumericSelectableInputType MODE,
+        final double NUMERIC_VALUE)
+    {
         final BaseSignUpActionType THIS = this;
         final BaseEngine<?> ENGINE = engine();
-        final String HEIGHT_STR = MODE.heightString(HEIGHT);
+        final String HEIGHT_STR = MODE.stringValue(NUMERIC_VALUE);
 
         final TextParam TEXT_PARAM = TextParam.builder()
             .withText(HEIGHT_STR)
@@ -239,8 +241,8 @@ public interface BaseSignUpActionType extends
             public Flowable<?> rxCompareFirst(@NotNull WebElement element) {
                 return Flowable.just(element)
                     .map(ENGINE::getText)
-                    .map(MODE::heightValue)
-                    .filter(a -> a > HEIGHT);
+                    .map(MODE::numericValue)
+                    .filter(a -> a > NUMERIC_VALUE);
             }
 
             @NotNull
@@ -248,14 +250,14 @@ public interface BaseSignUpActionType extends
             public Flowable<?> rxCompareLast(@NotNull WebElement element) {
                 return Flowable.just(element)
                     .map(ENGINE::getText)
-                    .map(MODE::heightValue)
-                    .filter(a -> a < HEIGHT);
+                    .map(MODE::numericValue)
+                    .filter(a -> a < NUMERIC_VALUE);
             }
 
             @NotNull
             @Override
             public Flowable<WebElement> rxScrollViewChildItems() {
-                return THIS.rxHeightPickerItemViews();
+                return THIS.rxPickerItemViews(TextInput.HEIGHT);
             }
 
             @Override
@@ -275,7 +277,7 @@ public interface BaseSignUpActionType extends
             @NotNull
             @Override
             public Flowable<WebElement> rxScrollableElementToSwipe() {
-                return rxScrollableHeightPickerView();
+                return rxScrollableInputPickerView(TextInput.HEIGHT);
             }
 
             @NotNull
@@ -305,32 +307,51 @@ public interface BaseSignUpActionType extends
      * @return A {@link Flowable} instance.
      * @see #rxSelectGender(Gender)
      * @see #rxSelectHeightMode(Height)
-     * @see #rxOpenHeightPickerWindow()
+     * @see #rxOpenPickerWindow(TextInput)
      * @see #rxEditFieldHasValue(TextInput, String)
      */
     @NotNull
     @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxEnterRandomAcceptableAgeInputs() {
-        final double HEIGHT_CM = Height.CM.randomSelectableHeight();
-        final double HEIGHT_FT = Height.FT.randomSelectableHeight();
-        final String HEIGHT_CM_STR = Height.CM.heightString(HEIGHT_CM);
+        final double HEIGHT_CM = Height.CM.randomSelectableNumericValue();
+        final double HEIGHT_FT = Height.FT.randomSelectableNumericValue();
+        final String HEIGHT_CM_STR = Height.CM.stringValue(HEIGHT_CM);
         final String HEIGHT_CM_FT_STR = Height.CM.ftString(HEIGHT_CM);
-        final String HEIGHT_FT_STR = Height.FT.heightString(HEIGHT_FT);
+        final String HEIGHT_FT_STR = Height.FT.stringValue(HEIGHT_FT);
+        final double WEIGHT_KG = Weight.KG.randomSelectableNumericValue();
+        final double WEIGHT_LB = Weight.LB.randomSelectableNumericValue();
+        final String WEIGHT_KG_STR = Weight.KG.stringValue(WEIGHT_KG);
+        final String WEIGHT_KG_LB_STR = Weight.KG.lbString(WEIGHT_KG);
+        final String WEIGHT_LB_STR = Weight.LB.stringValue(WEIGHT_LB);
 
         return Flowable
             .concatArray(
-                rxSelectGender(Gender.MALE)
-                    .flatMap(a -> rxSelectGender(Gender.FEMALE)),
+                rxSelectGender(Gender.MALE),
+                rxSelectGender(Gender.FEMALE),
 
                 rxSelectHeightMode(Height.CM)
-                    .flatMap(a -> rxOpenHeightPickerWindow())
-                    .flatMap(a -> rxSelectHeight(Height.CM, HEIGHT_CM))
-                    .flatMap(a -> rxEditFieldHasValue(TextInput.HEIGHT, HEIGHT_CM_STR))
-                    .flatMap(a -> rxSelectHeightMode(Height.FT))
+                    .flatMap(a -> rxOpenPickerWindow(TextInput.HEIGHT))
+                    .flatMap(a -> rxSelectNumericInput(Height.CM, HEIGHT_CM))
+                    .flatMap(a -> rxEditFieldHasValue(TextInput.HEIGHT, HEIGHT_CM_STR)),
+
+                rxSelectHeightMode(Height.FT)
                     .flatMap(a -> rxEditFieldHasValue(TextInput.HEIGHT, HEIGHT_CM_FT_STR))
-                    .flatMap(a -> rxOpenHeightPickerWindow())
-                    .flatMap(a -> rxSelectHeight(Height.FT, HEIGHT_FT))
-                    .flatMap(a -> rxEditFieldHasValue(TextInput.HEIGHT, HEIGHT_FT_STR))
-            );
+                    .flatMap(a -> rxOpenPickerWindow(TextInput.HEIGHT))
+                    .flatMap(a -> rxSelectNumericInput(Height.FT, HEIGHT_FT))
+                    .flatMap(a -> rxEditFieldHasValue(TextInput.HEIGHT, HEIGHT_FT_STR)),
+
+                rxSelectWeightMode(Weight.KG)
+                    .flatMap(a -> rxOpenPickerWindow(TextInput.WEIGHT))
+                    .flatMap(a -> rxSelectNumericInput(Weight.KG, WEIGHT_KG))
+                    .flatMap(a -> rxEditFieldHasValue(TextInput.WEIGHT, WEIGHT_KG_STR)),
+
+                rxSelectWeightMode(Weight.LB)
+                    .flatMap(a -> rxEditFieldHasValue(TextInput.WEIGHT, WEIGHT_KG_LB_STR))
+                    .flatMap(a -> rxOpenPickerWindow(TextInput.WEIGHT))
+                    .flatMap(a -> rxSelectNumericInput(Weight.LB, WEIGHT_LB))
+                    .flatMap(a -> rxEditFieldHasValue(TextInput.WEIGHT, WEIGHT_LB_STR))
+            )
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
     }
 }

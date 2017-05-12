@@ -1,12 +1,9 @@
 package com.holmusk.SuperLeapQA.model;
 
-import org.apache.xerces.impl.xpath.regex.Match;
+import com.holmusk.SuperLeapQA.model.type.NumericSelectableInputType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
-import org.swiften.javautilities.log.LogUtil;
-import org.swiften.xtestkit.util.type.ValueRangeConverterType;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,15 +11,9 @@ import java.util.regex.Pattern;
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Height implements ValueRangeConverterType<Double> {
+public enum Height implements NumericSelectableInputType {
     FT,
     CM;
-
-    @NotNull
-    @Override
-    public Converter<Double> converter() {
-        return a -> Double.valueOf(String.format("%.2f", a));
-    }
 
     /**
      * Get the localizable title for the current {@link Height}.
@@ -135,9 +126,11 @@ public enum Height implements ValueRangeConverterType<Double> {
      * @return A {@link String} value.
      * @see #ftString(double)
      * @see #cmString(double)
+     * @see NumericSelectableInputType#stringValue(double)
      */
     @NotNull
-    public String heightString(double value) {
+    @Override
+    public String stringValue(double value) {
         switch (this) {
             case FT:
                 return ftString(value);
@@ -155,8 +148,10 @@ public enum Height implements ValueRangeConverterType<Double> {
      * a height.
      * @param value A {@link String} value.
      * @return A {@link Double} value.
+     * @see NumericSelectableInputType#numericValue(String)
      */
-    public double heightValue(@NotNull String value) {
+    @Override
+    public double numericValue(@NotNull String value) {
         String regex;
         double ratio;
 
@@ -185,14 +180,15 @@ public enum Height implements ValueRangeConverterType<Double> {
     /**
      * Get the minimum selectable height.
      * @return A {@link Double} value.
+     * @see NumericSelectableInputType#minSelectableNumericValue()
      */
-    public double minSelectableHeight() {
+    public double minSelectableNumericValue() {
         switch (this) {
             case CM:
                 return 50;
 
             case FT:
-                return CM.ft(CM.minSelectableHeight());
+                return CM.ft(CM.minSelectableNumericValue());
 
             default:
                 return 0;
@@ -203,15 +199,17 @@ public enum Height implements ValueRangeConverterType<Double> {
      * Get the maximum selectable height. Return a lower value to avoid
      * {@link StackOverflowError} from too much scrolling.
      * @return A {@link Double} value.
+     * @see NumericSelectableInputType#maxSelectableNumericValue()
      */
-    public double maxSelectableHeight() {
+    @Override
+    public double maxSelectableNumericValue() {
         switch (this) {
             case CM:
 //                return 250;
                 return 100;
 
             case FT:
-                return CM.ft(CM.maxSelectableHeight());
+                return CM.ft(CM.maxSelectableNumericValue());
 
             default:
                 return 0;
@@ -222,44 +220,19 @@ public enum Height implements ValueRangeConverterType<Double> {
      * Get the step value that is the difference between a value and its
      * immediately higher value.
      * @return A {@link Double} value.
+     * @see NumericSelectableInputType#selectableNumericValueStep()
      */
-    public double selectableHeightStep() {
+    @Override
+    public double selectableNumericValueStep() {
         switch (this) {
             case CM:
                 return 0.5d;
 
             case FT:
-                return CM.ft(CM.selectableHeightStep());
+                return CM.ft(CM.selectableNumericValueStep());
 
             default:
                 return 0;
         }
-    }
-
-    /**
-     * Get the selectable height range.
-     * @return A {@link List} of {@link Double}.
-     * @see #valueRange(Number, Number, Number)
-     * @see #minSelectableHeight()
-     * @see #maxSelectableHeight()
-     * @see #selectableHeightStep()
-     */
-    @NotNull
-    public List<Double> selectableHeightRange() {
-        return valueRange(
-            minSelectableHeight(),
-            maxSelectableHeight(),
-            selectableHeightStep()
-        );
-    }
-
-    /**
-     * Get a random height from {@link #selectableHeightRange()}.
-     * @return A {@link Double} value.
-     * @see #selectableHeightRange()
-     */
-    public double randomSelectableHeight() {
-        List<Double> selectableRange = selectableHeightRange();
-        return CollectionTestUtil.randomElement(selectableRange);
     }
 }

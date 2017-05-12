@@ -43,24 +43,23 @@ public final class Config {
 //            .withTestMode(TestMode.SIMULATED)
 //            .build());
 
-        ENGINES.add(AndroidEngine.builder()
-            .withAppActivity(ANDROID_APP_ACTIVITY)
-            .withDeviceUID("4d00167552895059")
-            .withAppPackage(APP_PACKAGE)
-            .withDeviceName("GT_9500")
-            .withAutomation(Automation.APPIUM)
-            .withPlatformVersion("5.1")
-            .withTestMode(TestMode.ACTUAL)
-            .build());
-//
 //        ENGINES.add(AndroidEngine.builder()
 //            .withAppActivity(ANDROID_APP_ACTIVITY)
-//            .withApp(ANDROID_APP_NAME)
+//            .withDeviceUID("4d00167552895059")
 //            .withAppPackage(APP_PACKAGE)
-//            .withDeviceName("Nexus_4_API_22")
-//            .withTestMode(TestMode.SIMULATED)
+//            .withDeviceName("GT_9500")
+//            .withAutomation(Automation.APPIUM)
 //            .withPlatformVersion("5.1")
+//            .withTestMode(TestMode.ACTUAL)
 //            .build());
+
+        ENGINES.add(AndroidEngine.builder()
+            .withAppActivity(ANDROID_APP_ACTIVITY)
+            .withAppPackage(APP_PACKAGE)
+            .withDeviceName("Nexus_4_API_22")
+            .withPlatformVersion("5.1")
+            .withTestMode(TestMode.SIMULATED)
+            .build());
 
         TEST_KIT = TestKit.builder()
             .withEngines(ENGINES)
