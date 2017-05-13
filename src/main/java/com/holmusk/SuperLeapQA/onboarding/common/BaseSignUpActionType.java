@@ -5,8 +5,8 @@ import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.SuperLeapQA.model.type.InputType;
 import com.holmusk.SuperLeapQA.model.type.NumericSelectableInputType;
 import com.holmusk.SuperLeapQA.model.type.TextInputType;
+import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeActionType;
 import io.reactivex.Flowable;
-import org.apache.xpath.operations.Bool;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
@@ -33,7 +33,8 @@ import java.util.concurrent.TimeUnit;
 public interface BaseSignUpActionType extends
     BaseActionType,
     BaseSignUpValidationType,
-    PlatformErrorType
+    PlatformErrorType,
+    WelcomeActionType
 {
     //region Bridged Navigation
     /**
@@ -220,6 +221,7 @@ public interface BaseSignUpActionType extends
     }
     //endregion
 
+    //region Common Input Actions
     /**
      * Perform a click action on an editable field. This is useful when
      * the editable field is showing an error circle that can be shown if
@@ -232,6 +234,7 @@ public interface BaseSignUpActionType extends
     default Flowable<Boolean> rxClickInputField(@NotNull InputType input) {
         return rxEditFieldForInput(input).flatMap(engine()::rxClick);
     }
+    //endregion
 
     //region Unacceptable Age Input
     /**
@@ -264,11 +267,11 @@ public interface BaseSignUpActionType extends
     /**
      * Confirm email subscription for future program expansion.
      * @return A {@link Flowable} instance.
-     * @see #rxUnacceptableAgeRangeConfirmButton()
+     * @see #rxUnacceptableAgeSubmitButton()
      */
     @NotNull
     default Flowable<Boolean> rxConfirmUnacceptableAgeInput() {
-        return rxUnacceptableAgeRangeConfirmButton().flatMap(engine()::rxClick);
+        return rxUnacceptableAgeSubmitButton().flatMap(engine()::rxClick);
     }
     //endregion
 
@@ -457,18 +460,55 @@ public interface BaseSignUpActionType extends
      * @return A {@link Flowable} instance.
      * @see #rxEnterRandomInput(TextInputType)
      * @see #rxConfirmUnacceptableAgeInput()
+     * @see #unacceptableAgeInputConfirmDelay()
      */
     @NotNull
-    default Flowable<Boolean> rxCheckPhoneInputIsRequired() {
+    default Flowable<Boolean> rxCheckUnacceptableAgePhoneInputIsRequired() {
         return Flowable
             .concat(
                 rxEnterRandomInput(TextInput.NAME),
                 rxEnterRandomInput(TextInput.EMAIL),
                 rxConfirmUnacceptableAgeInput()
             )
+            .delay(unacceptableAgeInputConfirmDelay(), TimeUnit.MILLISECONDS)
+
+            /* We can validate unacceptable age screen - if views are present
+             * it means the app has not navigated to the confirmation screen
+             * yet (which is what we want since we expect there to be input
+             * errors) */
+            .concatWith(rxValidateUnacceptableAgeScreen())
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
+    }
+
+    /**
+     * Enter random inputs for unacceptable age screen, then confirm and check
+     * that the app shows a confirmation page.
+     * @return A {@link Flowable} instance.
+     * @see #rxEnterRandomInput(TextInputType)
+     * @see #unacceptableAgeInputConfirmDelay()
+     */
+    @NotNull
+    @SuppressWarnings("unchecked")
+    default Flowable<Boolean> rxEnterAndValidateUnacceptableAgeInputs() {
+        final BaseEngine<?> ENGINE = engine();
+
+        return Flowable
+            .concatArray(
+                rxEnterRandomInput(TextInput.NAME),
+                rxEnterRandomInput(TextInput.EMAIL),
+                rxEnterRandomInput(TextInput.PHONE),
+                rxConfirmUnacceptableAgeInput(),
+                rxValidateUnacceptableAgeInputConfirmation()
+            )
+            .delay(unacceptableAgeInputConfirmDelay(), TimeUnit.MILLISECONDS)
             .all(BooleanUtil::isTrue)
             .toFlowable()
-            .delay(unacceptableAgeInputConfirmDelay(), TimeUnit.MILLISECONDS);
+            .flatMap(a -> rxUnacceptableAgeInputOkButton())
+            .flatMap(ENGINE::rxClick)
+            .concatWith(rxValidateWelcomeScreen())
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
     }
 
     /**

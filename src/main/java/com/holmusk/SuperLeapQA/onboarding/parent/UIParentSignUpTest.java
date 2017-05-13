@@ -141,7 +141,26 @@ public final class UIParentSignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_unacceptableAgeInput()
-            .concatWith(rxCheckPhoneInputIsRequired())
+            .concatWith(rxCheckUnacceptableAgePhoneInputIsRequired())
+            .all(BooleanUtil::isTrue)
+            .toFlowable()
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void test_parentUnacceptableAgeInput_shouldWork() {
+        // Setup
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_splash_unacceptableAgeInput()
+            .concatWith(rxEnterAndValidateUnacceptableAgeInputs())
             .all(BooleanUtil::isTrue)
             .toFlowable()
             .subscribe(subscriber);

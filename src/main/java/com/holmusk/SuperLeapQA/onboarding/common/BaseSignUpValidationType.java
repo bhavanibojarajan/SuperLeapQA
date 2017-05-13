@@ -6,6 +6,7 @@ import com.holmusk.SuperLeapQA.model.type.InputType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
@@ -157,13 +158,44 @@ public interface BaseSignUpValidationType extends BaseActionType {
     }
 
     /**
-     * Get the confirm button for the unacceptable age range inputs.
+     * Get the confirm button for the unacceptable age inputs.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String)
      */
     @NotNull
-    default Flowable<WebElement> rxUnacceptableAgeRangeConfirmButton() {
+    default Flowable<WebElement> rxUnacceptableAgeSubmitButton() {
         return engine().rxElementContainingText("register_title_submit");
+    }
+
+    /**
+     * Get the continue button after the unacceptable age input is confirmed.
+     * @return A {@link Flowable} instance.
+     * @see BaseEngine#rxElementContainingText(String)
+     */
+    @NotNull
+    default Flowable<WebElement> rxUnacceptableAgeInputOkButton() {
+        return engine().rxElementContainingText("register_title_ok");
+    }
+
+    /**
+     * Validate the confirmation screen after unacceptable age input is
+     * submitted.
+     * @return A {@link Flowable} instance.
+     * @see #rxUnacceptableAgeInputOkButton()
+     * @see BaseEngine#rxElementContainingText(String)
+     */
+    @NotNull
+    default Flowable<Boolean> rxValidateUnacceptableAgeInputConfirmation() {
+        final BaseEngine<?> ENGINE = engine();
+
+        return Flowable
+            .concat(
+                rxUnacceptableAgeInputOkButton(),
+                ENGINE.rxElementContainingText("register_title_thanksForInterest"),
+                ENGINE.rxElementContainingText("register_title_notifiedWhenLaunched")
+            )
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
     }
     //endregion
 
