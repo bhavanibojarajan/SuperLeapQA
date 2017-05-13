@@ -1,6 +1,7 @@
 package com.holmusk.SuperLeapQA.onboarding.register;
 
 import com.holmusk.SuperLeapQA.base.BaseValidationType;
+import com.holmusk.SuperLeapQA.model.SignUpMode;
 import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
@@ -18,32 +19,17 @@ public interface RegisterValidationType extends
     WelcomeValidationType
 {
     /**
-     * Get the parent sign up button.
+     * Get the sign up button that corresponds to a {@link SignUpMode}.
+     * @param mode A {@link SignUpMode} instance.
      * @return A {@link Flowable} instance.
      */
     @NotNull
-    default Flowable<WebElement> rxParentSignUpButton() {
+    default Flowable<WebElement> rxSignUpButton(@NotNull SignUpMode mode) {
         BaseEngine<?> engine = engine();
         PlatformType platform = engine.platform();
 
         if (platform.equals(Platform.ANDROID)) {
-            return engine.rxElementContainingID("btnRegChild");
-        } else {
-            return Flowable.empty();
-        }
-    }
-
-    /**
-     * Get the self sign up button.
-     * @return A {@link Flowable} instance.
-     */
-    @NotNull
-    default Flowable<WebElement> rxTeenSignUpButton() {
-        BaseEngine<?> engine = engine();
-        PlatformType platform = engine.platform();
-
-        if (platform.equals(Platform.ANDROID)) {
-            return engine.rxElementContainingID("btnRegSelf");
+            return engine.rxElementContainingID(mode.androidSignUpButtonId());
         } else {
             return Flowable.empty();
         }
@@ -83,8 +69,8 @@ public interface RegisterValidationType extends
                 ENGINE.rxElementContainingText("register_title_iRegisterForSelf"),
                 ENGINE.rxElementContainingText("register_title_or"),
                 ENGINE.rxElementContainingText("register_title_initiativeByHPB"),
-                rxParentSignUpButton(),
-                rxTeenSignUpButton(),
+                rxSignUpButton(SignUpMode.PARENT),
+                rxSignUpButton(SignUpMode.TEEN),
                 rxBackButtonTitleLabel()
             )
             .all(ObjectUtil::nonNull)

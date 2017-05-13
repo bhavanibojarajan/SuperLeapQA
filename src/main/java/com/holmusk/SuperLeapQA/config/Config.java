@@ -15,8 +15,7 @@ import java.util.Locale;
  * Created by haipham on 5/7/17.
  */
 public final class Config {
-    @NotNull
-    private static final String APP_PACKAGE;
+    @NotNull private static final String APP_PACKAGE;
     @NotNull private static final String ANDROID_APP_ACTIVITY;
     @NotNull private static final List<BaseEngine> ENGINES;
     @NotNull public static final TestKit TEST_KIT;

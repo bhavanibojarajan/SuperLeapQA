@@ -205,8 +205,7 @@ public enum Height implements NumericSelectableInputType {
     public double maxSelectableNumericValue() {
         switch (this) {
             case CM:
-//                return 250;
-                return 100;
+                return 250;
 
             case FT:
                 return CM.ft(CM.maxSelectableNumericValue());

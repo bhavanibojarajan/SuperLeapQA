@@ -19,4 +19,12 @@ public interface InputType {
      */
     @NotNull
     String androidViewId();
+
+    /**
+     * Get the error message that is shown when the current {@link InputType}
+     * is empty.
+     * @return A {@link String} value.
+     */
+    @NotNull
+    String emptyInputErrorMessage();
 }

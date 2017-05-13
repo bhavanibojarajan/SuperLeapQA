@@ -5,7 +5,9 @@ import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.SuperLeapQA.model.type.InputType;
 import com.holmusk.SuperLeapQA.model.type.NumericSelectableInputType;
 import com.holmusk.SuperLeapQA.model.type.TextInputType;
+import com.holmusk.SuperLeapQA.onboarding.register.RegisterActionType;
 import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeActionType;
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -34,6 +36,7 @@ public interface BaseSignUpActionType extends
     BaseActionType,
     BaseSignUpValidationType,
     PlatformErrorType,
+    RegisterActionType,
     WelcomeActionType
 {
     //region Bridged Navigation
@@ -78,11 +81,73 @@ public interface BaseSignUpActionType extends
         int age = maxAcceptableAge() + 1;
         return rx_DoBPicker_inputScreenForAge(age);
     }
+
+    /**
+     * Bridge method that helps navigate from splash screen to sign up.
+     * @param mode A {@link SignUpMode} instance.
+     * @return A {@link Flowable} instance.
+     * @see #rx_splash_register()
+     * @see #rx_register_DoBPicker(SignUpMode)
+     */
+    @NotNull
+    default Flowable<Boolean> rx_splash_DoBPicker(@NotNull SignUpMode mode) {
+        return rx_splash_register()
+            .concatWith(rx_register_DoBPicker(mode))
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
+    }
+
+    /**
+     * Bridge method that helps navigate from splash screen to unacceptable
+     * age input.
+     * @param mode A {@link SignUpMode} instance.
+     * @return A {@link Flowable} instance.
+     * @see #rx_splash_DoBPicker(SignUpMode)
+     * @see #rx_DoBPicker_unacceptableAgeInput()
+     */
+    @NotNull
+    default Flowable<Boolean> rx_splash_unacceptableAgeInput(@NotNull SignUpMode mode) {
+        return rx_splash_DoBPicker(mode)
+            .concatWith(rx_DoBPicker_unacceptableAgeInput())
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
+    }
+
+    /**
+     * Bridge method that helps navigate from splash screen to acceptable
+     * age input.
+     * @param mode A {@link SignUpMode} instance.
+     * @return A {@link Flowable} instance.
+     * @see #rx_splash_DoBPicker(SignUpMode)
+     * @see #rx_DoBPicker_acceptableAgeInput()
+     */
+    @NotNull
+    default Flowable<Boolean> rx_splash_acceptableAgeInput(@NotNull SignUpMode mode) {
+        return rx_splash_DoBPicker(mode)
+            .concatWith(rx_DoBPicker_acceptableAgeInput())
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
+    }
     //endregion
 
     //region DoB Picker
     /**
-     * Open the DoB dialog in the parent sign up screen. This can be used both
+     * Navigate to the sign up screen from register screen, assuming the user
+     * is already on the register screen.
+     * @param mode A {@link SignUpMode} instance.
+     * @return A {@link Flowable} instance.
+     * @see #rxSignUpButton(SignUpMode)
+     */
+    @NotNull
+    default Flowable<Boolean> rx_register_DoBPicker(@NotNull SignUpMode mode) {
+        return rxSignUpButton(mode)
+            .flatMapCompletable(a -> Completable.fromAction(a::click))
+            .<Boolean>toFlowable()
+            .defaultIfEmpty(true);
+    }
+
+    /**
+     * Open the DoB dialog in the sign up screen. This can be used both
      * for parent sign up and teen sign up.
      * @return A {@link Flowable} instance.
      * @see #rxDoBEditField()
@@ -94,7 +159,9 @@ public interface BaseSignUpActionType extends
         return rxDoBEditField()
             .flatMap(ENGINE::rxClick)
             .delay(generalDelay(), TimeUnit.MILLISECONDS)
-            .flatMap(a -> ENGINE.rxImplicitlyWait(this::generalDelay));
+            .concatWith(ENGINE.rxImplicitlyWait(this::generalDelay))
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
     }
 
     /**
@@ -187,7 +254,7 @@ public interface BaseSignUpActionType extends
                         .flatMap(a -> rxNavigateBackWithBackButton())
                         .flatMap(a -> new IterateDoBs().repeat(INDEX + 1));
                 } else {
-                    return Flowable.empty();
+                    return Flowable.just(true);
                 }
             }
         }
@@ -214,10 +281,12 @@ public interface BaseSignUpActionType extends
 
         // When
         return rxOpenDoBPicker()
-            .flatMap(a -> rxSelectDoB(DATE))
-            .flatMap(a -> rxConfirmDoB())
-            .flatMap(a -> rxNavigateBackWithBackButton())
-            .flatMap(a -> rxDoBEditFieldHasDate(DATE));
+            .concatWith(rxSelectDoB(DATE))
+            .concatWith(rxConfirmDoB())
+            .concatWith(rxNavigateBackWithBackButton())
+            .concatWith(rxDoBEditFieldHasDate(DATE))
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
     }
     //endregion
 
@@ -583,6 +652,16 @@ public interface BaseSignUpActionType extends
             )
             .all(BooleanUtil::isTrue)
             .toFlowable();
+    }
+
+    /**
+     * Sequentially validate error messages due to empty inputs (refer to
+     * {@link TextInput} and {@link ChoiceInput}.
+     * @return A {@link Flowable} instance.
+     */
+    @NotNull
+    default Flowable<Boolean> rxConfirmEmptyInputErrorMessages() {
+        return Flowable.empty();
     }
     //endregion
 }

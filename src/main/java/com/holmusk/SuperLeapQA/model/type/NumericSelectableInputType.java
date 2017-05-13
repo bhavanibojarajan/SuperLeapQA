@@ -1,10 +1,12 @@
 package com.holmusk.SuperLeapQA.model.type;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.xtestkit.util.type.ValueRangeConverterType;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by haipham on 5/12/17.
@@ -55,8 +57,19 @@ public interface NumericSelectableInputType extends ValueRangeConverterType<Doub
     double selectableNumericValueStep();
 
     /**
+     * Limit the number of elements within a {@link List} of numeric range
+     * return by {@link #selectableNumericRange()}.
+     * @return An {@link Integer} value.
+     */
+    @NotNull
+    default Optional<Integer> numericRangeLimit() {
+        return Optional.of(50);
+    }
+
+    /**
      * Get the selectable numeric range.
      * @return A {@link List} of {@link Double}.
+     * @see #numericRangeLimit()
      * @see #valueRange(Number, Number, Number)
      * @see #minSelectableNumericValue()
      * @see #maxSelectableNumericValue()
@@ -64,11 +77,15 @@ public interface NumericSelectableInputType extends ValueRangeConverterType<Doub
      */
     @NotNull
     default List<Double> selectableNumericRange() {
-        return valueRange(
+        List<Double> values = valueRange(
             minSelectableNumericValue(),
             maxSelectableNumericValue(),
             selectableNumericValueStep()
         );
+
+        Optional<Integer> optional = numericRangeLimit();
+        int limit = optional.isPresent() ? optional.get() : values.size();
+        return values.subList(0, limit);
     }
 
     /**

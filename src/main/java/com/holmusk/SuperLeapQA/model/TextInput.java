@@ -95,4 +95,15 @@ public enum TextInput implements InputType, TextInputType {
                 return "";
         }
     }
+
+    /**
+     * Get the error message that is shown when the current {@link InputType}
+     * is empty.
+     * @return A {@link String} value.
+     * @see InputType#emptyInputErrorMessage()
+     */
+    @NotNull
+    public String emptyInputErrorMessage() {
+        return "";
+    }
 }

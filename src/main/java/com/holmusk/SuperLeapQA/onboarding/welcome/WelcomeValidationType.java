@@ -77,7 +77,7 @@ public interface WelcomeValidationType extends BaseValidationType {
         class CheckScreen {
             @NonNull
             @SuppressWarnings("WeakerAccess")
-            Flowable<WebElement> checkScreen(final int INDEX) {
+            Flowable<Boolean> checkScreen(final int INDEX) {
                 if (INDEX < LENGTH) {
                     String[] messages = MESSAGES[INDEX];
 
@@ -85,6 +85,7 @@ public interface WelcomeValidationType extends BaseValidationType {
                         .flatMap(ENGINE::rxElementContainingText)
                         .all(ObjectUtil::nonNull)
                         .toFlowable()
+
                         /* Swipe once from right to left */
                         .flatMap(a -> ENGINE.rxSwipeGenericRL(
                             UnidirectionalSwipeParam.builder()
@@ -94,7 +95,7 @@ public interface WelcomeValidationType extends BaseValidationType {
                         ))
                         .flatMap(a -> new CheckScreen().checkScreen(INDEX + 1));
                 } else {
-                    return Flowable.empty();
+                    return Flowable.just(true);
                 }
             }
         }
@@ -106,6 +107,6 @@ public interface WelcomeValidationType extends BaseValidationType {
                     .withDuration(0)
                     .build()
             )
-            .flatMap(a -> new CheckScreen().checkScreen(0).map(b -> true));
+            .flatMap(a -> new CheckScreen().checkScreen(0));
     }
 }

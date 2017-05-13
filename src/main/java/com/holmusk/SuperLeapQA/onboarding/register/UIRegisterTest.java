@@ -4,6 +4,7 @@ import com.holmusk.SuperLeapQA.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeActionType;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
 import io.reactivex.subscribers.TestSubscriber;
+import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
@@ -31,11 +32,13 @@ public final class UIRegisterTest extends UIBaseTest implements
 
         // When
         rx_splash_register()
-            .flatMap(a -> rxValidateRegisterScreen())
+            .concatWith(rxValidateRegisterScreen())
 
             /* Make sure the back button works */
-            .flatMap(a -> rxNavigateBackWithBackButton())
-            .flatMap(a -> rxValidateWelcomeScreen())
+            .concatWith(rxNavigateBackWithBackButton())
+            .concatWith(rxValidateWelcomeScreen())
+            .all(BooleanUtil::isTrue)
+            .toFlowable()
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

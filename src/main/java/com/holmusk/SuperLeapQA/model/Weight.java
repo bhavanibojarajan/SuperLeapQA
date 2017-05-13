@@ -199,12 +199,10 @@ public enum Weight implements NumericSelectableInputType {
     public double maxSelectableNumericValue() {
         switch (this) {
             case LB:
-//                return 485;
-                return 200;
+                return 485;
 
             case KG:
-//                return 220;
-                return 100;
+                return 220;
 
             default:
                 return 0;

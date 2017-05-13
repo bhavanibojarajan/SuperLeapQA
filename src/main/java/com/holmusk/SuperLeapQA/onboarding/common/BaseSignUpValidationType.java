@@ -124,11 +124,11 @@ public interface BaseSignUpValidationType extends BaseActionType {
     /**
      * Get all calendar {@link WebElement} instances.
      * @return A {@link Flowable} instance.
+     * @see BaseEngine#rxAllCalendarElements()
      */
     @NotNull
     default Flowable<WebElement> rxDoBElements() {
-        BaseEngine<?> engine = engine();
-        return engine.rxAllCalendarElements();
+        return  engine().rxAllCalendarElements();
     }
 
     /**
@@ -390,6 +390,18 @@ public interface BaseSignUpValidationType extends BaseActionType {
             .filter(a -> a.equals(VALUE))
             .switchIfEmpty(RxUtil.error("Value does not equal " + VALUE))
             .map(a -> true);
+    }
+
+    /**
+     * Get the view that pops up when an error is notified to the user. This
+     * only works in specific cases, however, so use with care.
+     * @param error A {@link String} value.
+     * @return A {@link Flowable} instance.
+     * @see BaseEngine#rxElementContainingText(String)
+     */
+    @NotNull
+    default Flowable<WebElement> rxErrorPopup(@NotNull String error) {
+        return engine().rxElementContainingText(error);
     }
     //endregion
 }
