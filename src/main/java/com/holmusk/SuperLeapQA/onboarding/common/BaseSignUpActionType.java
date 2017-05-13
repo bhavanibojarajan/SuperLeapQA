@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
@@ -20,6 +21,7 @@ import org.swiften.xtestkit.base.element.action.date.type.DateType;
 import org.swiften.xtestkit.base.element.action.swipe.type.SwipeType;
 import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatComparisonType;
 import org.swiften.xtestkit.base.param.TextParam;
+import org.swiften.xtestkit.base.type.DelayType;
 import org.swiften.xtestkit.base.type.PlatformErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
@@ -151,6 +153,8 @@ public interface BaseSignUpActionType extends
      * for parent sign up and teen sign up.
      * @return A {@link Flowable} instance.
      * @see #rxDoBEditField()
+     * @see BaseEngine#rxClick(WebElement)
+     * @see BaseEngine#rxImplicitlyWait(DelayType)
      */
     @NotNull
     default Flowable<Boolean> rxOpenDoBPicker() {
@@ -171,6 +175,7 @@ public interface BaseSignUpActionType extends
      * stored in the DoB text field, we need to navigate back once.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String)
+     * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rxConfirmDoB() {
@@ -298,6 +303,7 @@ public interface BaseSignUpActionType extends
      * @param input A {@link InputType} instance.
      * @return A {@link Flowable} instance.
      * @see #rxEditFieldForInput(InputType)
+     * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rxClickInputField(@NotNull InputType input) {
@@ -337,6 +343,7 @@ public interface BaseSignUpActionType extends
      * Confirm email subscription for future program expansion.
      * @return A {@link Flowable} instance.
      * @see #rxUnacceptableAgeSubmitButton()
+     * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rxConfirmUnacceptableAgeInput() {
@@ -350,6 +357,7 @@ public interface BaseSignUpActionType extends
      * @param gender A {@link Gender} instance.
      * @return A {@link Flowable} instance.
      * @see #rxGenderPicker(Gender)
+     * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rxSelectGender(@NotNull Gender gender) {
@@ -361,6 +369,7 @@ public interface BaseSignUpActionType extends
      * @param mode A {@link Height} instance.
      * @return A {@link Flowable} instance.
      * @see #rxHeightModePicker(Height)
+     * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rxSelectHeightMode(@NotNull Height mode) {
@@ -373,6 +382,7 @@ public interface BaseSignUpActionType extends
      * @param NUMERIC_VALUE A {@link Double} value.
      * @return A {@link Flowable} instance.
      * @see #rxPickerItemViews(InputType)
+     * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rxSelectNumericInput(
@@ -458,6 +468,7 @@ public interface BaseSignUpActionType extends
      * @param mode A {@link Weight} mode.
      * @return A {@link Flowable} instance.
      * @see #rxWeightModePicker(Weight)
+     * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rxSelectWeightMode(@NotNull Weight mode) {
@@ -470,6 +481,7 @@ public interface BaseSignUpActionType extends
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String)
      * @see #rxClickInputField(InputType)
+     * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rxSelectEthnicity(@NotNull final Ethnicity E) {
@@ -486,6 +498,7 @@ public interface BaseSignUpActionType extends
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String)
      * @see #rxClickInputField(InputType)
+     * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rxSelectCoachPref(@NotNull final CoachPref CP) {
@@ -494,6 +507,18 @@ public interface BaseSignUpActionType extends
         return rxClickInputField(ChoiceInput.COACH_PREFERENCE)
             .flatMap(a -> ENGINE.rxElementContainingText(CP.value()))
             .flatMap(ENGINE::rxClick);
+    }
+
+    /**
+     * Confirm the acceptable age inputs by clicking the next button, assuming
+     * the user is already in the acceptable age input screen.
+     * @return A {@link Flowable} instance.
+     * @see #rxAcceptableAgeConfirmButton()
+     * @see BaseEngine#rxClick(WebElement)
+     */
+    @NotNull
+    default Flowable<Boolean> rxConfirmAcceptableAgeInputs() {
+        return rxAcceptableAgeConfirmButton().flatMap(engine()::rxClick);
     }
     //endregion
 
@@ -556,6 +581,7 @@ public interface BaseSignUpActionType extends
      * @return A {@link Flowable} instance.
      * @see #rxEnterRandomInput(TextInputType)
      * @see #unacceptableAgeInputConfirmDelay()
+     * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -656,12 +682,29 @@ public interface BaseSignUpActionType extends
 
     /**
      * Sequentially validate error messages due to empty inputs (refer to
-     * {@link TextInput} and {@link ChoiceInput}.
+     * {@link TextInput} and {@link ChoiceInput}, assuming the user is
+     * already in the acceptable age input screen.
+     * @param MODE A {@link SignUpMode} instance.
      * @return A {@link Flowable} instance.
+     * @see #rxConfirmAcceptableAgeInputs()
      */
     @NotNull
-    default Flowable<Boolean> rxConfirmEmptyInputErrorMessages() {
-        return Flowable.empty();
+    @SuppressWarnings("unchecked")
+    default Flowable<Boolean> rxConfirmAcceptableAgeEmptyInputErrors(
+        @NotNull final SignUpMode MODE
+    ) {
+        final BaseEngine<?> ENGINE = engine();
+        final Gender GENDER = CollectionTestUtil.randomElement(Gender.values());
+
+        return Flowable
+            .concatArray(
+                /* At this stage the gender error message should be shown */
+                rxConfirmAcceptableAgeInputs(),
+                rxSelectGender(GENDER)
+            )
+            .all(BooleanUtil::isTrue)
+            .toFlowable()
+            .doOnNext(a -> LogUtil.println(ENGINE.driver().getPageSource()));
     }
     //endregion
 }

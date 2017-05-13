@@ -266,12 +266,12 @@ public interface BaseSignUpValidationType extends BaseActionType {
     }
 
     /**
-     * Get the next confirm button.
+     * Get the next confirm button for acceptable age input screen.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String)
      */
     @NotNull
-    default Flowable<WebElement> rxRegisterConfirmButton() {
+    default Flowable<WebElement> rxAcceptableAgeConfirmButton() {
         return engine().rxElementContainingText("register_title_next");
     }
 
@@ -350,7 +350,7 @@ public interface BaseSignUpValidationType extends BaseActionType {
      * @see #rxEditFieldForInput(InputType)
      * @see #rxHeightModePicker(Height)
      * @see #rxWeightModePicker(Weight)
-     * @see #rxRegisterConfirmButton()
+     * @see #rxAcceptableAgeConfirmButton()
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -367,7 +367,7 @@ public interface BaseSignUpValidationType extends BaseActionType {
                 rxWeightModePicker(Weight.KG),
                 rxEditFieldForInput(ChoiceInput.ETHNICITY),
                 rxEditFieldForInput(ChoiceInput.COACH_PREFERENCE),
-                rxRegisterConfirmButton(),
+                rxAcceptableAgeConfirmButton(),
                 rxParentAcceptableAgeInputTitleLabel()
             )
             .all(ObjectUtil::nonNull)

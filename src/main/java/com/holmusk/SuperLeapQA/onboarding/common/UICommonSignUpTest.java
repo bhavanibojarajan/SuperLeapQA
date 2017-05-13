@@ -137,6 +137,26 @@ public abstract class UICommonSignUpTest extends UIBaseTest implements
         assertCorrectness(subscriber);
     }
 
+    @Test
+    @SuppressWarnings("unchecked")
+    public void test_acceptableAgeEmptyInputs_shouldShowCorrectErrors() {
+        // Setup
+        SignUpMode mode = signUpMode();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_splash_acceptableAgeInput(mode)
+            .concatWith(rxConfirmAcceptableAgeEmptyInputErrors(mode))
+            .all(BooleanUtil::isTrue)
+            .toFlowable()
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
     /**
      * Get the {@link SignUpMode} being used for testing.
      * @return A {@link SignUpMode} instance.

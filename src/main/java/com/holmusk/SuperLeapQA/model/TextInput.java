@@ -4,12 +4,8 @@ import com.holmusk.SuperLeapQA.model.type.InputType;
 import com.holmusk.SuperLeapQA.model.type.TextInputType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
-import org.swiften.javautilities.number.NumberTestUtil;
-import org.swiften.javautilities.string.StringUtil;
-import sun.swing.StringUIClientPropertyKey;
 
 import java.util.Arrays;
-import java.util.Random;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -94,16 +90,5 @@ public enum TextInput implements InputType, TextInputType {
             default:
                 return "";
         }
-    }
-
-    /**
-     * Get the error message that is shown when the current {@link InputType}
-     * is empty.
-     * @return A {@link String} value.
-     * @see InputType#emptyInputErrorMessage()
-     */
-    @NotNull
-    public String emptyInputErrorMessage() {
-        return "";
     }
 }
