@@ -58,8 +58,6 @@ public final class UIParentSignUpTest extends UIBaseTest implements
         // When
         rx_splash_parentDoBPicker()
             .flatMap(a -> rxValidateParentDoBPickerScreen())
-
-            /* Make sure the back button works */
             .flatMap(a -> rxNavigateBackWithBackButton())
             .flatMap(a -> rxValidateRegisterScreen())
             .subscribe(subscriber);
@@ -75,19 +73,10 @@ public final class UIParentSignUpTest extends UIBaseTest implements
     public void test_parentDoBPickerDialog_shouldContainCorrectElements() {
         // Setup
         TestSubscriber subscriber = CustomTestSubscriber.create();
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH, NumberTestUtil.randomBetween(1, 28));
-        calendar.set(Calendar.MONTH, NumberTestUtil.randomBetween(0, 11));
-        calendar.set(Calendar.YEAR, NumberTestUtil.randomBetween(1970, 2000));
-        final Date DATE = calendar.getTime();
 
         // When
         rx_splash_parentDoBPicker()
-            .flatMap(a -> rxOpenDoBPicker())
-            .flatMap(a -> rxSelectDoB(DATE))
-            .flatMap(a -> rxConfirmDoB())
-            .flatMap(a -> rxNavigateBackWithBackButton())
-            .flatMap(a -> rxDoBEditFieldHasDate(DATE))
+            .flatMap(a -> rxCheckDoBDialogHasCorrectElements())
             .flatMap(a -> rxValidateParentDoBPickerScreen())
             .subscribe(subscriber);
 

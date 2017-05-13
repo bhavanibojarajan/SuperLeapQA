@@ -32,6 +32,7 @@ public interface BaseSignUpActionType extends
     BaseSignUpValidationType,
     PlatformErrorType
 {
+    //region Bridged Navigation
     /**
      * Navigate to the acceptable age input screen by selecting a DoB that
      * results in an age that lies within {@link #acceptableAgeRange()}.
@@ -48,7 +49,9 @@ public interface BaseSignUpActionType extends
             .flatMap(a -> rxSelectDoBToBeOfAge(AGE))
             .flatMap(a -> rxConfirmDoB());
     }
+    //endregion
 
+    //region DoB Picker
     /**
      * Open the DoB dialog in the parent sign up screen. This can be used both
      * for parent sign up and teen sign up.
@@ -187,7 +190,9 @@ public interface BaseSignUpActionType extends
             .flatMap(a -> rxNavigateBackWithBackButton())
             .flatMap(a -> rxDoBEditFieldHasDate(DATE));
     }
+    //endregion
 
+    //region Acceptable Age Input
     /**
      * Select a {@link Gender}.
      * @param gender A {@link Gender} instance.
@@ -338,6 +343,33 @@ public interface BaseSignUpActionType extends
             .flatMap(a -> ENGINE.rxElementContainingText(CP.value()))
             .flatMap(ENGINE::rxClick);
     }
+    //endregion
+
+    //region Convenience Validation Methods
+    /**
+     * Check that the DoB dialog has correct elements.
+     * @return A {@link Flowable} instance.
+     * @see #rxOpenDoBPicker()
+     * @see #rxSelectDoB(Date)
+     * @see #rxNavigateBackWithBackButton()
+     * @see #rxDoBEditFieldHasDate(Date)
+     */
+    @NotNull
+    default Flowable<Boolean> rxCheckDoBDialogHasCorrectElements() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, NumberTestUtil.randomBetween(1, 28));
+        calendar.set(Calendar.MONTH, NumberTestUtil.randomBetween(0, 11));
+        calendar.set(Calendar.YEAR, NumberTestUtil.randomBetween(1970, 2000));
+        final Date DATE = calendar.getTime();
+
+        return rxOpenDoBPicker()
+            .concatWith(rxSelectDoB(DATE))
+            .concatWith(rxConfirmDoB())
+            .concatWith(rxNavigateBackWithBackButton())
+            .concatWith(rxDoBEditFieldHasDate(DATE))
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
+    }
 
     /**
      * Enter random inputs for acceptable age screen, assuming the user is
@@ -372,28 +404,37 @@ public interface BaseSignUpActionType extends
                 rxSelectCoachPref(CP),
 
                 rxSelectHeightMode(Height.CM)
-                    .flatMap(a -> rxOpenPickerWindow(TextInput.HEIGHT))
-                    .flatMap(a -> rxSelectNumericInput(Height.CM, HEIGHT_CM))
-                    .flatMap(a -> rxEditFieldHasValue(TextInput.HEIGHT, HEIGHT_CM_STR)),
+                    .concatWith(rxOpenPickerWindow(TextInput.HEIGHT))
+                    .concatWith(rxSelectNumericInput(Height.CM, HEIGHT_CM))
+                    .concatWith(rxEditFieldHasValue(TextInput.HEIGHT, HEIGHT_CM_STR))
+                    .all(BooleanUtil::isTrue)
+                    .toFlowable(),
 
                 rxSelectHeightMode(Height.FT)
-                    .flatMap(a -> rxEditFieldHasValue(TextInput.HEIGHT, HEIGHT_CM_FT_STR))
-                    .flatMap(a -> rxOpenPickerWindow(TextInput.HEIGHT))
-                    .flatMap(a -> rxSelectNumericInput(Height.FT, HEIGHT_FT))
-                    .flatMap(a -> rxEditFieldHasValue(TextInput.HEIGHT, HEIGHT_FT_STR)),
+                    .concatWith(rxEditFieldHasValue(TextInput.HEIGHT, HEIGHT_CM_FT_STR))
+                    .concatWith(rxOpenPickerWindow(TextInput.HEIGHT))
+                    .concatWith(rxSelectNumericInput(Height.FT, HEIGHT_FT))
+                    .concatWith(rxEditFieldHasValue(TextInput.HEIGHT, HEIGHT_FT_STR))
+                    .all(BooleanUtil::isTrue)
+                    .toFlowable(),
 
                 rxSelectWeightMode(Weight.KG)
-                    .flatMap(a -> rxOpenPickerWindow(TextInput.WEIGHT))
-                    .flatMap(a -> rxSelectNumericInput(Weight.KG, WEIGHT_KG))
-                    .flatMap(a -> rxEditFieldHasValue(TextInput.WEIGHT, WEIGHT_KG_STR)),
+                    .concatWith(rxOpenPickerWindow(TextInput.WEIGHT))
+                    .concatWith(rxSelectNumericInput(Weight.KG, WEIGHT_KG))
+                    .concatWith(rxEditFieldHasValue(TextInput.WEIGHT, WEIGHT_KG_STR))
+                    .all(BooleanUtil::isTrue)
+                    .toFlowable(),
 
                 rxSelectWeightMode(Weight.LB)
-                    .flatMap(a -> rxEditFieldHasValue(TextInput.WEIGHT, WEIGHT_KG_LB_STR))
-                    .flatMap(a -> rxOpenPickerWindow(TextInput.WEIGHT))
-                    .flatMap(a -> rxSelectNumericInput(Weight.LB, WEIGHT_LB))
-                    .flatMap(a -> rxEditFieldHasValue(TextInput.WEIGHT, WEIGHT_LB_STR))
+                    .concatWith(rxEditFieldHasValue(TextInput.WEIGHT, WEIGHT_KG_LB_STR))
+                    .concatWith(rxOpenPickerWindow(TextInput.WEIGHT))
+                    .concatWith(rxSelectNumericInput(Weight.LB, WEIGHT_LB))
+                    .concatWith(rxEditFieldHasValue(TextInput.WEIGHT, WEIGHT_LB_STR))
+                    .all(BooleanUtil::isTrue)
+                    .toFlowable()
             )
             .all(BooleanUtil::isTrue)
             .toFlowable();
     }
+    //endregion
 }
