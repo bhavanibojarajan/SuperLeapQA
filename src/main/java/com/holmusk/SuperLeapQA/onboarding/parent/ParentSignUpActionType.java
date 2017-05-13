@@ -1,9 +1,12 @@
-package com.holmusk.SuperLeapQA.onboarding.register;
+package com.holmusk.SuperLeapQA.onboarding.parent;
 
 import com.holmusk.SuperLeapQA.base.BaseActionType;
+import com.holmusk.SuperLeapQA.onboarding.common.BaseSignUpActionType;
+import com.holmusk.SuperLeapQA.onboarding.register.RegisterActionType;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.bool.BooleanUtil;
 
 import java.util.concurrent.TimeUnit;
 
@@ -39,7 +42,25 @@ public interface ParentSignUpActionType extends
      */
     @NotNull
     default Flowable<Boolean> rx_splash_parentDoBPicker() {
-        return rx_splash_register().flatMap(a -> rx_register_parentDoBPicker());
+        return rx_splash_register()
+            .concatWith(rx_register_parentDoBPicker())
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
+    }
+
+    /**
+     * Bridge method that helps navigate from splash screen to unacceptable
+     * age input.
+     * @return A {@link Flowable} instance.
+     * @see #rx_splash_parentDoBPicker()
+     * @see #rx_DoBPicker_unacceptableAgeInput()
+     */
+    @NotNull
+    default Flowable<Boolean> rx_splash_unacceptableAgeInput() {
+        return rx_splash_parentDoBPicker()
+            .concatWith(rx_DoBPicker_unacceptableAgeInput())
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
     }
 
     /**
@@ -52,6 +73,8 @@ public interface ParentSignUpActionType extends
     @NotNull
     default Flowable<Boolean> rx_splash_acceptableAgeInput() {
         return rx_splash_parentDoBPicker()
-            .flatMap(a -> rx_DoBPicker_acceptableAgeInput());
+            .concatWith(rx_DoBPicker_acceptableAgeInput())
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
     }
 }

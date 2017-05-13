@@ -1,6 +1,7 @@
 package com.holmusk.SuperLeapQA.general;
 
 import com.holmusk.SuperLeapQA.model.Height;
+import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.Weight;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zipped;
@@ -17,7 +18,7 @@ public final class GeneralTest {
     @Test
     public void test_heightModeToFt_shouldWork() {
         // Setup
-        double heightInCM = 50;
+        double heightInCM = 52.0;
 
         // When
         String ftString = Height.CM.ftString(heightInCM);
@@ -86,5 +87,16 @@ public final class GeneralTest {
             double lb = Weight.LB.numericValue(lbString);
             LogUtil.println(kg, lb);
         }
+    }
+
+    @Test
+    public void test_randomTextInput_shouldWork() {
+        // Setup & When
+        String name = TextInput.NAME.randomInput();
+        String phone = TextInput.PHONE.randomInput();
+        String email = TextInput.EMAIL.randomInput();
+
+        // Then
+        LogUtil.println(name, phone, email);
     }
 }

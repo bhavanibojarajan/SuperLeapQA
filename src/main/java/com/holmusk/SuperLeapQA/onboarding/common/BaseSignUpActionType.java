@@ -1,9 +1,12 @@
-package com.holmusk.SuperLeapQA.onboarding.register;
+package com.holmusk.SuperLeapQA.onboarding.common;
 
 import com.holmusk.SuperLeapQA.base.BaseActionType;
 import com.holmusk.SuperLeapQA.model.*;
+import com.holmusk.SuperLeapQA.model.type.InputType;
 import com.holmusk.SuperLeapQA.model.type.NumericSelectableInputType;
+import com.holmusk.SuperLeapQA.model.type.TextInputType;
 import io.reactivex.Flowable;
+import org.apache.xpath.operations.Bool;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
@@ -34,20 +37,45 @@ public interface BaseSignUpActionType extends
 {
     //region Bridged Navigation
     /**
-     * Navigate to the acceptable age input screen by selecting a DoB that
-     * results in an age that lies within {@link #acceptableAgeRange()}.
+     * Navigate to the appropriate screen, based on an age value.
+     * @param AGE An {@link Integer} value.
      * @return A {@link Flowable} instance.
+     * @see #rxOpenDoBPicker()
      * @see #rxSelectDoBToBeOfAge(int)
      * @see #rxConfirmDoB()
      */
     @NotNull
+    default Flowable<Boolean> rx_DoBPicker_inputScreenForAge(final int AGE) {
+        return rxOpenDoBPicker()
+            .concatWith(rxSelectDoBToBeOfAge(AGE))
+            .concatWith(rxConfirmDoB())
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
+    }
+
+    /**
+     * Navigate to the acceptable age input screen by selecting a DoB that
+     * results in an age that lies within {@link #acceptableAgeRange()}.
+     * @return A {@link Flowable} instance.
+     * @see #rx_DoBPicker_inputScreenForAge(int)
+     */
+    @NotNull
     default Flowable<Boolean> rx_DoBPicker_acceptableAgeInput() {
         List<Integer> range = acceptableAgeRange();
-        final int AGE = CollectionTestUtil.randomElement(range);
+        int age = CollectionTestUtil.randomElement(range);
+        return rx_DoBPicker_inputScreenForAge(age);
+    }
 
-        return rxOpenDoBPicker()
-            .flatMap(a -> rxSelectDoBToBeOfAge(AGE))
-            .flatMap(a -> rxConfirmDoB());
+    /**
+     * Navigate to the unacceptable age input screen by selecting a DoB that
+     * results in an age that does not lie within {@link #acceptableAgeRange()}.
+     * @return A {@link Flowable} instance.
+     * @see #rx_DoBPicker_inputScreenForAge(int)
+     */
+    @NotNull
+    default Flowable<Boolean> rx_DoBPicker_unacceptableAgeInput() {
+        int age = maxAcceptableAge() + 1;
+        return rx_DoBPicker_inputScreenForAge(age);
     }
     //endregion
 
@@ -192,6 +220,58 @@ public interface BaseSignUpActionType extends
     }
     //endregion
 
+    /**
+     * Perform a click action on an editable field. This is useful when
+     * the editable field is showing an error circle that can be shown if
+     * clicked (however, this is only applicable to {@link Platform#ANDROID}.
+     * @param input A {@link InputType} instance.
+     * @return A {@link Flowable} instance.
+     * @see #rxEditFieldForInput(InputType)
+     */
+    @NotNull
+    default Flowable<Boolean> rxClickInputField(@NotNull InputType input) {
+        return rxEditFieldForInput(input).flatMap(engine()::rxClick);
+    }
+
+    //region Unacceptable Age Input
+    /**
+     * Enter an input for a {@link TextInput}.
+     * @param input A {@link TextInputType} instance.
+     * @param TEXT A {@link String} value.
+     * @return A {@link Flowable} instance.
+     * @see #rxEditFieldForInput(InputType)
+     * @see BaseEngine#rxSendKey(WebElement, String...)
+     */
+    @NotNull
+    default Flowable<Boolean> rxEnterInput(@NotNull TextInputType input,
+                                           @NotNull final String TEXT) {
+        final BaseEngine<?> ENGINE = engine();
+        return rxEditFieldForInput(input).flatMap(a -> ENGINE.rxSendKey(a, TEXT));
+    }
+
+    /**
+     * Enter a random input using {@link TextInputType#randomInput()}.
+     * @param input A {@link TextInputType} instance.
+     * @return A {@link Flowable} instance.
+     * @see #rxEnterInput(TextInputType, String)
+     * @see TextInputType#randomInput()
+     */
+    @NotNull
+    default Flowable<Boolean> rxEnterRandomInput(@NotNull TextInputType input) {
+        return rxEnterInput(input, input.randomInput());
+    }
+
+    /**
+     * Confirm email subscription for future program expansion.
+     * @return A {@link Flowable} instance.
+     * @see #rxUnacceptableAgeRangeConfirmButton()
+     */
+    @NotNull
+    default Flowable<Boolean> rxConfirmUnacceptableAgeInput() {
+        return rxUnacceptableAgeRangeConfirmButton().flatMap(engine()::rxClick);
+    }
+    //endregion
+
     //region Acceptable Age Input
     /**
      * Select a {@link Gender}.
@@ -220,7 +300,7 @@ public interface BaseSignUpActionType extends
      * @param MODE A {@link NumericSelectableInputType} instance.
      * @param NUMERIC_VALUE A {@link Double} value.
      * @return A {@link Flowable} instance.
-     * @see #rxPickerItemViews(TextInput)
+     * @see #rxPickerItemViews(InputType)
      */
     @NotNull
     default Flowable<Boolean> rxSelectNumericInput(
@@ -268,7 +348,7 @@ public interface BaseSignUpActionType extends
             @NotNull
             @Override
             public Flowable<WebElement> rxScrollViewChildItems() {
-                return THIS.rxPickerItemViews(TextInput.HEIGHT);
+                return THIS.rxPickerItemViews(ChoiceInput.HEIGHT);
             }
 
             @Override
@@ -288,7 +368,7 @@ public interface BaseSignUpActionType extends
             @NotNull
             @Override
             public Flowable<WebElement> rxScrollableViewToSwipe() {
-                return rxScrollableInputPickerView(TextInput.HEIGHT);
+                return rxScrollableInputPickerView(ChoiceInput.HEIGHT);
             }
 
             @NotNull
@@ -313,33 +393,33 @@ public interface BaseSignUpActionType extends
     }
 
     /**
-     * Select an {@link Ethnicity} for {@link TextInput#ETHNICITY}.
+     * Select an {@link Ethnicity} for {@link ChoiceInput#ETHNICITY}.
      * @param E An {@link Ethnicity} instance.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String)
-     * @see #rxOpenPickerWindow(TextInput)
+     * @see #rxClickInputField(InputType)
      */
     @NotNull
     default Flowable<Boolean> rxSelectEthnicity(@NotNull final Ethnicity E) {
         final BaseEngine<?> ENGINE = engine();
 
-        return rxOpenPickerWindow(TextInput.ETHNICITY)
+        return rxClickInputField(ChoiceInput.ETHNICITY)
             .flatMap(a -> ENGINE.rxElementContainingText(E.value()))
             .flatMap(ENGINE::rxClick);
     }
 
     /**
-     * Select a {@link CoachPref} for {@link TextInput#COACH_PREFERENCE}.
+     * Select a {@link CoachPref} for {@link ChoiceInput#COACH_PREFERENCE}.
      * @param CP A {@link CoachPref} instance.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String)
-     * @see #rxOpenPickerWindow(TextInput)
+     * @see #rxClickInputField(InputType)
      */
     @NotNull
     default Flowable<Boolean> rxSelectCoachPref(@NotNull final CoachPref CP) {
         final BaseEngine<?> ENGINE = engine();
 
-        return rxOpenPickerWindow(TextInput.COACH_PREFERENCE)
+        return rxClickInputField(ChoiceInput.COACH_PREFERENCE)
             .flatMap(a -> ENGINE.rxElementContainingText(CP.value()))
             .flatMap(ENGINE::rxClick);
     }
@@ -372,13 +452,33 @@ public interface BaseSignUpActionType extends
     }
 
     /**
+     * Check if the {@link TextInput#PHONE} input is required, assuming the
+     * user is already in the unacceptable age input screen.
+     * @return A {@link Flowable} instance.
+     * @see #rxEnterRandomInput(TextInputType)
+     * @see #rxConfirmUnacceptableAgeInput()
+     */
+    @NotNull
+    default Flowable<Boolean> rxCheckPhoneInputIsRequired() {
+        return Flowable
+            .concat(
+                rxEnterRandomInput(TextInput.NAME),
+                rxEnterRandomInput(TextInput.EMAIL),
+                rxConfirmUnacceptableAgeInput()
+            )
+            .all(BooleanUtil::isTrue)
+            .toFlowable()
+            .delay(unacceptableAgeInputConfirmDelay(), TimeUnit.MILLISECONDS);
+    }
+
+    /**
      * Enter random inputs for acceptable age screen, assuming the user is
      * already in the acceptable age input screen.
      * @return A {@link Flowable} instance.
      * @see #rxSelectGender(Gender)
      * @see #rxSelectHeightMode(Height)
-     * @see #rxOpenPickerWindow(TextInput)
-     * @see #rxEditFieldHasValue(TextInput, String)
+     * @see #rxClickInputField(InputType)
+     * @see #rxEditFieldHasValue(InputType, String)
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -388,11 +488,13 @@ public interface BaseSignUpActionType extends
         final String HEIGHT_CM_STR = Height.CM.stringValue(HEIGHT_CM);
         final String HEIGHT_CM_FT_STR = Height.CM.ftString(HEIGHT_CM);
         final String HEIGHT_FT_STR = Height.FT.stringValue(HEIGHT_FT);
+        final String HEIGHT_FT_CM_STR = Height.FT.cmString(HEIGHT_FT);
         final double WEIGHT_KG = Weight.KG.randomSelectableNumericValue();
         final double WEIGHT_LB = Weight.LB.randomSelectableNumericValue();
         final String WEIGHT_KG_STR = Weight.KG.stringValue(WEIGHT_KG);
         final String WEIGHT_KG_LB_STR = Weight.KG.lbString(WEIGHT_KG);
         final String WEIGHT_LB_STR = Weight.LB.stringValue(WEIGHT_LB);
+        final String WEIGHT_LB_KG_STR = Weight.LB.kgString(WEIGHT_LB);
         final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
         final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
 
@@ -404,32 +506,38 @@ public interface BaseSignUpActionType extends
                 rxSelectCoachPref(CP),
 
                 rxSelectHeightMode(Height.CM)
-                    .concatWith(rxOpenPickerWindow(TextInput.HEIGHT))
+                    .concatWith(rxClickInputField(ChoiceInput.HEIGHT))
                     .concatWith(rxSelectNumericInput(Height.CM, HEIGHT_CM))
-                    .concatWith(rxEditFieldHasValue(TextInput.HEIGHT, HEIGHT_CM_STR))
+                    .concatWith(rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_CM_STR))
+                    .concatWith(rxSelectHeightMode(Height.FT))
+                    .concatWith(rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_CM_FT_STR))
                     .all(BooleanUtil::isTrue)
                     .toFlowable(),
 
                 rxSelectHeightMode(Height.FT)
-                    .concatWith(rxEditFieldHasValue(TextInput.HEIGHT, HEIGHT_CM_FT_STR))
-                    .concatWith(rxOpenPickerWindow(TextInput.HEIGHT))
+                    .concatWith(rxClickInputField(ChoiceInput.HEIGHT))
                     .concatWith(rxSelectNumericInput(Height.FT, HEIGHT_FT))
-                    .concatWith(rxEditFieldHasValue(TextInput.HEIGHT, HEIGHT_FT_STR))
+                    .concatWith(rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_FT_STR))
+                    .concatWith(rxSelectHeightMode(Height.CM))
+                    .concatWith(rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_FT_CM_STR))
                     .all(BooleanUtil::isTrue)
                     .toFlowable(),
 
                 rxSelectWeightMode(Weight.KG)
-                    .concatWith(rxOpenPickerWindow(TextInput.WEIGHT))
+                    .concatWith(rxClickInputField(ChoiceInput.WEIGHT))
                     .concatWith(rxSelectNumericInput(Weight.KG, WEIGHT_KG))
-                    .concatWith(rxEditFieldHasValue(TextInput.WEIGHT, WEIGHT_KG_STR))
+                    .concatWith(rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_KG_STR))
+                    .concatWith(rxSelectWeightMode(Weight.LB))
+                    .concatWith(rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_KG_LB_STR))
                     .all(BooleanUtil::isTrue)
                     .toFlowable(),
 
                 rxSelectWeightMode(Weight.LB)
-                    .concatWith(rxEditFieldHasValue(TextInput.WEIGHT, WEIGHT_KG_LB_STR))
-                    .concatWith(rxOpenPickerWindow(TextInput.WEIGHT))
+                    .concatWith(rxClickInputField(ChoiceInput.WEIGHT))
                     .concatWith(rxSelectNumericInput(Weight.LB, WEIGHT_LB))
-                    .concatWith(rxEditFieldHasValue(TextInput.WEIGHT, WEIGHT_LB_STR))
+                    .concatWith(rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_LB_STR))
+                    .concatWith(rxSelectWeightMode(Weight.KG))
+                    .concatWith(rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_LB_KG_STR))
                     .all(BooleanUtil::isTrue)
                     .toFlowable()
             )

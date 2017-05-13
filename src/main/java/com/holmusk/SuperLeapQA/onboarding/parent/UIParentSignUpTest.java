@@ -1,17 +1,20 @@
-package com.holmusk.SuperLeapQA.onboarding.register;
+package com.holmusk.SuperLeapQA.onboarding.parent;
 
 import com.holmusk.SuperLeapQA.base.UIBaseTest;
+import com.holmusk.SuperLeapQA.model.TextInput;
+import com.holmusk.SuperLeapQA.onboarding.common.BaseSignUpValidationType;
+import com.holmusk.SuperLeapQA.onboarding.parent.ParentSignUpActionType;
+import com.holmusk.SuperLeapQA.onboarding.parent.ParentSignUpValidationType;
+import com.holmusk.SuperLeapQA.onboarding.register.RegisterActionType;
 import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeActionType;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
 import io.reactivex.subscribers.TestSubscriber;
+import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.log.LogUtil;
-import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,9 +60,11 @@ public final class UIParentSignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_parentDoBPicker()
-            .flatMap(a -> rxValidateParentDoBPickerScreen())
-            .flatMap(a -> rxNavigateBackWithBackButton())
-            .flatMap(a -> rxValidateRegisterScreen())
+            .concatWith(rxValidateParentDoBPickerScreen())
+            .concatWith(rxNavigateBackWithBackButton())
+            .concatWith(rxValidateRegisterScreen())
+            .all(BooleanUtil::isTrue)
+            .toFlowable()
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -76,8 +81,10 @@ public final class UIParentSignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_parentDoBPicker()
-            .flatMap(a -> rxCheckDoBDialogHasCorrectElements())
-            .flatMap(a -> rxValidateParentDoBPickerScreen())
+            .concatWith(rxCheckDoBDialogHasCorrectElements())
+            .concatWith(rxValidateParentDoBPickerScreen())
+            .all(BooleanUtil::isTrue)
+            .toFlowable()
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -95,7 +102,9 @@ public final class UIParentSignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_parentDoBPicker()
-            .flatMap(a -> rxValidateDoBs(AGES))
+            .concatWith(rxValidateDoBs(AGES))
+            .all(BooleanUtil::isTrue)
+            .toFlowable()
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -106,13 +115,54 @@ public final class UIParentSignUpTest extends UIBaseTest implements
 
     @Test
     @SuppressWarnings("unchecked")
-    public void test_parentSignUpInputs_shouldShowCorrectInputScreens() {
+    public void test_parentUnacceptableAgeInputs_shouldContainCorrectElements() {
+        // Setup
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_splash_unacceptableAgeInput()
+            .concatWith(rxConfirmUnacceptableAgeInput())
+            .concatWith(rxClickInputField(TextInput.NAME))
+            .all(BooleanUtil::isTrue)
+            .toFlowable()
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void test_parentUnacceptableAgePhoneInput_shouldBeRequired() {
+        // Setup
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_splash_unacceptableAgeInput()
+            .concatWith(rxCheckPhoneInputIsRequired())
+            .all(BooleanUtil::isTrue)
+            .toFlowable()
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void test_parentAcceptableAgeInputs_shouldContainCorrectElements() {
         // Setup
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         rx_splash_acceptableAgeInput()
-            .flatMap(a -> rxEnterRandomAcceptableAgeInputs())
+            .concatWith(rxEnterRandomAcceptableAgeInputs())
+            .all(BooleanUtil::isTrue)
+            .toFlowable()
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

@@ -1,10 +1,8 @@
-package com.holmusk.SuperLeapQA.onboarding.register;
+package com.holmusk.SuperLeapQA.onboarding.common;
 
 import com.holmusk.SuperLeapQA.base.BaseActionType;
-import com.holmusk.SuperLeapQA.model.TextInput;
-import com.holmusk.SuperLeapQA.model.Gender;
-import com.holmusk.SuperLeapQA.model.Height;
-import com.holmusk.SuperLeapQA.model.Weight;
+import com.holmusk.SuperLeapQA.model.*;
+import com.holmusk.SuperLeapQA.model.type.InputType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -26,6 +24,7 @@ import java.util.stream.IntStream;
  * Created by haipham on 5/8/17.
  */
 public interface BaseSignUpValidationType extends BaseActionType {
+    //region DoB Age Range
     /**
      * Get the minimum acceptable age for the current sign up mode.
      * @return An {@link Integer} value.
@@ -89,7 +88,9 @@ public interface BaseSignUpValidationType extends BaseActionType {
         int maxAge = maxAcceptableAge();
         return String.format("%1$d-%2$d", minAge, maxAge);
     }
+    //endregion
 
+    //region DoB Picker
     /**
      * Get the DoB's editable text field.
      * @return A {@link Flowable} instance.
@@ -116,6 +117,7 @@ public interface BaseSignUpValidationType extends BaseActionType {
         String string = formatter.format(date);
         return engine().rxElementContainingText(string).map(ObjectUtil::nonNull);
     }
+    //endregion
 
     //region Outside Acceptable Age Range
     /**
@@ -134,7 +136,7 @@ public interface BaseSignUpValidationType extends BaseActionType {
      * restrictions.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String)
-     * @see #rxEditFieldForInput(TextInput)
+     * @see #rxEditFieldForInput(InputType)
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -153,6 +155,16 @@ public interface BaseSignUpValidationType extends BaseActionType {
             .all(ObjectUtil::nonNull)
             .toFlowable();
     }
+
+    /**
+     * Get the confirm button for the unacceptable age range inputs.
+     * @return A {@link Flowable} instance.
+     * @see BaseEngine#rxElementContainingText(String)
+     */
+    @NotNull
+    default Flowable<WebElement> rxUnacceptableAgeRangeConfirmButton() {
+        return engine().rxElementContainingText("register_title_submit");
+    }
     //endregion
 
     //region Within Acceptable Age Range
@@ -168,13 +180,13 @@ public interface BaseSignUpValidationType extends BaseActionType {
 
     /**
      * Get the editable {@link WebElement} that corresponds to a
-     * {@link TextInput}.
-     * @param input A {@link TextInput} instance.
+     * {@link InputType}.
+     * @param input A {@link InputType} instance.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingID(String)
      */
     @NotNull
-    default Flowable<WebElement> rxEditFieldForInput(@NotNull TextInput input) {
+    default Flowable<WebElement> rxEditFieldForInput(@NotNull InputType input) {
         BaseEngine<?> engine = engine();
         PlatformType platform = engine.platform();
 
@@ -250,25 +262,14 @@ public interface BaseSignUpValidationType extends BaseActionType {
     }
 
     /**
-     * Open the selector dialog for a {@link TextInput}.
-     * @param input A {@link TextInput} instance.
-     * @return A {@link Flowable} instance.
-     * @see #rxEditFieldForInput(TextInput)
-     */
-    @NotNull
-    default Flowable<Boolean> rxOpenPickerWindow(@NotNull TextInput input) {
-        return rxEditFieldForInput(input).flatMap(engine()::rxClick);
-    }
-
-    /**
      * Get the scrollable height selector view, assuming the user is already
      * in the height picker window.
-     * @param input A {@link TextInput} instance.
+     * @param input A {@link InputType} instance.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingID(String)
      */
     @NotNull
-    default Flowable<WebElement> rxScrollableInputPickerView(@NotNull TextInput input) {
+    default Flowable<WebElement> rxScrollableInputPickerView(@NotNull InputType input) {
         BaseEngine<?> engine = engine();
         PlatformType platform = engine.platform();
 
@@ -281,14 +282,14 @@ public interface BaseSignUpValidationType extends BaseActionType {
 
     /**
      * Get all input value items within the scrollable view as emitted by
-     * {@link #rxScrollableInputPickerView(TextInput)}, assuming the user
+     * {@link #rxScrollableInputPickerView(InputType)}, assuming the user
      * is already in the picker window.
-     * @param input A {@link TextInput} instance.
+     * @param input A {@link InputType} instance.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementsByXPath(ByXPath)
      */
     @NotNull
-    default Flowable<WebElement> rxPickerItemViews(@NotNull TextInput input) {
+    default Flowable<WebElement> rxPickerItemViews(@NotNull InputType input) {
         BaseEngine<?> engine = engine();
         PlatformType platform = engine.platform();
 
@@ -314,7 +315,7 @@ public interface BaseSignUpValidationType extends BaseActionType {
      * for the program.
      * @return A {@link Flowable} instance.
      * @see #rxGenderPicker(Gender)
-     * @see #rxEditFieldForInput(TextInput)
+     * @see #rxEditFieldForInput(InputType)
      * @see #rxHeightModePicker(Height)
      * @see #rxWeightModePicker(Weight)
      * @see #rxRegisterConfirmButton()
@@ -326,14 +327,14 @@ public interface BaseSignUpValidationType extends BaseActionType {
             .concatArray(
                 rxGenderPicker(Gender.MALE),
                 rxGenderPicker(Gender.FEMALE),
-                rxEditFieldForInput(TextInput.HEIGHT),
+                rxEditFieldForInput(ChoiceInput.HEIGHT),
                 rxHeightModePicker(Height.FT),
                 rxHeightModePicker(Height.CM),
-                rxEditFieldForInput(TextInput.WEIGHT),
+                rxEditFieldForInput(ChoiceInput.WEIGHT),
                 rxWeightModePicker(Weight.LB),
                 rxWeightModePicker(Weight.KG),
-                rxEditFieldForInput(TextInput.ETHNICITY),
-                rxEditFieldForInput(TextInput.COACH_PREFERENCE),
+                rxEditFieldForInput(ChoiceInput.ETHNICITY),
+                rxEditFieldForInput(ChoiceInput.COACH_PREFERENCE),
                 rxRegisterConfirmButton(),
                 rxParentAcceptableAgeInputTitleLabel()
             )
@@ -343,18 +344,19 @@ public interface BaseSignUpValidationType extends BaseActionType {
 
     /**
      * Check if an editable field has an input.
-     * @param input A {@link TextInput} instance.
+     * @param input A {@link InputType} instance.
      * @param VALUE A {@link String} value.
      * @return A {@link Flowable} instance.
-     * @see #rxEditFieldForInput(TextInput)
+     * @see #rxEditFieldForInput(InputType)
      */
     @NotNull
-    default Flowable<Boolean> rxEditFieldHasValue(@NotNull TextInput input,
+    default Flowable<Boolean> rxEditFieldHasValue(@NotNull InputType input,
                                                   @NotNull final String VALUE) {
         return rxEditFieldForInput(input)
             .map(engine()::getText)
+            .doOnNext(LogUtil::println)
             .filter(a -> a.equals(VALUE))
-            .switchIfEmpty(RxUtil.error(""))
+            .switchIfEmpty(RxUtil.error("Value does not equal " + VALUE))
             .map(a -> true);
     }
     //endregion

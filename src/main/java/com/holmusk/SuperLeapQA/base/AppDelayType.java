@@ -15,4 +15,8 @@ public interface AppDelayType {
     default long splashSwipeScreenDelay() {
         return 5000;
     }
+
+    default long unacceptableAgeInputConfirmDelay() {
+        return 5000;
+    }
 }

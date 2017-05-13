@@ -1,6 +1,7 @@
-package com.holmusk.SuperLeapQA.onboarding.register;
+package com.holmusk.SuperLeapQA.onboarding.parent;
 
 import com.holmusk.SuperLeapQA.base.BaseValidationType;
+import com.holmusk.SuperLeapQA.onboarding.common.BaseSignUpValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.object.ObjectUtil;
