@@ -1,11 +1,12 @@
 package com.holmusk.SuperLeapQA.model;
 
+import com.holmusk.SuperLeapQA.model.type.InputType;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by haipham on 5/13/17.
  */
-public enum SignUpMode {
+public enum UserMode {
     PARENT,
     TEEN;
 

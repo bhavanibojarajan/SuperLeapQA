@@ -13,14 +13,13 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.element.action.date.type.DateType;
 import org.swiften.xtestkit.base.element.action.swipe.type.SwipeType;
 import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatComparisonType;
-import org.swiften.xtestkit.base.param.TextParam;
+import org.swiften.xtestkit.base.element.locator.general.param.TextParam;
 import org.swiften.xtestkit.base.type.DelayType;
 import org.swiften.xtestkit.base.type.PlatformErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
@@ -86,13 +85,13 @@ public interface BaseSignUpActionType extends
 
     /**
      * Bridge method that helps navigate from splash screen to sign up.
-     * @param mode A {@link SignUpMode} instance.
+     * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      * @see #rx_splash_register()
-     * @see #rx_register_DoBPicker(SignUpMode)
+     * @see #rx_register_DoBPicker(UserMode)
      */
     @NotNull
-    default Flowable<Boolean> rx_splash_DoBPicker(@NotNull SignUpMode mode) {
+    default Flowable<Boolean> rx_splash_DoBPicker(@NotNull UserMode mode) {
         return rx_splash_register()
             .concatWith(rx_register_DoBPicker(mode))
             .all(BooleanUtil::isTrue)
@@ -102,13 +101,13 @@ public interface BaseSignUpActionType extends
     /**
      * Bridge method that helps navigate from splash screen to unacceptable
      * age input.
-     * @param mode A {@link SignUpMode} instance.
+     * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rx_splash_DoBPicker(SignUpMode)
+     * @see #rx_splash_DoBPicker(UserMode)
      * @see #rx_DoBPicker_unacceptableAgeInput()
      */
     @NotNull
-    default Flowable<Boolean> rx_splash_unacceptableAgeInput(@NotNull SignUpMode mode) {
+    default Flowable<Boolean> rx_splash_unacceptableAgeInput(@NotNull UserMode mode) {
         return rx_splash_DoBPicker(mode)
             .concatWith(rx_DoBPicker_unacceptableAgeInput())
             .all(BooleanUtil::isTrue)
@@ -118,13 +117,13 @@ public interface BaseSignUpActionType extends
     /**
      * Bridge method that helps navigate from splash screen to acceptable
      * age input.
-     * @param mode A {@link SignUpMode} instance.
+     * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rx_splash_DoBPicker(SignUpMode)
+     * @see #rx_splash_DoBPicker(UserMode)
      * @see #rx_DoBPicker_acceptableAgeInput()
      */
     @NotNull
-    default Flowable<Boolean> rx_splash_acceptableAgeInput(@NotNull SignUpMode mode) {
+    default Flowable<Boolean> rx_splash_acceptableAgeInput(@NotNull UserMode mode) {
         return rx_splash_DoBPicker(mode)
             .concatWith(rx_DoBPicker_acceptableAgeInput())
             .all(BooleanUtil::isTrue)
@@ -136,12 +135,12 @@ public interface BaseSignUpActionType extends
     /**
      * Navigate to the sign up screen from register screen, assuming the user
      * is already on the register screen.
-     * @param mode A {@link SignUpMode} instance.
+     * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rxSignUpButton(SignUpMode)
+     * @see #rxSignUpButton(UserMode)
      */
     @NotNull
-    default Flowable<Boolean> rx_register_DoBPicker(@NotNull SignUpMode mode) {
+    default Flowable<Boolean> rx_register_DoBPicker(@NotNull UserMode mode) {
         return rxSignUpButton(mode)
             .flatMapCompletable(a -> Completable.fromAction(a::click))
             .<Boolean>toFlowable()
@@ -353,30 +352,6 @@ public interface BaseSignUpActionType extends
 
     //region Acceptable Age Input
     /**
-     * Select a {@link Gender}.
-     * @param gender A {@link Gender} instance.
-     * @return A {@link Flowable} instance.
-     * @see #rxGenderPicker(Gender)
-     * @see BaseEngine#rxClick(WebElement)
-     */
-    @NotNull
-    default Flowable<Boolean> rxSelectGender(@NotNull Gender gender) {
-        return rxGenderPicker(gender).flatMap(engine()::rxClick);
-    }
-
-    /**
-     * Select a {@link Height} mode.
-     * @param mode A {@link Height} instance.
-     * @return A {@link Flowable} instance.
-     * @see #rxHeightModePicker(Height)
-     * @see BaseEngine#rxClick(WebElement)
-     */
-    @NotNull
-    default Flowable<Boolean> rxSelectHeightMode(@NotNull Height mode) {
-        return rxHeightModePicker(mode).flatMap(engine()::rxClick);
-    }
-
-    /**
      * Select a value, assuming the user is in the value selection screen.
      * @param MODE A {@link NumericSelectableInputType} instance.
      * @param NUMERIC_VALUE A {@link Double} value.
@@ -461,18 +436,6 @@ public interface BaseSignUpActionType extends
         };
 
         return repeater.rxRepeatSwipe();
-    }
-
-    /**
-     * Select a {@link Weight} mode.
-     * @param mode A {@link Weight} mode.
-     * @return A {@link Flowable} instance.
-     * @see #rxWeightModePicker(Weight)
-     * @see BaseEngine#rxClick(WebElement)
-     */
-    @NotNull
-    default Flowable<Boolean> rxSelectWeightMode(@NotNull Weight mode) {
-        return rxWeightModePicker(mode).flatMap(engine()::rxClick);
     }
 
     /**
@@ -610,8 +573,6 @@ public interface BaseSignUpActionType extends
      * Enter random inputs for acceptable age screen, assuming the user is
      * already in the acceptable age input screen.
      * @return A {@link Flowable} instance.
-     * @see #rxSelectGender(Gender)
-     * @see #rxSelectHeightMode(Height)
      * @see #rxClickInputField(InputType)
      * @see #rxEditFieldHasValue(InputType, String)
      */
@@ -635,43 +596,43 @@ public interface BaseSignUpActionType extends
 
         return Flowable
             .concatArray(
-                rxSelectGender(Gender.MALE),
-                rxSelectGender(Gender.FEMALE),
+                rxClickInputField(Gender.MALE),
+                rxClickInputField(Gender.FEMALE),
                 rxSelectEthnicity(ETH),
                 rxSelectCoachPref(CP),
 
-                rxSelectHeightMode(Height.CM)
+                rxClickInputField(Height.CM)
                     .concatWith(rxClickInputField(ChoiceInput.HEIGHT))
                     .concatWith(rxSelectNumericInput(Height.CM, HEIGHT_CM))
                     .concatWith(rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_CM_STR))
-                    .concatWith(rxSelectHeightMode(Height.FT))
+                    .concatWith(rxClickInputField(Height.FT))
                     .concatWith(rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_CM_FT_STR))
                     .all(BooleanUtil::isTrue)
                     .toFlowable(),
 
-                rxSelectHeightMode(Height.FT)
+                rxClickInputField(Height.FT)
                     .concatWith(rxClickInputField(ChoiceInput.HEIGHT))
                     .concatWith(rxSelectNumericInput(Height.FT, HEIGHT_FT))
                     .concatWith(rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_FT_STR))
-                    .concatWith(rxSelectHeightMode(Height.CM))
+                    .concatWith(rxClickInputField(Height.CM))
                     .concatWith(rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_FT_CM_STR))
                     .all(BooleanUtil::isTrue)
                     .toFlowable(),
 
-                rxSelectWeightMode(Weight.KG)
+                rxClickInputField(Weight.KG)
                     .concatWith(rxClickInputField(ChoiceInput.WEIGHT))
                     .concatWith(rxSelectNumericInput(Weight.KG, WEIGHT_KG))
                     .concatWith(rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_KG_STR))
-                    .concatWith(rxSelectWeightMode(Weight.LB))
+                    .concatWith(rxClickInputField(Weight.LB))
                     .concatWith(rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_KG_LB_STR))
                     .all(BooleanUtil::isTrue)
                     .toFlowable(),
 
-                rxSelectWeightMode(Weight.LB)
+                rxClickInputField(Weight.LB)
                     .concatWith(rxClickInputField(ChoiceInput.WEIGHT))
                     .concatWith(rxSelectNumericInput(Weight.LB, WEIGHT_LB))
                     .concatWith(rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_LB_STR))
-                    .concatWith(rxSelectWeightMode(Weight.KG))
+                    .concatWith(rxClickInputField(Weight.KG))
                     .concatWith(rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_LB_KG_STR))
                     .all(BooleanUtil::isTrue)
                     .toFlowable()
@@ -684,27 +645,55 @@ public interface BaseSignUpActionType extends
      * Sequentially validate error messages due to empty inputs (refer to
      * {@link TextInput} and {@link ChoiceInput}, assuming the user is
      * already in the acceptable age input screen.
-     * @param MODE A {@link SignUpMode} instance.
+     * @param MODE A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      * @see #rxConfirmAcceptableAgeInputs()
      */
     @NotNull
     @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxConfirmAcceptableAgeEmptyInputErrors(
-        @NotNull final SignUpMode MODE
+        @NotNull final UserMode MODE
     ) {
         final BaseEngine<?> ENGINE = engine();
         final Gender GENDER = CollectionTestUtil.randomElement(Gender.values());
 
         return Flowable
             .concatArray(
-                /* At this stage the gender error message should be shown */
+                /* At this stage, the gender error message should be shown */
                 rxConfirmAcceptableAgeInputs(),
-                rxSelectGender(GENDER)
+                rxIsShowingError(GENDER.emptySignUpInputError(MODE)),
+                rxClickInputField(GENDER),
+
+                /* At this stage, the height error message should be shown */
+                rxClickInputField(Height.CM),
+                rxConfirmAcceptableAgeInputs(),
+                rxIsShowingError(Height.CM.emptySignUpInputError(MODE)),
+
+                /* At this stage, the height error message should be shown */
+                rxClickInputField(Height.FT),
+                rxConfirmAcceptableAgeInputs(),
+                rxIsShowingError(Height.FT.emptySignUpInputError(MODE)),
+
+                /* At this stage, the weight error message should be shown */
+                rxClickInputField(Weight.KG),
+                rxConfirmAcceptableAgeInputs(),
+                rxIsShowingError(Weight.KG.emptySignUpInputError(MODE)),
+
+                /* At this stage, the weight error message should be shown */
+                rxClickInputField(Weight.LB),
+                rxConfirmAcceptableAgeInputs(),
+                rxIsShowingError(Weight.LB.emptySignUpInputError(MODE)),
+
+                /* At this stage, the ethnicity error message should be shown */
+                rxConfirmAcceptableAgeInputs(),
+                rxIsShowingError(ChoiceInput.ETHNICITY.emptySignUpInputError(MODE)),
+
+                /* At this stage, the coach pref error message should be shown */
+                rxConfirmAcceptableAgeInputs(),
+                rxIsShowingError(ChoiceInput.COACH_PREFERENCE.emptySignUpInputError(MODE))
             )
             .all(BooleanUtil::isTrue)
-            .toFlowable()
-            .doOnNext(a -> LogUtil.println(ENGINE.driver().getPageSource()));
+            .toFlowable();
     }
     //endregion
 }

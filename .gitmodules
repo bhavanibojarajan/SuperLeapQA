@@ -1,3 +1,6 @@
 [submodule "XTestKit"]
 	path = XTestKit
 	url = https://github.com/protoman92/XTestKit.git
+[submodule "JavaUtilities"]
+	path = JavaUtilities
+	url = git@github.com:protoman92/JavaUtilities.git

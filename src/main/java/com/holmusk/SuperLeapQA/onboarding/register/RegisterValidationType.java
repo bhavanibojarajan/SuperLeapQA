@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.onboarding.register;
 
 import com.holmusk.SuperLeapQA.base.BaseValidationType;
-import com.holmusk.SuperLeapQA.model.SignUpMode;
+import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
@@ -19,12 +19,12 @@ public interface RegisterValidationType extends
     WelcomeValidationType
 {
     /**
-     * Get the sign up button that corresponds to a {@link SignUpMode}.
-     * @param mode A {@link SignUpMode} instance.
+     * Get the sign up button that corresponds to a {@link UserMode}.
+     * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      */
     @NotNull
-    default Flowable<WebElement> rxSignUpButton(@NotNull SignUpMode mode) {
+    default Flowable<WebElement> rxSignUpButton(@NotNull UserMode mode) {
         BaseEngine<?> engine = engine();
         PlatformType platform = engine.platform();
 
@@ -69,8 +69,8 @@ public interface RegisterValidationType extends
                 ENGINE.rxElementContainingText("register_title_iRegisterForSelf"),
                 ENGINE.rxElementContainingText("register_title_or"),
                 ENGINE.rxElementContainingText("register_title_initiativeByHPB"),
-                rxSignUpButton(SignUpMode.PARENT),
-                rxSignUpButton(SignUpMode.TEEN),
+                rxSignUpButton(UserMode.PARENT),
+                rxSignUpButton(UserMode.TEEN),
                 rxBackButtonTitleLabel()
             )
             .all(ObjectUtil::nonNull)

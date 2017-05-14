@@ -13,6 +13,16 @@ public enum Weight implements NumericSelectableInputType {
     LB,
     KG;
 
+    /**
+     * @return A {@link String} value.
+     * @see NumericSelectableInputType#emptySignUpInputError(UserMode)
+     */
+    @NotNull
+    @Override
+    public String emptyInputErrorFormat() {
+        return "register_error_weightValueNotSet";
+    }
+
     @NotNull
     @Override
     public Converter<Double> converter() {

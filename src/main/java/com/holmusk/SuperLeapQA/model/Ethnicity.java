@@ -1,12 +1,14 @@
 package com.holmusk.SuperLeapQA.model;
 
+import com.holmusk.SuperLeapQA.model.type.InputType;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.localizer.LocalizationFormat;
 import org.swiften.xtestkit.base.element.property.type.base.AttributeType;
 
 /**
  * Created by haipham on 5/12/17.
  */
-public enum Ethnicity implements AttributeType<String> {
+public enum Ethnicity implements AttributeType<String>, InputType {
     CHINESE,
     MALAY,
     INDIAN,
@@ -51,5 +53,22 @@ public enum Ethnicity implements AttributeType<String> {
             default:
                 return "";
         }
+    }
+
+    @Override
+    public String androidViewId() {
+        return "text1";
+    }
+
+    /**
+     * @return A {@link String} value.
+     * @see InputType#emptySignUpInputError(UserMode)
+     */
+    @NotNull
+    @Override
+    public LocalizationFormat emptySignUpInputError(@NotNull UserMode mode) {
+        return LocalizationFormat.builder()
+            .withPattern("register_error_ethnicityNotSet")
+            .build();
     }
 }

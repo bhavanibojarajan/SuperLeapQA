@@ -2,6 +2,7 @@ package com.holmusk.SuperLeapQA.runner;
 
 import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
+import org.junit.Ignore;
 import org.swiften.xtestkit.test.RepeatRunner;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -35,7 +36,7 @@ public final class TestRunner implements RepeatRunner.TestRunner {
         return RUNNER.dataParameters();
     }
 
-    @Test
+    @Test(enabled = false)
     @Override
     @RepeatRunner.TestRunnerMethod
     public void runTests() {

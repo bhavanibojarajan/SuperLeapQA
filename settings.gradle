@@ -1,2 +1,3 @@
 rootProject.name = 'SuperLeapQA'
 include 'XTestKit'
+include 'JavaUtilities'

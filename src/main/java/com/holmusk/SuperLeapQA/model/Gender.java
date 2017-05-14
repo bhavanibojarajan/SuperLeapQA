@@ -1,29 +1,57 @@
 package com.holmusk.SuperLeapQA.model;
 
+import com.holmusk.SuperLeapQA.model.type.InputType;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.localizer.LocalizationFormat;
 
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Gender {
+public enum Gender implements InputType {
     MALE,
     FEMALE;
 
     /**
-     * Get the localizable title for the current {@link Gender}.
      * @return A {@link String} value.
+     * @see InputType#androidViewId()
      */
-    @NotNull
-    public String localizable() {
+    @Override
+    public String androidViewId() {
         switch (this) {
             case MALE:
-                return "user_title_gender_male";
+                return "btn_male";
 
             case FEMALE:
-                return "user_title_gender_female";
+                return "btn_female";
 
             default:
                 return "";
         }
+    }
+
+    /**
+     * @return A {@link String} value.
+     * @see InputType#emptySignUpInputError(UserMode)
+     */
+    @NotNull
+    @Override
+    public LocalizationFormat emptySignUpInputError(@NotNull UserMode mode) {
+        String error;
+
+        switch (mode) {
+            case PARENT:
+                error = "parentSignUp_error_genderNotSelected";
+                break;
+
+            case TEEN:
+                error = "teenSignUp_error_genderNotSelected";
+                break;
+
+            default:
+                error = "";
+                break;
+        }
+
+        return LocalizationFormat.builder().withPattern(error).build();
     }
 }

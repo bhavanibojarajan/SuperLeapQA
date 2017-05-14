@@ -7,12 +7,13 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.localizer.LocalizationFormat;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
-import org.swiften.xtestkit.base.param.ByXPath;
+import org.swiften.xtestkit.base.element.locator.general.param.ByXPath;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.mobile.android.AndroidView;
@@ -201,16 +202,6 @@ public interface BaseSignUpValidationType extends BaseActionType {
 
     //region Within Acceptable Age Range
     /**
-     * Get the {@link WebElement} that corresponds to a {@link Gender}.
-     * @param gender A {@link Gender} instance.
-     * @return A {@link Flowable} instance.
-     */
-    @NotNull
-    default Flowable<WebElement> rxGenderPicker(@NotNull Gender gender) {
-        return engine().rxElementContainingText(gender.localizable());
-    }
-
-    /**
      * Get the editable {@link WebElement} that corresponds to a
      * {@link InputType}.
      * @param input A {@link InputType} instance.
@@ -224,42 +215,6 @@ public interface BaseSignUpValidationType extends BaseActionType {
 
         if (platform.equals(Platform.ANDROID)) {
             return engine.rxElementContainingID(input.androidViewId());
-        } else {
-            return RxUtil.error(PLATFORM_UNAVAILABLE);
-        }
-    }
-
-    /**
-     * Get the {@link WebElement} that corresponds to a {@link Height} mode.
-     * @param mode A {@link Height} instance.
-     * @return A {@link Flowable} instance.
-     * * @see BaseEngine#rxElementContainingID(String)
-     */
-    @NotNull
-    default Flowable<WebElement> rxHeightModePicker(@NotNull Height mode) {
-        BaseEngine<?> engine = engine();
-        PlatformType platform = engine.platform();
-
-        if (platform.equals(Platform.ANDROID)) {
-            return engine.rxElementContainingID(mode.androidViewId());
-        } else {
-            return RxUtil.error(PLATFORM_UNAVAILABLE);
-        }
-    }
-
-    /**
-     * Get the {@link WebElement} that corresponds to a {@link Weight} mode.
-     * @param mode A {@link Weight} instance.
-     * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingID(String)
-     */
-    @NotNull
-    default Flowable<WebElement> rxWeightModePicker(@NotNull Weight mode) {
-        BaseEngine<?> engine = engine();
-        PlatformType platform = engine.platform();
-
-        if (platform.equals(Platform.ANDROID)) {
-            return engine.rxElementContainingID(mode.androidViewId());
         } else {
             return RxUtil.error(PLATFORM_UNAVAILABLE);
         }
@@ -346,10 +301,7 @@ public interface BaseSignUpValidationType extends BaseActionType {
      * Validate the screen after the DoB picker whereby the user qualifies
      * for the program.
      * @return A {@link Flowable} instance.
-     * @see #rxGenderPicker(Gender)
      * @see #rxEditFieldForInput(InputType)
-     * @see #rxHeightModePicker(Height)
-     * @see #rxWeightModePicker(Weight)
      * @see #rxAcceptableAgeConfirmButton()
      */
     @NotNull
@@ -357,14 +309,14 @@ public interface BaseSignUpValidationType extends BaseActionType {
     default Flowable<Boolean> rxValidateAcceptableAgeScreen() {
         return Flowable
             .concatArray(
-                rxGenderPicker(Gender.MALE),
-                rxGenderPicker(Gender.FEMALE),
+                rxEditFieldForInput(Gender.MALE),
+                rxEditFieldForInput(Gender.FEMALE),
                 rxEditFieldForInput(ChoiceInput.HEIGHT),
-                rxHeightModePicker(Height.FT),
-                rxHeightModePicker(Height.CM),
+                rxEditFieldForInput(Height.FT),
+                rxEditFieldForInput(Height.CM),
                 rxEditFieldForInput(ChoiceInput.WEIGHT),
-                rxWeightModePicker(Weight.LB),
-                rxWeightModePicker(Weight.KG),
+                rxEditFieldForInput(Weight.LB),
+                rxEditFieldForInput(Weight.KG),
                 rxEditFieldForInput(ChoiceInput.ETHNICITY),
                 rxEditFieldForInput(ChoiceInput.COACH_PREFERENCE),
                 rxAcceptableAgeConfirmButton(),
@@ -394,14 +346,26 @@ public interface BaseSignUpValidationType extends BaseActionType {
 
     /**
      * Get the view that pops up when an error is notified to the user. This
-     * only works in specific cases, however, so use with care.
-     * @param error A {@link String} value.
+     * only works in specific cases however, so use with care.
+     * @param error A {@link LocalizationFormat} value.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String)
      */
     @NotNull
-    default Flowable<WebElement> rxErrorPopup(@NotNull String error) {
+    default Flowable<WebElement> rxErrorPopup(@NotNull LocalizationFormat error) {
         return engine().rxElementContainingText(error);
+    }
+
+    /**
+     * Check whether an error is being shown to the user. This only works in
+     * specific cases however, so use with care.
+     * @param error A {@link LocalizationFormat} value.
+     * @return A {@link Flowable} instance.
+     * @see #rxErrorPopup(LocalizationFormat)
+     */
+    @NotNull
+    default Flowable<Boolean> rxIsShowingError(@NotNull LocalizationFormat error) {
+        return rxErrorPopup(error).map(a -> true);
     }
     //endregion
 }

@@ -1,12 +1,11 @@
 package com.holmusk.SuperLeapQA.onboarding.register;
 
 import com.holmusk.SuperLeapQA.base.BaseActionType;
-import com.holmusk.SuperLeapQA.model.SignUpMode;
+import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeActionType;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.testng.annotations.Test;
 
 import java.util.concurrent.TimeUnit;
 
@@ -34,10 +33,10 @@ public interface RegisterActionType extends
      * Navigate to the parent sign up screen from register screen, assuming
      * the user is already on the register screen.
      * @return A {@link Flowable} instance.
-     * @see #rxSignUpButton(SignUpMode)
+     * @see #rxSignUpButton(UserMode)
      */
     @NotNull
-    default Flowable<Boolean> rx_register_DoBPicker(@NotNull SignUpMode mode) {
+    default Flowable<Boolean> rx_register_DoBPicker(@NotNull UserMode mode) {
         return rxSignUpButton(mode)
             .flatMapCompletable(a -> Completable.fromAction(a::click))
             .<Boolean>toFlowable()

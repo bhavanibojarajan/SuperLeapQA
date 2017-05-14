@@ -2,6 +2,7 @@ package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.SuperLeapQA.model.type.InputType;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.localizer.LocalizationFormat;
 
 /**
  * Created by haipham on 5/13/17.
@@ -36,5 +37,31 @@ public enum ChoiceInput implements InputType {
             default:
                 return "";
         }
+    }
+
+    /**
+     * @return A {@link String} value.
+     * @see InputType#emptySignUpInputError(UserMode)
+     */
+    @NotNull
+    @Override
+    public LocalizationFormat emptySignUpInputError(@NotNull UserMode mode) {
+        String error;
+
+        switch (this) {
+            case COACH_PREFERENCE:
+                error = "register_error_coachPrefNotSet";
+                break;
+
+            case ETHNICITY:
+                error = "register_error_ethnicityNotSet";
+                break;
+
+            default:
+                error = "";
+                break;
+        }
+
+        return LocalizationFormat.builder().withPattern(error).build();
     }
 }

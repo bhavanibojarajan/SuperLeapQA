@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.onboarding.common;
 
 import com.holmusk.SuperLeapQA.base.UIBaseTest;
-import com.holmusk.SuperLeapQA.model.SignUpMode;
+import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import io.reactivex.subscribers.TestSubscriber;
 import org.swiften.javautilities.bool.BooleanUtil;
@@ -48,7 +48,7 @@ public abstract class UICommonSignUpTest extends UIBaseTest implements
         final List<Integer> AGES = ageOffsetFromAcceptableRange(2);
 
         // When
-        rx_splash_DoBPicker(SignUpMode.PARENT)
+        rx_splash_DoBPicker(UserMode.PARENT)
             .concatWith(rxValidateDoBs(AGES))
             .all(BooleanUtil::isTrue)
             .toFlowable()
@@ -141,7 +141,7 @@ public abstract class UICommonSignUpTest extends UIBaseTest implements
     @SuppressWarnings("unchecked")
     public void test_acceptableAgeEmptyInputs_shouldShowCorrectErrors() {
         // Setup
-        SignUpMode mode = signUpMode();
+        UserMode mode = signUpMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
@@ -158,8 +158,8 @@ public abstract class UICommonSignUpTest extends UIBaseTest implements
     }
 
     /**
-     * Get the {@link SignUpMode} being used for testing.
-     * @return A {@link SignUpMode} instance.
+     * Get the {@link UserMode} being used for testing.
+     * @return A {@link UserMode} instance.
      */
-    protected abstract SignUpMode signUpMode();
+    protected abstract UserMode signUpMode();
 }

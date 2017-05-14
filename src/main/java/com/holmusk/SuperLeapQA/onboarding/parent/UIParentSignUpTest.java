@@ -1,8 +1,6 @@
 package com.holmusk.SuperLeapQA.onboarding.parent;
 
-import com.holmusk.SuperLeapQA.base.UIBaseTest;
-import com.holmusk.SuperLeapQA.model.SignUpMode;
-import com.holmusk.SuperLeapQA.model.TextInput;
+import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.onboarding.common.BaseSignUpValidationType;
 import com.holmusk.SuperLeapQA.onboarding.common.UICommonSignUpTest;
 import com.holmusk.SuperLeapQA.onboarding.register.RegisterActionType;
@@ -14,8 +12,6 @@ import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 /**
  * Created by haipham on 5/10/17.
@@ -53,12 +49,12 @@ public final class UIParentSignUpTest extends UICommonSignUpTest implements
     }
 
     /**
-     * @return A {@link SignUpMode} instance.
+     * @return A {@link UserMode} instance.
      * @see UICommonSignUpTest#signUpMode()
      */
     @NotNull
-    protected SignUpMode signUpMode() {
-        return SignUpMode.PARENT;
+    protected UserMode signUpMode() {
+        return UserMode.PARENT;
     }
 
     @Test
@@ -68,7 +64,7 @@ public final class UIParentSignUpTest extends UICommonSignUpTest implements
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_splash_DoBPicker(SignUpMode.PARENT)
+        rx_splash_DoBPicker(UserMode.PARENT)
             .concatWith(rxValidateParentDoBPickerScreen())
             .concatWith(rxNavigateBackWithBackButton())
             .concatWith(rxValidateRegisterScreen())

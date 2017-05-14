@@ -1,8 +1,10 @@
 package com.holmusk.SuperLeapQA.model.type;
 
+import com.holmusk.SuperLeapQA.model.UserMode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.swiften.javautilities.collection.CollectionTestUtil;
+import org.swiften.javautilities.localizer.LocalizationFormat;
 import org.swiften.xtestkit.util.type.ValueRangeConverterType;
 
 import java.util.List;
@@ -16,7 +18,10 @@ import java.util.Optional;
  * This interface provides methods to convert between numeric input values
  * and their {@link String} equivalents.
  */
-public interface NumericSelectableInputType extends ValueRangeConverterType<Double> {
+public interface NumericSelectableInputType extends
+    InputType,
+    ValueRangeConverterType<Double>
+{
     @NotNull
     @Override
     default Converter<Double> converter() {
@@ -89,6 +94,15 @@ public interface NumericSelectableInputType extends ValueRangeConverterType<Doub
     }
 
     /**
+     * Get an error message format that can be used with
+     * {@link #minSelectableNumericValue()} and
+     * {@link #maxSelectableNumericValue()} to create an error message.
+     * @return A {@link String} value.
+     */
+    @NotNull
+    String emptyInputErrorFormat();
+
+    /**
      * Get a random numeric value from {@link #selectableNumericRange()}.
      * @return A {@link Double} value.
      * @see #selectableNumericRange()
@@ -96,5 +110,25 @@ public interface NumericSelectableInputType extends ValueRangeConverterType<Doub
     default double randomSelectableNumericValue() {
         List<Double> selectableRange = selectableNumericRange();
         return CollectionTestUtil.randomElement(selectableRange);
+    }
+
+    /**
+     * We provide a default implementation to make use of max and min values.
+     * @param mode A {@link UserMode} instance.
+     * @return A {@link LocalizationFormat} value.
+     * @see InputType#emptySignUpInputError(UserMode)
+     * @see #emptyInputErrorFormat()
+     * @see #minSelectableNumericValue()
+     * @see #maxSelectableNumericValue()
+     * @see #stringValue(double)
+     */
+    @NotNull
+    @Override
+    default LocalizationFormat emptySignUpInputError(@NotNull UserMode mode) {
+        return LocalizationFormat.builder()
+            .withPattern(emptyInputErrorFormat())
+            .addArgument(stringValue(minSelectableNumericValue()))
+            .addArgument(stringValue(maxSelectableNumericValue()))
+            .build();
     }
 }

@@ -4,6 +4,7 @@ import com.holmusk.SuperLeapQA.model.type.InputType;
 import com.holmusk.SuperLeapQA.model.type.TextInputType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
+import org.swiften.javautilities.localizer.LocalizationFormat;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -90,5 +91,15 @@ public enum TextInput implements InputType, TextInputType {
             default:
                 return "";
         }
+    }
+
+    /**
+     * @return A {@link String} value.
+     * @see InputType#emptySignUpInputError(UserMode)
+     */
+    @NotNull
+    @Override
+    public LocalizationFormat emptySignUpInputError(@NotNull UserMode mode) {
+        return LocalizationFormat.empty();
     }
 }

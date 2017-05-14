@@ -1,15 +1,16 @@
 package com.holmusk.SuperLeapQA.general;
 
-import com.holmusk.SuperLeapQA.model.Height;
-import com.holmusk.SuperLeapQA.model.TextInput;
-import com.holmusk.SuperLeapQA.model.Weight;
+import com.holmusk.SuperLeapQA.model.*;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zipped;
+import org.swiften.javautilities.localizer.LocalizationFormat;
+import org.swiften.javautilities.localizer.Localizer;
 import org.swiften.javautilities.log.LogUtil;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by haipham on 5/11/17.
@@ -87,6 +88,34 @@ public final class GeneralTest {
             double lb = Weight.LB.numericValue(lbString);
             LogUtil.println(kg, lb);
         }
+    }
+
+    @Test
+    public void test_emptyInputErrors_shouldBeCorrect() {
+        // Setup & When
+        LocalizationFormat parent_gender = Gender.FEMALE.emptySignUpInputError(UserMode.PARENT);
+        LocalizationFormat teen_gender = Gender.MALE.emptySignUpInputError(UserMode.TEEN);
+        LocalizationFormat parent_ft_height = Height.FT.emptySignUpInputError(UserMode.PARENT);
+        LocalizationFormat parent_cm_height = Height.CM.emptySignUpInputError(UserMode.PARENT);
+        LocalizationFormat parent_kg_weight = Weight.KG.emptySignUpInputError(UserMode.PARENT);
+        LocalizationFormat parent_lb_weight = Weight.LB.emptySignUpInputError(UserMode.PARENT);
+        LocalizationFormat teen_ft_height = Height.FT.emptySignUpInputError(UserMode.TEEN);
+        LocalizationFormat teen_cm_height = Height.CM.emptySignUpInputError(UserMode.TEEN);
+        LocalizationFormat teen_kg_weight = Weight.KG.emptySignUpInputError(UserMode.TEEN);
+        LocalizationFormat teen_lb_weight = Weight.LB.emptySignUpInputError(UserMode.TEEN);
+        Localizer localizer = Localizer.builder().addBundle("Strings", Locale.US).build();
+
+        // Then
+        LogUtil.println(localizer.localize(parent_gender));
+        LogUtil.println(localizer.localize(teen_gender));
+        LogUtil.println(localizer.localize(parent_ft_height));
+        LogUtil.println(localizer.localize(parent_cm_height));
+        LogUtil.println(localizer.localize(parent_kg_weight));
+        LogUtil.println(localizer.localize(parent_lb_weight));
+        LogUtil.println(localizer.localize(teen_ft_height));
+        LogUtil.println(localizer.localize(teen_cm_height));
+        LogUtil.println(localizer.localize(teen_kg_weight));
+        LogUtil.println(localizer.localize(teen_lb_weight));
     }
 
     @Test
