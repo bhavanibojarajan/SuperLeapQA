@@ -5,6 +5,7 @@ import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import io.reactivex.subscribers.TestSubscriber;
 import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.testng.annotations.Test;
 
@@ -126,7 +127,7 @@ public abstract class UICommonSignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_acceptableAgeInput(signUpMode())
-            .concatWith(rxEnterRandomAcceptableAgeInputs())
+            .concatWith(rxValidateRandomAcceptableAgeInputs())
             .all(BooleanUtil::isTrue)
             .toFlowable()
             .subscribe(subscriber);
@@ -147,6 +148,26 @@ public abstract class UICommonSignUpTest extends UIBaseTest implements
         // When
         rx_splash_acceptableAgeInput(mode)
             .concatWith(rxConfirmAcceptableAgeEmptyInputErrors(mode))
+            .all(BooleanUtil::isTrue)
+            .toFlowable()
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void test_personalInfoInputScreen_shouldHaveCorrectElements() {
+        // Setup
+        UserMode mode = signUpMode();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_splash_personalInfoInput(mode)
+            .doOnNext(a -> LogUtil.println(engine().driver().getPageSource()))
             .all(BooleanUtil::isTrue)
             .toFlowable()
             .subscribe(subscriber);

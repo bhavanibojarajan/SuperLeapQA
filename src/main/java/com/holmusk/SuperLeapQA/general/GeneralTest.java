@@ -53,6 +53,7 @@ public final class GeneralTest {
             double cm = Height.CM.numericValue(cmString);
 
             // Then
+            LogUtil.println(cm);
             Assert.assertTrue(cms.contains(cm));
         }
     }

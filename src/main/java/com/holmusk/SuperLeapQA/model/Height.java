@@ -4,6 +4,7 @@ import com.holmusk.SuperLeapQA.model.type.InputType;
 import com.holmusk.SuperLeapQA.model.type.NumericSelectableInputType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
+import org.swiften.javautilities.log.LogUtil;
 
 import java.util.List;
 import java.util.regex.Matcher;

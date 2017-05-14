@@ -129,6 +129,22 @@ public interface BaseSignUpActionType extends
             .all(BooleanUtil::isTrue)
             .toFlowable();
     }
+
+    /**
+     * Bridge method that helps navigate from splash screen to personal info
+     * input.
+     * @param mode A {@link UserMode} instance.
+     * @return A {@link Flowable} instance.
+     * @see #rx_splash_acceptableAgeInput(UserMode)
+     * @see #rx_acceptableAgeInput_personalInfoInput()
+     */
+    @NotNull
+    default Flowable<Boolean> rx_splash_personalInfoInput(@NotNull UserMode mode) {
+        return rx_splash_acceptableAgeInput(mode)
+            .concatWith(rx_acceptableAgeInput_personalInfoInput())
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
+    }
     //endregion
 
     //region DoB Picker
@@ -483,6 +499,67 @@ public interface BaseSignUpActionType extends
     default Flowable<Boolean> rxConfirmAcceptableAgeInputs() {
         return rxAcceptableAgeConfirmButton().flatMap(engine()::rxClick);
     }
+
+    /**
+     * Enter random acceptable age inputs in order to access the personal
+     * information input screen.
+     * @return A {@link Flowable} instance.
+     * @see #rxClickInputField(InputType)
+     * @see #rxSelectEthnicity(Ethnicity)
+     * @see #rxSelectCoachPref(CoachPref)
+     * @see #rxSelectNumericInput(NumericSelectableInputType, double)
+     */
+    @NotNull
+    @SuppressWarnings("unchecked")
+    default Flowable<Boolean> rxEnterRandomAcceptableAgeInputs() {
+        final Gender GENDER = CollectionTestUtil.randomElement(Gender.values());
+        final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
+        final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
+//        final Height HEIGHT_MODE = CollectionTestUtil.randomElement(Height.values());
+//        final Weight WEIGHT_MODE = CollectionTestUtil.randomElement(Weight.values());
+        final Height HEIGHT_MODE = Height.CM; // TODO: Randomize when ft bug is fixed
+        final Weight WEIGHT_MODE = Weight.KG; // TODO: Randomize when lb bug is fixed
+        final double HEIGHT = HEIGHT_MODE.randomSelectableNumericValue();
+        final double WEIGHT = WEIGHT_MODE.randomSelectableNumericValue();
+
+        return Flowable
+            .concatArray(
+                rxClickInputField(GENDER),
+                rxSelectEthnicity(ETH),
+                rxSelectCoachPref(CP),
+
+                rxClickInputField(HEIGHT_MODE)
+                    .concatWith(rxClickInputField(ChoiceInput.HEIGHT))
+                    .concatWith(rxSelectNumericInput(HEIGHT_MODE, HEIGHT))
+                    .all(BooleanUtil::isTrue)
+                    .toFlowable(),
+
+                rxClickInputField(WEIGHT_MODE)
+                    .concatWith(rxClickInputField(ChoiceInput.WEIGHT))
+                    .concatWith(rxSelectNumericInput(WEIGHT_MODE, WEIGHT))
+                    .all(BooleanUtil::isTrue)
+                    .toFlowable()
+            )
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
+    }
+    //endregion
+
+    //region Personal Info Input
+    /**
+     * Navigate from the acceptable age input to the personal info input
+     * screen.
+     * @return A {@link Flowable} instance.
+     * @see #rxEnterRandomAcceptableAgeInputs()
+     * @see #rxConfirmAcceptableAgeInputs()
+     */
+    @NotNull
+    default Flowable<Boolean> rx_acceptableAgeInput_personalInfoInput() {
+        return rxEnterRandomAcceptableAgeInputs()
+            .concatWith(rxConfirmAcceptableAgeInputs())
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
+    }
     //endregion
 
     //region Convenience Validation Methods
@@ -578,7 +655,7 @@ public interface BaseSignUpActionType extends
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<Boolean> rxEnterRandomAcceptableAgeInputs() {
+    default Flowable<Boolean> rxValidateRandomAcceptableAgeInputs() {
         final double HEIGHT_CM = Height.CM.randomSelectableNumericValue();
         final double HEIGHT_FT = Height.FT.randomSelectableNumericValue();
         final String HEIGHT_CM_STR = Height.CM.stringValue(HEIGHT_CM);
@@ -655,7 +732,21 @@ public interface BaseSignUpActionType extends
         @NotNull final UserMode MODE
     ) {
         final BaseEngine<?> ENGINE = engine();
+
+        /* If we are testing on iOS, there is not need to check for empty
+         * error messages, since the confirm button is not enabled until
+         * all inputs are filled */
+        if (ENGINE.platform().equals(Platform.IOS)) {
+            return Flowable.just(true);
+        }
+
         final Gender GENDER = CollectionTestUtil.randomElement(Gender.values());
+        final double HEIGHT_CM = Height.CM.randomSelectableNumericValue();
+        final double HEIGHT_FT = Height.FT.randomSelectableNumericValue();
+        final double WEIGHT_KG = Weight.KG.randomSelectableNumericValue();
+        final double WEIGHT_LB = Weight.LB.randomSelectableNumericValue();
+        final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
+        final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
 
         return Flowable
             .concatArray(
@@ -668,29 +759,35 @@ public interface BaseSignUpActionType extends
                 rxClickInputField(Height.CM),
                 rxConfirmAcceptableAgeInputs(),
                 rxIsShowingError(Height.CM.emptySignUpInputError(MODE)),
+                rxSelectNumericInput(Height.CM, HEIGHT_CM),
 
                 /* At this stage, the height error message should be shown */
                 rxClickInputField(Height.FT),
                 rxConfirmAcceptableAgeInputs(),
                 rxIsShowingError(Height.FT.emptySignUpInputError(MODE)),
+                rxSelectNumericInput(Height.FT, HEIGHT_FT),
 
                 /* At this stage, the weight error message should be shown */
                 rxClickInputField(Weight.KG),
                 rxConfirmAcceptableAgeInputs(),
                 rxIsShowingError(Weight.KG.emptySignUpInputError(MODE)),
+                rxSelectNumericInput(Weight.KG, WEIGHT_KG),
 
                 /* At this stage, the weight error message should be shown */
                 rxClickInputField(Weight.LB),
                 rxConfirmAcceptableAgeInputs(),
                 rxIsShowingError(Weight.LB.emptySignUpInputError(MODE)),
+                rxSelectNumericInput(Weight.LB, WEIGHT_LB),
 
                 /* At this stage, the ethnicity error message should be shown */
                 rxConfirmAcceptableAgeInputs(),
                 rxIsShowingError(ChoiceInput.ETHNICITY.emptySignUpInputError(MODE)),
+                rxSelectEthnicity(ETH),
 
                 /* At this stage, the coach pref error message should be shown */
                 rxConfirmAcceptableAgeInputs(),
-                rxIsShowingError(ChoiceInput.COACH_PREFERENCE.emptySignUpInputError(MODE))
+                rxIsShowingError(ChoiceInput.COACH_PREFERENCE.emptySignUpInputError(MODE)),
+                rxSelectCoachPref(CP)
             )
             .all(BooleanUtil::isTrue)
             .toFlowable();
