@@ -20,6 +20,7 @@ import org.swiften.xtestkit.mobile.android.AndroidView;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 /**
@@ -28,16 +29,38 @@ import java.util.stream.IntStream;
 public interface BaseSignUpValidationType extends BaseActionType {
     //region DoB Age Range
     /**
-     * Get the minimum acceptable age for the current sign up mode.
-     * @return An {@link Integer} value.
+     * Validate the DoB picker screen.
+     * @return A {@link Flowable} instance.
+     * @see BaseEngine#rxElementContainingText(String)
+     * @see #rxDoBEditField()
+     * @see #rxDoBElements()
      */
-    int minAcceptableAge();
+    @NotNull
+    default Flowable<Boolean> rxValidateParentDoBPickerScreen() {
+        final BaseEngine<?> ENGINE = engine();
 
-    /**
-     * Get the maximum acceptable age for the current sign up mode.
-     * @return An {@link Integer} value.
-     */
-    int maxAcceptableAge();
+        return Flowable
+            .concat(
+                ENGINE.rxElementContainingText("parentSignUp_title_dateOfBirth"),
+                rxDoBEditField()
+            )
+            .all(ObjectUtil::nonNull)
+            .<Boolean>toFlowable()
+            .defaultIfEmpty(true)
+
+            /* Open the DoB dialog and verify that all elements are there */
+            .flatMap(a -> rxDoBEditField())
+            .flatMap(ENGINE::rxClick)
+            .flatMap(a -> rxDoBElements())
+            .all(ObjectUtil::nonNull)
+            .toFlowable()
+            .delay(generalDelay(), TimeUnit.MILLISECONDS)
+
+            /* Dismiss the dialog by navigating back once */
+            .flatMap(a -> ENGINE.rxNavigateBackOnce())
+            .delay(generalDelay(), TimeUnit.MILLISECONDS)
+            .map(a -> true);
+    }
 
     /**
      * Create an age range from inclusive lower/upper bounds.
@@ -55,39 +78,48 @@ public interface BaseSignUpValidationType extends BaseActionType {
 
     /**
      * Get the acceptable age range for the current sign up mode.
+     * @param mode A {@link UserMode} instance.
      * @return A {@link List} of {@link Integer}.
      * @see #ageRange(int, int)
+     * @see UserMode#minAcceptableAge()
+     * @see UserMode#maxAcceptableAge()
      */
     @NotNull
-    default List<Integer> acceptableAgeRange() {
-        int minAge = minAcceptableAge();
-        int maxAge = maxAcceptableAge();
+    default List<Integer> acceptableAgeRange(@NotNull UserMode mode) {
+        int minAge = mode.minAcceptableAge();
+        int maxAge = mode.maxAcceptableAge();
         return ageRange(minAge, maxAge);
     }
 
     /**
      * Get an age range with lower/upper bounds that are lower/higher than
      * the min/max age by an offset value.
+     * @param mode A {@link UserMode} instance.
      * @param offset An {@link Integer} value.
      * @return A {@link List} of {@link Integer}.
      * @see #ageRange(int, int)
+     * @see UserMode#minAcceptableAge()
+     * @see UserMode#maxAcceptableAge()
      */
     @NotNull
-    default List<Integer> ageOffsetFromAcceptableRange(int offset) {
-        int minAge = minAcceptableAge() - offset;
-        int maxAge = maxAcceptableAge() + offset;
+    default List<Integer> ageOffsetFromAcceptableRange(@NotNull UserMode mode, int offset) {
+        int minAge = mode.minAcceptableAge() - offset;
+        int maxAge = mode.maxAcceptableAge() + offset;
         return ageRange(minAge, maxAge);
     }
 
     /**
      * Get the {@link String} representation of the acceptable age range.
+     * @param mode A {@link UserMode} instance.
      * @return A {@link String} value.
-     * @see #acceptableAgeRange()
+     * @see #acceptableAgeRange(UserMode)
+     * @see UserMode#minAcceptableAge()
+     * @see UserMode#maxAcceptableAge()
      */
     @NotNull
-    default String acceptableAgeRangeString() {
-        int minAge = minAcceptableAge();
-        int maxAge = maxAcceptableAge();
+    default String acceptableAgeRangeString(@NotNull UserMode mode) {
+        int minAge = mode.minAcceptableAge();
+        int maxAge = mode.maxAcceptableAge();
         return String.format("%1$d-%2$d", minAge, maxAge);
     }
     //endregion
@@ -136,19 +168,20 @@ public interface BaseSignUpValidationType extends BaseActionType {
      * Validate the screen after the DoB picker whereby the user is notified
      * that he/she/the child is not qualified for the program due to age
      * restrictions.
+     * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String)
      * @see #rxEditFieldForInput(InputType)
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<Boolean> rxValidateUnacceptableAgeScreen() {
+    default Flowable<Boolean> rxValidateUnacceptableAgeScreen(@NotNull UserMode mode) {
         final BaseEngine<?> ENGINE = engine();
 
         return Flowable
             .concatArray(
                 ENGINE.rxElementContainingText("register_title_weAreOnlyAccepting"),
-                ENGINE.rxElementContainingText(acceptableAgeRangeString()),
+                ENGINE.rxElementContainingText(acceptableAgeRangeString(mode)),
                 ENGINE.rxElementContainingText("+65"),
                 rxEditFieldForInput(TextInput.NAME),
                 rxEditFieldForInput(TextInput.PHONE),
@@ -366,6 +399,37 @@ public interface BaseSignUpValidationType extends BaseActionType {
     @NotNull
     default Flowable<Boolean> rxIsShowingError(@NotNull LocalizationFormat error) {
         return rxErrorPopup(error).map(a -> true);
+    }
+    //endregion
+
+    //region Personal Information
+    /**
+     * Get the submit button for the personal info screen.
+     * @return A {@link Flowable} instance.
+     * @see BaseEngine#rxElementContainingText(String)
+     */
+    @NotNull
+    default Flowable<WebElement> rxPersonalInfoSubmitButton() {
+        return engine().rxElementContainingText("register_title_submit");
+    }
+
+    /**
+     * Get the Terms and Conditions checkbox.
+     * @return A {@link Flowable} instance.
+     * @see #engine()
+     * @see BaseEngine#platform()
+     * @see BaseEngine#rxElementContainingID(String)
+     */
+    @NotNull
+    default Flowable<WebElement> rxTOCCheckBox() {
+        BaseEngine<?> engine = engine();
+        PlatformType platform = engine.platform();
+
+        if (platform.equals(Platform.ANDROID)) {
+            return engine.rxElementContainingID("ctv_toc");
+        } else {
+            return RxUtil.error();
+        }
     }
     //endregion
 }

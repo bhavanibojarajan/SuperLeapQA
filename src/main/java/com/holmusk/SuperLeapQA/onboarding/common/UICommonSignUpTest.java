@@ -3,11 +3,14 @@ package com.holmusk.SuperLeapQA.onboarding.common;
 import com.holmusk.SuperLeapQA.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.TextInput;
+import com.holmusk.SuperLeapQA.runner.TestRunner;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.TestSubscriber;
+import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -16,22 +19,47 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by haipham on 5/13/17.
  */
-public abstract class UICommonSignUpTest extends UIBaseTest implements
+public class UICommonSignUpTest extends UIBaseTest implements
     BaseSignUpActionType,
     BaseSignUpValidationType
 {
+    @Factory(
+        dataProviderClass = TestRunner.class,
+        dataProvider = "dataProvider"
+    )
     public UICommonSignUpTest(int index) {
         super(index);
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void test_parentDoBPickerDialog_shouldContainCorrectElements() {
+    public void test_DoBPickerScreen_containsCorrectElements() {
         // Setup
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_splash_DoBPicker(signUpMode())
+        rx_splash_DoBPicker(UserMode.PARENT)
+            .concatWith(rxValidateParentDoBPickerScreen())
+            .concatWith(rxNavigateBackWithBackButton())
+            .concatWith(rxValidateRegisterScreen())
+            .all(BooleanUtil::isTrue)
+            .toFlowable()
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test(dataProvider = "userModeProvider")
+    public void test_DoBPickerDialog_containsCorrectElements(@NotNull UserMode mode) {
+        // Setup
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_splash_DoBPicker(mode)
             .concatWith(rxCheckDoBDialogHasCorrectElements())
             .all(BooleanUtil::isTrue)
             .toFlowable()
@@ -43,16 +71,16 @@ public abstract class UICommonSignUpTest extends UIBaseTest implements
         assertCorrectness(subscriber);
     }
 
-    @Test
     @SuppressWarnings("unchecked")
-    public void test_DoBSelection_shouldWork() {
+    @Test(dataProvider = "userModeProvider")
+    public void test_DoBSelection_shouldWork(@NotNull UserMode mode) {
         // Setup
         TestSubscriber subscriber = CustomTestSubscriber.create();
-        final List<Integer> AGES = ageOffsetFromAcceptableRange(2);
+        final List<Integer> AGES = ageOffsetFromAcceptableRange(mode, 2);
 
         // When
-        rx_splash_DoBPicker(UserMode.PARENT)
-            .concatWith(rxValidateDoBs(AGES))
+        rx_splash_DoBPicker(mode)
+            .concatWith(rxValidateDoBs(mode, AGES))
             .all(BooleanUtil::isTrue)
             .toFlowable()
             .subscribe(subscriber);
@@ -63,14 +91,14 @@ public abstract class UICommonSignUpTest extends UIBaseTest implements
         assertCorrectness(subscriber);
     }
 
-    @Test
     @SuppressWarnings("unchecked")
-    public void test_unacceptableAgeInputs_shouldContainCorrectElements() {
+    @Test(dataProvider = "userModeProvider")
+    public void test_unacceptableAgeInputs_containsCorrectElements(@NotNull UserMode mode) {
         // Setup
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_splash_unacceptableAgeInput(signUpMode())
+        rx_splash_unacceptableAgeInput(mode)
             .concatWith(rxConfirmUnacceptableAgeInput())
             .concatWith(rxClickInputField(TextInput.NAME))
             .all(BooleanUtil::isTrue)
@@ -83,15 +111,15 @@ public abstract class UICommonSignUpTest extends UIBaseTest implements
         assertCorrectness(subscriber);
     }
 
-    @Test
     @SuppressWarnings("unchecked")
-    public void test_unacceptableAgePhoneInput_shouldBeRequired() {
+    @Test(dataProvider = "userModeProvider")
+    public void test_unacceptableAgePhoneInput_shouldBeRequired(@NotNull UserMode mode) {
         // Setup
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_splash_unacceptableAgeInput(signUpMode())
-            .concatWith(rxCheckUnacceptableAgePhoneInputIsRequired())
+        rx_splash_unacceptableAgeInput(mode)
+            .concatWith(rxCheckUnacceptableAgePhoneInputIsRequired(mode))
             .all(BooleanUtil::isTrue)
             .toFlowable()
             .subscribe(subscriber);
@@ -102,14 +130,14 @@ public abstract class UICommonSignUpTest extends UIBaseTest implements
         assertCorrectness(subscriber);
     }
 
-    @Test
     @SuppressWarnings("unchecked")
-    public void test_unacceptableAgeInput_shouldWork() {
+    @Test(dataProvider = "userModeProvider")
+    public void test_unacceptableAgeInput_shouldWork(@NotNull UserMode mode) {
         // Setup
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_splash_unacceptableAgeInput(signUpMode())
+        rx_splash_unacceptableAgeInput(mode)
             .concatWith(rxEnterAndValidateUnacceptableAgeInputs())
             .all(BooleanUtil::isTrue)
             .toFlowable()
@@ -121,14 +149,14 @@ public abstract class UICommonSignUpTest extends UIBaseTest implements
         assertCorrectness(subscriber);
     }
 
-    @Test
     @SuppressWarnings("unchecked")
-    public void test_acceptableAgeInputs_shouldContainCorrectElements() {
+    @Test(dataProvider = "userModeProvider")
+    public void test_acceptableAgeInputs_containsCorrectElements(@NotNull UserMode mode) {
         // Setup
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_splash_acceptableAgeInput(signUpMode())
+        rx_splash_acceptableAgeInput(mode)
             .concatWith(rxEnterAndValidateAcceptableAgeInputs())
             .all(BooleanUtil::isTrue)
             .toFlowable()
@@ -140,11 +168,10 @@ public abstract class UICommonSignUpTest extends UIBaseTest implements
         assertCorrectness(subscriber);
     }
 
-    @Test
     @SuppressWarnings("unchecked")
-    public void test_acceptableAgeEmptyInputs_shouldShowCorrectErrors() {
+    @Test(dataProvider = "userModeProvider")
+    public void test_acceptableAgeEmptyInputs_showCorrectErrors(@NotNull UserMode mode) {
         // Setup
-        UserMode mode = signUpMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
@@ -160,16 +187,15 @@ public abstract class UICommonSignUpTest extends UIBaseTest implements
         assertCorrectness(subscriber);
     }
 
-    @Test
     @SuppressWarnings("unchecked")
-    public void test_personalInfoInputScreen_shouldHaveCorrectElements() {
+    @Test(dataProvider = "userModeProvider")
+    public void test_personalInfoInputScreen_containsCorrectElements(@NotNull UserMode mode) {
         // Setup
-        UserMode mode = signUpMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         rx_splash_personalInfoInput(mode)
-            .concatWith(rxEnterAndValidatePersonalInfoInputs())
+            .concatWith(rxEnterAndValidatePersonalInfoInputs(mode))
             .all(BooleanUtil::isTrue)
             .toFlowable()
             .subscribe(subscriber);
@@ -179,10 +205,4 @@ public abstract class UICommonSignUpTest extends UIBaseTest implements
         // Then
         assertCorrectness(subscriber);
     }
-
-    /**
-     * Get the {@link UserMode} being used for testing.
-     * @return A {@link UserMode} instance.
-     */
-    protected abstract UserMode signUpMode();
 }

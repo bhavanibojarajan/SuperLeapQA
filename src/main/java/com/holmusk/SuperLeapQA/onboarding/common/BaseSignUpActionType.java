@@ -7,7 +7,6 @@ import com.holmusk.SuperLeapQA.model.type.NumericSelectableInputType;
 import com.holmusk.SuperLeapQA.model.type.TextInputType;
 import com.holmusk.SuperLeapQA.onboarding.register.RegisterActionType;
 import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeActionType;
-import io.appium.java_client.android.AndroidDriver;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
@@ -15,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
@@ -63,26 +61,30 @@ public interface BaseSignUpActionType extends
 
     /**
      * Navigate to the acceptable age input screen by selecting a DoB that
-     * results in an age that lies within {@link #acceptableAgeRange()}.
+     * results in an age that lies within {@link #acceptableAgeRange(UserMode)}.
+     * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      * @see #rx_DoBPicker_inputScreenForAge(int)
      */
     @NotNull
-    default Flowable<Boolean> rx_DoBPicker_acceptableAgeInput() {
-        List<Integer> range = acceptableAgeRange();
+    default Flowable<Boolean> rx_DoBPicker_acceptableAgeInput(@NotNull UserMode mode) {
+        List<Integer> range = acceptableAgeRange(mode);
         int age = CollectionTestUtil.randomElement(range);
         return rx_DoBPicker_inputScreenForAge(age);
     }
 
     /**
      * Navigate to the unacceptable age input screen by selecting a DoB that
-     * results in an age that does not lie within {@link #acceptableAgeRange()}.
+     * results in an age that does not lie within {
+     * @link #acceptableAgeRange(UserMode)}.
+     * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      * @see #rx_DoBPicker_inputScreenForAge(int)
+     * @see UserMode#maxAcceptableAge()
      */
     @NotNull
-    default Flowable<Boolean> rx_DoBPicker_unacceptableAgeInput() {
-        int age = maxAcceptableAge() + 1;
+    default Flowable<Boolean> rx_DoBPicker_unacceptableAgeInput(@NotNull UserMode mode) {
+        int age = mode.maxAcceptableAge() + 1;
         return rx_DoBPicker_inputScreenForAge(age);
     }
 
@@ -107,12 +109,12 @@ public interface BaseSignUpActionType extends
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      * @see #rx_splash_DoBPicker(UserMode)
-     * @see #rx_DoBPicker_unacceptableAgeInput()
+     * @see #rx_DoBPicker_unacceptableAgeInput(UserMode)
      */
     @NotNull
     default Flowable<Boolean> rx_splash_unacceptableAgeInput(@NotNull UserMode mode) {
         return rx_splash_DoBPicker(mode)
-            .concatWith(rx_DoBPicker_unacceptableAgeInput())
+            .concatWith(rx_DoBPicker_unacceptableAgeInput(mode))
             .all(BooleanUtil::isTrue)
             .toFlowable();
     }
@@ -123,12 +125,12 @@ public interface BaseSignUpActionType extends
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      * @see #rx_splash_DoBPicker(UserMode)
-     * @see #rx_DoBPicker_acceptableAgeInput()
+     * @see #rx_DoBPicker_acceptableAgeInput(UserMode)
      */
     @NotNull
     default Flowable<Boolean> rx_splash_acceptableAgeInput(@NotNull UserMode mode) {
         return rx_splash_DoBPicker(mode)
-            .concatWith(rx_DoBPicker_acceptableAgeInput())
+            .concatWith(rx_DoBPicker_acceptableAgeInput(mode))
             .all(BooleanUtil::isTrue)
             .toFlowable();
     }
@@ -243,20 +245,22 @@ public interface BaseSignUpActionType extends
 
     /**
      * Sequentially select DoBs and validate that DoBs that fall out of
-     * {@link #acceptableAgeRange()} should not bring the user to the correct
-     * sign up screen. This action assumes the user is in the DoB selection
-     * screen, but has not opened the DoB picker yet.
+     * {@link #acceptableAgeRange(UserMode)} should not bring the user to the
+     * correct sign up screen. This action assumes the user is in the DoB
+     * selection screen, but has not opened the DoB picker yet.
+     * @param MODE A {@link UserMode} instance.
      * @param AGES A {@link List} of {@link Integer}.
      * @return A {@link Flowable} instance.
-     * @see #acceptableAgeRange()
+     * @see #acceptableAgeRange(UserMode)
      * @see #rxOpenDoBPicker()
      * @see #rxValidateAcceptableAgeScreen()
-     * @see #rxValidateUnacceptableAgeScreen()
+     * @see #rxValidateUnacceptableAgeScreen(UserMode)
      * @see #rxNavigateBackWithBackButton()
      */
     @NotNull
-    default Flowable<Boolean> rxValidateDoBs(@NotNull final List<Integer> AGES) {
-        final List<Integer> RANGE = acceptableAgeRange();
+    default Flowable<Boolean> rxValidateDoBs(@NotNull final UserMode MODE,
+                                             @NotNull final List<Integer> AGES) {
+        final List<Integer> RANGE = acceptableAgeRange(MODE);
         final int LENGTH = AGES.size();
 
         class IterateDoBs {
@@ -274,7 +278,7 @@ public interface BaseSignUpActionType extends
                             if (VALID) {
                                 return rxValidateAcceptableAgeScreen();
                             } else {
-                                return rxValidateUnacceptableAgeScreen();
+                                return rxValidateUnacceptableAgeScreen(MODE);
                             }
                         })
                         .flatMap(a -> rxNavigateBackWithBackButton())
@@ -573,6 +577,64 @@ public interface BaseSignUpActionType extends
             .all(BooleanUtil::isTrue)
             .toFlowable();
     }
+
+    /**
+     * Click the submit button to confirm personal info inputs.
+     * @return A {@link Flowable} instance.
+     * @see #rxPersonalInfoSubmitButton()
+     * @see BaseEngine#rxClick(WebElement)
+     */
+    @NotNull
+    default Flowable<Boolean> rxConfirmPersonalInfoInputs() {
+        final BaseEngine<?> ENGINE = engine();
+        return rxPersonalInfoSubmitButton().flatMap(ENGINE::rxClick).map(a -> true);
+    }
+
+    /**
+     * Toggle the TOC checkbox to be accepted/rejected.
+     * @param ACCEPTED A {@link Boolean} value.
+     * @return A {@link Flowable} instance.
+     * @see #engine()
+     * @see #rxTOCCheckBox()
+     * @see BaseEngine#isCheckBoxChecked(WebElement)
+     * @see BaseEngine#click(WebElement)
+     */
+    @NotNull
+    default Flowable<Boolean> rxToggleTOC(final boolean ACCEPTED) {
+        final BaseEngine<?> ENGINE = engine();
+
+        return rxTOCCheckBox()
+            .flatMap(a -> ENGINE.rxSetCheckBoxState(a, ACCEPTED))
+            .map(a -> true);
+    }
+
+    /**
+     * Enter random personal info inputs in order to access the next screen.
+     * @param mode A {@link UserMode} instance.
+     * @return A {@link Flowable} instance.
+     * @see #engine()
+     * @see UserMode#personalInformation()
+     * @see #rxEnterRandomInput(TextInputType)
+     * @see BaseEngine#rxNavigateBackOnce()
+     * @see #rxToggleTOC(boolean)
+     */
+    @NotNull
+    default Flowable<Boolean> rxEnterRandomPersonalInfoInputs(@NotNull UserMode mode) {
+        final BaseSignUpActionType THIS = this;
+        final BaseEngine<?> ENGINE = engine();
+
+        return Flowable
+            .fromIterable(mode.personalInformation())
+            .ofType(TextInputType.class)
+            .flatMap(THIS::rxEnterRandomInput)
+            .flatMap(a -> ENGINE.rxToggleNextInput())
+            .all(BooleanUtil::isTrue)
+            .toFlowable()
+            .concatWith(ENGINE.rxNavigateBackOnce())
+            .concatWith(THIS.rxToggleTOC(true))
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
+    }
     //endregion
 
     //region Convenience Validation Methods
@@ -604,13 +666,14 @@ public interface BaseSignUpActionType extends
     /**
      * Check if the {@link TextInput#PHONE} input is required, assuming the
      * user is already in the unacceptable age input screen.
+     * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      * @see #rxEnterRandomInput(TextInputType)
      * @see #rxConfirmUnacceptableAgeInput()
      * @see #unacceptableAgeInputConfirmDelay()
      */
     @NotNull
-    default Flowable<Boolean> rxCheckUnacceptableAgePhoneInputIsRequired() {
+    default Flowable<Boolean> rxCheckUnacceptableAgePhoneInputIsRequired(@NotNull UserMode mode) {
         long delay = unacceptableAgeInputConfirmDelay();
 
         return Flowable
@@ -625,7 +688,7 @@ public interface BaseSignUpActionType extends
              * it means the app has not navigated to the confirmation screen
              * yet (which is what we want since we expect there to be input
              * errors) */
-            .concatWith(rxValidateUnacceptableAgeScreen())
+            .concatWith(rxValidateUnacceptableAgeScreen(mode))
             .all(BooleanUtil::isTrue)
             .toFlowable();
     }
@@ -812,17 +875,32 @@ public interface BaseSignUpActionType extends
     /**
      * Enter random inputs and validate that the input views can be properly
      * interacted with.
+     * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
+     * @see #rxEnterRandomInput(TextInputType)
+     * @see #rxEditFieldForInput(InputType)
+     * @see BaseEngine#rxToggleNextInput()
+     * @see BaseEngine#rxTogglePasswordMask(WebElement)
+     * @see BaseEngine#isShowingPassword(WebElement)
+     * @see RxUtil#error()
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<Boolean> rxEnterAndValidatePersonalInfoInputs() {
+    default Flowable<Boolean> rxEnterAndValidatePersonalInfoInputs(@NotNull UserMode mode) {
+        final BaseSignUpActionType THIS = this;
         final BaseEngine<?> ENGINE = engine();
 
         return Flowable
             .concatArray(
+                Flowable.fromIterable(mode.personalInformation())
+                    .ofType(TextInputType.class)
+                    .flatMap(THIS::rxEnterRandomInput)
+                    .flatMap(a -> ENGINE.rxToggleNextInput())
+                    .all(BooleanUtil::isTrue)
+                    .toFlowable(),
+
                 rxEnterRandomInput(TextInput.PASSWORD)
-                    .flatMap(a -> rxEditFieldForInput(TextInput.PASSWORD))
+                    .flatMap(a -> THIS.rxEditFieldForInput(TextInput.PASSWORD))
                     .flatMap(a -> ENGINE.rxToggleNextInput().flatMap(b ->
                         ENGINE.rxTogglePasswordMask(a)
                     ))

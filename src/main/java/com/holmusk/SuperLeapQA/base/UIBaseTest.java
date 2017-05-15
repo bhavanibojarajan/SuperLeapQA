@@ -1,6 +1,7 @@
 package com.holmusk.SuperLeapQA.base;
 
 import com.holmusk.SuperLeapQA.config.Config;
+import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.kit.*;
@@ -37,6 +38,19 @@ public class UIBaseTest implements BaseActionType, BaseValidationType {
     public UIBaseTest(int index) {
         INDEX = index;
         TEST_KIT = Config.TEST_KIT;
+    }
+
+    @NotNull
+    @DataProvider
+    public Iterator<Object[]> userModeProvider() {
+        List<Object[]> data = new LinkedList<>();
+        UserMode[] modes = new UserMode[] { UserMode.PARENT };
+
+        for (UserMode mode : modes) {
+            data.add(new Object[] { mode });
+        }
+
+        return data.iterator();
     }
 
     //region BaseTestType.
