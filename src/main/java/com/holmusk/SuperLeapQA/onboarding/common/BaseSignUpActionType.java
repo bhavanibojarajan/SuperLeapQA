@@ -7,8 +7,10 @@ import com.holmusk.SuperLeapQA.model.type.NumericSelectableInputType;
 import com.holmusk.SuperLeapQA.model.type.TextInputType;
 import com.holmusk.SuperLeapQA.onboarding.register.RegisterActionType;
 import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeActionType;
+import io.appium.java_client.android.AndroidDriver;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
+import io.reactivex.schedulers.Schedulers;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
@@ -178,7 +180,7 @@ public interface BaseSignUpActionType extends
 
         return rxDoBEditField()
             .flatMap(ENGINE::rxClick).map(a -> true)
-            .delay(generalDelay(), TimeUnit.MILLISECONDS)
+            .delay(generalDelay(), TimeUnit.MILLISECONDS, Schedulers.trampoline())
             .concatWith(ENGINE.rxImplicitlyWait(this::generalDelay))
             .all(BooleanUtil::isTrue)
             .toFlowable();
@@ -609,13 +611,15 @@ public interface BaseSignUpActionType extends
      */
     @NotNull
     default Flowable<Boolean> rxCheckUnacceptableAgePhoneInputIsRequired() {
+        long delay = unacceptableAgeInputConfirmDelay();
+
         return Flowable
             .concat(
                 rxEnterRandomInput(TextInput.NAME),
                 rxEnterRandomInput(TextInput.EMAIL),
                 rxConfirmUnacceptableAgeInput()
             )
-            .delay(unacceptableAgeInputConfirmDelay(), TimeUnit.MILLISECONDS)
+            .delay(delay, TimeUnit.MILLISECONDS, Schedulers.trampoline())
 
             /* We can validate unacceptable age screen - if views are present
              * it means the app has not navigated to the confirmation screen
@@ -638,6 +642,7 @@ public interface BaseSignUpActionType extends
     @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxEnterAndValidateUnacceptableAgeInputs() {
         final BaseEngine<?> ENGINE = engine();
+        long delay = unacceptableAgeInputConfirmDelay();
 
         return Flowable
             .concatArray(
@@ -647,7 +652,7 @@ public interface BaseSignUpActionType extends
                 rxConfirmUnacceptableAgeInput(),
                 rxValidateUnacceptableAgeInputConfirmation()
             )
-            .delay(unacceptableAgeInputConfirmDelay(), TimeUnit.MILLISECONDS)
+            .delay(delay, TimeUnit.MILLISECONDS, Schedulers.trampoline())
             .all(BooleanUtil::isTrue)
             .toFlowable()
             .flatMap(a -> rxUnacceptableAgeInputOkButton())
@@ -818,13 +823,11 @@ public interface BaseSignUpActionType extends
             .concatArray(
                 rxEnterRandomInput(TextInput.PASSWORD)
                     .flatMap(a -> rxEditFieldForInput(TextInput.PASSWORD))
-                    .flatMap(a -> Flowable
-                        .concat(
-                            ENGINE.rxHideKeyboard(),
-                            ENGINE.rxTogglePasswordMask(a)
-                        )
-                        .all(BooleanUtil::isTrue)
-                        .toFlowable())
+                    .flatMap(a -> ENGINE.rxToggleNextInput().flatMap(b ->
+                        ENGINE.rxTogglePasswordMask(a)
+                    ))
+                    .filter(ENGINE::isShowingPassword)
+                    .switchIfEmpty(RxUtil.error())
             )
             .all(BooleanUtil::isTrue)
             .toFlowable();

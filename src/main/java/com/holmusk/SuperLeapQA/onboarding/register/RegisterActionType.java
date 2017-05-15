@@ -5,6 +5,7 @@ import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeActionType;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
+import io.reactivex.schedulers.Schedulers;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
@@ -25,9 +26,8 @@ public interface RegisterActionType extends
     @NotNull
     default Flowable<Boolean> rx_welcome_register() {
         return rxWelcomeRegisterButton()
-            .flatMap(engine()::rxClick)
-            .map(a -> true)
-            .delay(generalDelay(), TimeUnit.MILLISECONDS);
+            .flatMap(engine()::rxClick).map(a -> true)
+            .delay(generalDelay(), TimeUnit.MILLISECONDS, Schedulers.trampoline());
     }
 
     /**

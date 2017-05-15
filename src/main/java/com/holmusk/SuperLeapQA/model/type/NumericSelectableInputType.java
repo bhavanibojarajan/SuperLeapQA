@@ -19,8 +19,7 @@ import java.util.Optional;
  * and their {@link String} equivalents.
  */
 public interface NumericSelectableInputType extends
-    InputType,
-    ValueRangeConverterType<Double>
+    InputType, ValueRangeConverterType<Double>
 {
     @NotNull
     @Override

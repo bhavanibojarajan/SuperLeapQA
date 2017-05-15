@@ -3,6 +3,7 @@ package com.holmusk.SuperLeapQA.onboarding.common;
 import com.holmusk.SuperLeapQA.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.TextInput;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.TestSubscriber;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.log.LogUtil;
@@ -171,7 +172,6 @@ public abstract class UICommonSignUpTest extends UIBaseTest implements
             .concatWith(rxEnterAndValidatePersonalInfoInputs())
             .all(BooleanUtil::isTrue)
             .toFlowable()
-            .delay(1000000, TimeUnit.MILLISECONDS)
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

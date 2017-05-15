@@ -5,6 +5,7 @@ package com.holmusk.SuperLeapQA.base;
  */
 
 import io.reactivex.Flowable;
+import io.reactivex.schedulers.Schedulers;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.element.locator.general.type.BaseLocatorErrorType;
 import org.swiften.xtestkit.base.type.PlatformErrorType;
@@ -30,8 +31,7 @@ public interface BaseActionType extends
     @NotNull
     default Flowable<Boolean> rxNavigateBackWithBackButton() {
         return rxBackButton()
-            .flatMap(engine()::rxClick)
-            .map(a -> true)
-            .delay(generalDelay(), TimeUnit.MILLISECONDS);
+            .flatMap(engine()::rxClick).map(a -> true)
+            .delay(generalDelay(), TimeUnit.MILLISECONDS, Schedulers.trampoline());
     }
 }
