@@ -16,7 +16,11 @@ import java.util.stream.Stream;
 public enum TextInput implements InputType, TextInputType {
     NAME,
     EMAIL,
-    PHONE;
+    PHONE,
+    CHILD_NAME,
+    MOBILE,
+    PASSWORD,
+    HOME;
 
     /**
      * Get the view id for {@link org.swiften.xtestkit.mobile.Platform#ANDROID}
@@ -36,6 +40,18 @@ public enum TextInput implements InputType, TextInputType {
             case PHONE:
                 return "et_phone";
 
+            case CHILD_NAME:
+                return "et_childname";
+
+            case MOBILE:
+                return "et_mobile";
+
+            case PASSWORD:
+                return "et_password";
+
+            case HOME:
+                return "et_home";
+
             default:
                 return "";
         }
@@ -51,6 +67,9 @@ public enum TextInput implements InputType, TextInputType {
     public String randomInput() {
         switch (this) {
             case NAME:
+            case CHILD_NAME:
+            case PASSWORD:
+            case HOME:
                 String baseName = String.join("", IntStream.range(0, 10)
                     .boxed()
                     .map(a -> IntStream.range(97, 123))
@@ -65,6 +84,7 @@ public enum TextInput implements InputType, TextInputType {
                 return "testQA-" + baseName;
 
             case PHONE:
+            case MOBILE:
                 return String.join("", IntStream.range(0, 8)
                     .boxed()
                     .map(a -> IntStream.range(0, 10))

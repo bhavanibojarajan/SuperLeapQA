@@ -10,6 +10,7 @@ import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.testng.annotations.Test;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by haipham on 5/13/17.
@@ -127,7 +128,7 @@ public abstract class UICommonSignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_acceptableAgeInput(signUpMode())
-            .concatWith(rxValidateRandomAcceptableAgeInputs())
+            .concatWith(rxEnterAndValidateAcceptableAgeInputs())
             .all(BooleanUtil::isTrue)
             .toFlowable()
             .subscribe(subscriber);
@@ -147,7 +148,7 @@ public abstract class UICommonSignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_acceptableAgeInput(mode)
-            .concatWith(rxConfirmAcceptableAgeEmptyInputErrors(mode))
+            .concatWith(rxValidateAcceptableAgeEmptyInputErrors(mode))
             .all(BooleanUtil::isTrue)
             .toFlowable()
             .subscribe(subscriber);
@@ -167,9 +168,10 @@ public abstract class UICommonSignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_personalInfoInput(mode)
-            .doOnNext(a -> LogUtil.println(engine().driver().getPageSource()))
+            .concatWith(rxEnterAndValidatePersonalInfoInputs())
             .all(BooleanUtil::isTrue)
             .toFlowable()
+            .delay(1000000, TimeUnit.MILLISECONDS)
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

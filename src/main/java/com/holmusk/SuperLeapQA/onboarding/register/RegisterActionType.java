@@ -26,6 +26,7 @@ public interface RegisterActionType extends
     default Flowable<Boolean> rx_welcome_register() {
         return rxWelcomeRegisterButton()
             .flatMap(engine()::rxClick)
+            .map(a -> true)
             .delay(generalDelay(), TimeUnit.MILLISECONDS);
     }
 

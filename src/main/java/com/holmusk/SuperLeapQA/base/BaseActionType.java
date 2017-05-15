@@ -7,7 +7,6 @@ package com.holmusk.SuperLeapQA.base;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.element.locator.general.type.BaseLocatorErrorType;
-import org.swiften.xtestkit.base.element.property.type.BaseElementInteractionErrorType;
 import org.swiften.xtestkit.base.type.PlatformErrorType;
 import org.swiften.xtestkit.test.type.BaseTestType;
 
@@ -32,6 +31,7 @@ public interface BaseActionType extends
     default Flowable<Boolean> rxNavigateBackWithBackButton() {
         return rxBackButton()
             .flatMap(engine()::rxClick)
+            .map(a -> true)
             .delay(generalDelay(), TimeUnit.MILLISECONDS);
     }
 }

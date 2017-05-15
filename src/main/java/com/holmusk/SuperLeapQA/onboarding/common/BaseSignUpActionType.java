@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
@@ -176,7 +177,7 @@ public interface BaseSignUpActionType extends
         final BaseEngine<?> ENGINE = engine();
 
         return rxDoBEditField()
-            .flatMap(ENGINE::rxClick)
+            .flatMap(ENGINE::rxClick).map(a -> true)
             .delay(generalDelay(), TimeUnit.MILLISECONDS)
             .concatWith(ENGINE.rxImplicitlyWait(this::generalDelay))
             .all(BooleanUtil::isTrue)
@@ -198,7 +199,10 @@ public interface BaseSignUpActionType extends
         PlatformType platform = ENGINE.platform();
 
         if (platform.equals(Platform.ANDROID)) {
-            return ENGINE.rxElementContainingText("ok").flatMap(ENGINE::rxClick);
+            return ENGINE
+                .rxElementContainingText("ok")
+                .flatMap(ENGINE::rxClick)
+                .map(a -> true);
         } else {
             return RxUtil.error(PLATFORM_UNAVAILABLE);
         }
@@ -322,7 +326,7 @@ public interface BaseSignUpActionType extends
      */
     @NotNull
     default Flowable<Boolean> rxClickInputField(@NotNull InputType input) {
-        return rxEditFieldForInput(input).flatMap(engine()::rxClick);
+        return rxEditFieldForInput(input).flatMap(engine()::rxClick).map(a -> true);
     }
     //endregion
 
@@ -339,7 +343,9 @@ public interface BaseSignUpActionType extends
     default Flowable<Boolean> rxEnterInput(@NotNull TextInputType input,
                                            @NotNull final String TEXT) {
         final BaseEngine<?> ENGINE = engine();
-        return rxEditFieldForInput(input).flatMap(a -> ENGINE.rxSendKey(a, TEXT));
+        return rxEditFieldForInput(input)
+            .flatMap(a -> ENGINE.rxSendKey(a, TEXT))
+            .map(a -> true);
     }
 
     /**
@@ -362,7 +368,9 @@ public interface BaseSignUpActionType extends
      */
     @NotNull
     default Flowable<Boolean> rxConfirmUnacceptableAgeInput() {
-        return rxUnacceptableAgeSubmitButton().flatMap(engine()::rxClick);
+        return rxUnacceptableAgeSubmitButton()
+            .flatMap(engine()::rxClick)
+            .map(a -> true);
     }
     //endregion
 
@@ -435,7 +443,8 @@ public interface BaseSignUpActionType extends
                 return ENGINE
                     .rxElementWithText(TEXT_PARAM)
                     .filter(a -> ENGINE.getText(a).equals(HEIGHT_STR))
-                    .flatMap(ENGINE::rxClick);
+                    .flatMap(ENGINE::rxClick)
+                    .map(a -> true);
             }
 
             @NotNull
@@ -468,7 +477,8 @@ public interface BaseSignUpActionType extends
 
         return rxClickInputField(ChoiceInput.ETHNICITY)
             .flatMap(a -> ENGINE.rxElementContainingText(E.value()))
-            .flatMap(ENGINE::rxClick);
+            .flatMap(ENGINE::rxClick)
+            .map(a -> true);
     }
 
     /**
@@ -485,7 +495,8 @@ public interface BaseSignUpActionType extends
 
         return rxClickInputField(ChoiceInput.COACH_PREFERENCE)
             .flatMap(a -> ENGINE.rxElementContainingText(CP.value()))
-            .flatMap(ENGINE::rxClick);
+            .flatMap(ENGINE::rxClick)
+            .map(a -> true);
     }
 
     /**
@@ -497,7 +508,7 @@ public interface BaseSignUpActionType extends
      */
     @NotNull
     default Flowable<Boolean> rxConfirmAcceptableAgeInputs() {
-        return rxAcceptableAgeConfirmButton().flatMap(engine()::rxClick);
+        return rxAcceptableAgeConfirmButton().flatMap(engine()::rxClick).map(a -> true);
     }
 
     /**
@@ -640,7 +651,7 @@ public interface BaseSignUpActionType extends
             .all(BooleanUtil::isTrue)
             .toFlowable()
             .flatMap(a -> rxUnacceptableAgeInputOkButton())
-            .flatMap(ENGINE::rxClick)
+            .flatMap(ENGINE::rxClick).map(a -> true)
             .concatWith(rxValidateWelcomeScreen())
             .all(BooleanUtil::isTrue)
             .toFlowable();
@@ -655,7 +666,7 @@ public interface BaseSignUpActionType extends
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<Boolean> rxValidateRandomAcceptableAgeInputs() {
+    default Flowable<Boolean> rxEnterAndValidateAcceptableAgeInputs() {
         final double HEIGHT_CM = Height.CM.randomSelectableNumericValue();
         final double HEIGHT_FT = Height.FT.randomSelectableNumericValue();
         final String HEIGHT_CM_STR = Height.CM.stringValue(HEIGHT_CM);
@@ -728,7 +739,7 @@ public interface BaseSignUpActionType extends
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<Boolean> rxConfirmAcceptableAgeEmptyInputErrors(
+    default Flowable<Boolean> rxValidateAcceptableAgeEmptyInputErrors(
         @NotNull final UserMode MODE
     ) {
         final BaseEngine<?> ENGINE = engine();
@@ -788,6 +799,32 @@ public interface BaseSignUpActionType extends
                 rxConfirmAcceptableAgeInputs(),
                 rxIsShowingError(ChoiceInput.COACH_PREFERENCE.emptySignUpInputError(MODE)),
                 rxSelectCoachPref(CP)
+            )
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
+    }
+
+    /**
+     * Enter random inputs and validate that the input views can be properly
+     * interacted with.
+     * @return A {@link Flowable} instance.
+     */
+    @NotNull
+    @SuppressWarnings("unchecked")
+    default Flowable<Boolean> rxEnterAndValidatePersonalInfoInputs() {
+        final BaseEngine<?> ENGINE = engine();
+
+        return Flowable
+            .concatArray(
+                rxEnterRandomInput(TextInput.PASSWORD)
+                    .flatMap(a -> rxEditFieldForInput(TextInput.PASSWORD))
+                    .flatMap(a -> Flowable
+                        .concat(
+                            ENGINE.rxHideKeyboard(),
+                            ENGINE.rxTogglePasswordMask(a)
+                        )
+                        .all(BooleanUtil::isTrue)
+                        .toFlowable())
             )
             .all(BooleanUtil::isTrue)
             .toFlowable();
