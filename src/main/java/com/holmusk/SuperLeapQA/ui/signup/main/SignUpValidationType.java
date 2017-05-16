@@ -377,7 +377,6 @@ public interface SignUpValidationType extends BaseActionType {
                                                   @NotNull final String VALUE) {
         return rxEditFieldForInput(input)
             .map(engine()::getText)
-            .doOnNext(LogUtil::println)
             .filter(a -> a.equals(VALUE))
             .switchIfEmpty(RxUtil.error("Value does not equal " + VALUE))
             .map(BooleanUtil::toTrue);
@@ -414,16 +413,21 @@ public interface SignUpValidationType extends BaseActionType {
      * current {@link UserMode}, the confirm button text may change.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rxElementContainingText(String...)
-     * @see RxUtil#error()
+     * @see BaseEngine#platform()
+     * @see BaseEngine#rxElementContainingID(String...)
+     * @see RxUtil#error(String)
      */
     @NotNull
     @SuppressWarnings("unchecked")
     default Flowable<WebElement> rxPersonalInfoSubmitButton() {
-        return engine().rxElementContainingText(
-            "register_title_submit",
-            "register_title_register"
-        );
+        BaseEngine<?> engine = engine();
+        PlatformType platform = engine.platform();
+
+        if (platform.equals(Platform.ANDROID)) {
+            return engine.rxElementsContainingID("btnNext");
+        } else {
+            return RxUtil.error(NOT_IMPLEMENTED);
+        }
     }
 
     /**

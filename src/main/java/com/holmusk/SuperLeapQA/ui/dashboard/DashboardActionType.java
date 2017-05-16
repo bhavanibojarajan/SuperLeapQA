@@ -5,7 +5,10 @@ import com.holmusk.SuperLeapQA.ui.signup.main.SignUpActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.BaseEngine;
+
+import java.util.List;
 
 /**
  * Created by haipham on 5/16/17.
@@ -85,7 +88,10 @@ public interface DashboardActionType extends
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      * @see #rx_splash_personalInfoInput(UserMode)
+     * @see #rxEnterRandomPersonalInfoInputs(List)
      * @see #rxConfirmPersonalInfoInputs()
+     * @see #rxEnterRandomExtraPersonalInfoInputs(UserMode)
+     * @see #rxConfirmExtraPersonalInputs(UserMode)
      * @see BooleanUtil#isTrue(boolean)
      */
     @NotNull
@@ -96,8 +102,6 @@ public interface DashboardActionType extends
             .concatWith(rxConfirmPersonalInfoInputs())
             .concatWith(rxEnterRandomExtraPersonalInfoInputs(mode))
             .concatWith(rxConfirmExtraPersonalInputs(mode))
-            .all(BooleanUtil::isTrue)
-            .toFlowable()
 
             /* First progress bar appears immediately after the submit button
              * is clicked */

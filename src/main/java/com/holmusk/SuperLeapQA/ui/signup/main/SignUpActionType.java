@@ -339,13 +339,10 @@ public interface SignUpActionType extends
      * @see BaseEngine#rxSendKey(WebElement, String...)
      */
     @NotNull
-    default Flowable<Boolean> rxEnterInput(@NotNull TextInputType input,
-                                           @NotNull final String TEXT) {
+    default Flowable<WebElement> rxEnterInput(@NotNull TextInputType input,
+                                              @NotNull final String TEXT) {
         final BaseEngine<?> ENGINE = engine();
-
-        return rxEditFieldForInput(input)
-            .flatMap(a -> ENGINE.rxSendKey(a, TEXT))
-            .map(BooleanUtil::toTrue);
+        return rxEditFieldForInput(input).flatMap(a -> ENGINE.rxSendKey(a, TEXT));
     }
 
     /**
@@ -356,7 +353,7 @@ public interface SignUpActionType extends
      * @see TextInputType#randomInput()
      */
     @NotNull
-    default Flowable<Boolean> rxEnterRandomInput(@NotNull TextInputType input) {
+    default Flowable<WebElement> rxEnterRandomInput(@NotNull TextInputType input) {
         return rxEnterInput(input, input.randomInput());
     }
 
@@ -581,7 +578,10 @@ public interface SignUpActionType extends
     @NotNull
     default Flowable<Boolean> rxConfirmPersonalInfoInputs() {
         final BaseEngine<?> ENGINE = engine();
-        return rxPersonalInfoSubmitButton().flatMap(ENGINE::rxClick).map(a -> true);
+
+        return rxPersonalInfoSubmitButton()
+            .flatMap(ENGINE::rxClick)
+            .map(BooleanUtil::toTrue);
     }
 
     /**
@@ -622,10 +622,8 @@ public interface SignUpActionType extends
             .fromIterable(inputs)
             .ofType(TextInputType.class)
             .flatMap(THIS::rxEnterRandomInput)
-            .flatMap(a -> ENGINE.rxToggleNextInput())
-            .concatWith(ENGINE.rxNavigateBackOnce())
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+            .flatMap(ENGINE::rxToggleNextOrDoneInput)
+            .map(BooleanUtil::toTrue);
     }
 
     /**
@@ -663,21 +661,13 @@ public interface SignUpActionType extends
      * {@link UserMode#TEEN}.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #engine()
-     * @see BaseEngine#rxElementContainingText(String...)
-     * @see BaseEngine#rxClick(WebElement)
-     * @see BooleanUtil#toTrue(Object)
+     * @see #rxConfirmPersonalInfoInputs()
      */
     @NotNull
     default Flowable<Boolean> rxConfirmExtraPersonalInputs(@NotNull UserMode mode) {
         switch (mode) {
             case TEEN:
-                final BaseEngine<?> ENGINE = engine();
-
-                return ENGINE
-                    .rxElementContainingText("register_title_submit")
-                    .flatMap(ENGINE::rxClick)
-                    .map(BooleanUtil::toTrue);
+                return rxConfirmPersonalInfoInputs();
 
             default:
                 return Flowable.just(true);
@@ -942,7 +932,7 @@ public interface SignUpActionType extends
      * @return A {@link Flowable} instance.
      * @see #rxEnterRandomInput(TextInputType)
      * @see #rxEditFieldForInput(InputType)
-     * @see BaseEngine#rxToggleNextInput()
+     * @see BaseEngine#rxToggleNextOrDoneInput(WebElement)
      * @see BaseEngine#rxTogglePasswordMask(WebElement)
      * @see BaseEngine#isShowingPassword(WebElement)
      * @see RxUtil#error()
@@ -958,13 +948,13 @@ public interface SignUpActionType extends
                 Flowable.fromIterable(mode.personalInformation())
                     .ofType(TextInputType.class)
                     .flatMap(THIS::rxEnterRandomInput)
-                    .flatMap(a -> ENGINE.rxToggleNextInput())
+                    .flatMap(ENGINE::rxToggleNextOrDoneInput)
                     .all(BooleanUtil::isTrue)
                     .toFlowable(),
 
                 rxEnterRandomInput(TextInput.PASSWORD)
                     .flatMap(a -> THIS.rxEditFieldForInput(TextInput.PASSWORD))
-                    .flatMap(a -> ENGINE.rxToggleNextInput().flatMap(b ->
+                    .flatMap(a -> ENGINE.rxToggleNextOrDoneInput(a).flatMap(b ->
                         ENGINE.rxTogglePasswordMask(a)
                     ))
                     .filter(ENGINE::isShowingPassword)
