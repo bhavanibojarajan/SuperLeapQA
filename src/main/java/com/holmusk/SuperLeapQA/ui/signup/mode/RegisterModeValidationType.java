@@ -62,20 +62,15 @@ public interface RegisterModeValidationType extends
     default Flowable<Boolean> rxValidateRegisterScreen() {
         final BaseEngine<?> ENGINE = engine();
 
-        return Flowable
-            .concatArray(
-                ENGINE.rxElementContainingText("register_title_iAmParent"),
-                ENGINE.rxElementContainingText("register_title_iRegisterForChild"),
-                ENGINE.rxElementContainingText("register_title_iAmTeen"),
-                ENGINE.rxElementContainingText("register_title_iRegisterForSelf"),
-                ENGINE.rxElementContainingText("register_title_or"),
-                ENGINE.rxElementContainingText("register_title_initiativeByHPB"),
-                rxSignUpButton(UserMode.PARENT),
-                rxSignUpButton(UserMode.TEEN),
-                rxBackButtonTitleLabel()
-            )
-            .all(ObjectUtil::nonNull)
-            .toFlowable()
+        return ENGINE.rxElementContainingText("register_title_iAmParent")
+            .flatMap(a -> ENGINE.rxElementContainingText("register_title_iRegisterForChild"))
+            .flatMap(a -> ENGINE.rxElementContainingText("register_title_iAmTeen"))
+            .flatMap(a -> ENGINE.rxElementContainingText("register_title_iRegisterForSelf"))
+            .flatMap(a -> ENGINE.rxElementContainingText("register_title_or"))
+            .flatMap(a -> ENGINE.rxElementContainingText("register_title_initiativeByHPB"))
+            .flatMap(a -> rxSignUpButton(UserMode.PARENT))
+            .flatMap(a -> rxSignUpButton(UserMode.TEEN))
+            .flatMap(a -> rxBackButtonTitleLabel())
             .map(BooleanUtil::toTrue);
     }
 }

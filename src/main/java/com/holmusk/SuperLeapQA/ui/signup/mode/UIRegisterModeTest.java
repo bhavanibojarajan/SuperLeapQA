@@ -32,13 +32,11 @@ public final class UIRegisterModeTest extends UIBaseTest implements
 
         // When
         rx_splash_register()
-            .concatWith(rxValidateRegisterScreen())
+            .flatMap(a -> rxValidateRegisterScreen())
 
             /* Make sure the back button works */
-            .concatWith(rxNavigateBackWithBackButton())
-            .concatWith(rxValidateWelcomeScreen())
-            .all(BooleanUtil::isTrue)
-            .toFlowable()
+            .flatMap(a -> rxNavigateBackWithBackButton())
+            .flatMap(a -> rxValidateWelcomeScreen())
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

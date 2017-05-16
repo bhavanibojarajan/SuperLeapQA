@@ -14,7 +14,9 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.number.NumberTestUtil;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.element.action.date.type.DateType;
@@ -50,9 +52,11 @@ public interface SignUpActionType extends
      */
     @NotNull
     default Flowable<Boolean> rx_DoBPicker_inputScreenForAge(final int AGE) {
+        final SignUpActionType THIS = this;
+
         return rxOpenDoBPicker()
-            .concatWith(rxSelectDoBToBeOfAge(AGE))
-            .concatWith(rxConfirmDoB())
+            .flatMap(a -> THIS.rxSelectDoBToBeOfAge(AGE))
+            .flatMap(a -> THIS.rxConfirmDoB())
             .all(BooleanUtil::isTrue)
             .toFlowable();
     }
@@ -65,8 +69,7 @@ public interface SignUpActionType extends
      * @see #rx_DoBPicker_inputScreenForAge(int)
      */
     @NotNull
-    default Flowable<Boolean> rx_DoBPicker_acceptableAgeInput(
-        @NotNull UserMode mode) {
+    default Flowable<Boolean> rx_DoBPicker_acceptableAgeInput(@NotNull UserMode mode) {
         List<Integer> range = acceptableAgeRange(mode);
         int age = CollectionTestUtil.randomElement(range);
         return rx_DoBPicker_inputScreenForAge(age);
@@ -96,10 +99,8 @@ public interface SignUpActionType extends
      */
     @NotNull
     default Flowable<Boolean> rx_splash_DoBPicker(@NotNull UserMode mode) {
-        return rx_splash_register()
-            .concatWith(rx_register_DoBPicker(mode))
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+        final SignUpActionType THIS = this;
+        return rx_splash_register().flatMap(a -> THIS.rx_register_DoBPicker(mode));
     }
 
     /**
@@ -112,10 +113,10 @@ public interface SignUpActionType extends
      */
     @NotNull
     default Flowable<Boolean> rx_splash_unacceptableAgeInput(@NotNull UserMode mode) {
+        final SignUpActionType THIS = this;
+
         return rx_splash_DoBPicker(mode)
-            .concatWith(rx_DoBPicker_unacceptableAgeInput(mode))
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+            .flatMap(a -> THIS.rx_DoBPicker_unacceptableAgeInput(mode));
     }
 
     /**
@@ -128,10 +129,10 @@ public interface SignUpActionType extends
      */
     @NotNull
     default Flowable<Boolean> rx_splash_acceptableAgeInput(@NotNull UserMode mode) {
+        final SignUpActionType THIS = this;
+
         return rx_splash_DoBPicker(mode)
-            .concatWith(rx_DoBPicker_acceptableAgeInput(mode))
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+            .flatMap(a -> THIS.rx_DoBPicker_acceptableAgeInput(mode));
     }
 
     /**
@@ -144,10 +145,10 @@ public interface SignUpActionType extends
      */
     @NotNull
     default Flowable<Boolean> rx_splash_personalInfoInput(@NotNull UserMode mode) {
+        final SignUpActionType THIS = this;
+
         return rx_splash_acceptableAgeInput(mode)
-            .concatWith(rx_acceptableAgeInput_personalInfoInput())
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+            .flatMap(a -> THIS.rx_acceptableAgeInput_personalInfoInput());
     }
     //endregion
 
@@ -182,7 +183,7 @@ public interface SignUpActionType extends
         return rxDoBEditField()
             .flatMap(ENGINE::rxClick).map(a -> true)
             .delay(generalDelay(), TimeUnit.MILLISECONDS, Schedulers.trampoline())
-            .concatWith(ENGINE.rxImplicitlyWait(this::generalDelay))
+            .flatMap(a -> ENGINE.rxImplicitlyWait(this::generalDelay))
             .all(BooleanUtil::isTrue)
             .toFlowable();
     }
@@ -296,6 +297,7 @@ public interface SignUpActionType extends
      */
     @NotNull
     default Flowable<Boolean> rxSelectRandomDoB() {
+        final SignUpActionType THIS = this;
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, NumberTestUtil.randomBetween(1, 28));
         calendar.set(Calendar.MONTH, NumberTestUtil.randomBetween(0, 11));
@@ -304,12 +306,10 @@ public interface SignUpActionType extends
 
         // When
         return rxOpenDoBPicker()
-            .concatWith(rxSelectDoB(DATE))
-            .concatWith(rxConfirmDoB())
-            .concatWith(rxNavigateBackWithBackButton())
-            .concatWith(rxDoBEditFieldHasDate(DATE))
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+            .flatMap(a -> THIS.rxSelectDoB(DATE))
+            .flatMap(a -> THIS.rxConfirmDoB())
+            .flatMap(a -> THIS.rxNavigateBackWithBackButton())
+            .flatMap(a -> THIS.rxDoBEditFieldHasDate(DATE));
     }
     //endregion
 
@@ -360,13 +360,16 @@ public interface SignUpActionType extends
     /**
      * Confirm email subscription for future program expansion.
      * @return A {@link Flowable} instance.
+     * @see #engine()
      * @see #rxUnacceptableAgeSubmitButton()
      * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rxConfirmUnacceptableAgeInput() {
+        final BaseEngine<?> ENGINE = engine();
+
         return rxUnacceptableAgeSubmitButton()
-            .flatMap(engine()::rxClick)
+            .flatMap(ENGINE::rxClick)
             .map(BooleanUtil::toTrue);
     }
     //endregion
@@ -520,6 +523,7 @@ public interface SignUpActionType extends
     @NotNull
     @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxEnterRandomAcceptableAgeInputs() {
+        final SignUpActionType THIS = this;
         final Gender GENDER = CollectionTestUtil.randomElement(Gender.values());
         final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
         final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
@@ -530,26 +534,17 @@ public interface SignUpActionType extends
         final double HEIGHT = HEIGHT_MODE.randomSelectableNumericValue();
         final double WEIGHT = WEIGHT_MODE.randomSelectableNumericValue();
 
-        return Flowable
-            .concatArray(
-                rxClickInputField(GENDER),
-                rxSelectEthnicity(ETH),
-                rxSelectCoachPref(CP),
+        return rxClickInputField(GENDER)
+            .flatMap(a -> rxSelectEthnicity(ETH))
+            .flatMap(a -> rxSelectCoachPref(CP))
 
-                rxClickInputField(HEIGHT_MODE)
-                    .concatWith(rxClickInputField(ChoiceInput.HEIGHT))
-                    .concatWith(rxSelectNumericInput(HEIGHT_MODE, HEIGHT))
-                    .all(BooleanUtil::isTrue)
-                    .toFlowable(),
+            .flatMap(a -> rxClickInputField(HEIGHT_MODE))
+            .flatMap(a -> THIS.rxClickInputField(ChoiceInput.HEIGHT))
+            .flatMap(a -> THIS.rxSelectNumericInput(HEIGHT_MODE, HEIGHT))
 
-                rxClickInputField(WEIGHT_MODE)
-                    .concatWith(rxClickInputField(ChoiceInput.WEIGHT))
-                    .concatWith(rxSelectNumericInput(WEIGHT_MODE, WEIGHT))
-                    .all(BooleanUtil::isTrue)
-                    .toFlowable()
-            )
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+            .flatMap(a -> rxClickInputField(WEIGHT_MODE))
+            .flatMap(a -> THIS.rxClickInputField(ChoiceInput.WEIGHT))
+            .flatMap(a -> THIS.rxSelectNumericInput(WEIGHT_MODE, WEIGHT));
     }
     //endregion
 
@@ -563,10 +558,10 @@ public interface SignUpActionType extends
      */
     @NotNull
     default Flowable<Boolean> rx_acceptableAgeInput_personalInfoInput() {
+        final SignUpActionType THIS = this;
+
         return rxEnterRandomAcceptableAgeInputs()
-            .concatWith(rxConfirmAcceptableAgeInputs())
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+            .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs());
     }
 
     /**
@@ -623,7 +618,8 @@ public interface SignUpActionType extends
             .ofType(TextInputType.class)
             .flatMap(THIS::rxEnterRandomInput)
             .flatMap(ENGINE::rxToggleNextOrDoneInput)
-            .map(BooleanUtil::toTrue);
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
     }
 
     /**
@@ -633,14 +629,37 @@ public interface SignUpActionType extends
      * @see #engine()
      * @see UserMode#personalInformation()
      * @see #rxEnterRandomPersonalInfoInputs(List)
+     * @see #rxFinishPersonalInfoInputs()
      * @see #rxToggleTOC(boolean)
      */
     @NotNull
     default Flowable<Boolean> rxEnterRandomPersonalInfoInputs(@NotNull UserMode mode) {
+        final SignUpActionType THIS = this;
+
         return rxEnterRandomPersonalInfoInputs(mode.personalInformation())
-            .concatWith(rxToggleTOC(true))
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+            .flatMap(a -> THIS.rxFinishPersonalInfoInputs())
+            .flatMap(a -> THIS.rxToggleTOC(true));
+    }
+
+    /**
+     * Since it's so difficult to send a done key code, we use this just as
+     * a stopgap measure.
+     * @return A {@link Flowable} instance.
+     * @see #engine()
+     * @see BaseEngine#platform()
+     * @see BaseEngine#rxNavigateBackOnce()
+     * @see RxUtil#error(String)
+     */
+    @NotNull
+    default Flowable<Boolean> rxFinishPersonalInfoInputs() {
+        BaseEngine<?> engine = engine();
+        PlatformType platform = engine.platform();
+
+        if (platform.equals(Platform.ANDROID)) {
+            return engine.rxNavigateBackOnce();
+        } else {
+            return RxUtil.error(NOT_IMPLEMENTED);
+        }
     }
 
     /**
@@ -701,6 +720,7 @@ public interface SignUpActionType extends
      */
     @NotNull
     default Flowable<Boolean> rxCheckDoBDialogHasCorrectElements() {
+        final SignUpActionType THIS = this;
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, NumberTestUtil.randomBetween(1, 28));
         calendar.set(Calendar.MONTH, NumberTestUtil.randomBetween(0, 11));
@@ -708,42 +728,36 @@ public interface SignUpActionType extends
         final Date DATE = calendar.getTime();
 
         return rxOpenDoBPicker()
-            .concatWith(rxSelectDoB(DATE))
-            .concatWith(rxConfirmDoB())
-            .concatWith(rxNavigateBackWithBackButton())
-            .concatWith(rxDoBEditFieldHasDate(DATE))
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+            .flatMap(a -> THIS.rxSelectDoB(DATE))
+            .flatMap(a -> THIS.rxConfirmDoB())
+            .flatMap(a -> THIS.rxNavigateBackWithBackButton())
+            .flatMap(a -> THIS.rxDoBEditFieldHasDate(DATE));
     }
 
     /**
-     * Check if the {@link TextInput#PHONE} input is required, assuming the
-     * user is already in the unacceptable age input screen.
-     * @param mode A {@link UserMode} instance.
+     * Check if either the {@link TextInput#PHONE} or {@link TextInput#EMAIL}
+     * input is required, assuming the user is already in the unacceptable age
+     * input screen.
+     * @param input A {@link TextInput} instance. Should be either
+     * {@link TextInput#EMAIL} or {@link TextInput#PHONE}.
      * @return A {@link Flowable} instance.
      * @see #rxEnterRandomInput(TextInputType)
      * @see #rxConfirmUnacceptableAgeInput()
-     * @see #unacceptableAgeInputConfirmDelay()
+     * @see #rxWatchUntilProgressBarNoLongerVisible()
+     * @see #rxConfirmUnacceptableAgeInputCompleted()
      */
     @NotNull
-    default Flowable<Boolean> rxCheckUnacceptableAgePhoneInputIsRequired(@NotNull UserMode mode) {
-        long delay = unacceptableAgeInputConfirmDelay();
+    default Flowable<Boolean> rxCheckUnacceptableAgeInputRequired(@NotNull TextInput input) {
+        final SignUpActionType THIS = this;
+        final BaseEngine<?> ENGINE = engine();
 
-        return Flowable
-            .concat(
-                rxEnterRandomInput(TextInput.NAME),
-                rxEnterRandomInput(TextInput.EMAIL),
-                rxConfirmUnacceptableAgeInput()
-            )
-            .delay(delay, TimeUnit.MILLISECONDS, Schedulers.trampoline())
-
-            /* We can validate unacceptable age screen - if views are present
-             * it means the app has not navigated to the confirmation screen
-             * yet (which is what we want since we expect there to be input
-             * errors) */
-            .concatWith(rxValidateUnacceptableAgeScreen(mode))
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+        return rxEnterRandomInput(TextInput.NAME)
+            .flatMap(a -> THIS.rxEnterRandomInput(input))
+            .flatMap(a -> ENGINE.rxHideKeyboard())
+            .flatMap(a -> THIS.rxConfirmUnacceptableAgeInput())
+            .flatMap(a -> THIS.rxWatchUntilProgressBarNoLongerVisible())
+            .flatMap(a -> THIS.rxValidateUnacceptableAgeInputConfirmation())
+            .flatMap(a -> THIS.rxConfirmUnacceptableAgeInputCompleted());
     }
 
     /**
@@ -757,25 +771,19 @@ public interface SignUpActionType extends
     @NotNull
     @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxEnterAndValidateUnacceptableAgeInputs() {
+        final SignUpActionType THIS = this;
         final BaseEngine<?> ENGINE = engine();
         long delay = unacceptableAgeInputConfirmDelay();
 
-        return Flowable
-            .concatArray(
-                rxEnterRandomInput(TextInput.NAME),
-                rxEnterRandomInput(TextInput.EMAIL),
-                rxEnterRandomInput(TextInput.PHONE),
-                rxConfirmUnacceptableAgeInput(),
-                rxValidateUnacceptableAgeInputConfirmation()
-            )
+        return rxEnterRandomInput(TextInput.NAME)
+            .flatMap(a -> THIS.rxEnterRandomInput(TextInput.EMAIL))
+            .flatMap(a -> THIS.rxEnterRandomInput(TextInput.PHONE))
+            .flatMap(a -> THIS.rxConfirmUnacceptableAgeInput())
+            .flatMap(a -> THIS.rxValidateUnacceptableAgeInputConfirmation())
             .delay(delay, TimeUnit.MILLISECONDS, Schedulers.trampoline())
-            .all(BooleanUtil::isTrue)
-            .toFlowable()
-            .flatMap(a -> rxUnacceptableAgeInputOkButton())
+            .flatMap(a -> THIS.rxUnacceptableAgeInputOkButton())
             .flatMap(ENGINE::rxClick).map(a -> true)
-            .concatWith(rxValidateWelcomeScreen())
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+            .flatMap(a -> THIS.rxValidateWelcomeScreen());
     }
 
     /**
@@ -788,6 +796,7 @@ public interface SignUpActionType extends
     @NotNull
     @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxEnterAndValidateAcceptableAgeInputs() {
+        final SignUpActionType THIS = this;
         final double HEIGHT_CM = Height.CM.randomSelectableNumericValue();
         final double HEIGHT_FT = Height.FT.randomSelectableNumericValue();
         final String HEIGHT_CM_STR = Height.CM.stringValue(HEIGHT_CM);
@@ -803,51 +812,38 @@ public interface SignUpActionType extends
         final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
         final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
 
-        return Flowable
-            .concatArray(
-                rxClickInputField(Gender.MALE),
-                rxClickInputField(Gender.FEMALE),
-                rxSelectEthnicity(ETH),
-                rxSelectCoachPref(CP),
+        return rxClickInputField(Gender.MALE)
+            .flatMap(a -> THIS.rxClickInputField(Gender.FEMALE))
+            .flatMap(a -> THIS.rxSelectEthnicity(ETH))
+            .flatMap(a -> THIS.rxSelectCoachPref(CP))
 
-                rxClickInputField(Height.CM)
-                    .concatWith(rxClickInputField(ChoiceInput.HEIGHT))
-                    .concatWith(rxSelectNumericInput(Height.CM, HEIGHT_CM))
-                    .concatWith(rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_CM_STR))
-                    .concatWith(rxClickInputField(Height.FT))
-                    .concatWith(rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_CM_FT_STR))
-                    .all(BooleanUtil::isTrue)
-                    .toFlowable(),
+            .flatMap(a -> THIS.rxClickInputField(Height.CM))
+            .flatMap(a -> THIS.rxClickInputField(ChoiceInput.HEIGHT))
+            .flatMap(a -> THIS.rxSelectNumericInput(Height.CM, HEIGHT_CM))
+            .flatMap(a -> THIS.rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_CM_STR))
+            .flatMap(a -> THIS.rxClickInputField(Height.FT))
+            .flatMap(a -> THIS.rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_CM_FT_STR))
 
-                rxClickInputField(Height.FT)
-                    .concatWith(rxClickInputField(ChoiceInput.HEIGHT))
-                    .concatWith(rxSelectNumericInput(Height.FT, HEIGHT_FT))
-                    .concatWith(rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_FT_STR))
-                    .concatWith(rxClickInputField(Height.CM))
-                    .concatWith(rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_FT_CM_STR))
-                    .all(BooleanUtil::isTrue)
-                    .toFlowable(),
+            .flatMap(a -> THIS.rxClickInputField(Height.FT))
+            .flatMap(a -> THIS.rxClickInputField(ChoiceInput.HEIGHT))
+            .flatMap(a -> THIS.rxSelectNumericInput(Height.FT, HEIGHT_FT))
+            .flatMap(a -> THIS.rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_FT_STR))
+            .flatMap(a -> THIS.rxClickInputField(Height.CM))
+            .flatMap(a -> THIS.rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_FT_CM_STR))
 
-                rxClickInputField(Weight.KG)
-                    .concatWith(rxClickInputField(ChoiceInput.WEIGHT))
-                    .concatWith(rxSelectNumericInput(Weight.KG, WEIGHT_KG))
-                    .concatWith(rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_KG_STR))
-                    .concatWith(rxClickInputField(Weight.LB))
-                    .concatWith(rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_KG_LB_STR))
-                    .all(BooleanUtil::isTrue)
-                    .toFlowable(),
+            .flatMap(a -> THIS.rxClickInputField(Weight.KG))
+            .flatMap(a -> THIS.rxClickInputField(ChoiceInput.WEIGHT))
+            .flatMap(a -> THIS.rxSelectNumericInput(Weight.KG, WEIGHT_KG))
+            .flatMap(a -> THIS.rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_KG_STR))
+            .flatMap(a -> THIS.rxClickInputField(Weight.LB))
+            .flatMap(a -> THIS.rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_KG_LB_STR))
 
-                rxClickInputField(Weight.LB)
-                    .concatWith(rxClickInputField(ChoiceInput.WEIGHT))
-                    .concatWith(rxSelectNumericInput(Weight.LB, WEIGHT_LB))
-                    .concatWith(rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_LB_STR))
-                    .concatWith(rxClickInputField(Weight.KG))
-                    .concatWith(rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_LB_KG_STR))
-                    .all(BooleanUtil::isTrue)
-                    .toFlowable()
-            )
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+            .flatMap(a -> THIS.rxClickInputField(Weight.LB))
+            .flatMap(a -> THIS.rxClickInputField(ChoiceInput.WEIGHT))
+            .flatMap(a -> THIS.rxSelectNumericInput(Weight.LB, WEIGHT_LB))
+            .flatMap(a -> THIS.rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_LB_STR))
+            .flatMap(a -> THIS.rxClickInputField(Weight.KG))
+            .flatMap(a -> THIS.rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_LB_KG_STR));
     }
 
     /**
@@ -863,6 +859,7 @@ public interface SignUpActionType extends
     default Flowable<Boolean> rxValidateAcceptableAgeEmptyInputErrors(
         @NotNull final UserMode MODE
     ) {
+        final SignUpActionType THIS = this;
         final BaseEngine<?> ENGINE = engine();
 
         /* If we are testing on iOS, there is not need to check for empty
@@ -880,49 +877,44 @@ public interface SignUpActionType extends
         final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
         final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
 
-        return Flowable
-            .concatArray(
-                /* At this stage, the gender error message should be shown */
-                rxConfirmAcceptableAgeInputs(),
-                rxIsShowingError(GENDER.emptyInputError(MODE)),
-                rxClickInputField(GENDER),
+        /* At this stage, the gender error message should be shown */
+        return rxConfirmAcceptableAgeInputs()
+            .flatMap(a -> THIS.rxIsShowingError(GENDER.emptyInputError(MODE)))
+            .flatMap(a -> THIS.rxClickInputField(GENDER))
 
-                /* At this stage, the height error message should be shown */
-                rxClickInputField(Height.CM),
-                rxConfirmAcceptableAgeInputs(),
-                rxIsShowingError(Height.CM.emptyInputError(MODE)),
-                rxSelectNumericInput(Height.CM, HEIGHT_CM),
+            /* At this stage, the height error message should be shown */
+            .flatMap(a -> THIS.rxClickInputField(Height.CM))
+            .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
+            .flatMap(a -> THIS.rxIsShowingError(Height.CM.emptyInputError(MODE)))
+            .flatMap(a -> THIS.rxSelectNumericInput(Height.CM, HEIGHT_CM))
 
-                /* At this stage, the height error message should be shown */
-                rxClickInputField(Height.FT),
-                rxConfirmAcceptableAgeInputs(),
-                rxIsShowingError(Height.FT.emptyInputError(MODE)),
-                rxSelectNumericInput(Height.FT, HEIGHT_FT),
+            /* At this stage, the height error message should be shown */
+            .flatMap(a -> THIS.rxClickInputField(Height.FT))
+            .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
+            .flatMap(a -> THIS.rxIsShowingError(Height.FT.emptyInputError(MODE)))
+            .flatMap(a -> THIS.rxSelectNumericInput(Height.FT, HEIGHT_FT))
 
-                /* At this stage, the weight error message should be shown */
-                rxClickInputField(Weight.KG),
-                rxConfirmAcceptableAgeInputs(),
-                rxIsShowingError(Weight.KG.emptyInputError(MODE)),
-                rxSelectNumericInput(Weight.KG, WEIGHT_KG),
+            /* At this stage, the weight error message should be shown */
+            .flatMap(a -> THIS.rxClickInputField(Weight.KG))
+            .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
+            .flatMap(a -> THIS.rxIsShowingError(Weight.KG.emptyInputError(MODE)))
+            .flatMap(a -> THIS.rxSelectNumericInput(Weight.KG, WEIGHT_KG))
 
-                /* At this stage, the weight error message should be shown */
-                rxClickInputField(Weight.LB),
-                rxConfirmAcceptableAgeInputs(),
-                rxIsShowingError(Weight.LB.emptyInputError(MODE)),
-                rxSelectNumericInput(Weight.LB, WEIGHT_LB),
+            /* At this stage, the weight error message should be shown */
+            .flatMap(a -> THIS.rxClickInputField(Weight.LB))
+            .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
+            .flatMap(a -> THIS.rxIsShowingError(Weight.LB.emptyInputError(MODE)))
+            .flatMap(a -> THIS.rxSelectNumericInput(Weight.LB, WEIGHT_LB))
 
-                /* At this stage, the ethnicity error message should be shown */
-                rxConfirmAcceptableAgeInputs(),
-                rxIsShowingError(ChoiceInput.ETHNICITY.emptyInputError(MODE)),
-                rxSelectEthnicity(ETH),
+            /* At this stage, the ethnicity error message should be shown */
+            .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
+            .flatMap(a -> THIS.rxIsShowingError(ChoiceInput.ETHNICITY.emptyInputError(MODE)))
+            .flatMap(a -> THIS.rxSelectEthnicity(ETH))
 
-                /* At this stage, the coach pref error message should be shown */
-                rxConfirmAcceptableAgeInputs(),
-                rxIsShowingError(ChoiceInput.COACH_PREFERENCE.emptyInputError(MODE)),
-                rxSelectCoachPref(CP)
-            )
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+            /* At this stage, the coach pref error message should be shown */
+            .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
+            .flatMap(a -> THIS.rxIsShowingError(ChoiceInput.COACH_PREFERENCE.emptyInputError(MODE)))
+            .flatMap(a -> THIS.rxSelectCoachPref(CP));
     }
 
     /**
@@ -943,25 +935,21 @@ public interface SignUpActionType extends
         final SignUpActionType THIS = this;
         final BaseEngine<?> ENGINE = engine();
 
-        return Flowable
-            .concatArray(
-                Flowable.fromIterable(mode.personalInformation())
-                    .ofType(TextInputType.class)
-                    .flatMap(THIS::rxEnterRandomInput)
-                    .flatMap(ENGINE::rxToggleNextOrDoneInput)
-                    .all(BooleanUtil::isTrue)
-                    .toFlowable(),
-
-                rxEnterRandomInput(TextInput.PASSWORD)
-                    .flatMap(a -> THIS.rxEditFieldForInput(TextInput.PASSWORD))
-                    .flatMap(a -> ENGINE.rxToggleNextOrDoneInput(a).flatMap(b ->
-                        ENGINE.rxTogglePasswordMask(a)
-                    ))
-                    .filter(ENGINE::isShowingPassword)
-                    .switchIfEmpty(RxUtil.error())
-            )
+        return Flowable.fromIterable(mode.personalInformation())
+            .ofType(TextInputType.class)
+            .flatMap(THIS::rxEnterRandomInput)
+            .flatMap(ENGINE::rxToggleNextOrDoneInput)
             .all(BooleanUtil::isTrue)
-            .toFlowable();
+            .toFlowable()
+
+            .flatMap(a -> THIS.rxEnterRandomInput(TextInput.PASSWORD))
+            .flatMap(a -> THIS.rxEditFieldForInput(TextInput.PASSWORD))
+            .flatMap(a -> ENGINE.rxToggleNextOrDoneInput(a).flatMap(b ->
+                    ENGINE.rxTogglePasswordMask(a)
+            ))
+            .filter(ENGINE::isShowingPassword)
+            .switchIfEmpty(RxUtil.error())
+            .map(BooleanUtil::toTrue);
     }
     //endregion
 }

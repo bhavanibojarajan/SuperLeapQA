@@ -23,7 +23,7 @@ public interface BaseValidationType extends BaseTestType, AppDelayType {
      * @return A {@link Flowable} instance.
      * @see #engine()
      * @see BaseEngine#platform()
-     * @see BaseEngine#rxElementContainingID(String)
+     * @see BaseEngine#rxElementContainingID(String...)
      */
     @NotNull
     default Flowable<WebElement> rxBackButton() {
@@ -42,7 +42,7 @@ public interface BaseValidationType extends BaseTestType, AppDelayType {
      * @return A {@link Flowable} instance.
      * @see #engine()
      * @see BaseEngine#platform()
-     * @see BaseEngine#rxElementContainingID(String)
+     * @see BaseEngine#rxElementContainingID(String...)
      */
     @NotNull
     default Flowable<WebElement> rxProgressBar() {

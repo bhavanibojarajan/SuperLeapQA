@@ -182,17 +182,13 @@ public interface SignUpValidationType extends BaseActionType {
     default Flowable<Boolean> rxValidateUnacceptableAgeScreen(@NotNull UserMode mode) {
         final BaseEngine<?> ENGINE = engine();
 
-        return Flowable
-            .concatArray(
-                ENGINE.rxElementContainingText("register_title_weAreOnlyAccepting"),
-                ENGINE.rxElementContainingText(acceptableAgeRangeString(mode)),
-                ENGINE.rxElementContainingText("+65"),
-                rxEditFieldForInput(TextInput.NAME),
-                rxEditFieldForInput(TextInput.PHONE),
-                rxEditFieldForInput(TextInput.EMAIL)
-            )
-            .all(ObjectUtil::nonNull)
-            .toFlowable();
+        return ENGINE.rxElementContainingText("register_title_weAreOnlyAccepting")
+            .flatMap(a -> ENGINE.rxElementContainingText(acceptableAgeRangeString(mode)))
+            .flatMap(a -> ENGINE.rxElementContainingText("+65"))
+            .flatMap(a -> rxEditFieldForInput(TextInput.NAME))
+            .flatMap(a -> rxEditFieldForInput(TextInput.PHONE))
+            .flatMap(a -> rxEditFieldForInput(TextInput.EMAIL))
+            .map(BooleanUtil::toTrue);
     }
 
     /**
@@ -213,6 +209,23 @@ public interface SignUpValidationType extends BaseActionType {
     @NotNull
     default Flowable<WebElement> rxUnacceptableAgeInputOkButton() {
         return engine().rxElementContainingText("register_title_ok");
+    }
+
+    /**
+     * Press the ok button after unacceptable age inputs have been completed.
+     * @return A {@link Flowable} instance.
+     * @see #engine()
+     * @see #rxUnacceptableAgeInputOkButton()
+     * @see BaseEngine#rxClick(WebElement)
+     * @see BooleanUtil#toTrue(Object)
+     */
+    @NotNull
+    default Flowable<Boolean> rxConfirmUnacceptableAgeInputCompleted() {
+        final BaseEngine<?> ENGINE = engine();
+
+        return rxUnacceptableAgeInputOkButton()
+            .flatMap(ENGINE::rxClick)
+            .map(BooleanUtil::toTrue);
     }
 
     /**
@@ -346,23 +359,19 @@ public interface SignUpValidationType extends BaseActionType {
     @NotNull
     @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxValidateAcceptableAgeScreen() {
-        return Flowable
-            .concatArray(
-                rxEditFieldForInput(Gender.MALE),
-                rxEditFieldForInput(Gender.FEMALE),
-                rxEditFieldForInput(ChoiceInput.HEIGHT),
-                rxEditFieldForInput(Height.FT),
-                rxEditFieldForInput(Height.CM),
-                rxEditFieldForInput(ChoiceInput.WEIGHT),
-                rxEditFieldForInput(Weight.LB),
-                rxEditFieldForInput(Weight.KG),
-                rxEditFieldForInput(ChoiceInput.ETHNICITY),
-                rxEditFieldForInput(ChoiceInput.COACH_PREFERENCE),
-                rxAcceptableAgeConfirmButton(),
-                rxAcceptableAgeInputTitleLabel()
-            )
-            .all(ObjectUtil::nonNull)
-            .toFlowable();
+        return rxEditFieldForInput(Gender.MALE)
+            .flatMap(a -> rxEditFieldForInput(Gender.FEMALE))
+            .flatMap(a -> rxEditFieldForInput(ChoiceInput.HEIGHT))
+            .flatMap(a -> rxEditFieldForInput(Height.FT))
+            .flatMap(a -> rxEditFieldForInput(Height.CM))
+            .flatMap(a -> rxEditFieldForInput(ChoiceInput.WEIGHT))
+            .flatMap(a -> rxEditFieldForInput(Weight.LB))
+            .flatMap(a -> rxEditFieldForInput(Weight.KG))
+            .flatMap(a -> rxEditFieldForInput(ChoiceInput.ETHNICITY))
+            .flatMap(a -> rxEditFieldForInput(ChoiceInput.COACH_PREFERENCE))
+            .flatMap(a -> rxAcceptableAgeConfirmButton())
+            .flatMap(a -> rxAcceptableAgeInputTitleLabel())
+            .map(BooleanUtil::toTrue);
     }
 
     /**

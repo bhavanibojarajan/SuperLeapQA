@@ -4,6 +4,7 @@ import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
+import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.bool.BooleanUtil;
@@ -36,11 +37,9 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_DoBPicker(UserMode.PARENT)
-            .concatWith(rxValidateParentDoBPickerScreen())
-            .concatWith(rxNavigateBackWithBackButton())
-            .concatWith(rxValidateRegisterScreen())
-            .all(BooleanUtil::isTrue)
-            .toFlowable()
+            .flatMap(a -> rxValidateParentDoBPickerScreen())
+            .flatMap(a -> rxNavigateBackWithBackButton())
+            .flatMap(a -> rxValidateRegisterScreen())
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -57,9 +56,7 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_DoBPicker(mode)
-            .concatWith(rxCheckDoBDialogHasCorrectElements())
-            .all(BooleanUtil::isTrue)
-            .toFlowable()
+            .flatMap(a -> rxCheckDoBDialogHasCorrectElements())
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -77,9 +74,7 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_DoBPicker(mode)
-            .concatWith(rxValidateDoBs(mode, AGES))
-            .all(BooleanUtil::isTrue)
-            .toFlowable()
+            .flatMap(a -> rxValidateDoBs(mode, AGES))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -96,10 +91,8 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_unacceptableAgeInput(mode)
-            .concatWith(rxConfirmUnacceptableAgeInput())
-            .concatWith(rxClickInputField(TextInput.NAME))
-            .all(BooleanUtil::isTrue)
-            .toFlowable()
+            .flatMap(a -> rxConfirmUnacceptableAgeInput())
+            .flatMap(a -> rxClickInputField(TextInput.NAME))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -110,15 +103,18 @@ public class UISignUpTest extends UIBaseTest implements
 
     @SuppressWarnings("unchecked")
     @Test(dataProvider = "userModeProvider")
-    public void test_unacceptableAgePhoneInput_shouldBeRequired(@NotNull UserMode mode) {
+    public void test_unacceptableAgePhoneOrEmail_shouldOnlyRequireOne(@NotNull UserMode mode) {
         // Setup
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
+        /* Check that if phone is entered, we don't need email */
         rx_splash_unacceptableAgeInput(mode)
-            .concatWith(rxCheckUnacceptableAgePhoneInputIsRequired(mode))
-            .all(BooleanUtil::isTrue)
-            .toFlowable()
+            .flatMap(a -> rxCheckUnacceptableAgeInputRequired(TextInput.PHONE))
+
+            /* Check that if email is entered, we don't need phone */
+            .flatMap(a -> rx_splash_unacceptableAgeInput(mode))
+            .flatMap(a -> rxCheckUnacceptableAgeInputRequired(TextInput.EMAIL))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -135,9 +131,7 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_unacceptableAgeInput(mode)
-            .concatWith(rxEnterAndValidateUnacceptableAgeInputs())
-            .all(BooleanUtil::isTrue)
-            .toFlowable()
+            .flatMap(a -> rxEnterAndValidateUnacceptableAgeInputs())
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -154,9 +148,7 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_acceptableAgeInput(mode)
-            .concatWith(rxEnterAndValidateAcceptableAgeInputs())
-            .all(BooleanUtil::isTrue)
-            .toFlowable()
+            .flatMap(a -> rxEnterAndValidateAcceptableAgeInputs())
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -173,9 +165,7 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_acceptableAgeInput(mode)
-            .concatWith(rxValidateAcceptableAgeEmptyInputErrors(mode))
-            .all(BooleanUtil::isTrue)
-            .toFlowable()
+            .flatMap(a -> rxValidateAcceptableAgeEmptyInputErrors(mode))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -192,9 +182,7 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_personalInfoInput(mode)
-            .concatWith(rxEnterAndValidatePersonalInfoInputs(mode))
-            .all(BooleanUtil::isTrue)
-            .toFlowable()
+            .flatMap(a -> rxEnterAndValidatePersonalInfoInputs(mode))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

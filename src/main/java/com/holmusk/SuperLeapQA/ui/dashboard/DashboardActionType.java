@@ -29,10 +29,10 @@ public interface DashboardActionType extends
      */
     @NotNull
     default Flowable<Boolean> rx_splash_useAppNow(@NotNull UserMode mode) {
+        final DashboardActionType THIS = this;
+
         return rx_splash_personalInfoInput(mode)
-            .concatWith(rx_personalInfoInput_useAppNow(mode))
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+            .flatMap(a -> THIS.rx_personalInfoInput_useAppNow(mode));
     }
 
     /**
@@ -46,10 +46,10 @@ public interface DashboardActionType extends
      */
     @NotNull
     default Flowable<Boolean> rx_splash_dashboardTutorial(@NotNull UserMode mode) {
+        final DashboardActionType THIS = this;
+
         return rx_splash_useAppNow(mode)
-            .concatWith(rx_useAppNow_dashboardTutorial())
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+            .flatMap(a -> THIS.rx_useAppNow_dashboardTutorial());
     }
 
     /**
@@ -63,10 +63,10 @@ public interface DashboardActionType extends
      */
     @NotNull
     default Flowable<Boolean> rx_splash_signUp_dashboard(@NotNull UserMode mode) {
+        final DashboardActionType THIS = this;
+
         return rx_splash_dashboardTutorial(mode)
-            .concatWith(rx_dashboardTutorial_dashboard())
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+            .flatMap(a -> THIS.rx_dashboardTutorial_dashboard());
     }
     //endregion
 
@@ -99,22 +99,20 @@ public interface DashboardActionType extends
         final SignUpActionType THIS = this;
 
         return rxEnterRandomPersonalInfoInputs(mode)
-            .concatWith(rxConfirmPersonalInfoInputs())
-            .concatWith(rxEnterRandomExtraPersonalInfoInputs(mode))
-            .concatWith(rxConfirmExtraPersonalInputs(mode))
+            .flatMap(a -> THIS.rxConfirmPersonalInfoInputs())
+            .flatMap(a -> THIS.rxEnterRandomExtraPersonalInfoInputs(mode))
+            .flatMap(a -> THIS.rxConfirmExtraPersonalInputs(mode))
 
             /* First progress bar appears immediately after the submit button
              * is clicked */
-            .concatWith(THIS.rxWatchUntilProgressBarNoLongerVisible())
+            .flatMap(a -> THIS.rxWatchUntilProgressBarNoLongerVisible())
 
             /* There is a short delay between the first and the second
              * progress bar */
-            .concatWith(THIS.rxWatchPersonalInfoScreenUntilNoLongerVisible())
+            .flatMap(a -> THIS.rxWatchPersonalInfoScreenUntilNoLongerVisible())
 
             /* The second progress bar appears */
-            .concatWith(THIS.rxWatchUntilProgressBarNoLongerVisible())
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+            .flatMap(a -> THIS.rxWatchUntilProgressBarNoLongerVisible());
     }
 
     /**

@@ -3,6 +3,7 @@ package com.holmusk.SuperLeapQA.ui.dashboard;
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
+import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
@@ -29,10 +30,10 @@ public class UIMainDashboardTest extends UIBaseTest implements DashboardActionTy
 
         // When
         rx_splash_useAppNow(mode)
-            .concatWith(rxValidateUseAppNowScreen())
-            .concatWith(rxUseAppNow())
-            .concatWith(rxValidateDashboardTutorialScreen())
-            .concatWith(rx_dashboardTutorial_dashboard())
+            .flatMap(a -> rxValidateUseAppNowScreen())
+            .flatMap(a -> rxUseAppNow())
+            .flatMap(a -> rxValidateDashboardTutorialScreen())
+            .flatMap(a -> rx_dashboardTutorial_dashboard())
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
