@@ -35,6 +35,8 @@ public enum UserMode {
     /**
      * Get the personal information inputs for this {@link UserMode}.
      * @return A {@link List} of {@link InputType}.
+     * @see Arrays#asList(Object[])
+     * @see Collections#emptyList()
      */
     @NotNull
     public List<InputType> personalInformation() {
@@ -47,6 +49,37 @@ public enum UserMode {
                     TextInput.EMAIL,
                     TextInput.PASSWORD,
                     TextInput.HOME
+                );
+
+            case TEEN:
+                return Arrays.asList(
+                    TextInput.NAME,
+                    TextInput.MOBILE,
+                    TextInput.EMAIL,
+                    TextInput.PASSWORD,
+                    TextInput.HOME
+                );
+
+            default:
+                return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Get additional personal inputs, esp. for {@link UserMode#TEEN} since
+     * users will need to enter parent's information as well.
+     * @return A {@link List} of {@link InputType}.
+     * @see Arrays#asList(Object[])
+     * @see Collections#emptyList()
+     */
+    @NotNull
+    public List<InputType> extraPersonalInformation() {
+        switch (this) {
+            case TEEN:
+                return Arrays.asList(
+                    TextInput.PARENT_NAME,
+                    TextInput.PARENT_MOBILE,
+                    TextInput.PARENT_EMAIL
                 );
 
             default:

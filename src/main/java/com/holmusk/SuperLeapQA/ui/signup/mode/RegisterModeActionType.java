@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.ui.registermode;
+package com.holmusk.SuperLeapQA.ui.signup.mode;
 
 import com.holmusk.SuperLeapQA.ui.base.BaseActionType;
 import com.holmusk.SuperLeapQA.model.UserMode;

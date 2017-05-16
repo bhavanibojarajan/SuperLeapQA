@@ -2,7 +2,7 @@ package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
-import org.swiften.javautilities.localizer.LocalizationFormat;
+import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.xtestkit.util.type.ValueRangeConverterType;
 
 import java.util.List;
@@ -112,8 +112,8 @@ public interface NumericSelectableInputType extends
     /**
      * We provide a default implementation to make use of max and min values.
      * @param mode A {@link UserMode} instance.
-     * @return A {@link LocalizationFormat} value.
-     * @see InputType#emptySignUpInputError(UserMode)
+     * @return A {@link LCFormat} value.
+     * @see InputType#emptyInputError(UserMode)
      * @see #emptyInputErrorFormat()
      * @see #minSelectableNumericValue()
      * @see #maxSelectableNumericValue()
@@ -121,8 +121,8 @@ public interface NumericSelectableInputType extends
      */
     @NotNull
     @Override
-    default LocalizationFormat emptySignUpInputError(@NotNull UserMode mode) {
-        return LocalizationFormat.builder()
+    default LCFormat emptyInputError(@NotNull UserMode mode) {
+        return LCFormat.builder()
             .withPattern(emptyInputErrorFormat())
             .addArgument(stringValue(minSelectableNumericValue()))
             .addArgument(stringValue(maxSelectableNumericValue()))

@@ -11,7 +11,6 @@ import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.element.locator.general.type.BaseLocatorErrorType;
 import org.swiften.xtestkit.base.type.BaseErrorType;
-import org.swiften.xtestkit.base.type.PlatformErrorType;
 
 import java.util.concurrent.TimeUnit;
 
@@ -22,8 +21,7 @@ import java.util.concurrent.TimeUnit;
 public interface BaseActionType extends
     BaseErrorType,
     BaseValidationType,
-    BaseLocatorErrorType,
-    PlatformErrorType
+    BaseLocatorErrorType
 {
     /**
      * Navigate backwards by clicking the back button.

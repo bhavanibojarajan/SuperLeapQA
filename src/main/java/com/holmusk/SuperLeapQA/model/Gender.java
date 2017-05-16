@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.localizer.LocalizationFormat;
+import org.swiften.javautilities.localizer.LCFormat;
 
 /**
  * Created by haipham on 5/10/17.
@@ -30,11 +30,11 @@ public enum Gender implements InputType {
 
     /**
      * @return A {@link String} value.
-     * @see InputType#emptySignUpInputError(UserMode)
+     * @see InputType#emptyInputError(UserMode)
      */
     @NotNull
     @Override
-    public LocalizationFormat emptySignUpInputError(@NotNull UserMode mode) {
+    public LCFormat emptyInputError(@NotNull UserMode mode) {
         String error;
 
         switch (mode) {
@@ -51,6 +51,6 @@ public enum Gender implements InputType {
                 break;
         }
 
-        return LocalizationFormat.builder().withPattern(error).build();
+        return LCFormat.builder().withPattern(error).build();
     }
 }

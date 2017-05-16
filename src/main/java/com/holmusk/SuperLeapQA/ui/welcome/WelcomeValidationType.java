@@ -19,7 +19,7 @@ public interface WelcomeValidationType extends BaseValidationType {
      * Get the register button on the welcome screen.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rxElementContainingText(String)
+     * @see BaseEngine#rxElementContainingText(String...)
      */
     @NotNull
     default Flowable<WebElement> rxWelcomeRegisterButton() {
@@ -30,7 +30,7 @@ public interface WelcomeValidationType extends BaseValidationType {
      * Get the sign in button on the welcome screen.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rxElementContainingText(String)
+     * @see BaseEngine#rxElementContainingText(String...)
      */
     @NotNull
     default Flowable<WebElement> rxWelcomeSignInButton() {
@@ -58,7 +58,7 @@ public interface WelcomeValidationType extends BaseValidationType {
      * Validate the swipeable splash screens.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rxElementContainingText(String)
+     * @see BaseEngine#rxElementContainingText(String...)
      * @see BaseEngine#rxSwipeGenericLR(DurationType)
      * @see BaseEngine#rxSwipeGenericRL(DurationType)
      */

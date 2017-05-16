@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.localizer.LocalizationFormat;
+import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.xtestkit.base.element.property.type.base.AttributeType;
 
 /**
@@ -37,12 +37,12 @@ public enum CoachPref implements AttributeType<String>, InputType {
 
     /**
      * @return A {@link String} value.
-     * @see InputType#emptySignUpInputError(UserMode)
+     * @see InputType#emptyInputError(UserMode)
      */
     @NotNull
     @Override
-    public LocalizationFormat emptySignUpInputError(@NotNull UserMode mode) {
-        return LocalizationFormat.builder()
+    public LCFormat emptyInputError(@NotNull UserMode mode) {
+        return LCFormat.builder()
             .withPattern("register_error_coachPrefNotSet")
             .build();
     }

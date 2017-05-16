@@ -44,7 +44,7 @@ public class UIBaseTest implements BaseActionType, BaseValidationType {
     @DataProvider
     public Iterator<Object[]> userModeProvider() {
         List<Object[]> data = new LinkedList<>();
-        UserMode[] modes = new UserMode[] { UserMode.PARENT };
+        UserMode[] modes = new UserMode[] { UserMode.TEEN };
 
         for (UserMode mode : modes) {
             data.add(new Object[] { mode });

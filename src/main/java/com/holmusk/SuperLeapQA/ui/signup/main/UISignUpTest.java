@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.ui.signup;
+package com.holmusk.SuperLeapQA.ui.signup.main;
 
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.model.UserMode;

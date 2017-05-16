@@ -3,12 +3,15 @@ package com.holmusk.SuperLeapQA.general;
 import com.holmusk.SuperLeapQA.model.*;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zipped;
-import org.swiften.javautilities.localizer.LocalizationFormat;
+import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.javautilities.localizer.Localizer;
 import org.swiften.javautilities.log.LogUtil;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -94,16 +97,16 @@ public final class GeneralTest {
     @Test
     public void test_emptyInputErrors_shouldBeCorrect() {
         // Setup & When
-        LocalizationFormat parent_gender = Gender.FEMALE.emptySignUpInputError(UserMode.PARENT);
-        LocalizationFormat teen_gender = Gender.MALE.emptySignUpInputError(UserMode.TEEN);
-        LocalizationFormat parent_ft_height = Height.FT.emptySignUpInputError(UserMode.PARENT);
-        LocalizationFormat parent_cm_height = Height.CM.emptySignUpInputError(UserMode.PARENT);
-        LocalizationFormat parent_kg_weight = Weight.KG.emptySignUpInputError(UserMode.PARENT);
-        LocalizationFormat parent_lb_weight = Weight.LB.emptySignUpInputError(UserMode.PARENT);
-        LocalizationFormat teen_ft_height = Height.FT.emptySignUpInputError(UserMode.TEEN);
-        LocalizationFormat teen_cm_height = Height.CM.emptySignUpInputError(UserMode.TEEN);
-        LocalizationFormat teen_kg_weight = Weight.KG.emptySignUpInputError(UserMode.TEEN);
-        LocalizationFormat teen_lb_weight = Weight.LB.emptySignUpInputError(UserMode.TEEN);
+        LCFormat parent_gender = Gender.FEMALE.emptyInputError(UserMode.PARENT);
+        LCFormat teen_gender = Gender.MALE.emptyInputError(UserMode.TEEN);
+        LCFormat parent_ft_height = Height.FT.emptyInputError(UserMode.PARENT);
+        LCFormat parent_cm_height = Height.CM.emptyInputError(UserMode.PARENT);
+        LCFormat parent_kg_weight = Weight.KG.emptyInputError(UserMode.PARENT);
+        LCFormat parent_lb_weight = Weight.LB.emptyInputError(UserMode.PARENT);
+        LCFormat teen_ft_height = Height.FT.emptyInputError(UserMode.TEEN);
+        LCFormat teen_cm_height = Height.CM.emptyInputError(UserMode.TEEN);
+        LCFormat teen_kg_weight = Weight.KG.emptyInputError(UserMode.TEEN);
+        LCFormat teen_lb_weight = Weight.LB.emptyInputError(UserMode.TEEN);
         Localizer localizer = Localizer.builder().addBundle("Strings", Locale.US).build();
 
         // Then
@@ -128,5 +131,19 @@ public final class GeneralTest {
 
         // Then
         LogUtil.println(name, phone, email);
+    }
+
+    @Test
+    public void test_birthDayCalculation_shouldBeCorrect() {
+        // Setup
+        Calendar calendar = Calendar.getInstance();
+        LocalDate date1 = LocalDate.of(2017, 5, 16);
+        LocalDate date2 = LocalDate.of(2013, 5, 15);
+
+        // When
+        long yearDiff = ChronoUnit.YEARS.between(date1, date2);
+
+        // Then
+        LogUtil.println(yearDiff);
     }
 }

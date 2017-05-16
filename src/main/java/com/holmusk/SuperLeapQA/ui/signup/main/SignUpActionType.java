@@ -1,11 +1,11 @@
-package com.holmusk.SuperLeapQA.ui.signup;
+package com.holmusk.SuperLeapQA.ui.signup.main;
 
 import com.holmusk.SuperLeapQA.ui.base.BaseActionType;
 import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.SuperLeapQA.model.InputType;
 import com.holmusk.SuperLeapQA.model.NumericSelectableInputType;
 import com.holmusk.SuperLeapQA.model.TextInputType;
-import com.holmusk.SuperLeapQA.ui.registermode.RegisterModeActionType;
+import com.holmusk.SuperLeapQA.ui.signup.mode.RegisterModeActionType;
 import com.holmusk.SuperLeapQA.ui.welcome.WelcomeActionType;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
@@ -22,7 +22,6 @@ import org.swiften.xtestkit.base.element.action.swipe.type.SwipeType;
 import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatComparisonType;
 import org.swiften.xtestkit.base.element.locator.general.param.TextParam;
 import org.swiften.xtestkit.base.type.DelayType;
-import org.swiften.xtestkit.base.type.PlatformErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
 
@@ -37,7 +36,6 @@ import java.util.concurrent.TimeUnit;
 public interface SignUpActionType extends
     BaseActionType,
     SignUpValidationType,
-    PlatformErrorType,
     RegisterModeActionType,
     WelcomeActionType
 {
@@ -67,7 +65,8 @@ public interface SignUpActionType extends
      * @see #rx_DoBPicker_inputScreenForAge(int)
      */
     @NotNull
-    default Flowable<Boolean> rx_DoBPicker_acceptableAgeInput(@NotNull UserMode mode) {
+    default Flowable<Boolean> rx_DoBPicker_acceptableAgeInput(
+        @NotNull UserMode mode) {
         List<Integer> range = acceptableAgeRange(mode);
         int age = CollectionTestUtil.randomElement(range);
         return rx_DoBPicker_inputScreenForAge(age);
@@ -194,7 +193,7 @@ public interface SignUpActionType extends
      * the next screen, so if we want to check whether the date was properly
      * stored in the DoB text field, we need to navigate back once.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingText(String)
+     * @see BaseEngine#rxElementContainingText(String...)
      * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
@@ -208,7 +207,7 @@ public interface SignUpActionType extends
                 .flatMap(ENGINE::rxClick)
                 .map(BooleanUtil::toTrue);
         } else {
-            return RxUtil.error(PLATFORM_UNAVAILABLE);
+            return RxUtil.error(NOT_IMPLEMENTED);
         }
     }
 
@@ -234,12 +233,6 @@ public interface SignUpActionType extends
     default Flowable<Boolean> rxSelectDoBToBeOfAge(int age) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, -age);
-
-        /* We need to add 1 to the day field to avoid the birthday. E.g.
-         * if the current date is 10/05/2017 and we want the user to be 4
-         * years-old, we need to select 11/05/2013 - any lower than that then
-         * the user would be 5+ years-old */
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
         return rxSelectDoB(calendar.getTime());
     }
 
@@ -474,7 +467,7 @@ public interface SignUpActionType extends
      * Select an {@link Ethnicity} for {@link ChoiceInput#ETHNICITY}.
      * @param E An {@link Ethnicity} instance.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingText(String)
+     * @see BaseEngine#rxElementContainingText(String...)
      * @see #rxClickInputField(InputType)
      * @see BaseEngine#rxClick(WebElement)
      */
@@ -492,7 +485,7 @@ public interface SignUpActionType extends
      * Select a {@link CoachPref} for {@link ChoiceInput#COACH_PREFERENCE}.
      * @param CP A {@link CoachPref} instance.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingText(String)
+     * @see BaseEngine#rxElementContainingText(String...)
      * @see #rxClickInputField(InputType)
      * @see BaseEngine#rxClick(WebElement)
      */
@@ -611,30 +604,84 @@ public interface SignUpActionType extends
 
     /**
      * Enter random personal info inputs in order to access the next screen.
-     * @param mode A {@link UserMode} instance.
+     * This method can be used for {@link UserMode#personalInformation()}
+     * and {@link UserMode#extraPersonalInformation()}.
+     * @param inputs A {@link List} of {@link InputType}.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see UserMode#personalInformation()
      * @see #rxEnterRandomInput(TextInputType)
      * @see BaseEngine#rxNavigateBackOnce()
      * @see #rxToggleTOC(boolean)
      */
     @NotNull
-    default Flowable<Boolean> rxEnterRandomPersonalInfoInputs(@NotNull UserMode mode) {
+    default Flowable<Boolean> rxEnterRandomPersonalInfoInputs(@NotNull List<InputType> inputs) {
         final SignUpActionType THIS = this;
         final BaseEngine<?> ENGINE = engine();
 
         return Flowable
-            .fromIterable(mode.personalInformation())
+            .fromIterable(inputs)
             .ofType(TextInputType.class)
             .flatMap(THIS::rxEnterRandomInput)
             .flatMap(a -> ENGINE.rxToggleNextInput())
-            .all(BooleanUtil::isTrue)
-            .toFlowable()
             .concatWith(ENGINE.rxNavigateBackOnce())
-            .concatWith(THIS.rxToggleTOC(true))
             .all(BooleanUtil::isTrue)
             .toFlowable();
+    }
+
+    /**
+     * Enter random personal info inputs in order to access the next screen.
+     * @param mode A {@link UserMode} instance.
+     * @return A {@link Flowable} instance.
+     * @see #engine()
+     * @see UserMode#personalInformation()
+     * @see #rxEnterRandomPersonalInfoInputs(List)
+     * @see #rxToggleTOC(boolean)
+     */
+    @NotNull
+    default Flowable<Boolean> rxEnterRandomPersonalInfoInputs(@NotNull UserMode mode) {
+        return rxEnterRandomPersonalInfoInputs(mode.personalInformation())
+            .concatWith(rxToggleTOC(true))
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
+    }
+
+    /**
+     * Enter random additional personal info inputs in order to access the
+     * next screen. This is only relevant for {@link UserMode#TEEN}.
+     * @param mode A {@link UserMode} instance.
+     * @return A {@link Flowable} instance.
+     * @see #rxEnterRandomPersonalInfoInputs(List)
+     * @see UserMode#extraPersonalInformation()
+     */
+    @NotNull
+    default Flowable<Boolean> rxEnterRandomExtraPersonalInfoInputs(@NotNull UserMode mode) {
+        return rxEnterRandomPersonalInfoInputs(mode.extraPersonalInformation());
+    }
+
+    /**
+     * Confirm additional personal inputs. This is only relevant to
+     * {@link UserMode#TEEN}.
+     * @param mode A {@link UserMode} instance.
+     * @return A {@link Flowable} instance.
+     * @see #engine()
+     * @see BaseEngine#rxElementContainingText(String...)
+     * @see BaseEngine#rxClick(WebElement)
+     * @see BooleanUtil#toTrue(Object)
+     */
+    @NotNull
+    default Flowable<Boolean> rxConfirmExtraPersonalInputs(@NotNull UserMode mode) {
+        switch (mode) {
+            case TEEN:
+                final BaseEngine<?> ENGINE = engine();
+
+                return ENGINE
+                    .rxElementContainingText("register_title_submit")
+                    .flatMap(ENGINE::rxClick)
+                    .map(BooleanUtil::toTrue);
+
+            default:
+                return Flowable.just(true);
+        }
     }
 
     /**
@@ -847,41 +894,41 @@ public interface SignUpActionType extends
             .concatArray(
                 /* At this stage, the gender error message should be shown */
                 rxConfirmAcceptableAgeInputs(),
-                rxIsShowingError(GENDER.emptySignUpInputError(MODE)),
+                rxIsShowingError(GENDER.emptyInputError(MODE)),
                 rxClickInputField(GENDER),
 
                 /* At this stage, the height error message should be shown */
                 rxClickInputField(Height.CM),
                 rxConfirmAcceptableAgeInputs(),
-                rxIsShowingError(Height.CM.emptySignUpInputError(MODE)),
+                rxIsShowingError(Height.CM.emptyInputError(MODE)),
                 rxSelectNumericInput(Height.CM, HEIGHT_CM),
 
                 /* At this stage, the height error message should be shown */
                 rxClickInputField(Height.FT),
                 rxConfirmAcceptableAgeInputs(),
-                rxIsShowingError(Height.FT.emptySignUpInputError(MODE)),
+                rxIsShowingError(Height.FT.emptyInputError(MODE)),
                 rxSelectNumericInput(Height.FT, HEIGHT_FT),
 
                 /* At this stage, the weight error message should be shown */
                 rxClickInputField(Weight.KG),
                 rxConfirmAcceptableAgeInputs(),
-                rxIsShowingError(Weight.KG.emptySignUpInputError(MODE)),
+                rxIsShowingError(Weight.KG.emptyInputError(MODE)),
                 rxSelectNumericInput(Weight.KG, WEIGHT_KG),
 
                 /* At this stage, the weight error message should be shown */
                 rxClickInputField(Weight.LB),
                 rxConfirmAcceptableAgeInputs(),
-                rxIsShowingError(Weight.LB.emptySignUpInputError(MODE)),
+                rxIsShowingError(Weight.LB.emptyInputError(MODE)),
                 rxSelectNumericInput(Weight.LB, WEIGHT_LB),
 
                 /* At this stage, the ethnicity error message should be shown */
                 rxConfirmAcceptableAgeInputs(),
-                rxIsShowingError(ChoiceInput.ETHNICITY.emptySignUpInputError(MODE)),
+                rxIsShowingError(ChoiceInput.ETHNICITY.emptyInputError(MODE)),
                 rxSelectEthnicity(ETH),
 
                 /* At this stage, the coach pref error message should be shown */
                 rxConfirmAcceptableAgeInputs(),
-                rxIsShowingError(ChoiceInput.COACH_PREFERENCE.emptySignUpInputError(MODE)),
+                rxIsShowingError(ChoiceInput.COACH_PREFERENCE.emptyInputError(MODE)),
                 rxSelectCoachPref(CP)
             )
             .all(BooleanUtil::isTrue)

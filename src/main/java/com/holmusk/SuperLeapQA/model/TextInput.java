@@ -2,7 +2,7 @@ package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
-import org.swiften.javautilities.localizer.LocalizationFormat;
+import org.swiften.javautilities.localizer.LCFormat;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -18,7 +18,10 @@ public enum TextInput implements InputType, TextInputType {
     CHILD_NAME,
     MOBILE,
     PASSWORD,
-    HOME;
+    HOME,
+    PARENT_NAME,
+    PARENT_EMAIL,
+    PARENT_MOBILE;
 
     /**
      * Get the view id for {@link org.swiften.xtestkit.mobile.Platform#ANDROID}
@@ -30,9 +33,11 @@ public enum TextInput implements InputType, TextInputType {
     public String androidViewId() {
         switch (this) {
             case NAME:
+            case PARENT_NAME:
                 return "et_name";
 
             case EMAIL:
+            case PARENT_EMAIL:
                 return "et_email";
 
             case PHONE:
@@ -42,6 +47,7 @@ public enum TextInput implements InputType, TextInputType {
                 return "et_childname";
 
             case MOBILE:
+            case PARENT_MOBILE:
                 return "et_mobile";
 
             case PASSWORD:
@@ -66,6 +72,7 @@ public enum TextInput implements InputType, TextInputType {
         switch (this) {
             case NAME:
             case CHILD_NAME:
+            case PARENT_NAME:
             case PASSWORD:
             case HOME:
                 String baseName = String.join("", IntStream.range(0, 10)
@@ -83,6 +90,7 @@ public enum TextInput implements InputType, TextInputType {
 
             case PHONE:
             case MOBILE:
+            case PARENT_MOBILE:
                 return String.join("", IntStream.range(0, 8)
                     .boxed()
                     .map(a -> IntStream.range(0, 10))
@@ -94,6 +102,7 @@ public enum TextInput implements InputType, TextInputType {
                     .toArray(String[]::new));
 
             case EMAIL:
+            case PARENT_EMAIL:
                 String baseEmail = String.join("", IntStream.range(0, 10)
                     .boxed()
                     .map(a -> IntStream.range(97, 123))
@@ -113,11 +122,11 @@ public enum TextInput implements InputType, TextInputType {
 
     /**
      * @return A {@link String} value.
-     * @see InputType#emptySignUpInputError(UserMode)
+     * @see InputType#emptyInputError(UserMode)
      */
     @NotNull
     @Override
-    public LocalizationFormat emptySignUpInputError(@NotNull UserMode mode) {
-        return LocalizationFormat.empty();
+    public LCFormat emptyInputError(@NotNull UserMode mode) {
+        return LCFormat.empty();
     }
 }

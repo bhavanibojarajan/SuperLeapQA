@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.ui.signup;
+package com.holmusk.SuperLeapQA.ui.signup.main;
 
 import com.holmusk.SuperLeapQA.ui.base.BaseActionType;
 import com.holmusk.SuperLeapQA.model.*;
@@ -7,7 +7,7 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.localizer.LocalizationFormat;
+import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
@@ -31,7 +31,7 @@ public interface SignUpValidationType extends BaseActionType {
     /**
      * Validate the DoB picker screen.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingText(String)
+     * @see BaseEngine#rxElementContainingText(String...)
      * @see #rxDoBEditField()
      * @see #rxDoBElements()
      */
@@ -41,8 +41,12 @@ public interface SignUpValidationType extends BaseActionType {
 
         return Flowable
             .concat(
-                ENGINE.rxElementContainingText("parentSignUp_title_dateOfBirth"),
-                rxDoBEditField()
+                rxDoBEditField(),
+                ENGINE.rxElementContainingText("register_title_dateOfBirth"),
+                ENGINE.rxElementContainingText(
+                    "parentSignUp_title_whatIsYourChild",
+                    "teenSignUp_title_whatIsYour"
+                )
             )
             .all(ObjectUtil::nonNull)
             .<Boolean>toFlowable()
@@ -143,7 +147,7 @@ public interface SignUpValidationType extends BaseActionType {
      * pre-DoB picker screen.
      * @param date A {@link Date} instance.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingText(String)
+     * @see BaseEngine#rxElementContainingText(String...)
      */
     @NotNull
     default Flowable<Boolean> rxDoBEditFieldHasDate(@NotNull Date date) {
@@ -170,7 +174,7 @@ public interface SignUpValidationType extends BaseActionType {
      * restrictions.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingText(String)
+     * @see BaseEngine#rxElementContainingText(String...)
      * @see #rxEditFieldForInput(InputType)
      */
     @NotNull
@@ -194,7 +198,7 @@ public interface SignUpValidationType extends BaseActionType {
     /**
      * Get the confirm button for the unacceptable age inputs.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingText(String)
+     * @see BaseEngine#rxElementContainingText(String...)
      */
     @NotNull
     default Flowable<WebElement> rxUnacceptableAgeSubmitButton() {
@@ -204,7 +208,7 @@ public interface SignUpValidationType extends BaseActionType {
     /**
      * Get the continue button after the unacceptable age input is confirmed.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingText(String)
+     * @see BaseEngine#rxElementContainingText(String...)
      */
     @NotNull
     default Flowable<WebElement> rxUnacceptableAgeInputOkButton() {
@@ -216,7 +220,7 @@ public interface SignUpValidationType extends BaseActionType {
      * submitted.
      * @return A {@link Flowable} instance.
      * @see #rxUnacceptableAgeInputOkButton()
-     * @see BaseEngine#rxElementContainingText(String)
+     * @see BaseEngine#rxElementContainingText(String...)
      */
     @NotNull
     default Flowable<Boolean> rxValidateUnacceptableAgeInputConfirmation() {
@@ -239,7 +243,7 @@ public interface SignUpValidationType extends BaseActionType {
      * {@link InputType}.
      * @param input A {@link InputType} instance.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingID(String)
+     * @see BaseEngine#rxElementContainingID(String...)
      */
     @NotNull
     default Flowable<WebElement> rxEditFieldForInput(@NotNull InputType input) {
@@ -256,7 +260,7 @@ public interface SignUpValidationType extends BaseActionType {
     /**
      * Get the next confirm button for acceptable age input screen.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingText(String)
+     * @see BaseEngine#rxElementContainingText(String...)
      */
     @NotNull
     default Flowable<WebElement> rxAcceptableAgeConfirmButton() {
@@ -266,16 +270,18 @@ public interface SignUpValidationType extends BaseActionType {
     /**
      * Get the back button's title label.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingText(String)
+     * @see BaseEngine#rxElementContainingText(String...)
      */
     @NotNull
-    default Flowable<WebElement> rxParentAcceptableAgeInputTitleLabel() {
+    default Flowable<WebElement> rxAcceptableAgeInputTitleLabel() {
         BaseEngine<?> engine = engine();
         PlatformType platform = engine.platform();
 
         if (platform.equals(Platform.ANDROID)) {
-            String title = "parentSignUp_title_enterChildDetails";
-            return engine.rxElementContainingText(title);
+            return engine.rxElementContainingText(
+                "parentSignUp_title_enterChildDetails",
+                "teenSignUp_title_enterDetails"
+            );
         } else {
             return Flowable.empty();
         }
@@ -286,7 +292,7 @@ public interface SignUpValidationType extends BaseActionType {
      * in the height picker window.
      * @param input A {@link InputType} instance.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingID(String)
+     * @see BaseEngine#rxElementContainingID(String...)
      */
     @NotNull
     default Flowable<WebElement> rxScrollableInputPickerView(@NotNull InputType input) {
@@ -353,7 +359,7 @@ public interface SignUpValidationType extends BaseActionType {
                 rxEditFieldForInput(ChoiceInput.ETHNICITY),
                 rxEditFieldForInput(ChoiceInput.COACH_PREFERENCE),
                 rxAcceptableAgeConfirmButton(),
-                rxParentAcceptableAgeInputTitleLabel()
+                rxAcceptableAgeInputTitleLabel()
             )
             .all(ObjectUtil::nonNull)
             .toFlowable();
@@ -380,37 +386,44 @@ public interface SignUpValidationType extends BaseActionType {
     /**
      * Get the view that pops up when an error is notified to the user. This
      * only works in specific cases however, so use with care.
-     * @param error A {@link LocalizationFormat} value.
+     * @param error A {@link LCFormat} value.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingText(String)
+     * @see BaseEngine#rxElementContainingText(String...)
      */
     @NotNull
-    default Flowable<WebElement> rxErrorPopup(@NotNull LocalizationFormat error) {
+    default Flowable<WebElement> rxErrorPopup(@NotNull LCFormat error) {
         return engine().rxElementContainingText(error);
     }
 
     /**
      * Check whether an error is being shown to the user. This only works in
      * specific cases however, so use with care.
-     * @param error A {@link LocalizationFormat} value.
+     * @param error A {@link LCFormat} value.
      * @return A {@link Flowable} instance.
-     * @see #rxErrorPopup(LocalizationFormat)
+     * @see #rxErrorPopup(LCFormat)
      */
     @NotNull
-    default Flowable<Boolean> rxIsShowingError(@NotNull LocalizationFormat error) {
+    default Flowable<Boolean> rxIsShowingError(@NotNull LCFormat error) {
         return rxErrorPopup(error).map(a -> true);
     }
     //endregion
 
     //region Personal Information
     /**
-     * Get the submit button for the personal info screen.
+     * Get the submit button for the personal info screen. Depending on the
+     * current {@link UserMode}, the confirm button text may change.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingText(String)
+     * @see #engine()
+     * @see BaseEngine#rxElementContainingText(String...)
+     * @see RxUtil#error()
      */
     @NotNull
+    @SuppressWarnings("unchecked")
     default Flowable<WebElement> rxPersonalInfoSubmitButton() {
-        return engine().rxElementContainingText("register_title_submit");
+        return engine().rxElementContainingText(
+            "register_title_submit",
+            "register_title_register"
+        );
     }
 
     /**
@@ -418,7 +431,7 @@ public interface SignUpValidationType extends BaseActionType {
      * @return A {@link Flowable} instance.
      * @see #engine()
      * @see BaseEngine#platform()
-     * @see BaseEngine#rxElementContainingID(String)
+     * @see BaseEngine#rxElementContainingID(String...)
      */
     @NotNull
     default Flowable<WebElement> rxTOCCheckBox() {

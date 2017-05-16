@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.ui.dashboard;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.SuperLeapQA.ui.signup.SignUpActionType;
+import com.holmusk.SuperLeapQA.ui.signup.main.SignUpActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.bool.BooleanUtil;
@@ -91,10 +91,11 @@ public interface DashboardActionType extends
     @NotNull
     default Flowable<Boolean> rx_personalInfoInput_useAppNow(@NotNull UserMode mode) {
         final SignUpActionType THIS = this;
-        final BaseEngine<?> ENGINE = engine();
 
         return rxEnterRandomPersonalInfoInputs(mode)
             .concatWith(rxConfirmPersonalInfoInputs())
+            .concatWith(rxEnterRandomExtraPersonalInfoInputs(mode))
+            .concatWith(rxConfirmExtraPersonalInputs(mode))
             .all(BooleanUtil::isTrue)
             .toFlowable()
 

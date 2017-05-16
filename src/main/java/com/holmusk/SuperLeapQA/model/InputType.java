@@ -5,7 +5,7 @@ package com.holmusk.SuperLeapQA.model;
  */
 
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.localizer.LocalizationFormat;
+import org.swiften.javautilities.localizer.LCFormat;
 
 /**
  * This interface provides methods to help locate
@@ -26,8 +26,8 @@ public interface InputType {
      * Some {@link InputType} may not have a standard error message, however.
      * (e.g. {@link NumericSelectableInputType}.
      * where min/max values are taken into account).
-     * @return A {@link LocalizationFormat} value.
+     * @return A {@link LCFormat} value.
      */
     @NotNull
-    LocalizationFormat emptySignUpInputError(@NotNull UserMode mode);
+    LCFormat emptyInputError(@NotNull UserMode mode);
 }

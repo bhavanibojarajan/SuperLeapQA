@@ -14,7 +14,7 @@ public enum Weight implements NumericSelectableInputType {
 
     /**
      * @return A {@link String} value.
-     * @see NumericSelectableInputType#emptySignUpInputError(UserMode)
+     * @see NumericSelectableInputType#emptyInputError(UserMode)
      */
     @NotNull
     @Override
