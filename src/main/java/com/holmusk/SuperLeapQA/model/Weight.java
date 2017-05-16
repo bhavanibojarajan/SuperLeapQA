@@ -1,6 +1,5 @@
 package com.holmusk.SuperLeapQA.model;
 
-import com.holmusk.SuperLeapQA.model.type.NumericSelectableInputType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;

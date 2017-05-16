@@ -1,7 +1,7 @@
-package com.holmusk.SuperLeapQA.onboarding.register;
+package com.holmusk.SuperLeapQA.ui.registermode;
 
-import com.holmusk.SuperLeapQA.base.UIBaseTest;
-import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeActionType;
+import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
+import com.holmusk.SuperLeapQA.ui.welcome.WelcomeActionType;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
 import io.reactivex.subscribers.TestSubscriber;
 import org.swiften.javautilities.bool.BooleanUtil;
@@ -12,15 +12,15 @@ import org.testng.annotations.Test;
 /**
  * Created by haipham on 5/7/17.
  */
-public final class UIRegisterTest extends UIBaseTest implements
+public final class UIRegisterModeTest extends UIBaseTest implements
     WelcomeActionType,
-    RegisterActionType
+    RegisterModeActionType
 {
     @Factory(
         dataProviderClass = TestRunner.class,
         dataProvider = "dataProvider"
     )
-    public UIRegisterTest(int index) {
+    public UIRegisterModeTest(int index) {
         super(index);
     }
 

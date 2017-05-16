@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.base;
+package com.holmusk.SuperLeapQA.ui.base;
 
 import com.holmusk.SuperLeapQA.config.Config;
 import com.holmusk.SuperLeapQA.model.UserMode;

@@ -1,8 +1,7 @@
-package com.holmusk.SuperLeapQA.dashboard.common;
+package com.holmusk.SuperLeapQA.ui.dashboard;
 
-import com.holmusk.SuperLeapQA.base.BaseValidationType;
+import com.holmusk.SuperLeapQA.ui.base.BaseValidationType;
 import io.reactivex.Flowable;
-import org.intellij.lang.annotations.Flow;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
@@ -12,7 +11,7 @@ import org.swiften.xtestkit.base.BaseEngine;
 /**
  * Created by haipham on 5/16/17.
  */
-public interface BaseDashboardValidationType extends BaseValidationType {
+public interface DashboardValidationType extends BaseValidationType {
     /**
      * Get the Use App Now button.
      * @return A {@link Flowable} instance.

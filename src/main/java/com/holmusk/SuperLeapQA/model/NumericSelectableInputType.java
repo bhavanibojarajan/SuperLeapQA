@@ -1,8 +1,6 @@
-package com.holmusk.SuperLeapQA.model.type;
+package com.holmusk.SuperLeapQA.model;
 
-import com.holmusk.SuperLeapQA.model.UserMode;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.localizer.LocalizationFormat;
 import org.swiften.xtestkit.util.type.ValueRangeConverterType;

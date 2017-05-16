@@ -1,11 +1,9 @@
 package com.holmusk.SuperLeapQA.model;
 
-import com.holmusk.SuperLeapQA.model.type.InputType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 /**

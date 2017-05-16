@@ -1,6 +1,5 @@
 package com.holmusk.SuperLeapQA.model;
 
-import com.holmusk.SuperLeapQA.model.type.InputType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LocalizationFormat;
 

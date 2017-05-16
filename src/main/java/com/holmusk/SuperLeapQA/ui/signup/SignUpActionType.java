@@ -1,12 +1,12 @@
-package com.holmusk.SuperLeapQA.onboarding.common;
+package com.holmusk.SuperLeapQA.ui.signup;
 
-import com.holmusk.SuperLeapQA.base.BaseActionType;
+import com.holmusk.SuperLeapQA.ui.base.BaseActionType;
 import com.holmusk.SuperLeapQA.model.*;
-import com.holmusk.SuperLeapQA.model.type.InputType;
-import com.holmusk.SuperLeapQA.model.type.NumericSelectableInputType;
-import com.holmusk.SuperLeapQA.model.type.TextInputType;
-import com.holmusk.SuperLeapQA.onboarding.register.RegisterActionType;
-import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeActionType;
+import com.holmusk.SuperLeapQA.model.InputType;
+import com.holmusk.SuperLeapQA.model.NumericSelectableInputType;
+import com.holmusk.SuperLeapQA.model.TextInputType;
+import com.holmusk.SuperLeapQA.ui.registermode.RegisterModeActionType;
+import com.holmusk.SuperLeapQA.ui.welcome.WelcomeActionType;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
@@ -34,11 +34,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by haipham on 5/8/17.
  */
-public interface BaseSignUpActionType extends
+public interface SignUpActionType extends
     BaseActionType,
-    BaseSignUpValidationType,
+    SignUpValidationType,
     PlatformErrorType,
-    RegisterActionType,
+    RegisterModeActionType,
     WelcomeActionType
 {
     //region Bridged Navigation
@@ -395,7 +395,7 @@ public interface BaseSignUpActionType extends
         @NotNull final NumericSelectableInputType MODE,
         final double NUMERIC_VALUE)
     {
-        final BaseSignUpActionType THIS = this;
+        final SignUpActionType THIS = this;
         final BaseEngine<?> ENGINE = engine();
         final String HEIGHT_STR = MODE.stringValue(NUMERIC_VALUE);
 
@@ -621,7 +621,7 @@ public interface BaseSignUpActionType extends
      */
     @NotNull
     default Flowable<Boolean> rxEnterRandomPersonalInfoInputs(@NotNull UserMode mode) {
-        final BaseSignUpActionType THIS = this;
+        final SignUpActionType THIS = this;
         final BaseEngine<?> ENGINE = engine();
 
         return Flowable
@@ -903,7 +903,7 @@ public interface BaseSignUpActionType extends
     @NotNull
     @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxEnterAndValidatePersonalInfoInputs(@NotNull UserMode mode) {
-        final BaseSignUpActionType THIS = this;
+        final SignUpActionType THIS = this;
         final BaseEngine<?> ENGINE = engine();
 
         return Flowable

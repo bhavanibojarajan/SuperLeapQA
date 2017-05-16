@@ -1,8 +1,8 @@
-package com.holmusk.SuperLeapQA.onboarding.register;
+package com.holmusk.SuperLeapQA.ui.registermode;
 
-import com.holmusk.SuperLeapQA.base.BaseActionType;
+import com.holmusk.SuperLeapQA.ui.base.BaseActionType;
 import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeActionType;
+import com.holmusk.SuperLeapQA.ui.welcome.WelcomeActionType;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
@@ -13,10 +13,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by haipham on 5/8/17.
  */
-public interface RegisterActionType extends
+public interface RegisterModeActionType extends
     BaseActionType,
     WelcomeActionType,
-    RegisterValidationType
+    RegisterModeValidationType
 {
     /**
      * Navigate from welcome to register screen, assuming the user is already

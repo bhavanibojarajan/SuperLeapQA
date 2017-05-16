@@ -1,8 +1,8 @@
-package com.holmusk.SuperLeapQA.onboarding.common;
+package com.holmusk.SuperLeapQA.ui.signup;
 
-import com.holmusk.SuperLeapQA.base.BaseActionType;
+import com.holmusk.SuperLeapQA.ui.base.BaseActionType;
 import com.holmusk.SuperLeapQA.model.*;
-import com.holmusk.SuperLeapQA.model.type.InputType;
+import com.holmusk.SuperLeapQA.model.InputType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -26,7 +26,7 @@ import java.util.stream.IntStream;
 /**
  * Created by haipham on 5/8/17.
  */
-public interface BaseSignUpValidationType extends BaseActionType {
+public interface SignUpValidationType extends BaseActionType {
     //region DoB Age Range
     /**
      * Validate the DoB picker screen.

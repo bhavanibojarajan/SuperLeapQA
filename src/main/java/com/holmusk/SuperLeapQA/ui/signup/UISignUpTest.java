@@ -1,7 +1,6 @@
-package com.holmusk.SuperLeapQA.onboarding.common;
+package com.holmusk.SuperLeapQA.ui.signup;
 
-import com.holmusk.SuperLeapQA.base.UIBaseTest;
-import com.holmusk.SuperLeapQA.dashboard.common.BaseDashboardActionType;
+import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
@@ -17,15 +16,15 @@ import java.util.List;
 /**
  * Created by haipham on 5/13/17.
  */
-public class UICommonSignUpTest extends UIBaseTest implements
-    BaseSignUpActionType,
-    BaseSignUpValidationType
+public class UISignUpTest extends UIBaseTest implements
+    SignUpActionType,
+    SignUpValidationType
 {
     @Factory(
         dataProviderClass = TestRunner.class,
         dataProvider = "dataProvider"
     )
-    public UICommonSignUpTest(int index) {
+    public UISignUpTest(int index) {
         super(index);
     }
 

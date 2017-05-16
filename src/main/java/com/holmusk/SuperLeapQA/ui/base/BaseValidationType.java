@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.base;
+package com.holmusk.SuperLeapQA.ui.base;
 
 /**
  * Created by haipham on 5/7/17.

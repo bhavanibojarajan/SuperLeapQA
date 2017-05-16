@@ -1,8 +1,8 @@
-package com.holmusk.SuperLeapQA.onboarding.register;
+package com.holmusk.SuperLeapQA.ui.registermode;
 
-import com.holmusk.SuperLeapQA.base.BaseValidationType;
+import com.holmusk.SuperLeapQA.ui.base.BaseValidationType;
 import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeValidationType;
+import com.holmusk.SuperLeapQA.ui.welcome.WelcomeValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -15,7 +15,7 @@ import org.swiften.xtestkit.base.type.PlatformType;
 /**
  * Created by haipham on 5/8/17.
  */
-public interface RegisterValidationType extends
+public interface RegisterModeValidationType extends
     BaseValidationType,
     WelcomeValidationType
 {

@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.model.type;
+package com.holmusk.SuperLeapQA.model;
 
 /**
  * Created by haipham on 5/13/17.

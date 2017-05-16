@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.base;
+package com.holmusk.SuperLeapQA.ui.base;
 
 /**
  * Created by haipham on 5/7/17.
@@ -12,7 +12,6 @@ import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.element.locator.general.type.BaseLocatorErrorType;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformErrorType;
-import org.swiften.xtestkit.test.type.BaseTestType;
 
 import java.util.concurrent.TimeUnit;
 

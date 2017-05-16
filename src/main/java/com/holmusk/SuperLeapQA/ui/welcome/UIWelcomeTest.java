@@ -1,6 +1,6 @@
-package com.holmusk.SuperLeapQA.onboarding.welcome;
+package com.holmusk.SuperLeapQA.ui.welcome;
 
-import com.holmusk.SuperLeapQA.base.UIBaseTest;
+import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
 import io.reactivex.subscribers.TestSubscriber;
 import org.swiften.javautilities.rx.CustomTestSubscriber;

@@ -1,6 +1,6 @@
-package com.holmusk.SuperLeapQA.onboarding.welcome;
+package com.holmusk.SuperLeapQA.ui.welcome;
 
-import com.holmusk.SuperLeapQA.base.BaseActionType;
+import com.holmusk.SuperLeapQA.ui.base.BaseActionType;
 import io.reactivex.Flowable;
 
 import java.util.concurrent.TimeUnit;

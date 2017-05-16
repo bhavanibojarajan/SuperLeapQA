@@ -1,6 +1,6 @@
-package com.holmusk.SuperLeapQA.onboarding.welcome;
+package com.holmusk.SuperLeapQA.ui.welcome;
 
-import com.holmusk.SuperLeapQA.base.BaseValidationType;
+import com.holmusk.SuperLeapQA.ui.base.BaseValidationType;
 import io.reactivex.Flowable;
 import io.reactivex.annotations.NonNull;
 import org.jetbrains.annotations.NotNull;

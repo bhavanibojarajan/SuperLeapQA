@@ -1,9 +1,8 @@
-package com.holmusk.SuperLeapQA.dashboard.common;
+package com.holmusk.SuperLeapQA.ui.dashboard;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.SuperLeapQA.onboarding.common.BaseSignUpActionType;
+import com.holmusk.SuperLeapQA.ui.signup.SignUpActionType;
 import io.reactivex.Flowable;
-import org.intellij.lang.annotations.Flow;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.xtestkit.base.BaseEngine;
@@ -11,9 +10,9 @@ import org.swiften.xtestkit.base.BaseEngine;
 /**
  * Created by haipham on 5/16/17.
  */
-public interface BaseDashboardActionType extends
-    BaseSignUpActionType,
-    BaseDashboardValidationType
+public interface DashboardActionType extends
+    SignUpActionType,
+    DashboardValidationType
 {
     //region Bridged Navigation
     /**
@@ -91,7 +90,7 @@ public interface BaseDashboardActionType extends
      */
     @NotNull
     default Flowable<Boolean> rx_personalInfoInput_useAppNow(@NotNull UserMode mode) {
-        final BaseSignUpActionType THIS = this;
+        final SignUpActionType THIS = this;
         final BaseEngine<?> ENGINE = engine();
 
         return rxEnterRandomPersonalInfoInputs(mode)
