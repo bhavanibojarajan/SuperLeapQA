@@ -6,6 +6,7 @@ import com.holmusk.SuperLeapQA.onboarding.welcome.WelcomeValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.mobile.Platform;
@@ -75,6 +76,6 @@ public interface RegisterValidationType extends
             )
             .all(ObjectUtil::nonNull)
             .toFlowable()
-            .map(a -> true);
+            .map(BooleanUtil::toTrue);
     }
 }

@@ -59,7 +59,7 @@ public interface BaseSignUpValidationType extends BaseActionType {
             /* Dismiss the dialog by navigating back once */
             .flatMap(a -> ENGINE.rxNavigateBackOnce())
             .delay(generalDelay(), TimeUnit.MILLISECONDS)
-            .map(a -> true);
+            .map(BooleanUtil::toTrue);
     }
 
     /**
@@ -249,7 +249,7 @@ public interface BaseSignUpValidationType extends BaseActionType {
         if (platform.equals(Platform.ANDROID)) {
             return engine.rxElementContainingID(input.androidViewId());
         } else {
-            return RxUtil.error(PLATFORM_UNAVAILABLE);
+            return RxUtil.error();
         }
     }
 
@@ -296,7 +296,7 @@ public interface BaseSignUpValidationType extends BaseActionType {
         if (platform.equals(Platform.ANDROID)) {
             return engine.rxElementContainingID("select_dialog_listview");
         } else {
-            return RxUtil.error(NO_SUCH_ELEMENT);
+            return RxUtil.error();
         }
     }
 
@@ -326,7 +326,7 @@ public interface BaseSignUpValidationType extends BaseActionType {
 
             return engine.rxElementsByXPath(byXPath);
         } else {
-            return RxUtil.error(NO_SUCH_ELEMENT);
+            return RxUtil.error();
         }
     }
 
@@ -374,7 +374,7 @@ public interface BaseSignUpValidationType extends BaseActionType {
             .doOnNext(LogUtil::println)
             .filter(a -> a.equals(VALUE))
             .switchIfEmpty(RxUtil.error("Value does not equal " + VALUE))
-            .map(a -> true);
+            .map(BooleanUtil::toTrue);
     }
 
     /**

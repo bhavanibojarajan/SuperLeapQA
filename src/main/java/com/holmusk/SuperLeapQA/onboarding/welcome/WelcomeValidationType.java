@@ -5,21 +5,21 @@ import io.reactivex.Flowable;
 import io.reactivex.annotations.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.param.UnidirectionalSwipeParam;
+import org.swiften.xtestkit.base.type.DurationType;
 
 /**
  * Created by haipham on 5/7/17.
- */
-
-/**
- * Validate splash screen.
  */
 public interface WelcomeValidationType extends BaseValidationType {
     /**
      * Get the register button on the welcome screen.
      * @return A {@link Flowable} instance.
+     * @see #engine()
+     * @see BaseEngine#rxElementContainingText(String)
      */
     @NotNull
     default Flowable<WebElement> rxWelcomeRegisterButton() {
@@ -29,6 +29,8 @@ public interface WelcomeValidationType extends BaseValidationType {
     /**
      * Get the sign in button on the welcome screen.
      * @return A {@link Flowable} instance.
+     * @see #engine()
+     * @see BaseEngine#rxElementContainingText(String)
      */
     @NotNull
     default Flowable<WebElement> rxWelcomeSignInButton() {
@@ -38,19 +40,27 @@ public interface WelcomeValidationType extends BaseValidationType {
     /**
      * Validate that all views are present in splash screen.
      * @return A {@link Flowable} instance.
+     * @see #rxWelcomeSignInButton()
+     * @see #rxWelcomeRegisterButton()
+     * @see ObjectUtil#nonNull(Object)
+     * @see BooleanUtil#toTrue(Object)
      */
     @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxValidateWelcomeScreen() {
         return Flowable
             .concat(rxWelcomeSignInButton(), rxWelcomeRegisterButton())
             .all(ObjectUtil::nonNull)
-            .map(a -> true)
+            .map(BooleanUtil::toTrue)
             .toFlowable();
     }
 
     /**
      * Validate the swipeable splash screens.
      * @return A {@link Flowable} instance.
+     * @see #engine()
+     * @see BaseEngine#rxElementContainingText(String)
+     * @see BaseEngine#rxSwipeGenericLR(DurationType)
+     * @see BaseEngine#rxSwipeGenericRL(DurationType)
      */
     @NonNull
     @SuppressWarnings("unchecked")

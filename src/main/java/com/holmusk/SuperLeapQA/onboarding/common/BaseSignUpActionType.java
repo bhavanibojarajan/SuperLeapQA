@@ -206,7 +206,7 @@ public interface BaseSignUpActionType extends
             return ENGINE
                 .rxElementContainingText("ok")
                 .flatMap(ENGINE::rxClick)
-                .map(a -> true);
+                .map(BooleanUtil::toTrue);
         } else {
             return RxUtil.error(PLATFORM_UNAVAILABLE);
         }
@@ -349,9 +349,10 @@ public interface BaseSignUpActionType extends
     default Flowable<Boolean> rxEnterInput(@NotNull TextInputType input,
                                            @NotNull final String TEXT) {
         final BaseEngine<?> ENGINE = engine();
+
         return rxEditFieldForInput(input)
             .flatMap(a -> ENGINE.rxSendKey(a, TEXT))
-            .map(a -> true);
+            .map(BooleanUtil::toTrue);
     }
 
     /**
@@ -376,7 +377,7 @@ public interface BaseSignUpActionType extends
     default Flowable<Boolean> rxConfirmUnacceptableAgeInput() {
         return rxUnacceptableAgeSubmitButton()
             .flatMap(engine()::rxClick)
-            .map(a -> true);
+            .map(BooleanUtil::toTrue);
     }
     //endregion
 
@@ -450,7 +451,7 @@ public interface BaseSignUpActionType extends
                     .rxElementWithText(TEXT_PARAM)
                     .filter(a -> ENGINE.getText(a).equals(HEIGHT_STR))
                     .flatMap(ENGINE::rxClick)
-                    .map(a -> true);
+                    .map(BooleanUtil::toTrue);
             }
 
             @NotNull
@@ -484,7 +485,7 @@ public interface BaseSignUpActionType extends
         return rxClickInputField(ChoiceInput.ETHNICITY)
             .flatMap(a -> ENGINE.rxElementContainingText(E.value()))
             .flatMap(ENGINE::rxClick)
-            .map(a -> true);
+            .map(BooleanUtil::toTrue);
     }
 
     /**
@@ -502,7 +503,7 @@ public interface BaseSignUpActionType extends
         return rxClickInputField(ChoiceInput.COACH_PREFERENCE)
             .flatMap(a -> ENGINE.rxElementContainingText(CP.value()))
             .flatMap(ENGINE::rxClick)
-            .map(a -> true);
+            .map(BooleanUtil::toTrue);
     }
 
     /**
@@ -605,7 +606,7 @@ public interface BaseSignUpActionType extends
 
         return rxTOCCheckBox()
             .flatMap(a -> ENGINE.rxSetCheckBoxState(a, ACCEPTED))
-            .map(a -> true);
+            .map(BooleanUtil::toTrue);
     }
 
     /**
@@ -634,6 +635,21 @@ public interface BaseSignUpActionType extends
             .concatWith(THIS.rxToggleTOC(true))
             .all(BooleanUtil::isTrue)
             .toFlowable();
+    }
+
+    /**
+     * Watch until the personal info screen is no longer visible.
+     * @return A {@link Flowable} instance.
+     * @see #rxPersonalInfoSubmitButton()
+     * @see BaseEngine#rxWatchUntilNoLongerVisible(WebElement)
+     */
+    @NotNull
+    default Flowable<Boolean> rxWatchPersonalInfoScreenUntilNoLongerVisible() {
+        final BaseEngine<?> ENGINE = engine();
+
+        return rxPersonalInfoSubmitButton()
+            .flatMap(ENGINE::rxWatchUntilNoLongerVisible)
+            .onErrorReturnItem(true);
     }
     //endregion
 

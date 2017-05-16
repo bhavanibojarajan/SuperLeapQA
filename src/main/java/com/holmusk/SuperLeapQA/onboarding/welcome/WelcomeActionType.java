@@ -8,14 +8,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by haipham on 5/7/17.
  */
-
-/**
- * Splash screen navigation.
- */
-public interface WelcomeActionType extends
-    BaseActionType,
-    WelcomeValidationType
-{
+public interface WelcomeActionType extends BaseActionType, WelcomeValidationType {
     /**
      * Wait for splash screen to finish and navigate to welcome screen.
      * @return A {@link Flowable} instance.

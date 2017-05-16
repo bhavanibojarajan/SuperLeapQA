@@ -7,6 +7,7 @@ package com.holmusk.SuperLeapQA.base;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
@@ -18,8 +19,11 @@ import org.swiften.xtestkit.test.type.BaseTestType;
  */
 public interface BaseValidationType extends BaseTestType, AppDelayType {
     /**
-     * Get the back button in register screen.
+     * Get the common back button.
      * @return A {@link Flowable} instance.
+     * @see #engine()
+     * @see BaseEngine#platform()
+     * @see BaseEngine#rxElementContainingID(String)
      */
     @NotNull
     default Flowable<WebElement> rxBackButton() {
@@ -29,7 +33,26 @@ public interface BaseValidationType extends BaseTestType, AppDelayType {
         if (platform.equals(Platform.ANDROID)) {
             return engine.rxElementContainingID("btnBack");
         } else {
-            return Flowable.empty();
+            return RxUtil.error();
+        }
+    }
+
+    /**
+     * Get the common probress bar.
+     * @return A {@link Flowable} instance.
+     * @see #engine()
+     * @see BaseEngine#platform()
+     * @see BaseEngine#rxElementContainingID(String)
+     */
+    @NotNull
+    default Flowable<WebElement> rxProgressBar() {
+        BaseEngine<?> engine = engine();
+        PlatformType platform = engine.platform();
+
+        if (platform.equals(Platform.ANDROID)) {
+            return engine.rxElementContainingID("pb_general");
+        } else {
+            return RxUtil.error();
         }
     }
 }

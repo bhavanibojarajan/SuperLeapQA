@@ -1,20 +1,18 @@
 package com.holmusk.SuperLeapQA.onboarding.common;
 
 import com.holmusk.SuperLeapQA.base.UIBaseTest;
+import com.holmusk.SuperLeapQA.dashboard.common.BaseDashboardActionType;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by haipham on 5/13/17.
