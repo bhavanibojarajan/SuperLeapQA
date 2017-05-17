@@ -10,6 +10,7 @@ import com.holmusk.SuperLeapQA.ui.welcome.WelcomeActionType;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
+import org.intellij.lang.annotations.Flow;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
@@ -149,6 +150,22 @@ public interface SignUpActionType extends
 
         return rx_splash_acceptableAgeInput(mode)
             .flatMap(a -> THIS.rx_acceptableAgeInput_personalInfoInput());
+    }
+
+    /**
+     * Bridge method that helps navigate from splash screen to extra personal
+     * info screen. Only applicable to {@link UserMode#TEEN}.
+     * @param MODE A {@link UserMode} instance.
+     * @return A {@link Flowable} instance.
+     * @see #rx_splash_personalInfoInput(UserMode)
+     * @see #rx_personalInfoInputs_extraInfoInputs(UserMode)
+     */
+    @NotNull
+    default Flowable<Boolean> rx_splash_extraInfoInput(@NotNull final UserMode MODE) {
+        final SignUpActionType THIS = this;
+
+        return rx_splash_personalInfoInput(MODE)
+            .flatMap(a -> THIS.rx_personalInfoInputs_extraInfoInputs(MODE));
     }
     //endregion
 
@@ -616,8 +633,8 @@ public interface SignUpActionType extends
         return Flowable
             .fromIterable(inputs)
             .ofType(TextInputType.class)
-            .flatMap(THIS::rxEnterRandomInput)
-            .flatMap(ENGINE::rxToggleNextOrDoneInput)
+            .concatMap(THIS::rxEnterRandomInput)
+            .concatMap(ENGINE::rxToggleNextInput)
             .all(ObjectUtil::nonNull)
             .toFlowable();
     }
@@ -629,37 +646,17 @@ public interface SignUpActionType extends
      * @see #engine()
      * @see UserMode#personalInformation()
      * @see #rxEnterRandomPersonalInfoInputs(List)
-     * @see #rxFinishPersonalInfoInputs()
+     * @see BaseEngine#rxHideKeyboard()
      * @see #rxToggleTOC(boolean)
      */
     @NotNull
     default Flowable<Boolean> rxEnterRandomPersonalInfoInputs(@NotNull UserMode mode) {
         final SignUpActionType THIS = this;
+        final BaseEngine<?> ENGINE = THIS.engine();
 
         return rxEnterRandomPersonalInfoInputs(mode.personalInformation())
-            .flatMap(a -> THIS.rxFinishPersonalInfoInputs())
+            .flatMap(a -> ENGINE.rxHideKeyboard())
             .flatMap(a -> THIS.rxToggleTOC(true));
-    }
-
-    /**
-     * Since it's so difficult to send a done key code, we use this just as
-     * a stopgap measure.
-     * @return A {@link Flowable} instance.
-     * @see #engine()
-     * @see BaseEngine#platform()
-     * @see BaseEngine#rxNavigateBackOnce()
-     * @see RxUtil#error(String)
-     */
-    @NotNull
-    default Flowable<Boolean> rxFinishPersonalInfoInputs() {
-        BaseEngine<?> engine = engine();
-        PlatformType platform = engine.platform();
-
-        if (platform.equals(Platform.ANDROID)) {
-            return engine.rxNavigateBackOnce();
-        } else {
-            return RxUtil.error(NOT_IMPLEMENTED);
-        }
     }
 
     /**
@@ -706,6 +703,29 @@ public interface SignUpActionType extends
         return rxPersonalInfoSubmitButton()
             .flatMap(ENGINE::rxWatchUntilNoLongerVisible)
             .onErrorReturnItem(true);
+    }
+
+    /**
+     * Navigate from the personal info input screen to the extra info input
+     * screen. Only applicable to {@link UserMode#TEEN}.
+     * @param mode A {@link UserMode} instance.
+     * @return A {@link Flowable} instance.
+     * @see #rxEnterRandomPersonalInfoInputs(UserMode)
+     * @see #rxConfirmPersonalInfoInputs()
+     * @see UserMode#TEEN
+     */
+    @NotNull
+    default Flowable<Boolean> rx_personalInfoInputs_extraInfoInputs(@NotNull UserMode mode) {
+        switch (mode) {
+            case TEEN:
+                final SignUpActionType THIS = this;
+
+                return rxEnterRandomPersonalInfoInputs(mode)
+                    .flatMap(a -> THIS.rxConfirmPersonalInfoInputs());
+
+            default:
+                return Flowable.just(true);
+        }
     }
     //endregion
 
@@ -937,14 +957,12 @@ public interface SignUpActionType extends
 
         return Flowable.fromIterable(mode.personalInformation())
             .ofType(TextInputType.class)
-            .flatMap(THIS::rxEnterRandomInput)
-            .flatMap(ENGINE::rxToggleNextOrDoneInput)
-            .all(BooleanUtil::isTrue)
-            .toFlowable()
+            .concatMap(THIS::rxEnterRandomInput)
+            .concatMap(ENGINE::rxToggleNextOrDoneInput)
 
-            .flatMap(a -> THIS.rxEnterRandomInput(TextInput.PASSWORD))
-            .flatMap(a -> THIS.rxEditFieldForInput(TextInput.PASSWORD))
-            .flatMap(a -> ENGINE.rxToggleNextOrDoneInput(a).flatMap(b ->
+            .concatMap(a -> THIS.rxEnterRandomInput(TextInput.PASSWORD))
+            .concatMap(a -> THIS.rxEditFieldForInput(TextInput.PASSWORD))
+            .concatMap(a -> ENGINE.rxToggleNextOrDoneInput(a).flatMap(b ->
                     ENGINE.rxTogglePasswordMask(a)
             ))
             .filter(ENGINE::isShowingPassword)

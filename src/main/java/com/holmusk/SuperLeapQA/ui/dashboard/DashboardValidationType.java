@@ -31,16 +31,13 @@ public interface DashboardValidationType extends BaseValidationType {
      */
     @NotNull
     default Flowable<Boolean> rxValidateUseAppNowScreen() {
-        BaseEngine<?> engine = engine();
+        final DashboardValidationType THIS = this;
+        final BaseEngine<?> ENGINE = engine();
 
-        return Flowable
-            .concat(
-                engine.rxElementContainingText("dashboard_title_accountReadyToUse"),
-                engine.rxElementContainingText("dashboard_title_rememberToCheckEmail"),
-                rxUseAppNowButton()
-            )
-            .all(ObjectUtil::nonNull)
-            .toFlowable();
+        return ENGINE.rxElementContainingText("dashboard_title_accountReadyToUse")
+            .flatMap(a -> ENGINE.rxElementContainingText("dashboard_title_rememberCheckEmail"))
+            .flatMap(a -> THIS.rxUseAppNowButton())
+            .map(BooleanUtil::toTrue);
     }
 
     /**
