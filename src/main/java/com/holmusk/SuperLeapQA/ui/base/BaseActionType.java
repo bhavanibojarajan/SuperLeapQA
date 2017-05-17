@@ -45,14 +45,14 @@ public interface BaseActionType extends
      * @return A {@link Flowable} instance.
      * @see #engine()
      * @see #rxProgressBar()
-     * @see BaseEngine#rxWatchUntilNoLongerVisible(WebElement)
+     * @see BaseEngine#rxWatchUntilHidden(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rxWatchUntilProgressBarNoLongerVisible() {
         final BaseEngine<?> ENGINE = engine();
 
         return rxProgressBar()
-            .flatMap(ENGINE::rxWatchUntilNoLongerVisible)
+            .flatMap(ENGINE::rxWatchUntilHidden)
             .onErrorReturnItem(true);
     }
 }

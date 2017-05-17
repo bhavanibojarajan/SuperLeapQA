@@ -1,20 +1,22 @@
 package com.holmusk.SuperLeapQA.ui.dashboard;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.SuperLeapQA.ui.signup.main.SignUpActionType;
+import com.holmusk.SuperLeapQA.ui.signup.main.*;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
+import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.BaseEngine;
-
-import java.util.List;
 
 /**
  * Created by haipham on 5/16/17.
  */
 public interface DashboardActionType extends
     SignUpActionType,
+    DOBPickerActionType,
+    UnacceptableAgeInputActionType,
+    AcceptableAgeInputType,
+    PersonalInfoInputActionType,
     DashboardValidationType
 {
     //region Bridged Navigation
@@ -23,16 +25,14 @@ public interface DashboardActionType extends
      * now screen, by registering a new account.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rx_splash_personalInfoInput(UserMode)
-     * @see #rx_personalInfoInput_useAppNow(UserMode)
+     * @see #rx_splash_personalInfo(UserMode)
+     * @see #rx_personalInfo_useApp(UserMode)
      * @see BooleanUtil#isTrue(boolean)
      */
     @NotNull
-    default Flowable<Boolean> rx_splash_useAppNow(@NotNull UserMode mode) {
+    default Flowable<Boolean> rx_splash_useApp(@NotNull UserMode mode) {
         final DashboardActionType THIS = this;
-
-        return rx_splash_personalInfoInput(mode)
-            .flatMap(a -> THIS.rx_personalInfoInput_useAppNow(mode));
+        return rx_splash_personalInfo(mode).flatMap(a -> THIS.rx_personalInfo_useApp(mode));
     }
 
     /**
@@ -40,16 +40,14 @@ public interface DashboardActionType extends
      * by registering a new account.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rx_splash_useAppNow(UserMode)
-     * @see #rx_useAppNow_dashboardTutorial()
+     * @see #rx_splash_useApp(UserMode)
+     * @see #rx_useApp_tutorial()
      * @see BooleanUtil#isTrue(boolean)
      */
     @NotNull
-    default Flowable<Boolean> rx_splash_dashboardTutorial(@NotNull UserMode mode) {
+    default Flowable<Boolean> rx_splash_tutorial(@NotNull UserMode mode) {
         final DashboardActionType THIS = this;
-
-        return rx_splash_useAppNow(mode)
-            .flatMap(a -> THIS.rx_useAppNow_dashboardTutorial());
+        return rx_splash_useApp(mode).flatMap(a -> THIS.rx_useApp_tutorial());
     }
 
     /**
@@ -57,51 +55,49 @@ public interface DashboardActionType extends
      * registering a new account.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rx_splash_dashboardTutorial(UserMode)
-     * @see #rx_dashboardTutorial_dashboard()
+     * @see #rx_splash_tutorial(UserMode)
+     * @see #rx_tutorial_dashboard()
      * @see BooleanUtil#isTrue(boolean)
      */
     @NotNull
     default Flowable<Boolean> rx_splash_signUp_dashboard(@NotNull UserMode mode) {
         final DashboardActionType THIS = this;
-
-        return rx_splash_dashboardTutorial(mode)
-            .flatMap(a -> THIS.rx_dashboardTutorial_dashboard());
+        return rx_splash_tutorial(mode).flatMap(a -> THIS.rx_tutorial_dashboard());
     }
     //endregion
 
     /**
      * Click the Use App Now button.
      * @return A {@link Flowable} instance.
+     * @see #rxUseAppNowButton()
+     * @see BaseEngine#rxClick(WebElement)
+     * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
     default Flowable<Boolean> rxUseAppNow() {
         final BaseEngine<?> ENGINE = engine();
-
-        return rxUseAppNowButton()
-            .flatMap(ENGINE::rxClick)
-            .map(BooleanUtil::toTrue);
+        return rxUseAppNowButton().flatMap(ENGINE::rxClick).map(BooleanUtil::toTrue);
     }
 
     /**
      * Navigate from the personal info input screen to the dashboard screen.
-     * @param mode A {@link UserMode} instance.
+     * @param MODE A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rx_splash_personalInfoInput(UserMode)
-     * @see #rxEnterRandomPersonalInfoInputs(List)
-     * @see #rxConfirmPersonalInfoInputs()
-     * @see #rxEnterRandomExtraPersonalInfoInputs(UserMode)
-     * @see #rxConfirmExtraPersonalInputs(UserMode)
+     * @see #rx_splash_personalInfo(UserMode)
+     * @see #rxEnterPersonalInfo(UserMode)
+     * @see #rxConfirmPersonalInfo()
+     * @see #rxEnterExtraPersonalInfo(UserMode)
+     * @see #rxConfirmExtraPersonalInfo(UserMode)
      * @see BooleanUtil#isTrue(boolean)
      */
     @NotNull
-    default Flowable<Boolean> rx_personalInfoInput_useAppNow(@NotNull UserMode mode) {
-        final SignUpActionType THIS = this;
+    default Flowable<Boolean> rx_personalInfo_useApp(@NotNull final UserMode MODE) {
+        final DashboardActionType THIS = this;
 
-        return rxEnterRandomPersonalInfoInputs(mode)
-            .flatMap(a -> THIS.rxConfirmPersonalInfoInputs())
-            .flatMap(a -> THIS.rxEnterRandomExtraPersonalInfoInputs(mode))
-            .flatMap(a -> THIS.rxConfirmExtraPersonalInputs(mode))
+        return rxEnterPersonalInfo(MODE)
+            .flatMap(a -> THIS.rxConfirmPersonalInfo())
+            .flatMap(a -> THIS.rxEnterPersonalInfo(MODE))
+            .flatMap(a -> THIS.rxConfirmExtraPersonalInfo(MODE))
 
             /* First progress bar appears immediately after the submit button
              * is clicked */
@@ -109,7 +105,7 @@ public interface DashboardActionType extends
 
             /* There is a short delay between the first and the second
              * progress bar */
-            .flatMap(a -> THIS.rxWatchPersonalInfoScreenUntilNoLongerVisible())
+            .flatMap(a -> THIS.rxWatchPersonalInfoScreenUntilHidden())
 
             /* The second progress bar appears */
             .flatMap(a -> THIS.rxWatchUntilProgressBarNoLongerVisible());
@@ -122,7 +118,7 @@ public interface DashboardActionType extends
      * @see #rxUseAppNow()
      */
     @NotNull
-    default Flowable<Boolean> rx_useAppNow_dashboardTutorial() {
+    default Flowable<Boolean> rx_useApp_tutorial() {
         return rxUseAppNow();
     }
 
@@ -134,7 +130,7 @@ public interface DashboardActionType extends
      * @see BaseEngine#rxNavigateBackOnce()
      */
     @NotNull
-    default Flowable<Boolean> rx_dashboardTutorial_dashboard() {
+    default Flowable<Boolean> rx_tutorial_dashboard() {
         return engine().rxNavigateBackOnce();
     }
 }

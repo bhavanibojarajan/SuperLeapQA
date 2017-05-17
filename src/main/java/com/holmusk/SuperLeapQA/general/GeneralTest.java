@@ -146,4 +146,13 @@ public final class GeneralTest {
         // Then
         LogUtil.println(yearDiff);
     }
+
+    @Test
+    public void test_userModeAgeRange_shouldBeCorrect() {
+        // Setup & When & Then
+        LogUtil.println(UserMode.PARENT.acceptableAgeRange());
+        LogUtil.println(UserMode.PARENT.acceptableAgeRangeString());
+        LogUtil.println(UserMode.TEEN.acceptableAgeRange());
+        LogUtil.println(UserMode.TEEN.acceptableAgeRangeString());
+    }
 }

@@ -1,17 +1,25 @@
 package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
+import org.swiften.xtestkit.util.type.ValueRangeConverterType;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Created by haipham on 5/13/17.
  */
-public enum UserMode {
+public enum UserMode implements ValueRangeConverterType<Integer> {
     PARENT,
     TEEN;
+
+    @NotNull
+    @Override
+    public Converter<Integer> converter() {
+        return a -> Double.valueOf(a).intValue();
+    }
 
     /**
      * Get the sign up button's id for
@@ -119,5 +127,49 @@ public enum UserMode {
             default:
                 return 0;
         }
+    }
+
+    /**
+     * Get the acceptable age range for the current sign up mode.
+     * @return A {@link List} of {@link Integer}.
+     * @see #valueRange(Number, Number, Number)
+     * @see #minAcceptableAge()
+     * @see #maxAcceptableAge()
+     */
+    @NotNull
+    public List<Integer> acceptableAgeRange() {
+        int minAge = minAcceptableAge();
+        int maxAge = maxAcceptableAge();
+        return valueRange(minAge, maxAge + 1, 1);
+    }
+
+    /**
+     * Get an age range with lower/upper bounds that are lower/higher than
+     * the min/max age by an offset value.
+     * @param offset An {@link Integer} value.
+     * @return A {@link List} of {@link Integer}.
+     * @see #valueRange(Number, Number, Number)
+     * @see #minAcceptableAge()
+     * @see #maxAcceptableAge()
+     */
+    @NotNull
+    public List<Integer> ageOffsetFromAcceptableRange(int offset) {
+        int minAge = minAcceptableAge() - offset;
+        int maxAge = maxAcceptableAge() + offset;
+        return valueRange(minAge, maxAge + 1, 1);
+    }
+
+    /**
+     * Get the {@link String} representation of the acceptable age range.
+     * @return A {@link String} value.
+     * @see #acceptableAgeRange()
+     * @see #minAcceptableAge()
+     * @see #maxAcceptableAge()
+     */
+    @NotNull
+    public String acceptableAgeRangeString() {
+        int minAge = minAcceptableAge();
+        int maxAge = maxAcceptableAge();
+        return String.format("%1$d-%2$d", minAge, maxAge);
     }
 }

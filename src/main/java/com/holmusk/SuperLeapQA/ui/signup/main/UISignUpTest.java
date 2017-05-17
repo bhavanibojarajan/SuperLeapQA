@@ -5,10 +5,8 @@ import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
-import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -24,7 +22,11 @@ import java.util.List;
  */
 public class UISignUpTest extends UIBaseTest implements
     SignUpActionType,
-    SignUpValidationType
+    SignUpValidationType,
+    DOBPickerActionType,
+    UnacceptableAgeInputActionType,
+    AcceptableAgeInputType,
+    PersonalInfoInputActionType
 {
     @Factory(
         dataProviderClass = TestRunner.class,
@@ -93,7 +95,7 @@ public class UISignUpTest extends UIBaseTest implements
         // Setup
         final UISignUpTest THIS = this;
         TestSubscriber subscriber = CustomTestSubscriber.create();
-        final List<Integer> AGES = ageOffsetFromAcceptableRange(mode, 2);
+        final List<Integer> AGES = mode.ageOffsetFromAcceptableRange(2);
 
         // When
         rx_splash_DoBPicker(mode)
@@ -127,7 +129,7 @@ public class UISignUpTest extends UIBaseTest implements
 
     @SuppressWarnings("unchecked")
     @Test(dataProvider = "userModeProvider")
-    public void test_unacceptableAgePhoneOrEmail_shouldOnlyRequireOne(@NotNull UserMode mode) {
+    public void test_unacceptableAgeInput_shouldRequirePhoneOrEmail(@NotNull UserMode mode) {
         // Setup
         final UISignUpTest THIS = this;
         TestSubscriber subscriber = CustomTestSubscriber.create();
@@ -174,7 +176,7 @@ public class UISignUpTest extends UIBaseTest implements
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_splash_acceptableAgeInput(mode)
+        rx_splash_acceptableAge(mode)
             .flatMap(a -> THIS.rxEnterAndValidateAcceptableAgeInputs())
             .subscribe(subscriber);
 
@@ -192,7 +194,7 @@ public class UISignUpTest extends UIBaseTest implements
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_splash_acceptableAgeInput(mode)
+        rx_splash_acceptableAge(mode)
             .flatMap(a -> THIS.rxValidateAcceptableAgeEmptyInputErrors(mode))
             .subscribe(subscriber);
 
@@ -204,14 +206,14 @@ public class UISignUpTest extends UIBaseTest implements
 
     @SuppressWarnings("unchecked")
     @Test(dataProvider = "userModeProvider")
-    public void test_personalInfoInputScreen_containsCorrectElements(@NotNull UserMode mode) {
+    public void test_personalInfoScreen_containsCorrectElements(@NotNull UserMode mode) {
         // Setup
         final UISignUpTest THIS = this;
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_splash_personalInfoInput(mode)
-            .flatMap(a -> THIS.rxEnterAndValidatePersonalInfoInputs(mode))
+        rx_splash_personalInfo(mode)
+            .flatMap(a -> THIS.rxEnterAndValidatePersonalInfo(mode))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -222,7 +224,7 @@ public class UISignUpTest extends UIBaseTest implements
 
     @SuppressWarnings("unchecked")
     @Test(dataProvider = "parentPersonalInfoProvider")
-    public void test_parentInfoInputScreen_shouldOnlyRequirePhoneOrEmail(@NotNull List<InputType> inputs) {
+    public void test_parentInfoScreen_shouldRequirePhoneOrEmail(@NotNull List<InputType> inputs) {
         // Setup
         final UISignUpTest THIS = this;
         final UserMode MODE = UserMode.TEEN;
@@ -230,8 +232,8 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_extraInfoInput(MODE)
-            .flatMap(a -> THIS.rxEnterRandomPersonalInfoInputs(inputs))
-            .flatMap(a -> THIS.rxConfirmExtraPersonalInputs(MODE))
+            .flatMap(a -> THIS.rxEnterPersonalInfo(inputs))
+            .flatMap(a -> THIS.rxConfirmExtraPersonalInfo(MODE))
 
             /* If all inputs are valid, the progress bar should be visible
              * to indicate data being processed */
@@ -241,5 +243,24 @@ public class UISignUpTest extends UIBaseTest implements
         subscriber.awaitTerminalEvent();
 
         // Then
+        assertCorrectness(subscriber);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test(dataProvider = "userModeProvider")
+    public void test_navigateAwayFromPersonalInfo_shouldSaveState(@NotNull final UserMode MODE) {
+        // Setup
+        final UISignUpTest THIS = this;
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_splash_personalInfo(MODE)
+            .flatMap(a -> THIS.rxValidatePersonalInfoStateSaved(MODE))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
     }
 }
