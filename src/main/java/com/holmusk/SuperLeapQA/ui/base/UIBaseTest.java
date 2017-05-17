@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class UIBaseTest implements BaseActionType, BaseValidationType {
     @NotNull
-    @DataProvider
+    @DataProvider(parallel = true)
     public static Iterator<Object[]> dataProvider() {
         List<Object[]> data = new LinkedList<>();
 
@@ -86,7 +86,7 @@ public class UIBaseTest implements BaseActionType, BaseValidationType {
         return data.iterator();
     }
 
-    //region BaseTestType.
+    //region BaseTestType
     @NotNull
     @Override
     public TestKit testKit() {

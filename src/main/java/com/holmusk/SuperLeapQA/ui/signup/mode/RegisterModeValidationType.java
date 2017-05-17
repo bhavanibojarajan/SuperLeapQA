@@ -7,9 +7,11 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.base.type.PlatformType;
+import org.swiften.xtestkit.mobile.android.AndroidEngine;
 
 /**
  * Created by haipham on 5/8/17.
@@ -22,33 +24,38 @@ public interface RegisterModeValidationType extends
      * Get the sign up button that corresponds to a {@link UserMode}.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
+     * @see #engine()
+     * @see BaseEngine#rxElementContainingID(String...)
+     * @see RxUtil#error(String)
+     * @see #NOT_IMPLEMENTED
      */
     @NotNull
     default Flowable<WebElement> rxSignUpButton(@NotNull UserMode mode) {
         BaseEngine<?> engine = engine();
-        PlatformType platform = engine.platform();
 
-        if (platform.equals(Platform.ANDROID)) {
+        if (engine instanceof AndroidEngine) {
             return engine.rxElementContainingID(mode.androidSignUpButtonId());
         } else {
-            return Flowable.empty();
+            return RxUtil.error(NOT_IMPLEMENTED);
         }
     }
 
     /**
      * Get the back button's title label.
      * @return A {@link Flowable} instance.
+     * @see #engine()
+     * @see BaseEngine#rxElementContainingText(String...)
+     * @see RxUtil#error(String)
+     * @see #NOT_IMPLEMENTED
      */
     @NotNull
     default Flowable<WebElement> rxBackButtonTitleLabel() {
         BaseEngine<?> engine = engine();
-        PlatformType platform = engine.platform();
 
-        if (platform.equals(Platform.ANDROID)) {
-            String title = "register_title_whichOneBestDescribes";
-            return engine.rxElementContainingText(title);
+        if (engine instanceof AndroidEngine) {
+            return engine.rxElementContainingText("register_title_whichOneBestDescribes");
         } else {
-            return Flowable.empty();
+            return RxUtil.error(NOT_IMPLEMENTED);
         }
     }
 

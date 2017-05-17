@@ -1,0 +1,16 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="XTestKit"
+       parallel="tests"
+       thread-count="100"
+       data-provider-thread-count="100">
+
+    <test name="UI Tests">
+        <classes>
+            <class name="com.holmusk.SuperLeapQA.ui.welcome.UIWelcomeTest"/>
+            <class name="com.holmusk.SuperLeapQA.ui.signup.mode.UIRegisterModeTest"/>
+            <class name="com.holmusk.SuperLeapQA.ui.signup.main.UISignUpTest"/>
+            <class name="com.holmusk.SuperLeapQA.ui.dashboard.UIMainDashboardTest"/>
+        </classes>
+    </test>
+
+</suite>

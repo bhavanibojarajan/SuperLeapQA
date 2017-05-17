@@ -16,6 +16,7 @@ import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.element.locator.general.param.ByXPath;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkit.mobile.android.AndroidEngine;
 import org.swiften.xtestkit.mobile.android.AndroidView;
 
 import java.text.SimpleDateFormat;
@@ -32,17 +33,19 @@ public interface SignUpValidationType extends BaseActionType {
      * {@link InputType}.
      * @param input A {@link InputType} instance.
      * @return A {@link Flowable} instance.
+     * @see #engine()
      * @see BaseEngine#rxElementContainingID(String...)
+     * @see RxUtil#error(String)
+     * @see #NOT_IMPLEMENTED
      */
     @NotNull
     default Flowable<WebElement> rxEditFieldForInput(@NotNull InputType input) {
         BaseEngine<?> engine = engine();
-        PlatformType platform = engine.platform();
 
-        if (platform.equals(Platform.ANDROID)) {
+        if (engine instanceof AndroidEngine) {
             return engine.rxElementContainingID(input.androidViewId());
         } else {
-            return RxUtil.error();
+            return RxUtil.error(NOT_IMPLEMENTED);
         }
     }
 }

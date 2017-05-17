@@ -13,6 +13,7 @@ import org.swiften.xtestkit.base.element.locator.general.param.ByXPath;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkit.mobile.android.AndroidEngine;
 import org.swiften.xtestkit.mobile.android.AndroidView;
 
 /**
@@ -32,20 +33,22 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
     /**
      * Get the back button's title label.
      * @return A {@link Flowable} instance.
+     * @see #engine()
      * @see BaseEngine#rxElementContainingText(String...)
+     * @see RxUtil#error(String)
+     * @see #NOT_IMPLEMENTED
      */
     @NotNull
     default Flowable<WebElement> rxAcceptableAgeInputTitleLabel() {
         BaseEngine<?> engine = engine();
-        PlatformType platform = engine.platform();
 
-        if (platform.equals(Platform.ANDROID)) {
+        if (engine instanceof AndroidEngine) {
             return engine.rxElementContainingText(
                 "parentSignUp_title_enterChildDetails",
                 "teenSignUp_title_enterDetails"
             );
         } else {
-            return Flowable.empty();
+            return RxUtil.error(NOT_IMPLEMENTED);
         }
     }
 
@@ -54,17 +57,19 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
      * in the height picker window.
      * @param input A {@link InputType} instance.
      * @return A {@link Flowable} instance.
+     * @see #engine()
      * @see BaseEngine#rxElementContainingID(String...)
+     * @see RxUtil#error(String)
+     * @see #NOT_IMPLEMENTED
      */
     @NotNull
     default Flowable<WebElement> rxScrollableInputPickerView(@NotNull InputType input) {
         BaseEngine<?> engine = engine();
-        PlatformType platform = engine.platform();
 
-        if (platform.equals(Platform.ANDROID)) {
+        if (engine instanceof AndroidEngine) {
             return engine.rxElementContainingID("select_dialog_listview");
         } else {
-            return RxUtil.error();
+            return RxUtil.error(NOT_IMPLEMENTED);
         }
     }
 
@@ -74,14 +79,18 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
      * is already in the picker window.
      * @param input A {@link InputType} instance.
      * @return A {@link Flowable} instance.
+     * @see #engine()
      * @see BaseEngine#rxElementsByXPath(ByXPath)
+     * @see BaseEngine#newXPathBuilder()
+     * @see RxUtil#error(String)
+     * @see #NOT_IMPLEMENTED
      */
     @NotNull
     default Flowable<WebElement> rxPickerItemViews(@NotNull InputType input) {
         BaseEngine<?> engine = engine();
         PlatformType platform = engine.platform();
 
-        if (platform.equals(Platform.ANDROID)) {
+        if (engine instanceof AndroidEngine) {
             XPath xPath = engine.newXPathBuilder()
                 .ofClass(AndroidView.ViewType.TEXT_VIEW.className())
                 .containsID("text1")
@@ -94,7 +103,7 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
 
             return engine.rxElementsByXPath(byXPath);
         } else {
-            return RxUtil.error();
+            return RxUtil.error(NOT_IMPLEMENTED);
         }
     }
 

@@ -8,6 +8,7 @@ import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkit.mobile.android.AndroidEngine;
 
 /**
  * Created by haipham on 17/5/17.
@@ -18,7 +19,6 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
      * current {@link UserMode}, the confirm button text may change.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#platform()
      * @see BaseEngine#rxElementContainingID(String...)
      * @see RxUtil#error(String)
      */
@@ -26,9 +26,8 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
     @SuppressWarnings("unchecked")
     default Flowable<WebElement> rxPersonalInfoSubmitButton() {
         BaseEngine<?> engine = engine();
-        PlatformType platform = engine.platform();
 
-        if (platform.equals(Platform.ANDROID)) {
+        if (engine instanceof AndroidEngine) {
             return engine.rxElementsContainingID("btnNext");
         } else {
             return RxUtil.error(NOT_IMPLEMENTED);
@@ -39,18 +38,18 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
      * Get the Terms and Conditions checkbox.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#platform()
      * @see BaseEngine#rxElementContainingID(String...)
+     * @see RxUtil#error(String)
+     * @see #NOT_IMPLEMENTED
      */
     @NotNull
     default Flowable<WebElement> rxTOCCheckBox() {
         BaseEngine<?> engine = engine();
-        PlatformType platform = engine.platform();
 
-        if (platform.equals(Platform.ANDROID)) {
+        if (engine instanceof AndroidEngine) {
             return engine.rxElementContainingID("ctv_toc");
         } else {
-            return RxUtil.error();
+            return RxUtil.error(NOT_IMPLEMENTED);
         }
     }
 

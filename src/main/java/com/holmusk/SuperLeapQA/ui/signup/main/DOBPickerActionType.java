@@ -19,6 +19,7 @@ import org.swiften.xtestkit.base.element.action.date.type.DateType;
 import org.swiften.xtestkit.base.type.DelayType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkit.mobile.android.AndroidEngine;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -96,12 +97,12 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
      * @link #acceptableAgeRange(UserMode)}.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
+     * @see UserMode#firstUnacceptableAge()
      * @see #rx_DoBPicker_inputScreenForAge(int)
-     * @see UserMode#maxAcceptableAge()
      */
     @NotNull
     default Flowable<Boolean> rx_DoBPicker_unacceptableAgeInput(@NotNull UserMode mode) {
-        int age = mode.maxAcceptableAge() + 1;
+        int age = mode.firstUnacceptableAge();
         return rx_DoBPicker_inputScreenForAge(age);
     }
 
@@ -133,13 +134,13 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String...)
      * @see BaseEngine#rxClick(WebElement)
+     * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
     default Flowable<Boolean> rxConfirmDoB() {
         final BaseEngine<?> ENGINE = engine();
-        PlatformType platform = ENGINE.platform();
 
-        if (platform.equals(Platform.ANDROID)) {
+        if (ENGINE instanceof AndroidEngine) {
             return ENGINE
                 .rxElementContainingText("ok")
                 .flatMap(ENGINE::rxClick)
