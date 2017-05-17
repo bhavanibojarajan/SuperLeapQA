@@ -24,19 +24,29 @@ public final class UIRegisterModeTest extends UIBaseTest implements
         super(index);
     }
 
+    /**
+     * This test validates that the register mode screen contains the correct
+     * {@link org.openqa.selenium.WebElement} by checking their visibility,
+     * and then navigate back once to check the welcome screen.
+     * @see #rx_splash_register()
+     * @see #rxValidateRegisterScreen()
+     * @see #rxNavigateBackWithBackButton()
+     * @see #rxValidateWelcomeScreen()
+     */
     @Test
     @SuppressWarnings("unchecked")
     public void test_registerScreen_shouldContainCorrectElements() {
         // Setup
+        final UIRegisterModeTest THIS = this;
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         rx_splash_register()
-            .flatMap(a -> rxValidateRegisterScreen())
+            .flatMap(a -> THIS.rxValidateRegisterScreen())
 
             /* Make sure the back button works */
-            .flatMap(a -> rxNavigateBackWithBackButton())
-            .flatMap(a -> rxValidateWelcomeScreen())
+            .flatMap(a -> THIS.rxNavigateBackWithBackButton())
+            .flatMap(a -> THIS.rxValidateWelcomeScreen())
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

@@ -31,19 +31,6 @@ import java.util.concurrent.TimeUnit;
 public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActionType {
     //region Bridged Navigation
     /**
-     * Bridge method that helps navigate from splash screen to sign up.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
-     * @see #rx_splash_register()
-     * @see #rx_register_DoBPicker(UserMode)
-     */
-    @NotNull
-    default Flowable<Boolean> rx_splash_DoBPicker(@NotNull UserMode mode) {
-        final SignUpActionType THIS = this;
-        return rx_splash_register().flatMap(a -> THIS.rx_register_DoBPicker(mode));
-    }
-
-    /**
      * Navigate to the appropriate screen, based on an age value.
      * @param AGE An {@link Integer} value.
      * @return A {@link Flowable} instance.
@@ -59,21 +46,63 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
             .flatMap(a -> THIS.rxSelectDoBToBeOfAge(AGE))
             .flatMap(a -> THIS.rxConfirmDoB());
     }
+
+    /**
+     * Bridge method that helps navigate from splash screen to acceptable
+     * age input.
+     * @param MODE A {@link UserMode} instance.
+     * @return A {@link Flowable} instance.
+     * @see #rx_splash_DoBPicker(UserMode)
+     * @see #rx_DoBPicker_acceptableAge(UserMode)
+     */
+    @NotNull
+    default Flowable<Boolean> rx_splash_acceptableAge(@NotNull final UserMode MODE) {
+        final DOBPickerActionType THIS = this;
+        return rx_splash_DoBPicker(MODE).flatMap(a -> THIS.rx_DoBPicker_acceptableAge(MODE));
+    }
+
+    /**
+     * Bridge method that helps navigate from splash screen to unacceptable
+     * age input.
+     * @param mode A {@link UserMode} instance.
+     * @return A {@link Flowable} instance.
+     * @see #rx_splash_DoBPicker(UserMode)
+     * @see #rx_DoBPicker_unacceptableAgeInput(UserMode)
+     */
+    @NotNull
+    default Flowable<Boolean> rx_splash_unacceptableAgeInput(@NotNull UserMode mode) {
+        final DOBPickerActionType THIS = this;
+        return rx_splash_DoBPicker(mode).flatMap(a -> THIS.rx_DoBPicker_unacceptableAgeInput(mode));
+    }
     //endregion
 
     /**
-     * Navigate to the sign up screen from register screen, assuming the user
-     * is already on the register screen.
+     * Navigate to the acceptable age input screen by selecting a DoB that
+     * results in an age that lies within {@link UserMode#acceptableAgeRange()}.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rxSignUpButton(UserMode)
+     * @see #rx_DoBPicker_inputScreenForAge(int)
      */
     @NotNull
-    default Flowable<Boolean> rx_register_DoBPicker(@NotNull UserMode mode) {
-        return rxSignUpButton(mode)
-            .flatMapCompletable(a -> Completable.fromAction(a::click))
-            .<Boolean>toFlowable()
-            .defaultIfEmpty(true);
+    default Flowable<Boolean> rx_DoBPicker_acceptableAge(@NotNull UserMode mode) {
+        List<Integer> range = mode.acceptableAgeRange();
+        int age = CollectionTestUtil.randomElement(range);
+        return rx_DoBPicker_inputScreenForAge(age);
+    }
+
+    /**
+     * Navigate to the unacceptable age input screen by selecting a DoB that
+     * results in an age that does not lie within {
+     * @link #acceptableAgeRange(UserMode)}.
+     * @param mode A {@link UserMode} instance.
+     * @return A {@link Flowable} instance.
+     * @see #rx_DoBPicker_inputScreenForAge(int)
+     * @see UserMode#maxAcceptableAge()
+     */
+    @NotNull
+    default Flowable<Boolean> rx_DoBPicker_unacceptableAgeInput(@NotNull UserMode mode) {
+        int age = mode.maxAcceptableAge() + 1;
+        return rx_DoBPicker_inputScreenForAge(age);
     }
 
     /**

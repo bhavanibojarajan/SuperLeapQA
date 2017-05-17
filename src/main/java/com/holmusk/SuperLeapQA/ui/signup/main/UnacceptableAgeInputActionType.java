@@ -16,40 +16,8 @@ import java.util.concurrent.TimeUnit;
  * Created by haipham on 17/5/17.
  */
 public interface UnacceptableAgeInputActionType extends
-    UnacceptableAgeInputValidationType,
-    DOBPickerActionType
+    UnacceptableAgeInputValidationType, DOBPickerActionType
 {
-    //region Bridged Navigation
-    /**
-     * Bridge method that helps navigate from splash screen to unacceptable
-     * age input.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
-     * @see #rx_splash_DoBPicker(UserMode)
-     * @see #rx_DoBPicker_unacceptableAgeInput(UserMode)
-     */
-    @NotNull
-    default Flowable<Boolean> rx_splash_unacceptableAgeInput(@NotNull UserMode mode) {
-        final UnacceptableAgeInputActionType THIS = this;
-        return rx_splash_DoBPicker(mode).flatMap(a -> THIS.rx_DoBPicker_unacceptableAgeInput(mode));
-    }
-    //endregion
-
-    /**
-     * Navigate to the unacceptable age input screen by selecting a DoB that
-     * results in an age that does not lie within {
-     * @link #acceptableAgeRange(UserMode)}.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
-     * @see #rx_DoBPicker_inputScreenForAge(int)
-     * @see UserMode#maxAcceptableAge()
-     */
-    @NotNull
-    default Flowable<Boolean> rx_DoBPicker_unacceptableAgeInput(@NotNull UserMode mode) {
-        int age = mode.maxAcceptableAge() + 1;
-        return rx_DoBPicker_inputScreenForAge(age);
-    }
-
     /**
      * Confirm email subscription for future program expansion.
      * @return A {@link Flowable} instance.
@@ -75,7 +43,7 @@ public interface UnacceptableAgeInputActionType extends
      * @return A {@link Flowable} instance.
      * @see #rxEnterRandomInput(TextInputType)
      * @see #rxConfirmUnacceptableAgeInput()
-     * @see #rxWatchUntilProgressBarNoLongerVisible()
+     * @see #rxWatchProgressBarUntilHidden()
      * @see #rxConfirmUnacceptableAgeInputCompleted()
      */
     @NotNull
@@ -87,7 +55,7 @@ public interface UnacceptableAgeInputActionType extends
             .flatMap(a -> THIS.rxEnterRandomInput(input))
             .flatMap(a -> ENGINE.rxHideKeyboard())
             .flatMap(a -> THIS.rxConfirmUnacceptableAgeInput())
-            .flatMap(a -> THIS.rxWatchUntilProgressBarNoLongerVisible())
+            .flatMap(a -> THIS.rxWatchProgressBarUntilHidden())
             .flatMap(a -> THIS.rxValidateUnacceptableAgeInputConfirmation())
             .flatMap(a -> THIS.rxConfirmUnacceptableAgeInputCompleted());
     }

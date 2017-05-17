@@ -1,19 +1,20 @@
 package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.xtestkit.util.type.ValueRangeConverterType;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.IntStream;
 
 /**
  * Created by haipham on 5/13/17.
  */
 public enum UserMode implements ValueRangeConverterType<Integer> {
     PARENT,
-    TEEN;
+    TEEN_UNDER_18,
+    TEEN_ABOVE_18;
 
     @NotNull
     @Override
@@ -32,7 +33,8 @@ public enum UserMode implements ValueRangeConverterType<Integer> {
             case PARENT:
                 return "btnRegChild";
 
-            case TEEN:
+            case TEEN_UNDER_18:
+            case TEEN_ABOVE_18:
                 return "btnRegSelf";
 
             default:
@@ -59,7 +61,8 @@ public enum UserMode implements ValueRangeConverterType<Integer> {
                     TextInput.HOME
                 );
 
-            case TEEN:
+            case TEEN_UNDER_18:
+            case TEEN_ABOVE_18:
                 return Arrays.asList(
                     TextInput.NAME,
                     TextInput.MOBILE,
@@ -74,7 +77,7 @@ public enum UserMode implements ValueRangeConverterType<Integer> {
     }
 
     /**
-     * Get additional personal inputs, esp. for {@link UserMode#TEEN} since
+     * Get additional personal inputs, esp. for {@link UserMode#TEEN_UNDER_18} since
      * users will need to enter parent's information as well.
      * @return A {@link List} of {@link InputType}.
      * @see Arrays#asList(Object[])
@@ -83,7 +86,8 @@ public enum UserMode implements ValueRangeConverterType<Integer> {
     @NotNull
     public List<InputType> extraPersonalInformation() {
         switch (this) {
-            case TEEN:
+            case TEEN_UNDER_18:
+            case TEEN_ABOVE_18:
                 return Arrays.asList(
                     TextInput.PARENT_NAME,
                     TextInput.PARENT_MOBILE,
@@ -96,6 +100,21 @@ public enum UserMode implements ValueRangeConverterType<Integer> {
     }
 
     /**
+     * Check whether the current use requires guarantor information. This
+     * is only applicable for {@link #TEEN_UNDER_18}.
+     * @return A {@link Boolean} value.
+     */
+    public boolean requiresGuarantor() {
+        switch (this) {
+            case TEEN_UNDER_18:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    /**
      * Get the minimum acceptable age for the current {@link UserMode}.
      * @return An {@link Integer} value.
      */
@@ -104,8 +123,11 @@ public enum UserMode implements ValueRangeConverterType<Integer> {
             case PARENT:
                 return 5;
 
-            case TEEN:
+            case TEEN_UNDER_18:
                 return 16;
+
+            case TEEN_ABOVE_18:
+                return 18;
 
             default:
                 return 0;
@@ -121,8 +143,57 @@ public enum UserMode implements ValueRangeConverterType<Integer> {
             case PARENT:
                 return 6;
 
-            case TEEN:
+            case TEEN_UNDER_18:
+                return 17;
+
+            case TEEN_ABOVE_18:
                 return 19;
+
+            default:
+                return 0;
+        }
+    }
+
+    /**
+     * Get the minimum acceptable age for the current {@link UserMode}'s
+     * category. This is different from {@link #minAcceptableAge()} because
+     * {@link #TEEN_UNDER_18} and {@link #TEEN_ABOVE_18} technically have
+     * the same {@link #minAcceptableAge()} and {@link #maxAcceptableAge()}
+     * from the application's perspective.
+     * @return An {@link Integer} value.
+     * @see #maxAcceptableAge()
+     */
+    public int minCategoryAcceptableAge() {
+        switch (this) {
+            case PARENT:
+                return minAcceptableAge();
+
+            case TEEN_ABOVE_18:
+            case TEEN_UNDER_18:
+                return TEEN_UNDER_18.minAcceptableAge();
+
+            default:
+                return 0;
+        }
+    }
+
+    /**
+     * Get the maximum acceptable age for the current {@link UserMode}'s
+     * category. This is different from {@link #maxAcceptableAge()} because
+     * {@link #TEEN_UNDER_18} and {@link #TEEN_ABOVE_18} technically have
+     * the same {@link #minAcceptableAge()} and {@link #maxAcceptableAge()}
+     * from the application's perspective.
+     * @return An {@link Integer} value.
+     * @see #maxAcceptableAge()
+     */
+    public int maxCategoryAcceptableAge() {
+        switch (this) {
+            case PARENT:
+                return maxAcceptableAge();
+
+            case TEEN_ABOVE_18:
+            case TEEN_UNDER_18:
+                return TEEN_ABOVE_18.maxAcceptableAge();
 
             default:
                 return 0;
@@ -144,6 +215,16 @@ public enum UserMode implements ValueRangeConverterType<Integer> {
     }
 
     /**
+     * Produce a random acceptable age.
+     * @return An {@link Integer} value.
+     * @see CollectionTestUtil#randomElement(List)
+     * @see #acceptableAgeRange()
+     */
+    public int randomAcceptableAge() {
+        return CollectionTestUtil.randomElement(acceptableAgeRange());
+    }
+
+    /**
      * Get an age range with lower/upper bounds that are lower/higher than
      * the min/max age by an offset value.
      * @param offset An {@link Integer} value.
@@ -161,15 +242,18 @@ public enum UserMode implements ValueRangeConverterType<Integer> {
 
     /**
      * Get the {@link String} representation of the acceptable age range.
+     * Note that this uses the {@link #minCategoryAcceptableAge()} and
+     * {@link #maxCategoryAcceptableAge()} because {@link #TEEN_UNDER_18}
+     * and {@link #TEEN_ABOVE_18} are technically in the same category.
      * @return A {@link String} value.
      * @see #acceptableAgeRange()
-     * @see #minAcceptableAge()
-     * @see #maxAcceptableAge()
+     * @see #minCategoryAcceptableAge()
+     * @see #maxCategoryAcceptableAge()
      */
     @NotNull
     public String acceptableAgeRangeString() {
-        int minAge = minAcceptableAge();
-        int maxAge = maxAcceptableAge();
+        int minAge = minCategoryAcceptableAge();
+        int maxAge = maxCategoryAcceptableAge();
         return String.format("%1$d-%2$d", minAge, maxAge);
     }
 }

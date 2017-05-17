@@ -19,15 +19,22 @@ public class UIWelcomeTest extends UIBaseTest implements WelcomeActionType {
         super(index);
     }
 
+    /**
+     * This test validates the welcome screen by checking that all
+     * {@link org.openqa.selenium.WebElement} are visible.
+     * @see #rx_splash_welcome()
+     * @see #rxValidateWelcomeScreen()
+     */
     @Test
     @SuppressWarnings("unchecked")
     public void test_splashScreen_shouldContainCorrectElements() {
         // Setup
+        final UIWelcomeTest THIS = this;
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         rx_splash_welcome()
-            .flatMap(a -> rxValidateWelcomeScreen())
+            .flatMap(a -> THIS.rxValidateWelcomeScreen())
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

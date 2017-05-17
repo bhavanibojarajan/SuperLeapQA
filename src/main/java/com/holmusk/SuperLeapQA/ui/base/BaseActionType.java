@@ -48,7 +48,7 @@ public interface BaseActionType extends
      * @see BaseEngine#rxWatchUntilHidden(WebElement)
      */
     @NotNull
-    default Flowable<Boolean> rxWatchUntilProgressBarNoLongerVisible() {
+    default Flowable<Boolean> rxWatchProgressBarUntilHidden() {
         final BaseEngine<?> ENGINE = engine();
 
         return rxProgressBar()

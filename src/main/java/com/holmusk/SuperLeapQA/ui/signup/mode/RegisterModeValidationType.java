@@ -7,7 +7,6 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.base.type.PlatformType;
@@ -69,7 +68,7 @@ public interface RegisterModeValidationType extends
             .flatMap(a -> ENGINE.rxElementContainingText("register_title_or"))
             .flatMap(a -> ENGINE.rxElementContainingText("register_title_initiativeByHPB"))
             .flatMap(a -> rxSignUpButton(UserMode.PARENT))
-            .flatMap(a -> rxSignUpButton(UserMode.TEEN))
+            .flatMap(a -> rxSignUpButton(UserMode.TEEN_UNDER_18))
             .flatMap(a -> rxBackButtonTitleLabel())
             .map(BooleanUtil::toTrue);
     }

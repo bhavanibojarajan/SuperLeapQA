@@ -18,37 +18,35 @@ import java.util.List;
  * Created by haipham on 17/5/17.
  */
 public interface AcceptableAgeInputType extends
-    AcceptableInputValidationType,
-    DOBPickerActionType
+    AcceptableInputValidationType, DOBPickerActionType
 {
     //region Bridged Navigation
     /**
-     * Bridge method that helps navigate from splash screen to acceptable
-     * age input.
+     * Bridge method that helps navigate from splash screen to personal info
+     * input.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rx_splash_DoBPicker(UserMode)
-     * @see #rx_DoBPicker_acceptableAge(UserMode)
+     * @see #rx_splash_acceptableAge(UserMode)
+     * @see #rx_acceptableAge_personalInfo()
      */
     @NotNull
-    default Flowable<Boolean> rx_splash_acceptableAge(@NotNull UserMode mode) {
+    default Flowable<Boolean> rx_splash_personalInfo(@NotNull UserMode mode) {
         final AcceptableAgeInputType THIS = this;
-        return rx_splash_DoBPicker(mode).flatMap(a -> THIS.rx_DoBPicker_acceptableAge(mode));
+        return rx_splash_acceptableAge(mode).flatMap(a -> THIS.rx_acceptableAge_personalInfo());
     }
     //endregion
 
     /**
-     * Navigate to the acceptable age input screen by selecting a DoB that
-     * results in an age that lies within {@link UserMode#acceptableAgeRange()}.
-     * @param mode A {@link UserMode} instance.
+     * Navigate from the acceptable age input to the personal info input
+     * screen.
      * @return A {@link Flowable} instance.
-     * @see #rx_DoBPicker_inputScreenForAge(int)
+     * @see #rxEnterAcceptableAgeInputs()
+     * @see #rxConfirmAcceptableAgeInputs()
      */
     @NotNull
-    default Flowable<Boolean> rx_DoBPicker_acceptableAge(@NotNull UserMode mode) {
-        List<Integer> range = mode.acceptableAgeRange();
-        int age = CollectionTestUtil.randomElement(range);
-        return rx_DoBPicker_inputScreenForAge(age);
+    default Flowable<Boolean> rx_acceptableAge_personalInfo() {
+        final AcceptableAgeInputType THIS = this;
+        return rxEnterAcceptableAgeInputs().flatMap(a -> THIS.rxConfirmAcceptableAgeInputs());
     }
 
     /**

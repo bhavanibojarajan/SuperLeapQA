@@ -61,7 +61,7 @@ public interface DOBPickerValidationType extends SignUpActionType {
      * @see ObjectUtil#nonNull(Object)
      */
     @NotNull
-    default Flowable<Boolean> rxValidateParentDoBPickerScreen() {
+    default Flowable<Boolean> rxValidateDoBPickerScreen() {
         final BaseEngine<?> ENGINE = engine();
 
         return rxDoBEditField()

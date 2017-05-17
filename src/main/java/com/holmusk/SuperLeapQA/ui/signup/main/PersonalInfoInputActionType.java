@@ -11,7 +11,6 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
@@ -26,50 +25,68 @@ import java.util.stream.Collectors;
  * Created by haipham on 17/5/17.
  */
 public interface PersonalInfoInputActionType extends
-    PersonalInfoValidationType,
-    AcceptableAgeInputType
+    PersonalInfoValidationType, AcceptableAgeInputType
 {
     //region Bridged Navigation
     /**
      * Bridge method that helps navigate from splash screen to extra personal
-     * info screen. Only applicable to {@link UserMode#TEEN}.
+     * info screen. Only applicable to {@link UserMode#TEEN_UNDER_18}.
      * @param MODE A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      * @see #rx_splash_personalInfo(UserMode)
      * @see #rx_personalInfo_extraInfo(UserMode)
      */
     @NotNull
-    default Flowable<Boolean> rx_splash_extraInfoInput(@NotNull final UserMode MODE) {
+    default Flowable<Boolean> rx_splash_extraInfo(@NotNull final UserMode MODE) {
         final PersonalInfoInputActionType THIS = this;
         return rx_splash_personalInfo(MODE).flatMap(a -> THIS.rx_personalInfo_extraInfo(MODE));
+    }
+
+    /**
+     * Bridge method that helps navigate from the splash screen to the
+     * Use App Now screen.
+     * @param MODE A {@link UserMode} instance.
+     * @return A {@link Flowable} instance.
+     * @see #rx_splash_extraInfo(UserMode)
+     * @see #rx_extraInfo_useApp(UserMode)
+     */
+    @NotNull
+    default Flowable<Boolean> rx_splash_useApp(@NotNull final UserMode MODE) {
+        final PersonalInfoInputActionType THIS = this;
+        return rx_splash_extraInfo(MODE).flatMap(a -> THIS.rx_extraInfo_useApp(MODE));
     }
     //endregion
 
     /**
-     * Bridge method that helps navigate from splash screen to personal info
-     * input.
-     * @param mode A {@link UserMode} instance.
+     * Navigate from the extra info screen to the Use App Now screen. Note
+     * that the extra info screen only exists for {@link UserMode#TEEN_UNDER_18}.
+     * For other {@link UserMode} instances, this screen should be the
+     * personal info screen.
+     * @param MODE A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rx_splash_acceptableAge(UserMode)
-     * @see #rx_acceptableAge_personalInfo()
+     * @see #rxEnterExtraPersonalInfo(UserMode)
+     * @see #rxConfirmExtraPersonalInfo(UserMode)
+     * @see #rxWatchProgressBarUntilHidden()
+     * @see #rxWatchPersonalInfoScreenUntilHidden()
+     * @see BooleanUtil#isTrue(boolean)
      */
     @NotNull
-    default Flowable<Boolean> rx_splash_personalInfo(@NotNull UserMode mode) {
+    default Flowable<Boolean> rx_extraInfo_useApp(@NotNull final UserMode MODE) {
         final PersonalInfoInputActionType THIS = this;
-        return rx_splash_acceptableAge(mode).flatMap(a -> THIS.rx_acceptableAge_personalInfo());
-    }
 
-    /**
-     * Navigate from the acceptable age input to the personal info input
-     * screen.
-     * @return A {@link Flowable} instance.
-     * @see #rxEnterAcceptableAgeInputs()
-     * @see #rxConfirmAcceptableAgeInputs()
-     */
-    @NotNull
-    default Flowable<Boolean> rx_acceptableAge_personalInfo() {
-        final PersonalInfoInputActionType THIS = this;
-        return rxEnterAcceptableAgeInputs().flatMap(a -> THIS.rxConfirmAcceptableAgeInputs());
+        return rxEnterExtraPersonalInfo(MODE)
+            .flatMap(a -> THIS.rxConfirmExtraPersonalInfo(MODE))
+
+            /* First progress bar appears immediately after the submit button
+             * is clicked */
+            .flatMap(a -> THIS.rxWatchProgressBarUntilHidden())
+
+            /* There is a short delay between the first and the second
+             * progress bar */
+            .flatMap(a -> THIS.rxWatchPersonalInfoScreenUntilHidden())
+
+            /* The second progress bar appears */
+            .flatMap(a -> THIS.rxWatchProgressBarUntilHidden());
     }
 
     /**
@@ -82,7 +99,10 @@ public interface PersonalInfoInputActionType extends
     @NotNull
     default Flowable<Boolean> rxConfirmPersonalInfo() {
         final BaseEngine<?> ENGINE = engine();
-        return rxPersonalInfoSubmitButton().flatMap(ENGINE::rxClick).map(BooleanUtil::toTrue);
+
+        return rxPersonalInfoSubmitButton()
+            .flatMap(ENGINE::rxClick)
+            .map(BooleanUtil::toTrue);
     }
 
     /**
@@ -150,32 +170,36 @@ public interface PersonalInfoInputActionType extends
 
     /**
      * Enter random additional personal info inputs in order to access the
-     * next screen. This is only relevant for {@link UserMode#TEEN}.
+     * next screen. This is only relevant for {@link UserMode#requiresGuarantor()}.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      * @see #rxEnterPersonalInfo(List)
      * @see UserMode#extraPersonalInformation()
+     * @see UserMode#requiresGuarantor()
      */
     @NotNull
     default Flowable<Boolean> rxEnterExtraPersonalInfo(@NotNull UserMode mode) {
-        return rxEnterPersonalInfo(mode.extraPersonalInformation());
+        if (mode.requiresGuarantor()) {
+            return rxEnterPersonalInfo(mode.extraPersonalInformation());
+        } else {
+            return Flowable.just(true);
+        }
     }
 
     /**
      * Confirm additional personal inputs. This is only relevant to
-     * {@link UserMode#TEEN}.
+     * {@link UserMode#requiresGuarantor()}.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      * @see #rxConfirmPersonalInfo()
+     * @see UserMode#requiresGuarantor()
      */
     @NotNull
     default Flowable<Boolean> rxConfirmExtraPersonalInfo(@NotNull UserMode mode) {
-        switch (mode) {
-            case TEEN:
-                return rxConfirmPersonalInfo();
-
-            default:
-                return Flowable.just(true);
+        if (mode.requiresGuarantor()) {
+            return rxConfirmPersonalInfo();
+        } else {
+            return Flowable.just(true);
         }
     }
 
@@ -196,23 +220,19 @@ public interface PersonalInfoInputActionType extends
 
     /**
      * Navigate from the personal info input screen to the extra info input
-     * screen. Only applicable to {@link UserMode#TEEN}.
+     * screen. Only applicable to {@link UserMode#requiresGuarantor()}.
+     * If {@link UserMode#requiresGuarantor()} is {@link Boolean#FALSE},
+     * this method will go directly to the dashboard.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      * @see #rxEnterPersonalInfo(UserMode)
      * @see #rxConfirmPersonalInfo()
-     * @see UserMode#TEEN
+     * @see UserMode#requiresGuarantor()
      */
     @NotNull
     default Flowable<Boolean> rx_personalInfo_extraInfo(@NotNull UserMode mode) {
-        switch (mode) {
-            case TEEN:
-                final PersonalInfoInputActionType THIS = this;
-                return rxEnterPersonalInfo(mode).flatMap(a -> THIS.rxConfirmPersonalInfo());
-
-            default:
-                return Flowable.just(true);
-        }
+        final PersonalInfoInputActionType THIS = this;
+        return rxEnterPersonalInfo(mode).flatMap(a -> THIS.rxConfirmPersonalInfo());
     }
 
     /**

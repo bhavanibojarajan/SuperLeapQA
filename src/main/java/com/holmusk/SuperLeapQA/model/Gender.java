@@ -42,7 +42,7 @@ public enum Gender implements InputType {
                 error = "parentSignUp_error_genderNotSelected";
                 break;
 
-            case TEEN:
+            case TEEN_UNDER_18:
                 error = "teenSignUp_error_genderNotSelected";
                 break;
 

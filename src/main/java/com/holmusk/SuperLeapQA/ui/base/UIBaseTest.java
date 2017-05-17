@@ -40,11 +40,44 @@ public class UIBaseTest implements BaseActionType, BaseValidationType {
         TEST_KIT = Config.TEST_KIT;
     }
 
+    /**
+     * This {@link DataProvider} provides {@link UserMode} instances that
+     * do not care whether a guarantor is required.
+     * @return A {@link Iterator} instance.
+     * @see UserMode#PARENT
+     * @see UserMode#TEEN_UNDER_18
+     */
     @NotNull
     @DataProvider
-    public Iterator<Object[]> userModeProvider() {
+    public Iterator<Object[]> generalUserModeProvider() {
         List<Object[]> data = new LinkedList<>();
-        UserMode[] modes = new UserMode[] { UserMode.TEEN };
+        UserMode[] modes = new UserMode[] { UserMode.TEEN_UNDER_18};
+
+        for (UserMode mode : modes) {
+            data.add(new Object[] { mode });
+        }
+
+        return data.iterator();
+    }
+
+    /**
+     * This {@link DataProvider} provides {@link UserMode} for tests that
+     * specifically request for guarantor information. For example, personal
+     * information input tests will require {@link UserMode#requiresGuarantor()}
+     * to decide whether the parent info screen is required.
+     * @return A {@link Iterator} instance.
+     * @see UserMode#TEEN_UNDER_18
+     * @see UserMode#TEEN_ABOVE_18
+     */
+    @NotNull
+    @DataProvider
+    public Iterator<Object[]> guarantorSpecificUserModeProvider() {
+        List<Object[]> data = new LinkedList<>();
+
+        UserMode[] modes = new UserMode[] {
+            UserMode.TEEN_UNDER_18,
+            UserMode.TEEN_ABOVE_18
+        };
 
         for (UserMode mode : modes) {
             data.add(new Object[] { mode });
