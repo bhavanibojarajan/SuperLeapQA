@@ -1,21 +1,98 @@
 package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
-import org.swiften.xtestkit.base.element.action.input.type.NumericSelectableType;
+import org.swiften.javautilities.collection.Pair;
+import org.swiften.xtestkit.base.element.action.input.type.NumericInputType;
+import org.swiften.xtestkit.base.type.BaseErrorType;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Weight implements SLNumericSelectableType {
-    LB,
-    KG;
+public enum Weight implements BaseErrorType, SLNumericInputType {
+    CHILD_KG,
+    CHILD_KG_DEC,
+    CHILD_LB,
+    CHILD_LB_DEC,
+    TEEN_KG,
+    TEEN_KG_DEC,
+    TEEN_LB,
+    TEEN_LB_DEC;
+
+    /**
+     * Get the {@link Weight} instances for metric unit of measurement.
+     * @param mode A {@link UserMode} instance.
+     * @return A {@link List} of {@link SLNumericInputType}.
+     */
+    @NotNull
+    public static List<SLNumericInputType> metric(@NotNull UserMode mode) {
+        switch (mode) {
+            case PARENT:
+                return Arrays.asList(CHILD_KG, CHILD_KG_DEC);
+
+            case TEEN_ABOVE_18:
+            case TEEN_UNDER_18:
+                return Arrays.asList(TEEN_KG, TEEN_KG_DEC);
+
+            default:
+                throw new RuntimeException(NOT_IMPLEMENTED);
+        }
+    }
+
+    /**
+     * Get the {@link Weight} instances for imperial unit of measurement.
+     * @param mode A {@link UserMode} instance.
+     * @return A {@link List} of {@link SLNumericInputType}.
+     */
+    @NotNull
+    public static List<SLNumericInputType> imperial(@NotNull UserMode mode) {
+        switch (mode) {
+            case PARENT:
+                return Arrays.asList(CHILD_LB, CHILD_LB_DEC);
+
+            case TEEN_ABOVE_18:
+            case TEEN_UNDER_18:
+                return Arrays.asList(TEEN_LB, TEEN_LB_DEC);
+
+            default:
+                throw new RuntimeException(NOT_IMPLEMENTED);
+        }
+    }
+
+    /**
+     * Get a {@link List} of random metric input values.
+     * @param mode A {@link UserMode} instance.
+     * @return A {@link List} of {@link Pair}.
+     * @see #metric(UserMode)
+     * @see NumericInputType#randomNumericValue()
+     */
+    @NotNull
+    public static List<Pair<SLNumericInputType,Double>> randomMetric(@NotNull UserMode mode) {
+        return metric(mode).stream()
+            .map(a -> new Pair<>(a, a.randomNumericValue()))
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Get a {@link List} of random imperial input values.
+     * @param mode A {@link UserMode} instance.
+     * @return A {@link List} of {@link Pair}.
+     * @see #imperial(UserMode)
+     * @see NumericInputType#randomNumericValue()
+     */
+    @NotNull
+    public static List<Pair<SLNumericInputType,Double>> randomImperial(@NotNull UserMode mode) {
+        return imperial(mode).stream()
+            .map(a -> new Pair<>(a, a.randomNumericValue()))
+            .collect(Collectors.toList());
+    }
 
     /**
      * @return A {@link String} value.
-     * @see SLNumericSelectableType#emptyInputError(UserMode)
+     * @see SLNumericInputType#emptyInputError(UserMode)
      */
     @NotNull
     @Override
@@ -30,24 +107,6 @@ public enum Weight implements SLNumericSelectableType {
     }
 
     /**
-     * Get the localizable title for the current {@link Weight}.
-     * @return A {@link String} value.
-     */
-    @NotNull
-    public String localizable() {
-        switch (this) {
-            case LB:
-                return "user_title_weight_lbs";
-
-            case KG:
-                return "user_title_weight_kg";
-
-            default:
-                return "";
-        }
-    }
-
-    /**
      * Get the view id for {@link org.swiften.xtestkit.mobile.Platform#ANDROID}
      * locator.
      * @return A {@link String} value.
@@ -55,10 +114,16 @@ public enum Weight implements SLNumericSelectableType {
     @NotNull
     public String androidViewId() {
         switch (this) {
-            case LB:
+            case CHILD_LB:
+            case CHILD_LB_DEC:
+            case TEEN_LB:
+            case TEEN_LB_DEC:
                 return "btn_lb";
 
-            case KG:
+            case CHILD_KG:
+            case CHILD_KG_DEC:
+            case TEEN_KG:
+            case TEEN_KG_DEC:
                 return "btn_kg";
 
             default:
@@ -67,132 +132,43 @@ public enum Weight implements SLNumericSelectableType {
     }
 
     /**
-     * Convert a weight value to lb.
-     * @param value A {@link Double} value.
-     * @return A {@link Double} value.
-     */
-    public double lb(double value) {
-        switch (this) {
-            case LB:
-                return value;
-
-            case KG:
-                return value * 2.20462d;
-
-            default:
-                return 0;
-        }
-    }
-
-    /**
-     * Convert a weight value to kg.
-     * @param value A {@link Double} value.
-     * @return A {@link Double} value.
-     */
-    public double kg(double value) {
-        switch (this) {
-            case KG:
-                return value;
-
-            case LB:
-                return value * 0.453592d;
-
-            default:
-                return 0;
-        }
-    }
-
-    /**
-     * Get a weight value's {@link String} representation in kg.
-     * @param value A {@link Double} value.
-     * @return A {@link String} value.
-     */
-    @NotNull
-    public String kgString(double value) {
-        return String.format("%.1f kg", kg(value));
-    }
-
-    /**
-     * Get a weight value's {@link String} representation in lbs.
-     * @param value A {@link Double} value.
-     * @return A {@link String} value.
-     */
-    @NotNull
-    public String lbString(double value) {
-        return String.format("%d lbs", (int)Math.round(lb(value)));
-    }
-
-    /**
-     * Get the weight value by parsing a {@link String} representation of
-     * a weight.
-     * @param value A {@link String} value.
-     * @return A {@link Double} value.
-     * @see NumericSelectableType#numericValue(String)
-     */
-    @Override
-    public double numericValue(@NotNull String value) {
-        String regex;
-        double ratio;
-
-        switch (this) {
-            case KG:
-                regex = "(\\d+).(\\d+) kg";
-                ratio = 10;
-                break;
-
-            case LB:
-                regex = "(\\d+) lbs";
-                ratio = 1;
-                break;
-
-            default:
-                return 0;
-        }
-
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(value);
-        double base = matcher.find() ? Double.valueOf(matcher.group(1)) : 0;
-        double dec = matcher.groupCount() > 1 ? Double.valueOf(matcher.group(2)) : 0;
-        return base + dec / ratio;
-    }
-
-    /**
      * Get the appropriately formatted weight {@link String}, depending on
      * the type of {@link Weight}.
      * @param value A {@link Double} value.
      * @return A {@link String} value.
-     * @see #kgString(double)
-     * @see #lbString(double)
-     * @see NumericSelectableType#stringValue(double)
+     * @see NumericInputType#stringValue(double)
      */
     @NotNull
     @Override
     public String stringValue(double value) {
-        switch (this) {
-            case KG:
-                return kgString(value);
-
-            case LB:
-                return lbString(value);
-
-            default:
-                return "";
-        }
+        return String.valueOf((int)value);
     }
 
     /**
      * Get the minimum selectable weight.
      * @return A {@link Double} value.
-     * @see NumericSelectableType#minSelectableNumericValue()
+     * @see NumericInputType#minSelectableNumericValue()
      */
     @Override
     public double minSelectableNumericValue() {
         switch (this) {
-            case LB:
-                return 26;
-
-            case KG:
+            case CHILD_KG:
                 return 10;
+
+            case CHILD_LB:
+                return 22;
+
+            case TEEN_KG:
+                return 50;
+
+            case TEEN_LB:
+                return 110;
+
+            case CHILD_KG_DEC:
+            case TEEN_KG_DEC:
+            case CHILD_LB_DEC:
+            case TEEN_LB_DEC:
+                return 0;
 
             default:
                 return 0;
@@ -203,38 +179,31 @@ public enum Weight implements SLNumericSelectableType {
      * Get the maximum selectable weight. Return a lower value to avoid
      * {@link StackOverflowError} from too much scrolling.
      * @return A {@link Double} value.
-     * @see NumericSelectableType#maxSelectableNumericValue()
+     * @see NumericInputType#maxSelectableNumericValue()
      */
     @Override
     public double maxSelectableNumericValue() {
         switch (this) {
-            case LB:
+            case CHILD_KG:
+                return 80;
+
+            case CHILD_LB:
+                return 176;
+
+            case TEEN_KG:
+                return 250;
+
+            case TEEN_LB:
                 return 485;
 
-            case KG:
-                return 220;
+            case CHILD_KG_DEC:
+            case TEEN_KG_DEC:
+            case CHILD_LB_DEC:
+            case TEEN_LB_DEC:
+                return 9;
 
             default:
-                return 0;
-        }
-    }
-
-    /**
-     * Get the selectable weight step.
-     * @return A {@link Double} value.
-     * @see NumericSelectableType#selectableNumericValueStep()
-     */
-    @Override
-    public double selectableNumericValueStep() {
-        switch (this) {
-            case LB:
-                return 1;
-
-            case KG:
-                return 0.5;
-
-            default:
-                return 0;
+                throw new RuntimeException(NOT_IMPLEMENTED);
         }
     }
 }

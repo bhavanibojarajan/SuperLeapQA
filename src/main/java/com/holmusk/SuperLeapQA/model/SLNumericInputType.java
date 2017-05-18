@@ -2,16 +2,16 @@ package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
-import org.swiften.xtestkit.base.element.action.input.type.NumericSelectableType;
+import org.swiften.xtestkit.base.element.action.input.type.NumericInputType;
 
 /**
  * Created by haipham on 18/5/17.
  */
 
 /**
- * {@link NumericSelectableType} for Superleap.
+ * {@link NumericInputType} for Superleap.
  */
-public interface SLNumericSelectableType extends SLInputType, NumericSelectableType {
+public interface SLNumericInputType extends SLInputType, NumericInputType {
     /**
      * We provide a default implementation to make use of max and min values.
      * @param mode A {@link UserMode} instance.

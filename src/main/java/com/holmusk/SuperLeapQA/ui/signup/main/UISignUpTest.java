@@ -149,22 +149,22 @@ public class UISignUpTest extends UIBaseTest implements
      * This test validates that the acceptable age inputs screen contains the
      * correct {@link org.openqa.selenium.WebElement} by verifying their
      * visibility,
-     * @param mode A {@link UserMode} instance.
+     * @param MODE A {@link UserMode} instance.
      * @see #rx_splash_acceptableAge(UserMode)
-     * @see #rxEnterAndValidateAcceptableAgeInputs()
+     * @see #rxEnterAndValidateAcceptableAgeInputs(UserMode)
      * @see #generalUserModeProvider()
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
-    public void test_acceptableAgeInputs_containsCorrectElements(@NotNull UserMode mode) {
+    public void test_acceptableAgeInputs_containsCorrectElements(@NotNull final UserMode MODE) {
         // Setup
         final UISignUpTest THIS = this;
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_splash_acceptableAge(mode)
-            .flatMap(a -> THIS.rxEnterAndValidateAcceptableAgeInputs())
+        rx_splash_acceptableAge(MODE)
+            .flatMap(a -> THIS.rxEnterAndValidateAcceptableAgeInputs(MODE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

@@ -1,23 +1,99 @@
 package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
-import org.swiften.xtestkit.base.element.action.input.type.InputType;
-import org.swiften.xtestkit.base.element.action.input.type.NumericSelectableType;
+import org.swiften.javautilities.collection.Pair;
+import org.swiften.xtestkit.base.element.action.input.type.NumericInputType;
+import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Height implements AndroidInputType, SLNumericSelectableType {
-    FT,
-    CM;
+public enum Height implements BaseErrorType, SLNumericInputType {
+    CHILD_FT,
+    CHILD_INCH,
+    CHILD_CM,
+    CHILD_CM_DEC,
+    TEEN_FT,
+    TEEN_INCH,
+    TEEN_CM,
+    TEEN_CM_DEC;
+
+    /**
+     * Get the {@link Height} instances for metric unit of measurement.
+     * @param mode A {@link UserMode} instance.
+     * @return A {@link List} of {@link SLNumericInputType}.
+     */
+    @NotNull
+    public static List<SLNumericInputType> metric(@NotNull UserMode mode) {
+        switch (mode) {
+            case PARENT:
+                return Arrays.asList(CHILD_CM, CHILD_CM_DEC);
+
+            case TEEN_ABOVE_18:
+            case TEEN_UNDER_18:
+                return Arrays.asList(TEEN_CM, TEEN_CM_DEC);
+
+            default:
+                throw new RuntimeException(NOT_IMPLEMENTED);
+        }
+    }
+
+    /**
+     * Get the {@link Height} instances for imperial unit of measurement.
+     * @param mode A {@link UserMode} instance.
+     * @return A {@link List} of {@link SLNumericInputType}.
+     */
+    @NotNull
+    public static List<SLNumericInputType> imperial(@NotNull UserMode mode) {
+        switch (mode) {
+            case PARENT:
+                return Arrays.asList(CHILD_FT, CHILD_INCH);
+
+            case TEEN_ABOVE_18:
+            case TEEN_UNDER_18:
+                return Arrays.asList(TEEN_FT, TEEN_INCH);
+
+            default:
+                throw new RuntimeException(NOT_IMPLEMENTED);
+        }
+    }
+
+    /**
+     * Get a {@link List} of random metric input values.
+     * @param mode A {@link UserMode} instance.
+     * @return A {@link List} of {@link Pair}.
+     * @see #metric(UserMode)
+     * @see NumericInputType#randomNumericValue()
+     */
+    @NotNull
+    public static List<Pair<SLNumericInputType,Double>> randomMetric(@NotNull UserMode mode) {
+        return metric(mode).stream()
+            .map(a -> new Pair<>(a, a.randomNumericValue()))
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Get a {@link List} of random imperial input values.
+     * @param mode A {@link UserMode} instance.
+     * @return A {@link List} of {@link Pair}.
+     * @see #imperial(UserMode)
+     * @see NumericInputType#randomNumericValue()
+     */
+    @NotNull
+    public static List<Pair<SLNumericInputType,Double>> randomImperial(@NotNull UserMode mode) {
+        return imperial(mode).stream()
+            .map(a -> new Pair<>(a, a.randomNumericValue()))
+            .collect(Collectors.toList());
+    }
 
     /**
      * @return A {@link String} value.
-     * @see SLNumericSelectableType#emptyInputError(UserMode)
+     * @see SLNumericInputType#emptyInputError(UserMode)
      */
     @NotNull
     @Override
@@ -33,82 +109,21 @@ public enum Height implements AndroidInputType, SLNumericSelectableType {
     @Override
     public String androidViewId() {
         switch (this) {
-            case FT:
-                return "btn_male";
+            case CHILD_FT:
+            case CHILD_INCH:
+            case TEEN_FT:
+            case TEEN_INCH:
+                return "btn_ft";
 
-            case CM:
-                return "btn_female";
-
-            default:
-                return "";
-        }
-    }
-
-    /**
-     * Convert a height value to cm.
-     * @param value A {@link Double} value.
-     * @return A {@link Double} value.
-     */
-    public double cm(double value) {
-        switch (this) {
-            case FT:
-                return value * 30.48d;
+            case CHILD_CM:
+            case CHILD_CM_DEC:
+            case TEEN_CM:
+            case TEEN_CM_DEC:
+                return "btn_cm";
 
             default:
-                return value;
+                throw new RuntimeException(NOT_IMPLEMENTED);
         }
-    }
-
-    /**
-     * Get a height value's {@link String} representation in cm.
-     * @param value A {@link Double} value.
-     * @return A {@link String} value.
-     * @see #cm(double)
-     */
-    @NotNull
-    public String cmString(double value) {
-        return String.format("%.1f cm", cm(value));
-    }
-
-    /**
-     * Convert a height value to ft.
-     * @param value A {@link Double} value.
-     * @return A {@link Double} value.
-     */
-    public double ft(double value) {
-        switch (this) {
-            case FT:
-                return value;
-
-            case CM:
-                return value / 30.48d;
-
-            default:
-                return 0;
-        }
-    }
-
-    /**
-     * Get a height value's {@link String} representation in ft.
-     * @param value A {@link Double} value.
-     * @return A {@link String} value.
-     * @see #ft(double)
-     */
-    @NotNull
-    public String ftString(double value) {
-        double ft = ft(value);
-        double base = Math.floor(ft);
-        int remain = (int)Math.round(((ft - base) * 12));
-
-        /* Since we use ceil for the remainder value, if it rounds up to 12,
-         * we need to add 1 to base and reset remain to 0 - i.e. a full foot
-         * from 12 inches */
-        if (remain % 12 == 0) {
-            base += remain / 12;
-            remain = 0;
-        }
-
-        return String.format("%1$d'%2$d\"", (int)base, remain);
     }
 
     /**
@@ -116,74 +131,43 @@ public enum Height implements AndroidInputType, SLNumericSelectableType {
      * the type of {@link Height}.
      * @param value A {@link Double} value.
      * @return A {@link String} value.
-     * @see #ftString(double)
-     * @see #cmString(double)
-     * @see NumericSelectableType#stringValue(double)
+     * @see NumericInputType#stringValue(double)
      */
     @NotNull
     @Override
     public String stringValue(double value) {
-        switch (this) {
-            case FT:
-                return ftString(value);
-
-            case CM:
-                return cmString(value);
-
-            default:
-                return "";
-        }
-    }
-
-    /**
-     * Get the height value by parsing a {@link String} representation of
-     * a height.
-     * @param value A {@link String} value.
-     * @return A {@link Double} value.
-     * @see NumericSelectableType#numericValue(String)
-     */
-    @Override
-    public double numericValue(@NotNull String value) {
-        String regex;
-        double ratio;
-
-        switch (this) {
-            case FT:
-                regex = "(\\d+)'(\\d+)\"";
-                ratio = 12;
-                break;
-
-            case CM:
-                regex = "(\\d+)\\.(\\d+) cm";
-                ratio = 10;
-                break;
-
-            default:
-                return 0;
-        }
-
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(value);
-        double base = matcher.find() ? Double.valueOf(matcher.group(1)) : 0;
-        double dec = matcher.groupCount() > 1 ? Double.valueOf(matcher.group(2)) : 0;
-        return base + dec / ratio;
+        return String.valueOf((int)value);
     }
 
     /**
      * Get the minimum selectable height.
      * @return A {@link Double} value.
-     * @see NumericSelectableType#minSelectableNumericValue()
+     * @see NumericInputType#minSelectableNumericValue()
      */
     public double minSelectableNumericValue() {
         switch (this) {
-            case CM:
+            case CHILD_CM:
                 return 50;
 
-            case FT:
-                return CM.ft(CM.minSelectableNumericValue());
+            case CHILD_FT:
+                return 1;
+
+            case TEEN_CM:
+                return 120;
+
+            case TEEN_FT:
+                return 3;
+
+            case TEEN_CM_DEC:
+            case CHILD_CM_DEC:
+                return 0;
+
+            case TEEN_INCH:
+            case CHILD_INCH:
+                return 0;
 
             default:
-                return 0;
+                throw new RuntimeException(NOT_IMPLEMENTED);
         }
     }
 
@@ -191,39 +175,33 @@ public enum Height implements AndroidInputType, SLNumericSelectableType {
      * Get the maximum selectable height. Return a lower value to avoid
      * {@link StackOverflowError} from too much scrolling.
      * @return A {@link Double} value.
-     * @see NumericSelectableType#maxSelectableNumericValue()
+     * @see NumericInputType#maxSelectableNumericValue()
      */
     @Override
     public double maxSelectableNumericValue() {
         switch (this) {
-            case CM:
+            case CHILD_CM:
+                return 120;
+
+            case CHILD_FT:
+                return 3;
+
+            case TEEN_CM:
                 return 250;
 
-            case FT:
-                return CM.ft(CM.maxSelectableNumericValue());
+            case TEEN_FT:
+                return 8;
+
+            case TEEN_CM_DEC:
+            case CHILD_CM_DEC:
+                return 9;
+
+            case TEEN_INCH:
+            case CHILD_INCH:
+                return 11;
 
             default:
-                return 0;
-        }
-    }
-
-    /**
-     * Get the step value that is the difference between a value and its
-     * immediately higher value.
-     * @return A {@link Double} value.
-     * @see NumericSelectableType#selectableNumericValueStep()
-     */
-    @Override
-    public double selectableNumericValueStep() {
-        switch (this) {
-            case CM:
-                return 0.5d;
-
-            case FT:
-                return CM.ft(CM.selectableNumericValueStep());
-
-            default:
-                return 0;
+                throw new RuntimeException(NOT_IMPLEMENTED);
         }
     }
 }

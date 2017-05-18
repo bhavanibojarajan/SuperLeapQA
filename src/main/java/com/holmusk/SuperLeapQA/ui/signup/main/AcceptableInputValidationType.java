@@ -64,7 +64,7 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
      * @see #NOT_IMPLEMENTED
      */
     @NotNull
-    default Flowable<WebElement> rxScrollableChoicePicker(@NotNull SLNumericSelectableType input) {
+    default Flowable<WebElement> rxScrollableChoicePicker(@NotNull SLNumericInputType input) {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
@@ -76,7 +76,7 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
 
     /**
      * Get all input value items within the scrollable view as emitted by
-     * {@link #rxScrollableChoicePicker(SLNumericSelectableType)}, assuming
+     * {@link #rxScrollableChoicePicker(SLNumericInputType)}, assuming
      * the user is already in the picker window.
      * @param input A {@link InputType} instance.
      * @return A {@link Flowable} instance.
@@ -87,7 +87,7 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
      * @see #NOT_IMPLEMENTED
      */
     @NotNull
-    default Flowable<WebElement> rxPickerItemViews(@NotNull SLNumericSelectableType input) {
+    default Flowable<WebElement> rxPickerItemViews(@NotNull SLNumericInputType input) {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
@@ -124,11 +124,11 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
                 rxEditFieldForInput(Gender.MALE),
                 rxEditFieldForInput(Gender.FEMALE),
                 rxEditFieldForInput(ChoiceInput.HEIGHT),
-                rxEditFieldForInput(Height.FT),
-                rxEditFieldForInput(Height.CM),
+                rxEditFieldForInput(Height.CHILD_FT),
+                rxEditFieldForInput(Height.CHILD_CM),
                 rxEditFieldForInput(ChoiceInput.WEIGHT),
-                rxEditFieldForInput(Weight.LB),
-                rxEditFieldForInput(Weight.KG),
+                rxEditFieldForInput(Weight.CHILD_LB),
+                rxEditFieldForInput(Weight.CHILD_KG),
                 rxEditFieldForInput(ChoiceInput.ETHNICITY),
                 rxEditFieldForInput(ChoiceInput.COACH_PREFERENCE),
                 rxAcceptableAgeConfirmButton(),

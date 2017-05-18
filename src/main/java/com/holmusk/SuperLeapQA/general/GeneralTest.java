@@ -1,18 +1,14 @@
 package com.holmusk.SuperLeapQA.general;
 
 import com.holmusk.SuperLeapQA.model.*;
-import org.swiften.javautilities.collection.CollectionUtil;
-import org.swiften.javautilities.collection.Zipped;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.javautilities.localizer.Localizer;
 import org.swiften.javautilities.log.LogUtil;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -20,93 +16,18 @@ import java.util.Locale;
  */
 public final class GeneralTest {
     @Test
-    public void test_heightModeToFt_shouldWork() {
-        // Setup
-        double heightInCM = 52.0;
-
-        // When
-        String ftString = Height.CM.ftString(heightInCM);
-
-        // Then
-        Assert.assertTrue(ftString.matches("\\d+'\\d+\""));
-    }
-
-    @Test
-    public void test_heightModeToCm_shouldWork() {
-        // Setup
-        double heightInFt = 1.64d;
-
-        // When
-        String cmString = Height.FT.cmString(heightInFt);
-
-        // Then
-        Assert.assertTrue(cmString.matches("\\d+\\.\\d+ cm"));
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void test_heightValueFromString_shouldWork() {
-        // Setup
-        List<Double> cms = Height.CM.selectableNumericRange();
-
-        for (Double cmVal : cms) {
-            String cmString = Height.CM.stringValue(cmVal);
-
-            // When
-            double cm = Height.CM.numericValue(cmString);
-
-            // Then
-            LogUtil.println(cm);
-            Assert.assertTrue(cms.contains(cm));
-        }
-    }
-
-    @Test
-    public void test_weightModeToLB_shouldWork() {
-        // Setup
-        double weightInKg = 100;
-
-        // When
-        String lbString = Weight.KG.lbString(weightInKg);
-
-        // Then
-        Assert.assertTrue(lbString.matches("\\d+ lbs"));
-    }
-
-    @Test
-    public void test_weightValueFromString_shouldWork() {
-        // Setup
-        List<Double> kgs = Weight.KG.selectableNumericRange();
-        List<Double> lbs = Weight.LB.selectableNumericRange();
-        List<Zipped<Double,Double>> allZipped = CollectionUtil.zip(kgs, lbs);
-
-        for (Zipped<Double,Double> zipped : allZipped) {
-            // When
-            Assert.assertNotNull(zipped.FIRST);
-            Assert.assertNotNull(zipped.SECOND);
-            String kgString = Weight.KG.kgString(zipped.FIRST);
-            String lbString = Weight.LB.lbString(zipped.SECOND);
-
-            // Then
-            double kg = Weight.KG.numericValue(kgString);
-            double lb = Weight.LB.numericValue(lbString);
-            LogUtil.println(kg, lb);
-        }
-    }
-
-    @Test
     public void test_emptyInputErrors_shouldBeCorrect() {
         // Setup & When
         LCFormat parent_gender = Gender.FEMALE.emptyInputError(UserMode.PARENT);
         LCFormat teen_gender = Gender.MALE.emptyInputError(UserMode.TEEN_UNDER_18);
-        LCFormat parent_ft_height = Height.FT.emptyInputError(UserMode.PARENT);
-        LCFormat parent_cm_height = Height.CM.emptyInputError(UserMode.PARENT);
-        LCFormat parent_kg_weight = Weight.KG.emptyInputError(UserMode.PARENT);
-        LCFormat parent_lb_weight = Weight.LB.emptyInputError(UserMode.PARENT);
-        LCFormat teen_ft_height = Height.FT.emptyInputError(UserMode.TEEN_UNDER_18);
-        LCFormat teen_cm_height = Height.CM.emptyInputError(UserMode.TEEN_UNDER_18);
-        LCFormat teen_kg_weight = Weight.KG.emptyInputError(UserMode.TEEN_UNDER_18);
-        LCFormat teen_lb_weight = Weight.LB.emptyInputError(UserMode.TEEN_UNDER_18);
+        LCFormat parent_ft_height = Height.CHILD_FT.emptyInputError(UserMode.PARENT);
+        LCFormat parent_cm_height = Height.CHILD_CM.emptyInputError(UserMode.PARENT);
+        LCFormat parent_kg_weight = Weight.CHILD_KG.emptyInputError(UserMode.PARENT);
+        LCFormat parent_lb_weight = Weight.CHILD_LB.emptyInputError(UserMode.PARENT);
+        LCFormat teen_ft_height = Height.CHILD_FT.emptyInputError(UserMode.TEEN_UNDER_18);
+        LCFormat teen_cm_height = Height.CHILD_CM.emptyInputError(UserMode.TEEN_UNDER_18);
+        LCFormat teen_kg_weight = Weight.CHILD_KG.emptyInputError(UserMode.TEEN_UNDER_18);
+        LCFormat teen_lb_weight = Weight.CHILD_LB.emptyInputError(UserMode.TEEN_UNDER_18);
         Localizer localizer = Localizer.builder().addBundle("Strings", Locale.US).build();
 
         // Then

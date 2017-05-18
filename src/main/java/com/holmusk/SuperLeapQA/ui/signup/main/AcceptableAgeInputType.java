@@ -4,16 +4,22 @@ import com.holmusk.SuperLeapQA.model.*;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.io.Zip;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
+import org.swiften.javautilities.collection.Pair;
+import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatComparisonType;
 import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatType;
 import org.swiften.xtestkit.base.element.action.swipe.type.SwipeType;
 import org.swiften.xtestkit.base.element.locator.general.param.TextParam;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkit.base.element.action.input.type.InputType;
-import org.swiften.xtestkit.base.element.action.input.type.NumericSelectableType;
+import org.swiften.xtestkit.base.element.action.input.type.NumericInputType;
+import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
+
+import java.util.List;
 
 /**
  * Created by haipham on 17/5/17.
@@ -52,15 +58,15 @@ public interface AcceptableAgeInputType extends
 
     /**
      * Select a value, assuming the user is in the value selection screen.
-     * @param MODE A {@link NumericSelectableType} instance.
+     * @param MODE A {@link NumericInputType} instance.
      * @param NUMERIC_VALUE A {@link Double} value.
      * @return A {@link Flowable} instance.
-     * @see #rxPickerItemViews(SLNumericSelectableType)
+     * @see #rxPickerItemViews(SLNumericInputType)
      * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rxSelectNumericInput(
-        @NotNull final SLNumericSelectableType MODE,
+        @NotNull final SLNumericInputType MODE,
         final double NUMERIC_VALUE
     ) {
         final AcceptableAgeInputType THIS = this;
@@ -139,11 +145,41 @@ public interface AcceptableAgeInputType extends
     }
 
     /**
+     * Select values for a set {@link SLNumericInputType}. This is
+     * useful when we want to select {@link Height} or {@link Weight} based
+     * on different units of measurement (metric/imperial), since the app
+     * requires a combination of two inputs from two
+     * {@link SLNumericInputType} (e.g. {@link Height#CHILD_CM} and
+     * {@link Height#CHILD_CM_DEC}).
+     * @param inputs A {@link List} of {@link Pair} instances.
+     * @return A {@link Flowable} instance.
+     * @see #rxSelectNumericInput(SLNumericInputType, double)
+     */
+    @NotNull
+    default Flowable<Boolean> rxSelectNumericInput(
+        @NotNull List<Pair<SLNumericInputType,Double>> inputs
+    ) {
+        final AcceptableAgeInputType THIS = this;
+
+        return Flowable
+            .fromIterable(inputs)
+            .concatMap(a -> {
+                if (ObjectUtil.nonNull(a.A) && ObjectUtil.nonNull(a.B)) {
+                    return THIS.rxSelectNumericInput(a.A, a.B);
+                } else {
+                    return RxUtil.error(NOT_IMPLEMENTED);
+                }
+            })
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
+    }
+
+    /**
      * Select an {@link Ethnicity} for {@link ChoiceInput#ETHNICITY}.
      * @param E An {@link Ethnicity} instance.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String...)
-     * @see #rxClickInputField(InputType)
+     * @see #rxClickInputField(AndroidInputType)
      * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
@@ -161,7 +197,7 @@ public interface AcceptableAgeInputType extends
      * @param CP A {@link CoachPref} instance.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String...)
-     * @see #rxClickInputField(InputType)
+     * @see #rxClickInputField(AndroidInputType)
      * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
@@ -190,10 +226,10 @@ public interface AcceptableAgeInputType extends
      * Enter random acceptable age inputs in order to access the personal
      * information input screen.
      * @return A {@link Flowable} instance.
-     * @see #rxClickInputField(InputType)
+     * @see #rxClickInputField(AndroidInputType)
      * @see #rxSelectEthnicity(Ethnicity)
      * @see #rxSelectCoachPref(CoachPref)
-     * @see #rxSelectNumericInput(SLNumericSelectableType, double)
+     * @see #rxSelectNumericInput(SLNumericInputType, double)
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -204,10 +240,10 @@ public interface AcceptableAgeInputType extends
         final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
 //        final Height HEIGHT_MODE = CollectionTestUtil.randomElement(Height.values());
 //        final Weight WEIGHT_MODE = CollectionTestUtil.randomElement(Weight.values());
-        final Height HEIGHT_MODE = Height.CM; // TODO: Randomize when ft bug is fixed
-        final Weight WEIGHT_MODE = Weight.KG; // TODO: Randomize when lb bug is fixed
-        final double HEIGHT = HEIGHT_MODE.randomSelectableNumericValue();
-        final double WEIGHT = WEIGHT_MODE.randomSelectableNumericValue();
+        final Height HEIGHT_MODE = Height.CHILD_CM; // TODO: Randomize when ft bug is fixed
+        final Weight WEIGHT_MODE = Weight.CHILD_KG; // TODO: Randomize when lb bug is fixed
+        final double HEIGHT = HEIGHT_MODE.randomNumericValue();
+        final double WEIGHT = WEIGHT_MODE.randomNumericValue();
 
         return rxClickInputField(GENDER)
             .flatMap(a -> rxSelectEthnicity(ETH))
@@ -225,26 +261,20 @@ public interface AcceptableAgeInputType extends
     /**
      * Enter random inputs for acceptable age screen, assuming the user is
      * already in the acceptable age input screen.
+     * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rxClickInputField(InputType)
-     * @see #rxEditFieldHasValue(InputType, String)
+     * @see #rxClickInputField(AndroidInputType)
+     * @see #rxSelectNumericInput(List)
+     * @see #rxEditFieldHasValue(AndroidInputType, String)
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<Boolean> rxEnterAndValidateAcceptableAgeInputs() {
+    default Flowable<Boolean> rxEnterAndValidateAcceptableAgeInputs(@NotNull UserMode mode) {
         final AcceptableAgeInputType THIS = this;
-        final double HEIGHT_CM = Height.CM.randomSelectableNumericValue();
-        final double HEIGHT_FT = Height.FT.randomSelectableNumericValue();
-        final String HEIGHT_CM_STR = Height.CM.stringValue(HEIGHT_CM);
-        final String HEIGHT_CM_FT_STR = Height.CM.ftString(HEIGHT_CM);
-        final String HEIGHT_FT_STR = Height.FT.stringValue(HEIGHT_FT);
-        final String HEIGHT_FT_CM_STR = Height.FT.cmString(HEIGHT_FT);
-        final double WEIGHT_KG = Weight.KG.randomSelectableNumericValue();
-        final double WEIGHT_LB = Weight.LB.randomSelectableNumericValue();
-        final String WEIGHT_KG_STR = Weight.KG.stringValue(WEIGHT_KG);
-        final String WEIGHT_KG_LB_STR = Weight.KG.lbString(WEIGHT_KG);
-        final String WEIGHT_LB_STR = Weight.LB.stringValue(WEIGHT_LB);
-        final String WEIGHT_LB_KG_STR = Weight.LB.kgString(WEIGHT_LB);
+        final List<Pair<SLNumericInputType,Double>> HEIGHT_M = Height.randomMetric(mode);
+        final List<Pair<SLNumericInputType,Double>> WEIGHT_M = Weight.randomMetric(mode);
+        final List<Pair<SLNumericInputType,Double>> HEIGHT_I = Height.randomImperial(mode);
+        final List<Pair<SLNumericInputType,Double>> WEIGHT_I = Weight.randomImperial(mode);
         final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
         final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
 
@@ -253,33 +283,21 @@ public interface AcceptableAgeInputType extends
             .flatMap(a -> THIS.rxSelectEthnicity(ETH))
             .flatMap(a -> THIS.rxSelectCoachPref(CP))
 
-            .flatMap(a -> THIS.rxClickInputField(Height.CM))
+            .flatMap(a -> THIS.rxClickInputField(Height.CHILD_CM))
             .flatMap(a -> THIS.rxClickInputField(ChoiceInput.HEIGHT))
-            .flatMap(a -> THIS.rxSelectNumericInput(Height.CM, HEIGHT_CM))
-            .flatMap(a -> THIS.rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_CM_STR))
-            .flatMap(a -> THIS.rxClickInputField(Height.FT))
-            .flatMap(a -> THIS.rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_CM_FT_STR))
+            .flatMap(a -> THIS.rxSelectNumericInput(HEIGHT_M))
 
-            .flatMap(a -> THIS.rxClickInputField(Height.FT))
+            .flatMap(a -> THIS.rxClickInputField(Height.CHILD_FT))
             .flatMap(a -> THIS.rxClickInputField(ChoiceInput.HEIGHT))
-            .flatMap(a -> THIS.rxSelectNumericInput(Height.FT, HEIGHT_FT))
-            .flatMap(a -> THIS.rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_FT_STR))
-            .flatMap(a -> THIS.rxClickInputField(Height.CM))
-            .flatMap(a -> THIS.rxEditFieldHasValue(ChoiceInput.HEIGHT, HEIGHT_FT_CM_STR))
+            .flatMap(a -> THIS.rxSelectNumericInput(HEIGHT_I))
 
-            .flatMap(a -> THIS.rxClickInputField(Weight.KG))
+            .flatMap(a -> THIS.rxClickInputField(Weight.CHILD_KG))
             .flatMap(a -> THIS.rxClickInputField(ChoiceInput.WEIGHT))
-            .flatMap(a -> THIS.rxSelectNumericInput(Weight.KG, WEIGHT_KG))
-            .flatMap(a -> THIS.rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_KG_STR))
-            .flatMap(a -> THIS.rxClickInputField(Weight.LB))
-            .flatMap(a -> THIS.rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_KG_LB_STR))
+            .flatMap(a -> THIS.rxSelectNumericInput(WEIGHT_M))
 
-            .flatMap(a -> THIS.rxClickInputField(Weight.LB))
+            .flatMap(a -> THIS.rxClickInputField(Weight.CHILD_LB))
             .flatMap(a -> THIS.rxClickInputField(ChoiceInput.WEIGHT))
-            .flatMap(a -> THIS.rxSelectNumericInput(Weight.LB, WEIGHT_LB))
-            .flatMap(a -> THIS.rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_LB_STR))
-            .flatMap(a -> THIS.rxClickInputField(Weight.KG))
-            .flatMap(a -> THIS.rxEditFieldHasValue(ChoiceInput.WEIGHT, WEIGHT_LB_KG_STR));
+            .flatMap(a -> THIS.rxSelectNumericInput(WEIGHT_I));
     }
 
     /**
@@ -304,10 +322,10 @@ public interface AcceptableAgeInputType extends
         }
 
         final Gender GENDER = CollectionTestUtil.randomElement(Gender.values());
-        final double HEIGHT_CM = Height.CM.randomSelectableNumericValue();
-        final double HEIGHT_FT = Height.FT.randomSelectableNumericValue();
-        final double WEIGHT_KG = Weight.KG.randomSelectableNumericValue();
-        final double WEIGHT_LB = Weight.LB.randomSelectableNumericValue();
+        final double HEIGHT_CM = Height.CHILD_CM.randomNumericValue();
+        final double HEIGHT_FT = Height.CHILD_FT.randomNumericValue();
+        final double WEIGHT_KG = Weight.CHILD_KG.randomNumericValue();
+        final double WEIGHT_LB = Weight.CHILD_LB.randomNumericValue();
         final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
         final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
 
@@ -317,28 +335,28 @@ public interface AcceptableAgeInputType extends
             .flatMap(a -> THIS.rxClickInputField(GENDER))
 
             /* At this stage, the height error message should be shown */
-            .flatMap(a -> THIS.rxClickInputField(Height.CM))
+            .flatMap(a -> THIS.rxClickInputField(Height.CHILD_CM))
             .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
-            .flatMap(a -> THIS.rxIsShowingError(Height.CM.emptyInputError(MODE)))
-            .flatMap(a -> THIS.rxSelectNumericInput(Height.CM, HEIGHT_CM))
+            .flatMap(a -> THIS.rxIsShowingError(Height.CHILD_CM.emptyInputError(MODE)))
+            .flatMap(a -> THIS.rxSelectNumericInput(Height.CHILD_CM, HEIGHT_CM))
 
             /* At this stage, the height error message should be shown */
-            .flatMap(a -> THIS.rxClickInputField(Height.FT))
+            .flatMap(a -> THIS.rxClickInputField(Height.CHILD_FT))
             .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
-            .flatMap(a -> THIS.rxIsShowingError(Height.FT.emptyInputError(MODE)))
-            .flatMap(a -> THIS.rxSelectNumericInput(Height.FT, HEIGHT_FT))
+            .flatMap(a -> THIS.rxIsShowingError(Height.CHILD_FT.emptyInputError(MODE)))
+            .flatMap(a -> THIS.rxSelectNumericInput(Height.CHILD_FT, HEIGHT_FT))
 
             /* At this stage, the weight error message should be shown */
-            .flatMap(a -> THIS.rxClickInputField(Weight.KG))
+            .flatMap(a -> THIS.rxClickInputField(Weight.CHILD_KG))
             .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
-            .flatMap(a -> THIS.rxIsShowingError(Weight.KG.emptyInputError(MODE)))
-            .flatMap(a -> THIS.rxSelectNumericInput(Weight.KG, WEIGHT_KG))
+            .flatMap(a -> THIS.rxIsShowingError(Weight.CHILD_KG.emptyInputError(MODE)))
+            .flatMap(a -> THIS.rxSelectNumericInput(Weight.CHILD_KG, WEIGHT_KG))
 
             /* At this stage, the weight error message should be shown */
-            .flatMap(a -> THIS.rxClickInputField(Weight.LB))
+            .flatMap(a -> THIS.rxClickInputField(Weight.CHILD_LB))
             .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
-            .flatMap(a -> THIS.rxIsShowingError(Weight.LB.emptyInputError(MODE)))
-            .flatMap(a -> THIS.rxSelectNumericInput(Weight.LB, WEIGHT_LB))
+            .flatMap(a -> THIS.rxIsShowingError(Weight.CHILD_LB.emptyInputError(MODE)))
+            .flatMap(a -> THIS.rxSelectNumericInput(Weight.CHILD_LB, WEIGHT_LB))
 
             /* At this stage, the ethnicity error message should be shown */
             .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
