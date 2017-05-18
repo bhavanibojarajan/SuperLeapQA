@@ -30,14 +30,19 @@ public interface DashboardValidationType extends BaseValidationType {
      * @see ObjectUtil#nonNull(Object)
      */
     @NotNull
+    @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxValidateUseAppNowScreen() {
         final DashboardValidationType THIS = this;
         final BaseEngine<?> ENGINE = engine();
 
-        return ENGINE.rxElementContainingText("dashboard_title_accountReadyToUse")
-            .flatMap(a -> ENGINE.rxElementContainingText("dashboard_title_rememberCheckEmail"))
-            .flatMap(a -> THIS.rxUseAppNowButton())
-            .map(BooleanUtil::toTrue);
+        return Flowable
+            .concatArray(
+                ENGINE.rxElementContainingText("dashboard_title_accountReadyToUse"),
+                ENGINE.rxElementContainingText("dashboard_title_rememberCheckEmail"),
+                THIS.rxUseAppNowButton()
+            )
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
     }
 
     /**

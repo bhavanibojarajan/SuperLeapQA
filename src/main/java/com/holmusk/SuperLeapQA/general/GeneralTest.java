@@ -151,10 +151,10 @@ public final class GeneralTest {
     public void test_userModeAgeRange_shouldBeCorrect() {
         // Setup & When & Then
         LogUtil.println(UserMode.PARENT.acceptableAgeRange());
-        LogUtil.println(UserMode.PARENT.acceptableAgeRangeString());
+        LogUtil.println(UserMode.PARENT.acceptableAgeCategoryRangeString());
         LogUtil.println(UserMode.TEEN_UNDER_18.acceptableAgeRange());
-        LogUtil.println(UserMode.TEEN_UNDER_18.acceptableAgeRangeString());
+        LogUtil.println(UserMode.TEEN_UNDER_18.acceptableAgeCategoryRangeString());
         LogUtil.println(UserMode.TEEN_ABOVE_18.acceptableAgeRange());
-        LogUtil.println(UserMode.TEEN_ABOVE_18.acceptableAgeRangeString());
+        LogUtil.println(UserMode.TEEN_ABOVE_18.acceptableAgeCategoryRangeString());
     }
 }

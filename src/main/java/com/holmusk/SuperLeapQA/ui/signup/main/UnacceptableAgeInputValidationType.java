@@ -30,7 +30,7 @@ public interface UnacceptableAgeInputValidationType extends DOBPickerValidationT
         final BaseEngine<?> ENGINE = engine();
 
         return ENGINE.rxElementContainingText("register_title_weAreOnlyAccepting")
-            .flatMap(a -> ENGINE.rxElementContainingText(MODE.acceptableAgeRangeString()))
+            .flatMap(a -> ENGINE.rxElementContainingText(MODE.acceptableAgeCategoryRangeString()))
             .flatMap(a -> ENGINE.rxElementContainingText("+65"))
             .flatMap(a -> rxEditFieldForInput(TextInput.NAME))
             .flatMap(a -> rxEditFieldForInput(TextInput.PHONE))

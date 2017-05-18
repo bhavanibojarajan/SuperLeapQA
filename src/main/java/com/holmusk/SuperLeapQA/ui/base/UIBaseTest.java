@@ -4,6 +4,7 @@ import com.holmusk.SuperLeapQA.config.Config;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.kit.*;
 import org.swiften.xtestkit.kit.param.AfterClassParam;
 import org.swiften.xtestkit.kit.param.AfterParam;
@@ -36,6 +37,7 @@ public class UIBaseTest implements BaseActionType, BaseValidationType {
     private final int INDEX;
 
     public UIBaseTest(int index) {
+        LogUtil.printfThread("Init new test with index %d", index);
         INDEX = index;
         TEST_KIT = Config.TEST_KIT;
     }

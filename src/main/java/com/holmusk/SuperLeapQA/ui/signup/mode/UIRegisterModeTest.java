@@ -3,6 +3,7 @@ package com.holmusk.SuperLeapQA.ui.signup.mode;
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.ui.welcome.WelcomeActionType;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
+import com.holmusk.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
@@ -35,6 +36,7 @@ public final class UIRegisterModeTest extends UIBaseTest implements
      */
     @Test
     @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
     public void test_registerScreen_shouldContainCorrectElements() {
         // Setup
         final UIRegisterModeTest THIS = this;

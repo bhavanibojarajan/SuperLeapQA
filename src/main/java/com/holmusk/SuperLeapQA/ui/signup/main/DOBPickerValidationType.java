@@ -3,6 +3,7 @@ package com.holmusk.SuperLeapQA.ui.signup.main;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
+import org.intellij.lang.annotations.Flow;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
@@ -61,25 +62,32 @@ public interface DOBPickerValidationType extends SignUpActionType {
      * @see ObjectUtil#nonNull(Object)
      */
     @NotNull
+    @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxValidateDoBPickerScreen() {
         final BaseEngine<?> ENGINE = engine();
+        long delay = generalDelay();
 
-        return rxDoBEditField()
-            .flatMap(a -> ENGINE.rxElementContainingText("register_title_dateOfBirth"))
-            .flatMap(a -> ENGINE.rxElementContainingText(
-                "parentSignUp_title_whatIsYourChild",
-                "teenSignUp_title_whatIsYour"
-            ))
+        return Flowable
+            .concatArray(
+                rxDoBEditField(),
+                ENGINE.rxElementContainingText("register_title_dateOfBirth"),
+                ENGINE.rxElementContainingText(
+                    "parentSignUp_title_whatIsYourChild",
+                    "teenSignUp_title_whatIsYour"
+                )
+            )
+            .all(ObjectUtil::nonNull)
+            .toFlowable()
 
             /* Open the DoB dialog and verify that all elements are there */
             .flatMap(a -> rxDoBEditField())
             .flatMap(ENGINE::rxClick)
             .flatMap(a -> rxDoBElements().all(ObjectUtil::nonNull).toFlowable())
-            .delay(generalDelay(), TimeUnit.MILLISECONDS, Schedulers.trampoline())
+            .delay(delay, TimeUnit.MILLISECONDS, Schedulers.trampoline())
 
             /* Dismiss the dialog by navigating back once */
             .flatMap(a -> ENGINE.rxNavigateBackOnce())
-            .delay(generalDelay(), TimeUnit.MILLISECONDS, Schedulers.trampoline())
+            .delay(delay, TimeUnit.MILLISECONDS, Schedulers.trampoline())
             .map(BooleanUtil::toTrue);
     }
 

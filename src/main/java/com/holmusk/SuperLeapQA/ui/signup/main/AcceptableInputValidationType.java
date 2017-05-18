@@ -7,12 +7,11 @@ import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.javautilities.log.LogUtil;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.element.locator.general.param.ByXPath;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
-import org.swiften.xtestkit.base.type.PlatformType;
-import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.mobile.android.AndroidEngine;
 import org.swiften.xtestkit.mobile.android.AndroidView;
 
@@ -88,7 +87,6 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
     @NotNull
     default Flowable<WebElement> rxPickerItemViews(@NotNull InputType input) {
         BaseEngine<?> engine = engine();
-        PlatformType platform = engine.platform();
 
         if (engine instanceof AndroidEngine) {
             XPath xPath = engine.newXPathBuilder()
@@ -113,24 +111,29 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
      * @return A {@link Flowable} instance.
      * @see #rxEditFieldForInput(InputType)
      * @see #rxAcceptableAgeConfirmButton()
+     * @see #rxAcceptableAgeInputTitleLabel()
      */
     @NotNull
     @Override
     @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxValidateAcceptableAgeScreen() {
-        return rxEditFieldForInput(Gender.MALE)
-            .flatMap(a -> rxEditFieldForInput(Gender.FEMALE))
-            .flatMap(a -> rxEditFieldForInput(ChoiceInput.HEIGHT))
-            .flatMap(a -> rxEditFieldForInput(Height.FT))
-            .flatMap(a -> rxEditFieldForInput(Height.CM))
-            .flatMap(a -> rxEditFieldForInput(ChoiceInput.WEIGHT))
-            .flatMap(a -> rxEditFieldForInput(Weight.LB))
-            .flatMap(a -> rxEditFieldForInput(Weight.KG))
-            .flatMap(a -> rxEditFieldForInput(ChoiceInput.ETHNICITY))
-            .flatMap(a -> rxEditFieldForInput(ChoiceInput.COACH_PREFERENCE))
-            .flatMap(a -> rxAcceptableAgeConfirmButton())
-            .flatMap(a -> rxAcceptableAgeInputTitleLabel())
-            .map(BooleanUtil::toTrue);
+        return Flowable
+            .concatArray(
+                rxEditFieldForInput(Gender.MALE),
+                rxEditFieldForInput(Gender.FEMALE),
+                rxEditFieldForInput(ChoiceInput.HEIGHT),
+                rxEditFieldForInput(Height.FT),
+                rxEditFieldForInput(Height.CM),
+                rxEditFieldForInput(ChoiceInput.WEIGHT),
+                rxEditFieldForInput(Weight.LB),
+                rxEditFieldForInput(Weight.KG),
+                rxEditFieldForInput(ChoiceInput.ETHNICITY),
+                rxEditFieldForInput(ChoiceInput.COACH_PREFERENCE),
+                rxAcceptableAgeConfirmButton(),
+                rxAcceptableAgeInputTitleLabel()
+            )
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
     }
 
     /**
@@ -145,7 +148,7 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
                                                   @NotNull final String VALUE) {
         return rxEditFieldForInput(INPUT)
             .map(engine()::getText)
-            .doOnNext(a -> LogUtil.printf("Current value for %s: %s", INPUT, a))
+            .doOnNext(a -> LogUtil.printfThread("Current value for %s: %s", INPUT, a))
             .filter(a -> a.equals(VALUE))
             .switchIfEmpty(RxUtil.errorF("Value for %s does not equal %s", INPUT, VALUE))
             .map(BooleanUtil::toTrue);

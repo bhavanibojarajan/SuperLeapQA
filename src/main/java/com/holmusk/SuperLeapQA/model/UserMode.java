@@ -201,27 +201,7 @@ public enum UserMode implements ValueRangeConverterType<Integer> {
     }
 
     /**
-     * Get the first unaceptable age to check unacceptable age input screen.
-     * @return An {@link Integer} value.
-     * @see #minAcceptableAge()
-     * @see #maxAcceptableAge()
-     */
-    public int firstUnacceptableAge() {
-        switch (this) {
-            case PARENT:
-            case TEEN_ABOVE_18:
-                return maxAcceptableAge() + 1;
-
-            case TEEN_UNDER_18:
-                return minAcceptableAge() - 1;
-
-            default:
-                return 0;
-        }
-    }
-
-    /**
-     * Get the acceptable age range for the current sign up mode.
+     * Get the acceptable age range for the current {@link UserMode}.
      * @return A {@link List} of {@link Integer}.
      * @see #valueRange(Number, Number, Number)
      * @see #minAcceptableAge()
@@ -231,6 +211,20 @@ public enum UserMode implements ValueRangeConverterType<Integer> {
     public List<Integer> acceptableAgeRange() {
         int minAge = minAcceptableAge();
         int maxAge = maxAcceptableAge();
+        return valueRange(minAge, maxAge + 1, 1);
+    }
+
+    /**
+     * Get the acceptable age category range for the current {@link UserMode}.
+     * @return A {@link List} of {@link Integer}.
+     * @see #valueRange(Number, Number, Number)
+     * @see #minCategoryAcceptableAge()
+     * @see #maxCategoryAcceptableAge()
+     */
+    @NotNull
+    public List<Integer> acceptableAgeCategoryRange() {
+        int minAge = minCategoryAcceptableAge();
+        int maxAge = maxCategoryAcceptableAge();
         return valueRange(minAge, maxAge + 1, 1);
     }
 
@@ -246,17 +240,19 @@ public enum UserMode implements ValueRangeConverterType<Integer> {
 
     /**
      * Get an age range with lower/upper bounds that are lower/higher than
-     * the min/max age by an offset value.
+     * the min/max age by an offset value. Note that this does not take
+     * into account {@link #requiresGuarantor()}, so the ranges for
+     * {@link #TEEN_ABOVE_18} and {@link #TEEN_UNDER_18} are the same.
      * @param offset An {@link Integer} value.
      * @return A {@link List} of {@link Integer}.
      * @see #valueRange(Number, Number, Number)
-     * @see #minAcceptableAge()
-     * @see #maxAcceptableAge()
+     * @see #minCategoryAcceptableAge()
+     * @see #maxCategoryAcceptableAge()
      */
     @NotNull
-    public List<Integer> ageOffsetFromAcceptableRange(int offset) {
-        int minAge = minAcceptableAge() - offset;
-        int maxAge = maxAcceptableAge() + offset;
+    public List<Integer> offsetFromCategoryAcceptableRange(int offset) {
+        int minAge = minCategoryAcceptableAge() - offset;
+        int maxAge = maxCategoryAcceptableAge() + offset;
         return valueRange(minAge, maxAge + 1, 1);
     }
 
@@ -271,7 +267,7 @@ public enum UserMode implements ValueRangeConverterType<Integer> {
      * @see #maxCategoryAcceptableAge()
      */
     @NotNull
-    public String acceptableAgeRangeString() {
+    public String acceptableAgeCategoryRangeString() {
         int minAge = minCategoryAcceptableAge();
         int maxAge = maxCategoryAcceptableAge();
         return String.format("%1$d-%2$d", minAge, maxAge);

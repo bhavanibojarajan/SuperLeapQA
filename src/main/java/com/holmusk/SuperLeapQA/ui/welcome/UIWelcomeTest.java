@@ -2,6 +2,7 @@ package com.holmusk.SuperLeapQA.ui.welcome;
 
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
+import com.holmusk.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.testng.annotations.Factory;
@@ -27,6 +28,7 @@ public class UIWelcomeTest extends UIBaseTest implements WelcomeActionType {
      */
     @Test
     @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
     public void test_splashScreen_shouldContainCorrectElements() {
         // Setup
         final UIWelcomeTest THIS = this;

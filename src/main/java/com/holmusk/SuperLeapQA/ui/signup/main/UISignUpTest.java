@@ -6,8 +6,10 @@ import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
+import com.holmusk.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -64,6 +66,7 @@ public class UISignUpTest extends UIBaseTest implements
      * @see #generalUserModeProvider()
      */
     @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider")
     public void test_DoBPickerScreen_containsCorrectElements(@NotNull UserMode mode) {
         // Setup
@@ -94,6 +97,7 @@ public class UISignUpTest extends UIBaseTest implements
      * @see #generalUserModeProvider()
      */
     @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider")
     public void test_DoBPickerDialog_containsCorrectElements(@NotNull UserMode mode) {
         // Setup
@@ -114,23 +118,27 @@ public class UISignUpTest extends UIBaseTest implements
     /**
      * This test validates that DoB selection works by sequentially selecting
      * DoBs from a range of {@link java.util.Date}.
-     * @param mode A {@link UserMode} instance.
-     * @see UserMode#ageOffsetFromAcceptableRange(int)
+     * Note that this test is not guarantor-aware, so
+     * {@link UserMode#TEEN_UNDER_18} and {@link UserMode#TEEN_ABOVE_18} will
+     * be treated the same.
+     * @param MODE A {@link UserMode} instance.
+     * @see UserMode#offsetFromCategoryAcceptableRange(int)
      * @see #rx_splash_DoBPicker(UserMode)
      * @see #rxValidateDoBs(UserMode, List)
      * @see #generalUserModeProvider()
      */
     @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider")
-    public void test_DoBSelection_shouldWork(@NotNull UserMode mode) {
+    public void test_DoBSelection_shouldWork(@NotNull final UserMode MODE) {
         // Setup
         final UISignUpTest THIS = this;
         TestSubscriber subscriber = CustomTestSubscriber.create();
-        final List<Integer> AGES = mode.ageOffsetFromAcceptableRange(2);
+        final List<Integer> AGES = MODE.offsetFromCategoryAcceptableRange(2);
 
         // When
-        rx_splash_DoBPicker(mode)
-            .flatMap(a -> THIS.rxValidateDoBs(mode, AGES))
+        rx_splash_DoBPicker(MODE)
+            .flatMap(a -> THIS.rxValidateDoBs(MODE, AGES))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -149,6 +157,7 @@ public class UISignUpTest extends UIBaseTest implements
      * @see #generalUserModeProvider()
      */
     @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider")
     public void test_unacceptableAgeInputs_containsCorrectElements(@NotNull UserMode mode) {
         // Setup
@@ -180,6 +189,7 @@ public class UISignUpTest extends UIBaseTest implements
      * @see #generalUserModeProvider()
      */
     @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider")
     public void test_unacceptableAgeInput_shouldRequirePhoneOrEmail(@NotNull UserMode mode) {
         // Setup
@@ -212,6 +222,7 @@ public class UISignUpTest extends UIBaseTest implements
      * @see #generalUserModeProvider()
      */
     @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider")
     public void test_unacceptableAgeInput_shouldWork(@NotNull UserMode mode) {
         // Setup
@@ -239,6 +250,7 @@ public class UISignUpTest extends UIBaseTest implements
      * @see #generalUserModeProvider()
      */
     @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider")
     public void test_acceptableAgeInputs_containsCorrectElements(@NotNull UserMode mode) {
         // Setup
@@ -267,6 +279,7 @@ public class UISignUpTest extends UIBaseTest implements
      * @see #generalUserModeProvider()
      */
     @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider")
     public void test_acceptableAgeEmptyInputs_showCorrectErrors(@NotNull UserMode mode) {
         // Setup
@@ -294,6 +307,7 @@ public class UISignUpTest extends UIBaseTest implements
      * @see #generalUserModeProvider()
      */
     @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider")
     public void test_personalInfoScreen_containsCorrectElements(@NotNull UserMode mode) {
         // Setup
@@ -325,6 +339,7 @@ public class UISignUpTest extends UIBaseTest implements
      * @see #parentPersonalInfoProvider()
      */
     @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
     @Test(dataProvider = "parentPersonalInfoProvider")
     public void test_parentInfoScreen_shouldRequirePhoneOrEmail(@NotNull List<InputType> inputs) {
         // Setup
@@ -359,6 +374,7 @@ public class UISignUpTest extends UIBaseTest implements
      * @see #generalUserModeProvider()
      */
     @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider")
     public void test_navigateAwayFromPersonalInfo_shouldSaveState(@NotNull final UserMode MODE) {
         // Setup
@@ -386,6 +402,7 @@ public class UISignUpTest extends UIBaseTest implements
      * @see #guarantorSpecificUserModeProvider()
      */
     @SuppressWarnings("unchecked")
+    @GuarantorAware(value = true)
     @Test(dataProvider = "guarantorSpecificUserModeProvider")
     public void test_guarantorNeeded_shouldRequireParentInfo(@NotNull final UserMode MODE) {
         // Setup
