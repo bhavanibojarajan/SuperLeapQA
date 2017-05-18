@@ -2,6 +2,8 @@ package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
+import org.swiften.xtestkit.base.element.action.input.type.InputType;
+import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.util.type.ValueRangeConverterType;
 
 import java.util.Arrays;
@@ -11,7 +13,7 @@ import java.util.List;
 /**
  * Created by haipham on 5/13/17.
  */
-public enum UserMode implements ValueRangeConverterType<Integer> {
+public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> {
     PARENT,
     TEEN_UNDER_18,
     TEEN_ABOVE_18;
@@ -23,33 +25,11 @@ public enum UserMode implements ValueRangeConverterType<Integer> {
     }
 
     /**
-     * Get the sign up button's id for
-     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
-     * @return A {@link String} value.
-     */
-    @NotNull
-    public String androidSignUpButtonId() {
-        switch (this) {
-            case PARENT:
-                return "btnRegChild";
-
-            case TEEN_UNDER_18:
-            case TEEN_ABOVE_18:
-                return "btnRegSelf";
-
-            default:
-                return "";
-        }
-    }
-
-    /**
      * Get the personal information inputs for this {@link UserMode}.
-     * @return A {@link List} of {@link InputType}.
-     * @see Arrays#asList(Object[])
-     * @see Collections#emptyList()
+     * @return A {@link List} of {@link SLInputType}.
      */
     @NotNull
-    public List<InputType> personalInformation() {
+    public List<SLInputType> personalInformation() {
         switch (this) {
             case PARENT:
                 return Arrays.asList(
@@ -72,19 +52,19 @@ public enum UserMode implements ValueRangeConverterType<Integer> {
                 );
 
             default:
-                return Collections.emptyList();
+                throw new RuntimeException(NOT_IMPLEMENTED);
         }
     }
 
     /**
      * Get additional personal inputs, esp. for {@link UserMode#TEEN_UNDER_18} since
      * users will need to enter parent's information as well.
-     * @return A {@link List} of {@link InputType}.
+     * @return A {@link List} of {@link SLInputType}.
      * @see Arrays#asList(Object[])
      * @see Collections#emptyList()
      */
     @NotNull
-    public List<InputType> extraPersonalInformation() {
+    public List<SLInputType> extraPersonalInformation() {
         switch (this) {
             case TEEN_UNDER_18:
             case TEEN_ABOVE_18:
@@ -130,7 +110,7 @@ public enum UserMode implements ValueRangeConverterType<Integer> {
                 return 18;
 
             default:
-                return 0;
+                throw new RuntimeException(NOT_IMPLEMENTED);
         }
     }
 
@@ -150,7 +130,7 @@ public enum UserMode implements ValueRangeConverterType<Integer> {
                 return 19;
 
             default:
-                return 0;
+                throw new RuntimeException(NOT_IMPLEMENTED);
         }
     }
 
@@ -173,7 +153,7 @@ public enum UserMode implements ValueRangeConverterType<Integer> {
                 return TEEN_UNDER_18.minAcceptableAge();
 
             default:
-                return 0;
+                throw new RuntimeException(NOT_IMPLEMENTED);
         }
     }
 
@@ -196,7 +176,7 @@ public enum UserMode implements ValueRangeConverterType<Integer> {
                 return TEEN_ABOVE_18.maxAcceptableAge();
 
             default:
-                return 0;
+                throw new RuntimeException(NOT_IMPLEMENTED);
         }
     }
 

@@ -1,28 +1,14 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
 import com.holmusk.SuperLeapQA.ui.base.BaseActionType;
-import com.holmusk.SuperLeapQA.model.*;
-import com.holmusk.SuperLeapQA.model.InputType;
+import org.swiften.xtestkit.base.element.action.input.type.InputType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.localizer.LCFormat;
-import org.swiften.javautilities.log.LogUtil;
-import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
-import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
-import org.swiften.xtestkit.base.element.locator.general.param.ByXPath;
-import org.swiften.xtestkit.base.type.PlatformType;
-import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.mobile.android.AndroidEngine;
-import org.swiften.xtestkit.mobile.android.AndroidView;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
+import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 
 /**
  * Created by haipham on 5/8/17.
@@ -32,6 +18,7 @@ public interface SignUpValidationType extends BaseActionType {
      * Get the editable {@link WebElement} that corresponds to a
      * {@link InputType}.
      * @param input A {@link InputType} instance.
+     * @param <P> Generics parameter.
      * @return A {@link Flowable} instance.
      * @see #engine()
      * @see BaseEngine#rxElementContainingID(String...)
@@ -39,7 +26,8 @@ public interface SignUpValidationType extends BaseActionType {
      * @see #NOT_IMPLEMENTED
      */
     @NotNull
-    default Flowable<WebElement> rxEditFieldForInput(@NotNull InputType input) {
+    default <P extends AndroidInputType> Flowable<WebElement>
+    rxEditFieldForInput(@NotNull P input) {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {

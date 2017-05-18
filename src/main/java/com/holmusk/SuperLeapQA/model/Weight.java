@@ -1,6 +1,7 @@
 package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
+import org.swiften.xtestkit.base.element.action.input.type.NumericSelectableType;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,13 +9,13 @@ import java.util.regex.Pattern;
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Weight implements NumericSelectableInputType {
+public enum Weight implements SLNumericSelectableType {
     LB,
     KG;
 
     /**
      * @return A {@link String} value.
-     * @see NumericSelectableInputType#emptyInputError(UserMode)
+     * @see SLNumericSelectableType#emptyInputError(UserMode)
      */
     @NotNull
     @Override
@@ -126,7 +127,7 @@ public enum Weight implements NumericSelectableInputType {
      * a weight.
      * @param value A {@link String} value.
      * @return A {@link Double} value.
-     * @see NumericSelectableInputType#numericValue(String)
+     * @see NumericSelectableType#numericValue(String)
      */
     @Override
     public double numericValue(@NotNull String value) {
@@ -162,7 +163,7 @@ public enum Weight implements NumericSelectableInputType {
      * @return A {@link String} value.
      * @see #kgString(double)
      * @see #lbString(double)
-     * @see NumericSelectableInputType#stringValue(double)
+     * @see NumericSelectableType#stringValue(double)
      */
     @NotNull
     @Override
@@ -182,7 +183,7 @@ public enum Weight implements NumericSelectableInputType {
     /**
      * Get the minimum selectable weight.
      * @return A {@link Double} value.
-     * @see NumericSelectableInputType#minSelectableNumericValue()
+     * @see NumericSelectableType#minSelectableNumericValue()
      */
     @Override
     public double minSelectableNumericValue() {
@@ -202,7 +203,7 @@ public enum Weight implements NumericSelectableInputType {
      * Get the maximum selectable weight. Return a lower value to avoid
      * {@link StackOverflowError} from too much scrolling.
      * @return A {@link Double} value.
-     * @see NumericSelectableInputType#maxSelectableNumericValue()
+     * @see NumericSelectableType#maxSelectableNumericValue()
      */
     @Override
     public double maxSelectableNumericValue() {
@@ -221,7 +222,7 @@ public enum Weight implements NumericSelectableInputType {
     /**
      * Get the selectable weight step.
      * @return A {@link Double} value.
-     * @see NumericSelectableInputType#selectableNumericValueStep()
+     * @see NumericSelectableType#selectableNumericValueStep()
      */
     @Override
     public double selectableNumericValueStep() {

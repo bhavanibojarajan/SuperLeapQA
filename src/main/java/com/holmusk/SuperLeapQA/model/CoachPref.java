@@ -3,11 +3,12 @@ package com.holmusk.SuperLeapQA.model;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.xtestkit.base.element.property.type.base.AttributeType;
+import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 
 /**
  * Created by haipham on 5/12/17.
  */
-public enum CoachPref implements AttributeType<String>, InputType {
+public enum CoachPref implements AttributeType<String>, AndroidInputType, SLInputType {
     MALE,
     FEMALE,
     NO_PREFERENCE;
@@ -37,7 +38,7 @@ public enum CoachPref implements AttributeType<String>, InputType {
 
     /**
      * @return A {@link String} value.
-     * @see InputType#emptyInputError(UserMode)
+     * @see SLInputType#emptyInputError(UserMode)
      */
     @NotNull
     @Override

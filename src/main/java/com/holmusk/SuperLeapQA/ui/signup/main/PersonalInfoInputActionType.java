@@ -1,8 +1,10 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
-import com.holmusk.SuperLeapQA.model.InputType;
+import com.holmusk.SuperLeapQA.model.SLInputType;
+import com.holmusk.SuperLeapQA.model.SLTextInputType;
+import org.swiften.xtestkit.base.element.action.input.type.InputType;
 import com.holmusk.SuperLeapQA.model.TextInput;
-import com.holmusk.SuperLeapQA.model.TextInputType;
+import org.swiften.xtestkit.base.element.action.input.type.TextInputType;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
@@ -14,6 +16,8 @@ import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
+import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
+import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidTextInputType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -130,18 +134,18 @@ public interface PersonalInfoInputActionType extends
      * @param inputs A {@link List} of {@link InputType}.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see #rxEnterRandomInput(TextInputType)
+     * @see #rxEnterRandomInput(AndroidTextInputType)
      * @see BaseEngine#rxNavigateBackOnce()
      * @see #rxToggleTOC(boolean)
      */
     @NotNull
-    default Flowable<Boolean> rxEnterPersonalInfo(@NotNull List<InputType> inputs) {
+    default Flowable<Boolean> rxEnterPersonalInfo(@NotNull List<SLInputType> inputs) {
         final PersonalInfoInputActionType THIS = this;
         final BaseEngine<?> ENGINE = engine();
 
         return Flowable
             .fromIterable(inputs)
-            .ofType(TextInputType.class)
+            .ofType(SLTextInputType.class)
             .concatMap(THIS::rxEnterRandomInput)
             .flatMap(ENGINE::rxToggleNextInput)
             .all(ObjectUtil::nonNull)
@@ -240,8 +244,8 @@ public interface PersonalInfoInputActionType extends
      * interacted with.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rxEnterRandomInput(TextInputType)
-     * @see #rxEditFieldForInput(InputType)
+     * @see #rxEnterRandomInput(AndroidTextInputType)
+     * @see #rxEditFieldForInput(AndroidInputType)
      * @see BaseEngine#rxToggleNextOrDoneInput(WebElement)
      * @see BaseEngine#rxTogglePasswordMask(WebElement)
      * @see BaseEngine#isShowingPassword(WebElement)
@@ -254,18 +258,43 @@ public interface PersonalInfoInputActionType extends
         final BaseEngine<?> ENGINE = engine();
 
         return Flowable.fromIterable(mode.personalInformation())
-            .ofType(TextInputType.class)
+            .ofType(SLTextInputType.class)
             .concatMap(THIS::rxEnterRandomInput)
-            .concatMap(ENGINE::rxToggleNextOrDoneInput)
+            .flatMap(ENGINE::rxToggleNextOrDoneInput)
+            .all(ObjectUtil::nonNull)
+            .toFlowable()
 
-            .concatMap(a -> THIS.rxEnterRandomInput(TextInput.PASSWORD))
-            .concatMap(a -> THIS.rxEditFieldForInput(TextInput.PASSWORD))
-            .concatMap(a -> ENGINE.rxToggleNextOrDoneInput(a).flatMap(b ->
+            .flatMap(a -> THIS.rxEnterRandomInput(TextInput.PASSWORD))
+            .flatMap(a -> THIS.rxEditFieldForInput(TextInput.PASSWORD))
+            .flatMap(a -> ENGINE.rxToggleNextOrDoneInput(a).flatMap(b ->
                 ENGINE.rxTogglePasswordMask(a)
             ))
             .filter(ENGINE::isShowingPassword)
             .switchIfEmpty(RxUtil.error())
             .map(BooleanUtil::toTrue);
+    }
+
+    /**
+     * Validate that the TOC checkbox has the be checked before the user can
+     * proceed to the next screen.
+     * @param MODE A {@link UserMode} instance.
+     * @return A {@link Flowable} instance.
+     * @see #engine()
+     * @see UserMode#personalInformation()
+     * @see #rxEnterPersonalInfo(List)
+     * @see BaseEngine#rxHideKeyboard()
+     * @see #rxConfirmPersonalInfo()
+     * @see #rxValidatePersonalInfoScreen(UserMode)
+     */
+    @NotNull
+    default Flowable<Boolean> rxValidateTOCCheckedBeforeProceeding(@NotNull final UserMode MODE) {
+        final PersonalInfoInputActionType THIS = this;
+        final BaseEngine<?> ENGINE = engine();
+
+        return rxEnterPersonalInfo(MODE.personalInformation())
+            .flatMap(a -> ENGINE.rxHideKeyboard())
+            .flatMap(a -> THIS.rxConfirmPersonalInfo())
+            .flatMap(a -> THIS.rxValidatePersonalInfoScreen((MODE)));
     }
 
     /**
@@ -301,21 +330,21 @@ public interface PersonalInfoInputActionType extends
      * @return A {@link Flowable} instance.
      * @see #engine()
      * @see UserMode#personalInformation()
-     * @see #rxEnterInput(TextInputType, String)
+     * @see #rxEnterInput(AndroidInputType, String)
      * @see ObjectUtil#nonNull(Object)
      * @see #rxOpenTOCWebsite()
-     * @see #rxEditFieldHasValue(InputType, String)
+     * @see #rxEditFieldHasValue(AndroidInputType, String)
      */
     @NotNull
     default Flowable<Boolean> rxValidatePersonalInfoStateSaved(@NotNull UserMode mode) {
         final PersonalInfoInputActionType THIS = this;
         final BaseEngine<?> ENGINE = engine();
         final Map<String,String> INPUTS = new HashMap<>();
-        List<InputType> info = mode.personalInformation();
+        List<SLInputType> info = mode.personalInformation();
 
-        final List<TextInputType> TEXT_INFO = info.stream()
+        final List<SLTextInputType> TEXT_INFO = info.stream()
             .filter(TextInputType.class::isInstance)
-            .map(TextInputType.class::cast)
+            .map(SLTextInputType.class::cast)
             .collect(Collectors.toList());
 
         TEXT_INFO.forEach(a -> INPUTS.put(a.toString(), a.randomInput()));

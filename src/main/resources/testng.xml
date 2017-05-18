@@ -1,10 +1,16 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite name="XTestKit"
+<suite name="Superleap"
        parallel="tests"
        thread-count="100"
        data-provider-thread-count="100">
 
-    <test name="UI Tests">
+    <test name="All UI Tests">
+        <groups>
+            <run>
+                <include name="ValidateScreen"/>
+            </run>
+        </groups>
+
         <classes>
             <class name="com.holmusk.SuperLeapQA.ui.welcome.UIWelcomeTest"/>
             <class name="com.holmusk.SuperLeapQA.ui.signup.mode.UIRegisterModeTest"/>

@@ -1,8 +1,7 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
 import com.holmusk.SuperLeapQA.model.TextInput;
-import com.holmusk.SuperLeapQA.model.TextInputType;
-import com.holmusk.SuperLeapQA.model.UserMode;
+import org.swiften.xtestkit.base.element.action.input.type.TextInputType;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
 import org.jetbrains.annotations.NotNull;

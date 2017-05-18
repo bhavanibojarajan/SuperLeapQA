@@ -8,11 +8,12 @@ import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatComparisonType;
+import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatType;
 import org.swiften.xtestkit.base.element.action.swipe.type.SwipeType;
 import org.swiften.xtestkit.base.element.locator.general.param.TextParam;
 import org.swiften.xtestkit.mobile.Platform;
-
-import java.util.List;
+import org.swiften.xtestkit.base.element.action.input.type.InputType;
+import org.swiften.xtestkit.base.element.action.input.type.NumericSelectableType;
 
 /**
  * Created by haipham on 17/5/17.
@@ -51,17 +52,17 @@ public interface AcceptableAgeInputType extends
 
     /**
      * Select a value, assuming the user is in the value selection screen.
-     * @param MODE A {@link NumericSelectableInputType} instance.
+     * @param MODE A {@link NumericSelectableType} instance.
      * @param NUMERIC_VALUE A {@link Double} value.
      * @return A {@link Flowable} instance.
-     * @see #rxPickerItemViews(InputType)
+     * @see #rxPickerItemViews(SLNumericSelectableType)
      * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rxSelectNumericInput(
-        @NotNull final NumericSelectableInputType MODE,
-        final double NUMERIC_VALUE)
-    {
+        @NotNull final SLNumericSelectableType MODE,
+        final double NUMERIC_VALUE
+    ) {
         final AcceptableAgeInputType THIS = this;
         final BaseEngine<?> ENGINE = engine();
         final String HEIGHT_STR = MODE.stringValue(NUMERIC_VALUE);
@@ -71,7 +72,7 @@ public interface AcceptableAgeInputType extends
             .withRetries(0)
             .build();
 
-        SwipeRepeatComparisonType repeater = new SwipeRepeatComparisonType() {
+        SwipeRepeatType repeater = new SwipeRepeatComparisonType() {
             @NotNull
             @Override
             public Flowable<Integer> rxInitialDifference(@NotNull WebElement element) {
@@ -103,7 +104,7 @@ public interface AcceptableAgeInputType extends
             @NotNull
             @Override
             public Flowable<WebElement> rxScrollViewChildItems() {
-                return THIS.rxPickerItemViews(ChoiceInput.HEIGHT);
+                return THIS.rxPickerItemViews(MODE);
             }
 
             @Override
@@ -124,7 +125,7 @@ public interface AcceptableAgeInputType extends
             @NotNull
             @Override
             public Flowable<WebElement> rxScrollableViewToSwipe() {
-                return rxScrollableInputPickerView(ChoiceInput.HEIGHT);
+                return rxScrollableChoicePicker(MODE);
             }
 
             @NotNull
@@ -192,7 +193,7 @@ public interface AcceptableAgeInputType extends
      * @see #rxClickInputField(InputType)
      * @see #rxSelectEthnicity(Ethnicity)
      * @see #rxSelectCoachPref(CoachPref)
-     * @see #rxSelectNumericInput(NumericSelectableInputType, double)
+     * @see #rxSelectNumericInput(SLNumericSelectableType, double)
      */
     @NotNull
     @SuppressWarnings("unchecked")

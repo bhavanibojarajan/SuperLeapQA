@@ -3,6 +3,10 @@ package com.holmusk.SuperLeapQA.model;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.localizer.LCFormat;
+import org.swiften.xtestkit.base.element.action.input.type.InputType;
+import org.swiften.xtestkit.base.element.action.input.type.TextInputType;
+import org.swiften.xtestkit.base.type.BaseErrorType;
+import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -11,7 +15,7 @@ import java.util.stream.Stream;
 /**
  * Created by haipham on 5/10/17.
  */
-public enum TextInput implements InputType, TextInputType {
+public enum TextInput implements BaseErrorType, SLTextInputType {
     NAME,
     EMAIL,
     PHONE,
@@ -27,9 +31,10 @@ public enum TextInput implements InputType, TextInputType {
      * Get the view id for {@link org.swiften.xtestkit.mobile.Platform#ANDROID}
      * locator.
      * @return A {@link String} value.
-     * @see InputType#androidViewId()
+     * @see AndroidInputType#androidViewId()
      */
     @NotNull
+    @Override
     public String androidViewId() {
         switch (this) {
             case NAME:
@@ -57,7 +62,7 @@ public enum TextInput implements InputType, TextInputType {
                 return "et_home";
 
             default:
-                return "";
+                throw new RuntimeException(NOT_IMPLEMENTED);
         }
     }
 
@@ -116,13 +121,13 @@ public enum TextInput implements InputType, TextInputType {
                 return "testQA-" + baseEmail + "@gmail.com";
 
             default:
-                return "";
+                throw new RuntimeException(NOT_IMPLEMENTED);
         }
     }
 
     /**
      * @return A {@link String} value.
-     * @see InputType#emptyInputError(UserMode)
+     * @see SLInputType#emptyInputError(UserMode)
      */
     @NotNull
     @Override

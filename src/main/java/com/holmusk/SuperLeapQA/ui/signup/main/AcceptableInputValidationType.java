@@ -14,6 +14,8 @@ import org.swiften.xtestkit.base.element.locator.general.param.ByXPath;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.mobile.android.AndroidEngine;
 import org.swiften.xtestkit.mobile.android.AndroidView;
+import org.swiften.xtestkit.base.element.action.input.type.InputType;
+import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 
 /**
  * Created by haipham on 17/5/17.
@@ -54,7 +56,7 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
     /**
      * Get the scrollable height selector view, assuming the user is already
      * in the height picker window.
-     * @param input A {@link InputType} instance.
+     * @param input A {@link ChoiceInput} instance.
      * @return A {@link Flowable} instance.
      * @see #engine()
      * @see BaseEngine#rxElementContainingID(String...)
@@ -62,7 +64,7 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
      * @see #NOT_IMPLEMENTED
      */
     @NotNull
-    default Flowable<WebElement> rxScrollableInputPickerView(@NotNull InputType input) {
+    default Flowable<WebElement> rxScrollableChoicePicker(@NotNull SLNumericSelectableType input) {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
@@ -74,8 +76,8 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
 
     /**
      * Get all input value items within the scrollable view as emitted by
-     * {@link #rxScrollableInputPickerView(InputType)}, assuming the user
-     * is already in the picker window.
+     * {@link #rxScrollableChoicePicker(SLNumericSelectableType)}, assuming
+     * the user is already in the picker window.
      * @param input A {@link InputType} instance.
      * @return A {@link Flowable} instance.
      * @see #engine()
@@ -85,7 +87,7 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
      * @see #NOT_IMPLEMENTED
      */
     @NotNull
-    default Flowable<WebElement> rxPickerItemViews(@NotNull InputType input) {
+    default Flowable<WebElement> rxPickerItemViews(@NotNull SLNumericSelectableType input) {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
@@ -109,7 +111,7 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
      * Validate the screen after the DoB picker whereby the user qualifies
      * for the program.
      * @return A {@link Flowable} instance.
-     * @see #rxEditFieldForInput(InputType)
+     * @see #rxEditFieldForInput(AndroidInputType)
      * @see #rxAcceptableAgeConfirmButton()
      * @see #rxAcceptableAgeInputTitleLabel()
      */
@@ -140,12 +142,13 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
      * Check if an editable field has an input.
      * @param INPUT A {@link InputType} instance.
      * @param VALUE A {@link String} value.
+     * @param <P> Generics parameter.
      * @return A {@link Flowable} instance.
-     * @see #rxEditFieldForInput(InputType)
+     * @see #rxEditFieldForInput(AndroidInputType)
      */
     @NotNull
-    default Flowable<Boolean> rxEditFieldHasValue(@NotNull final InputType INPUT,
-                                                  @NotNull final String VALUE) {
+    default <P extends AndroidInputType>
+    Flowable<Boolean> rxEditFieldHasValue(@NotNull final P INPUT, @NotNull final String VALUE) {
         return rxEditFieldForInput(INPUT)
             .map(engine()::getText)
             .doOnNext(a -> LogUtil.printfThread("Current value for %s: %s", INPUT, a))

@@ -1,6 +1,9 @@
 package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
+import org.swiften.xtestkit.base.element.action.input.type.InputType;
+import org.swiften.xtestkit.base.element.action.input.type.NumericSelectableType;
+import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,13 +11,13 @@ import java.util.regex.Pattern;
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Height implements InputType, NumericSelectableInputType {
+public enum Height implements AndroidInputType, SLNumericSelectableType {
     FT,
     CM;
 
     /**
      * @return A {@link String} value.
-     * @see NumericSelectableInputType#emptyInputError(UserMode)
+     * @see SLNumericSelectableType#emptyInputError(UserMode)
      */
     @NotNull
     @Override
@@ -24,7 +27,7 @@ public enum Height implements InputType, NumericSelectableInputType {
 
     /**
      * @return A {@link String} value.
-     * @see InputType#androidViewId()
+     * @see AndroidInputType#androidViewId()
      */
     @NotNull
     @Override
@@ -115,7 +118,7 @@ public enum Height implements InputType, NumericSelectableInputType {
      * @return A {@link String} value.
      * @see #ftString(double)
      * @see #cmString(double)
-     * @see NumericSelectableInputType#stringValue(double)
+     * @see NumericSelectableType#stringValue(double)
      */
     @NotNull
     @Override
@@ -137,7 +140,7 @@ public enum Height implements InputType, NumericSelectableInputType {
      * a height.
      * @param value A {@link String} value.
      * @return A {@link Double} value.
-     * @see NumericSelectableInputType#numericValue(String)
+     * @see NumericSelectableType#numericValue(String)
      */
     @Override
     public double numericValue(@NotNull String value) {
@@ -169,7 +172,7 @@ public enum Height implements InputType, NumericSelectableInputType {
     /**
      * Get the minimum selectable height.
      * @return A {@link Double} value.
-     * @see NumericSelectableInputType#minSelectableNumericValue()
+     * @see NumericSelectableType#minSelectableNumericValue()
      */
     public double minSelectableNumericValue() {
         switch (this) {
@@ -188,7 +191,7 @@ public enum Height implements InputType, NumericSelectableInputType {
      * Get the maximum selectable height. Return a lower value to avoid
      * {@link StackOverflowError} from too much scrolling.
      * @return A {@link Double} value.
-     * @see NumericSelectableInputType#maxSelectableNumericValue()
+     * @see NumericSelectableType#maxSelectableNumericValue()
      */
     @Override
     public double maxSelectableNumericValue() {
@@ -208,7 +211,7 @@ public enum Height implements InputType, NumericSelectableInputType {
      * Get the step value that is the difference between a value and its
      * immediately higher value.
      * @return A {@link Double} value.
-     * @see NumericSelectableInputType#selectableNumericValueStep()
+     * @see NumericSelectableType#selectableNumericValueStep()
      */
     @Override
     public double selectableNumericValueStep() {

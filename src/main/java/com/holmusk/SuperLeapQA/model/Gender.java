@@ -2,17 +2,19 @@ package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
+import org.swiften.xtestkit.base.element.action.input.type.InputType;
+import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Gender implements InputType {
+public enum Gender implements AndroidInputType, SLInputType {
     MALE,
     FEMALE;
 
     /**
      * @return A {@link String} value.
-     * @see InputType#androidViewId()
+     * @see AndroidInputType#androidViewId()
      */
     @Override
     public String androidViewId() {
@@ -30,7 +32,7 @@ public enum Gender implements InputType {
 
     /**
      * @return A {@link String} value.
-     * @see InputType#emptyInputError(UserMode)
+     * @see SLInputType#emptyInputError(UserMode)
      */
     @NotNull
     @Override

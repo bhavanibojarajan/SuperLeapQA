@@ -34,7 +34,7 @@ public interface RegisterModeValidationType extends
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rxElementContainingID(mode.androidSignUpButtonId());
+            return engine.rxElementContainingID("btnRegChild", "btnRegSelf");
         } else {
             return RxUtil.error(NOT_IMPLEMENTED);
         }

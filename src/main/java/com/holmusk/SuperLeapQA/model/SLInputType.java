@@ -1,30 +1,23 @@
 package com.holmusk.SuperLeapQA.model;
 
-/**
- * Created by haipham on 5/13/17.
- */
-
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
+import org.swiften.xtestkit.base.element.action.input.type.InputType;
+import org.swiften.xtestkit.base.element.action.input.type.NumericSelectableType;
+import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 
 /**
- * This interface provides methods to help locate
- * {@link org.openqa.selenium.WebElement} that corresponds to each
- * {@link InputType} instance.
+ * Created by haipham on 18/5/17.
  */
-public interface InputType {
-    /**
-     * Get the view id for {@link org.swiften.xtestkit.mobile.Platform#ANDROID}
-     * locator.
-     * @return A {@link String} value.
-     */
-    @NotNull
-    String androidViewId();
 
+/**
+ * {@link InputType} for Superleap.
+ */
+public interface SLInputType extends AndroidInputType {
     /**
      * Get the relevant empty input error messages for sign up, where applicable.
      * Some {@link InputType} may not have a standard error message, however.
-     * (e.g. {@link NumericSelectableInputType}.
+     * (e.g. {@link NumericSelectableType}.
      * where min/max values are taken into account).
      * @return A {@link LCFormat} value.
      */
