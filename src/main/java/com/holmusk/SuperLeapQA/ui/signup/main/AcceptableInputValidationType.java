@@ -13,9 +13,8 @@ import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.element.locator.general.param.ByXPath;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.mobile.android.AndroidEngine;
-import org.swiften.xtestkit.mobile.android.AndroidView;
 import org.swiften.xtestkit.base.element.action.input.type.InputType;
-import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
+import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidChoiceInputType;
 
 /**
  * Created by haipham on 17/5/17.
@@ -59,16 +58,17 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
      * @param input A {@link ChoiceInput} instance.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rxElementContainingID(String...)
+     * @see BaseEngine#rxElementWithXPath(XPath...)
      * @see RxUtil#error(String)
      * @see #NOT_IMPLEMENTED
      */
     @NotNull
-    default Flowable<WebElement> rxScrollableChoicePicker(@NotNull SLNumericInputType input) {
+    default <P extends AndroidChoiceInputType> Flowable<WebElement>
+    rxScrollableChoicePicker(@NotNull P input) {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rxElementContainingID("select_dialog_listview");
+            return engine.rxElementWithXPath(input.androidScrollViewPickerXPath());
         } else {
             return RxUtil.error(NOT_IMPLEMENTED);
         }
@@ -76,7 +76,7 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
 
     /**
      * Get all input value items within the scrollable view as emitted by
-     * {@link #rxScrollableChoicePicker(SLNumericInputType)}, assuming
+     * {@link #rxScrollableChoicePicker(AndroidChoiceInputType)}, assuming
      * the user is already in the picker window.
      * @param input A {@link InputType} instance.
      * @return A {@link Flowable} instance.
@@ -87,21 +87,12 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
      * @see #NOT_IMPLEMENTED
      */
     @NotNull
-    default Flowable<WebElement> rxPickerItemViews(@NotNull SLNumericInputType input) {
+    default <P extends SLChoiceInputType & SLNumericInputType>
+    Flowable<WebElement> rxPickerItemViews(@NotNull P input) {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            XPath xPath = engine.newXPathBuilder()
-                .ofClass(AndroidView.ViewType.TEXT_VIEW.className())
-                .containsID("text1")
-                .build();
-
-            ByXPath byXPath = ByXPath.builder()
-                .withXPath(xPath)
-                .withError(NO_SUCH_ELEMENT)
-                .build();
-
-            return engine.rxElementsByXPath(byXPath);
+            return engine.rxElementContainingID(input.androidScrollViewItemXPath());
         } else {
             return RxUtil.error(NOT_IMPLEMENTED);
         }
@@ -111,7 +102,7 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
      * Validate the screen after the DoB picker whereby the user qualifies
      * for the program.
      * @return A {@link Flowable} instance.
-     * @see #rxEditFieldForInput(AndroidInputType)
+     * @see #rxEditFieldForInput(SLInputType)
      * @see #rxAcceptableAgeConfirmButton()
      * @see #rxAcceptableAgeInputTitleLabel()
      */
@@ -144,10 +135,10 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
      * @param VALUE A {@link String} value.
      * @param <P> Generics parameter.
      * @return A {@link Flowable} instance.
-     * @see #rxEditFieldForInput(AndroidInputType)
+     * @see #rxEditFieldForInput(SLInputType)
      */
     @NotNull
-    default <P extends AndroidInputType>
+    default <P extends SLInputType>
     Flowable<Boolean> rxEditFieldHasValue(@NotNull final P INPUT, @NotNull final String VALUE) {
         return rxEditFieldForInput(INPUT)
             .map(engine()::getText)

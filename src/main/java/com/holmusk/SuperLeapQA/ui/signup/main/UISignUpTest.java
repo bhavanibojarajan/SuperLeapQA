@@ -7,10 +7,11 @@ import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
-import com.holmusk.util.GuarantorAware;
+import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
+import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
@@ -122,7 +123,7 @@ public class UISignUpTest extends UIBaseTest implements
      * submit button without filling in require inputs should fail.
      * @param mode A {@link UserMode} instance.
      * @see #rx_splash_unacceptableAgeInput(UserMode)
-     * @see #rxClickInputField(InputType)
+     * @see #rxClickInputField(SLInputType)
      * @see #generalUserModeProvider()
      */
     @SuppressWarnings("unchecked")
@@ -239,7 +240,7 @@ public class UISignUpTest extends UIBaseTest implements
      * This test validates that the unacceptable age inputs should only
      * require either {@link TextInput#PHONE} or {@link TextInput#EMAIL},
      * and not both. It sequentially substitutes {@link TextInput} into
-     * {@link #rxEnterInput(TextInputType, String)}. We do not use
+     * {@link #rxEnterInput(SLInputType, String)}. We do not use
      * {@link DataProvider} with this method because we already have a
      * {@link Factory} for the constructor.
      * @param mode A {@link UserMode} instance.

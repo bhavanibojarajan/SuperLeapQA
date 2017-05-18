@@ -3,7 +3,9 @@ package com.holmusk.SuperLeapQA.model;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Pair;
 import org.swiften.xtestkit.base.element.action.input.type.NumericInputType;
+import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseErrorType;
+import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidChoiceInputType;
 import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 
 import java.util.Arrays;
@@ -13,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Height implements BaseErrorType, SLNumericInputType {
+public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputType {
     CHILD_FT,
     CHILD_INCH,
     CHILD_CM,
@@ -26,10 +28,10 @@ public enum Height implements BaseErrorType, SLNumericInputType {
     /**
      * Get the {@link Height} instances for metric unit of measurement.
      * @param mode A {@link UserMode} instance.
-     * @return A {@link List} of {@link SLNumericInputType}.
+     * @return A {@link List} of {@link Height}.
      */
     @NotNull
-    public static List<SLNumericInputType> metric(@NotNull UserMode mode) {
+    public static List<Height> metric(@NotNull UserMode mode) {
         switch (mode) {
             case PARENT:
                 return Arrays.asList(CHILD_CM, CHILD_CM_DEC);
@@ -46,10 +48,10 @@ public enum Height implements BaseErrorType, SLNumericInputType {
     /**
      * Get the {@link Height} instances for imperial unit of measurement.
      * @param mode A {@link UserMode} instance.
-     * @return A {@link List} of {@link SLNumericInputType}.
+     * @return A {@link List} of {@link Height}.
      */
     @NotNull
-    public static List<SLNumericInputType> imperial(@NotNull UserMode mode) {
+    public static List<Height> imperial(@NotNull UserMode mode) {
         switch (mode) {
             case PARENT:
                 return Arrays.asList(CHILD_FT, CHILD_INCH);
@@ -68,12 +70,12 @@ public enum Height implements BaseErrorType, SLNumericInputType {
      * @param mode A {@link UserMode} instance.
      * @return A {@link List} of {@link Pair}.
      * @see #metric(UserMode)
-     * @see NumericInputType#randomNumericValue()
+     * @see NumericInputType#randomValue()
      */
     @NotNull
-    public static List<Pair<SLNumericInputType,Double>> randomMetric(@NotNull UserMode mode) {
+    public static List<Pair<Height,Double>> randomMetric(@NotNull UserMode mode) {
         return metric(mode).stream()
-            .map(a -> new Pair<>(a, a.randomNumericValue()))
+            .map(a -> new Pair<>(a, a.randomValue()))
             .collect(Collectors.toList());
     }
 
@@ -82,12 +84,12 @@ public enum Height implements BaseErrorType, SLNumericInputType {
      * @param mode A {@link UserMode} instance.
      * @return A {@link List} of {@link Pair}.
      * @see #imperial(UserMode)
-     * @see NumericInputType#randomNumericValue()
+     * @see NumericInputType#randomValue()
      */
     @NotNull
-    public static List<Pair<SLNumericInputType,Double>> randomImperial(@NotNull UserMode mode) {
+    public static List<Pair<Height,Double>> randomImperial(@NotNull UserMode mode) {
         return imperial(mode).stream()
-            .map(a -> new Pair<>(a, a.randomNumericValue()))
+            .map(a -> new Pair<>(a, a.randomValue()))
             .collect(Collectors.toList());
     }
 
@@ -102,28 +104,77 @@ public enum Height implements BaseErrorType, SLNumericInputType {
     }
 
     /**
-     * @return A {@link String} value.
-     * @see AndroidInputType#androidViewId()
+     * @return A {@link XPath} value.
+     * @see AndroidInputType#androidViewXPath()
+     * @see #newXPathBuilder()
      */
     @NotNull
     @Override
-    public String androidViewId() {
+    public XPath androidViewXPath() {
+        final String ID;
+
         switch (this) {
             case CHILD_FT:
             case CHILD_INCH:
             case TEEN_FT:
             case TEEN_INCH:
-                return "btn_ft";
+                ID = "btn_ft";
+                break;
 
             case CHILD_CM:
             case CHILD_CM_DEC:
             case TEEN_CM:
             case TEEN_CM_DEC:
-                return "btn_cm";
+                ID = "btn_cm";
+                break;
 
             default:
                 throw new RuntimeException(NOT_IMPLEMENTED);
         }
+
+        return newXPathBuilder().containsID(ID).build();
+    }
+
+    /**
+     * @return Return a {@link XPath} value.
+     * @see AndroidChoiceInputType#androidScrollViewPickerXPath()
+     * @see #newXPathBuilder()
+     */
+    @NotNull
+    @Override
+    public XPath androidScrollViewPickerXPath() {
+        final int INDEX;
+
+        switch (this) {
+            case CHILD_FT:
+            case CHILD_CM:
+            case TEEN_FT:
+            case TEEN_CM:
+                INDEX = 0;
+                break;
+
+            case CHILD_INCH:
+            case CHILD_CM_DEC:
+            case TEEN_INCH:
+            case TEEN_CM_DEC:
+                INDEX = 1;
+                break;
+
+            default:
+                throw new RuntimeException(NOT_IMPLEMENTED);
+        }
+
+        String cls = "NumberPicker";
+        return newXPathBuilder().atIndex(INDEX).ofClass(cls).build();
+    }
+
+    /**
+     * @return A {@link String} value.
+     * @see AndroidChoiceInputType#androidScrollViewItemXPath()
+     */
+    @Override
+    public String androidScrollViewItemXPath() {
+        return "numberpicker_input";
     }
 
     /**

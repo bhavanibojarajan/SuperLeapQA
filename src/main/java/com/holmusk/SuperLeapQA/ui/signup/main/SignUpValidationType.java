@@ -1,5 +1,6 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
+import com.holmusk.SuperLeapQA.model.SLInputType;
 import com.holmusk.SuperLeapQA.ui.base.BaseActionType;
 import org.swiften.xtestkit.base.element.action.input.type.InputType;
 import io.reactivex.Flowable;
@@ -7,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
+import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.mobile.android.AndroidEngine;
-import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 
 /**
  * Created by haipham on 5/8/17.
@@ -21,17 +22,17 @@ public interface SignUpValidationType extends BaseActionType {
      * @param <P> Generics parameter.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rxElementContainingID(String...)
+     * @see BaseEngine#rxElementWithXPath(XPath...)
      * @see RxUtil#error(String)
      * @see #NOT_IMPLEMENTED
      */
     @NotNull
-    default <P extends AndroidInputType> Flowable<WebElement>
+    default <P extends SLInputType> Flowable<WebElement>
     rxEditFieldForInput(@NotNull P input) {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rxElementContainingID(input.androidViewId());
+            return engine.rxElementWithXPath(input.androidViewXPath());
         } else {
             return RxUtil.error(NOT_IMPLEMENTED);
         }

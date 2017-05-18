@@ -2,7 +2,7 @@ package com.holmusk.SuperLeapQA.ui.welcome;
 
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
-import com.holmusk.util.GuarantorAware;
+import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.testng.annotations.Factory;

@@ -30,11 +30,11 @@ public interface SignUpActionType extends
      * @param TEXT A {@link String} value.
      * @param <P> Generics parameter.
      * @return A {@link Flowable} instance.
-     * @see #rxEditFieldForInput(AndroidInputType)
+     * @see #rxEditFieldForInput(SLInputType)
      * @see BaseEngine#rxSendKey(WebElement, String...)
      */
     @NotNull
-    default <P extends AndroidInputType>
+    default <P extends SLInputType>
     Flowable<WebElement> rxEnterInput(@NotNull P input, @NotNull final String TEXT) {
         final BaseEngine<?> ENGINE = engine();
         return rxEditFieldForInput(input).flatMap(a -> ENGINE.rxSendKey(a, TEXT));
@@ -45,11 +45,11 @@ public interface SignUpActionType extends
      * @param input A {@link TextInputType} instance.
      * @param <P> Generics parameter.
      * @return A {@link Flowable} instance.
-     * @see #rxEnterInput(AndroidInputType, String)
+     * @see #rxEnterInput(SLInputType, String)
      * @see TextInputType#randomInput()
      */
     @NotNull
-    default <P extends AndroidTextInputType> Flowable<WebElement>
+    default <P extends SLTextInputType> Flowable<WebElement>
     rxEnterRandomInput(@NotNull P input) {
         return rxEnterInput(input, input.randomInput());
     }
@@ -61,11 +61,11 @@ public interface SignUpActionType extends
      * @param input A {@link InputType} instance.
      * @param <P> Generics parameter.
      * @return A {@link Flowable} instance.
-     * @see #rxEditFieldForInput(AndroidInputType) )
+     * @see #rxEditFieldForInput(SLInputType)  )
      * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
-    default <P extends AndroidInputType>
+    default <P extends SLInputType>
     Flowable<Boolean> rxClickInputField(@NotNull P input) {
         return rxEditFieldForInput(input).flatMap(engine()::rxClick).map(BooleanUtil::toTrue);
     }

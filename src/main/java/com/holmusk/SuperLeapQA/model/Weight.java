@@ -3,7 +3,9 @@ package com.holmusk.SuperLeapQA.model;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Pair;
 import org.swiften.xtestkit.base.element.action.input.type.NumericInputType;
+import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseErrorType;
+import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidChoiceInputType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Weight implements BaseErrorType, SLNumericInputType {
+public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputType {
     CHILD_KG,
     CHILD_KG_DEC,
     CHILD_LB,
@@ -25,10 +27,10 @@ public enum Weight implements BaseErrorType, SLNumericInputType {
     /**
      * Get the {@link Weight} instances for metric unit of measurement.
      * @param mode A {@link UserMode} instance.
-     * @return A {@link List} of {@link SLNumericInputType}.
+     * @return A {@link List} of {@link Weight}.
      */
     @NotNull
-    public static List<SLNumericInputType> metric(@NotNull UserMode mode) {
+    public static List<Weight> metric(@NotNull UserMode mode) {
         switch (mode) {
             case PARENT:
                 return Arrays.asList(CHILD_KG, CHILD_KG_DEC);
@@ -45,10 +47,10 @@ public enum Weight implements BaseErrorType, SLNumericInputType {
     /**
      * Get the {@link Weight} instances for imperial unit of measurement.
      * @param mode A {@link UserMode} instance.
-     * @return A {@link List} of {@link SLNumericInputType}.
+     * @return A {@link List} of {@link Weight}.
      */
     @NotNull
-    public static List<SLNumericInputType> imperial(@NotNull UserMode mode) {
+    public static List<Weight> imperial(@NotNull UserMode mode) {
         switch (mode) {
             case PARENT:
                 return Arrays.asList(CHILD_LB, CHILD_LB_DEC);
@@ -67,12 +69,12 @@ public enum Weight implements BaseErrorType, SLNumericInputType {
      * @param mode A {@link UserMode} instance.
      * @return A {@link List} of {@link Pair}.
      * @see #metric(UserMode)
-     * @see NumericInputType#randomNumericValue()
+     * @see NumericInputType#randomValue()
      */
     @NotNull
-    public static List<Pair<SLNumericInputType,Double>> randomMetric(@NotNull UserMode mode) {
+    public static List<Pair<Weight,Double>> randomMetric(@NotNull UserMode mode) {
         return metric(mode).stream()
-            .map(a -> new Pair<>(a, a.randomNumericValue()))
+            .map(a -> new Pair<>(a, a.randomValue()))
             .collect(Collectors.toList());
     }
 
@@ -81,12 +83,12 @@ public enum Weight implements BaseErrorType, SLNumericInputType {
      * @param mode A {@link UserMode} instance.
      * @return A {@link List} of {@link Pair}.
      * @see #imperial(UserMode)
-     * @see NumericInputType#randomNumericValue()
+     * @see NumericInputType#randomValue()
      */
     @NotNull
-    public static List<Pair<SLNumericInputType,Double>> randomImperial(@NotNull UserMode mode) {
+    public static List<Pair<Weight,Double>> randomImperial(@NotNull UserMode mode) {
         return imperial(mode).stream()
-            .map(a -> new Pair<>(a, a.randomNumericValue()))
+            .map(a -> new Pair<>(a, a.randomValue()))
             .collect(Collectors.toList());
     }
 
@@ -109,26 +111,77 @@ public enum Weight implements BaseErrorType, SLNumericInputType {
     /**
      * Get the view id for {@link org.swiften.xtestkit.mobile.Platform#ANDROID}
      * locator.
-     * @return A {@link String} value.
+     * @return A {@link XPath} value.
+     * @see #newXPathBuilder()
+     * @see #NOT_IMPLEMENTED
      */
     @NotNull
-    public String androidViewId() {
+    public XPath androidViewXPath() {
+        final String ID;
+
         switch (this) {
             case CHILD_LB:
             case CHILD_LB_DEC:
             case TEEN_LB:
             case TEEN_LB_DEC:
-                return "btn_lb";
+                ID = "btn_lb";
+                break;
 
             case CHILD_KG:
             case CHILD_KG_DEC:
             case TEEN_KG:
             case TEEN_KG_DEC:
-                return "btn_kg";
+                ID = "btn_kg";
+                break;
 
             default:
-                return "";
+                throw new RuntimeException(NOT_IMPLEMENTED);
         }
+
+        return newXPathBuilder().containsID(ID).build();
+    }
+
+    /**
+     * @return Return a {@link XPath} value.
+     * @see AndroidChoiceInputType#androidScrollViewPickerXPath()
+     * @see #newXPathBuilder()
+     * @see #NOT_IMPLEMENTED
+     */
+    @NotNull
+    @Override
+    public XPath androidScrollViewPickerXPath() {
+        final int INDEX;
+
+        switch (this) {
+            case CHILD_KG:
+            case CHILD_LB:
+            case TEEN_KG:
+            case TEEN_LB:
+                INDEX = 0;
+                break;
+
+            case CHILD_KG_DEC:
+            case CHILD_LB_DEC:
+            case TEEN_KG_DEC:
+            case TEEN_LB_DEC:
+                INDEX = 1;
+                break;
+
+            default:
+                throw new RuntimeException(NOT_IMPLEMENTED);
+        }
+
+        String cls = "NumberPicker";
+        return newXPathBuilder().atIndex(INDEX).ofClass(cls).build();
+    }
+
+    /**
+     * @return A {@link String} value.
+     * @see AndroidChoiceInputType#androidScrollViewItemXPath()
+     */
+    @Override
+    public String androidScrollViewItemXPath() {
+        return "numberpicker_input";
     }
 
     /**

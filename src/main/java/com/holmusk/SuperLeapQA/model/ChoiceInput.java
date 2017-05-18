@@ -2,6 +2,7 @@ package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
+import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidChoiceInputType;
 import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
@@ -16,48 +17,58 @@ public enum ChoiceInput implements BaseErrorType, SLInputType, AndroidChoiceInpu
     COACH_PREFERENCE;
 
     /**
-     * Get the view id for {@link org.swiften.xtestkit.mobile.Platform#ANDROID}
-     * locator.
-     * @return A {@link String} value.
-     * @see AndroidInputType#androidViewId()
+     * @return A {@link XPath} value.
+     * @see AndroidInputType#androidViewXPath()
+     * @see #newXPathBuilder()
+     * @see #NOT_IMPLEMENTED
      */
     @NotNull
     @Override
-    public String androidViewId() {
+    public XPath androidViewXPath() {
+        final String ID;
+
         switch (this) {
             case HEIGHT:
-                return "et_height";
+                ID = "et_height";
+                break;
 
             case WEIGHT:
-                return "et_weight";
+                ID = "et_weight";
+                break;
 
             case ETHNICITY:
-                return "et_eth";
+                ID = "et_eth";
+                break;
 
             case COACH_PREFERENCE:
-                return "et_coachpref";
+                ID = "et_coachpref";
+                break;
 
             default:
                 throw new RuntimeException(NOT_IMPLEMENTED);
         }
+
+        return newXPathBuilder().containsID(ID).build();
     }
 
     /**
-     * Get the scroll view picker id for
-     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
-     * @return A {@link String} value.
+     * @return A {@link XPath} value.
+     * @see AndroidChoiceInputType#androidScrollViewItemXPath()
+     * @see #newXPathBuilder()
      */
     @NotNull
     @Override
-    public String androidScrollViewPickerId() {
-        switch (this) {
-            case ETHNICITY:
-            case COACH_PREFERENCE:
-                return "select_dialog_listview";
+    public XPath androidScrollViewPickerXPath() {
+        return newXPathBuilder().containsID("select_dialog_listview").build();
+    }
 
-            default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
-        }
+    /**
+     * @return A {@link String} value.
+     * @see AndroidChoiceInputType#androidScrollViewItemXPath()
+     */
+    @Override
+    public String androidScrollViewItemXPath() {
+        return "text1";
     }
 
     /**

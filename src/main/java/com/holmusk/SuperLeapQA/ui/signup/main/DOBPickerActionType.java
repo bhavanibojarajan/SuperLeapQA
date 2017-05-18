@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.util.GuarantorAware;
+import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
 import org.jetbrains.annotations.NotNull;

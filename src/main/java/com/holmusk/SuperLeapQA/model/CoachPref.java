@@ -2,6 +2,7 @@ package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
+import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.element.property.type.base.AttributeType;
 import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 
@@ -31,9 +32,15 @@ public enum CoachPref implements AttributeType<String>, AndroidInputType, SLInpu
         }
     }
 
+    /**
+     * @return A {@link XPath} value.
+     * @see AndroidInputType#androidViewXPath()
+     * @see #newXPathBuilder()
+     */
+    @NotNull
     @Override
-    public String androidViewId() {
-        return "text1";
+    public XPath androidViewXPath() {
+        return newXPathBuilder().containsID("text1").build();
     }
 
     /**

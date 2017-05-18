@@ -3,8 +3,8 @@ package com.holmusk.SuperLeapQA.model;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.localizer.LCFormat;
-import org.swiften.xtestkit.base.element.action.input.type.InputType;
 import org.swiften.xtestkit.base.element.action.input.type.TextInputType;
+import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 
@@ -30,40 +30,53 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
     /**
      * Get the view id for {@link org.swiften.xtestkit.mobile.Platform#ANDROID}
      * locator.
-     * @return A {@link String} value.
-     * @see AndroidInputType#androidViewId()
+     * @return A {@link XPath} value.
+     * @see AndroidInputType#androidViewXPath()
+     * @see #newXPathBuilder()
+     * @see #NOT_IMPLEMENTED
      */
     @NotNull
     @Override
-    public String androidViewId() {
+    public XPath androidViewXPath() {
+        final String ID;
+
         switch (this) {
             case NAME:
             case PARENT_NAME:
-                return "et_name";
+                ID = "et_name";
+                break;
 
             case EMAIL:
             case PARENT_EMAIL:
-                return "et_email";
+                ID = "et_email";
+                break;
 
             case PHONE:
-                return "et_phone";
+                ID = "et_phone";
+                break;
 
             case CHILD_NAME:
-                return "et_childname";
+                ID = "et_childname";
+                break;
 
             case MOBILE:
             case PARENT_MOBILE:
-                return "et_mobile";
+                ID = "et_mobile";
+                break;
 
             case PASSWORD:
-                return "et_password";
+                ID = "et_password";
+                break;
 
             case HOME:
-                return "et_home";
+                ID = "et_home";
+                break;
 
             default:
                 throw new RuntimeException(NOT_IMPLEMENTED);
         }
+
+        return newXPathBuilder().containsID(ID).build();
     }
 
     /**

@@ -4,10 +4,10 @@ import com.holmusk.SuperLeapQA.model.*;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.io.Zip;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.collection.Pair;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
@@ -61,20 +61,19 @@ public interface AcceptableAgeInputType extends
      * @param MODE A {@link NumericInputType} instance.
      * @param NUMERIC_VALUE A {@link Double} value.
      * @return A {@link Flowable} instance.
-     * @see #rxPickerItemViews(SLNumericInputType)
+     * @see #rxPickerItemViews(SLChoiceInputType)
      * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
-    default Flowable<Boolean> rxSelectNumericInput(
-        @NotNull final SLNumericInputType MODE,
-        final double NUMERIC_VALUE
-    ) {
+    default <P extends SLChoiceInputType & SLNumericInputType>
+    Flowable<Boolean> rxSelectNumericInput(@NotNull final P MODE,
+                                           final double NUMERIC_VALUE) {
         final AcceptableAgeInputType THIS = this;
         final BaseEngine<?> ENGINE = engine();
-        final String HEIGHT_STR = MODE.stringValue(NUMERIC_VALUE);
+        final String STR_VALUE = MODE.stringValue(NUMERIC_VALUE);
 
         final TextParam TEXT_PARAM = TextParam.builder()
-            .withText(HEIGHT_STR)
+            .withText(STR_VALUE)
             .withRetries(0)
             .build();
 
@@ -84,7 +83,7 @@ public interface AcceptableAgeInputType extends
             public Flowable<Integer> rxInitialDifference(@NotNull WebElement element) {
                 return Flowable.just(element)
                     .map(ENGINE::getText)
-                    .map(MODE::numericValue)
+                    .map(a -> MODE.numericValue(a))
                     .map(a -> a - NUMERIC_VALUE)
                     .map(Double::intValue);
             }
@@ -94,7 +93,7 @@ public interface AcceptableAgeInputType extends
             public Flowable<?> rxCompareFirst(@NotNull WebElement element) {
                 return Flowable.just(element)
                     .map(ENGINE::getText)
-                    .map(MODE::numericValue)
+                    .map(a -> MODE.numericValue(a))
                     .filter(a -> a > NUMERIC_VALUE);
             }
 
@@ -103,7 +102,7 @@ public interface AcceptableAgeInputType extends
             public Flowable<?> rxCompareLast(@NotNull WebElement element) {
                 return Flowable.just(element)
                     .map(ENGINE::getText)
-                    .map(MODE::numericValue)
+                    .map(a -> MODE.numericValue(a))
                     .filter(a -> a < NUMERIC_VALUE);
             }
 
@@ -123,7 +122,7 @@ public interface AcceptableAgeInputType extends
             public Flowable<Boolean> rxShouldKeepSwiping() {
                 return ENGINE
                     .rxElementWithText(TEXT_PARAM)
-                    .filter(a -> ENGINE.getText(a).equals(HEIGHT_STR))
+                    .filter(a -> ENGINE.getText(a).equals(STR_VALUE))
                     .flatMap(ENGINE::rxClick)
                     .map(BooleanUtil::toTrue);
             }
@@ -153,12 +152,11 @@ public interface AcceptableAgeInputType extends
      * {@link Height#CHILD_CM_DEC}).
      * @param inputs A {@link List} of {@link Pair} instances.
      * @return A {@link Flowable} instance.
-     * @see #rxSelectNumericInput(SLNumericInputType, double)
+     * @see #rxSelectNumericInput(SLChoiceInputType, double)
      */
     @NotNull
-    default Flowable<Boolean> rxSelectNumericInput(
-        @NotNull List<Pair<SLNumericInputType,Double>> inputs
-    ) {
+    default <P extends SLChoiceInputType & SLNumericInputType>
+    Flowable<Boolean> rxSelectNumericInput(@NotNull List<Pair<P,Double>> inputs) {
         final AcceptableAgeInputType THIS = this;
 
         return Flowable
@@ -179,7 +177,7 @@ public interface AcceptableAgeInputType extends
      * @param E An {@link Ethnicity} instance.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String...)
-     * @see #rxClickInputField(AndroidInputType)
+     * @see #rxClickInputField(SLInputType)
      * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
@@ -197,7 +195,7 @@ public interface AcceptableAgeInputType extends
      * @param CP A {@link CoachPref} instance.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String...)
-     * @see #rxClickInputField(AndroidInputType)
+     * @see #rxClickInputField(SLInputType)
      * @see BaseEngine#rxClick(WebElement)
      */
     @NotNull
@@ -226,10 +224,10 @@ public interface AcceptableAgeInputType extends
      * Enter random acceptable age inputs in order to access the personal
      * information input screen.
      * @return A {@link Flowable} instance.
-     * @see #rxClickInputField(AndroidInputType)
+     * @see #rxClickInputField(SLInputType)
      * @see #rxSelectEthnicity(Ethnicity)
      * @see #rxSelectCoachPref(CoachPref)
-     * @see #rxSelectNumericInput(SLNumericInputType, double)
+     * @see #rxSelectNumericInput(SLChoiceInputType, double)
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -242,8 +240,8 @@ public interface AcceptableAgeInputType extends
 //        final Weight WEIGHT_MODE = CollectionTestUtil.randomElement(Weight.values());
         final Height HEIGHT_MODE = Height.CHILD_CM; // TODO: Randomize when ft bug is fixed
         final Weight WEIGHT_MODE = Weight.CHILD_KG; // TODO: Randomize when lb bug is fixed
-        final double HEIGHT = HEIGHT_MODE.randomNumericValue();
-        final double WEIGHT = WEIGHT_MODE.randomNumericValue();
+        final double HEIGHT = HEIGHT_MODE.randomValue();
+        final double WEIGHT = WEIGHT_MODE.randomValue();
 
         return rxClickInputField(GENDER)
             .flatMap(a -> rxSelectEthnicity(ETH))
@@ -263,18 +261,18 @@ public interface AcceptableAgeInputType extends
      * already in the acceptable age input screen.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rxClickInputField(AndroidInputType)
+     * @see #rxClickInputField(SLInputType)
      * @see #rxSelectNumericInput(List)
-     * @see #rxEditFieldHasValue(AndroidInputType, String)
+     * @see #rxEditFieldHasValue(SLInputType, String)
      */
     @NotNull
     @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxEnterAndValidateAcceptableAgeInputs(@NotNull UserMode mode) {
         final AcceptableAgeInputType THIS = this;
-        final List<Pair<SLNumericInputType,Double>> HEIGHT_M = Height.randomMetric(mode);
-        final List<Pair<SLNumericInputType,Double>> WEIGHT_M = Weight.randomMetric(mode);
-        final List<Pair<SLNumericInputType,Double>> HEIGHT_I = Height.randomImperial(mode);
-        final List<Pair<SLNumericInputType,Double>> WEIGHT_I = Weight.randomImperial(mode);
+        final List<Pair<Height,Double>> HEIGHT_M = Height.randomMetric(mode);
+        final List<Pair<Weight,Double>> WEIGHT_M = Weight.randomMetric(mode);
+        final List<Pair<Height,Double>> HEIGHT_I = Height.randomImperial(mode);
+        final List<Pair<Weight,Double>> WEIGHT_I = Weight.randomImperial(mode);
         final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
         final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
 
@@ -322,10 +320,10 @@ public interface AcceptableAgeInputType extends
         }
 
         final Gender GENDER = CollectionTestUtil.randomElement(Gender.values());
-        final double HEIGHT_CM = Height.CHILD_CM.randomNumericValue();
-        final double HEIGHT_FT = Height.CHILD_FT.randomNumericValue();
-        final double WEIGHT_KG = Weight.CHILD_KG.randomNumericValue();
-        final double WEIGHT_LB = Weight.CHILD_LB.randomNumericValue();
+        final double HEIGHT_CM = Height.CHILD_CM.randomValue();
+        final double HEIGHT_FT = Height.CHILD_FT.randomValue();
+        final double WEIGHT_KG = Weight.CHILD_KG.randomValue();
+        final double WEIGHT_LB = Weight.CHILD_LB.randomValue();
         final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
         final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
 
