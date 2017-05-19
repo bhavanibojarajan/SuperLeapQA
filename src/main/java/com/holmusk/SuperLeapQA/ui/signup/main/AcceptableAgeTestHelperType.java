@@ -6,7 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.collection.Pair;
 import org.swiften.xtestkit.base.BaseEngine;
-import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkit.base.type.PlatformType;
+import org.swiften.xtestkit.mobile.ios.IOSEngine;
 
 import java.util.List;
 
@@ -19,45 +20,46 @@ public interface AcceptableAgeTestHelperType extends AcceptableAgeActionType {
      * already in the acceptable age input screen.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rxClickInputField(SLInputType)
-     * @see #rxSelectNumericInput(List)
+     * @see #rx_clickInputField(SLInputType)
+     * @see #rx_selectNumericInput(List)
      * @see #rxEditFieldHasValue(SLInputType, String)
      */
     @NotNull
     @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxEnterAndValidateAcceptableAgeInputs(@NotNull UserMode mode) {
+        PlatformType platform = engine().platform();
         final AcceptableAgeActionType THIS = this;
-        final List<Pair<Height,Double>> HEIGHT_M = Height.randomMetric(mode);
-        final List<Pair<Weight,Double>> WEIGHT_M = Weight.randomMetric(mode);
-        final List<Pair<Height,Double>> HEIGHT_I = Height.randomImperial(mode);
-        final List<Pair<Weight,Double>> WEIGHT_I = Weight.randomImperial(mode);
+        final List<Pair<Height,Double>> HEIGHT_M = Height.random(platform, mode, UnitSystem.METRIC);
+        final List<Pair<Height,Double>> HEIGHT_I = Height.random(platform, mode, UnitSystem.IMPERIAL);
+        final List<Pair<Weight,Double>> WEIGHT_M = Weight.random(platform, mode, UnitSystem.METRIC);
+        final List<Pair<Weight,Double>> WEIGHT_I = Weight.random(platform, mode, UnitSystem.IMPERIAL);
         final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
         final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
 
-        return rxClickInputField(Gender.MALE)
-            .flatMap(a -> THIS.rxClickInputField(Gender.FEMALE))
-            .flatMap(a -> THIS.rxSelectEthnicity(ETH))
-            .flatMap(a -> THIS.rxSelectCoachPref(CP))
+        return rx_clickInputField(Gender.MALE)
+            .flatMap(a -> THIS.rx_clickInputField(Gender.FEMALE))
+            .flatMap(a -> THIS.rx_selectEthnicity(ETH))
+            .flatMap(a -> THIS.rx_selectCoachPref(CP))
 
-            .flatMap(a -> THIS.rxClickInputField(Height.CHILD_CM))
-            .flatMap(a -> THIS.rxClickInputField(ChoiceInput.HEIGHT))
-            .flatMap(a -> THIS.rxSelectNumericInput(HEIGHT_M))
-            .flatMap(a -> THIS.rxConfirmNumericChoiceInput())
+            .flatMap(a -> THIS.rx_clickInputField(Height.CM))
+            .flatMap(a -> THIS.rx_clickInputField(ChoiceInput.HEIGHT))
+            .flatMap(a -> THIS.rx_selectNumericInput(HEIGHT_M))
+            .flatMap(a -> THIS.rx_confirmNumericChoiceInput())
 
-            .flatMap(a -> THIS.rxClickInputField(Height.CHILD_FT))
-            .flatMap(a -> THIS.rxClickInputField(ChoiceInput.HEIGHT))
-            .flatMap(a -> THIS.rxSelectNumericInput(HEIGHT_I))
-            .flatMap(a -> THIS.rxConfirmNumericChoiceInput())
+            .flatMap(a -> THIS.rx_clickInputField(Height.FT))
+            .flatMap(a -> THIS.rx_clickInputField(ChoiceInput.HEIGHT))
+            .flatMap(a -> THIS.rx_selectNumericInput(HEIGHT_I))
+            .flatMap(a -> THIS.rx_confirmNumericChoiceInput())
 
-            .flatMap(a -> THIS.rxClickInputField(Weight.CHILD_KG))
-            .flatMap(a -> THIS.rxClickInputField(ChoiceInput.WEIGHT))
-            .flatMap(a -> THIS.rxSelectNumericInput(WEIGHT_M))
-            .flatMap(a -> THIS.rxConfirmNumericChoiceInput())
+            .flatMap(a -> THIS.rx_clickInputField(Weight.KG))
+            .flatMap(a -> THIS.rx_clickInputField(ChoiceInput.WEIGHT))
+            .flatMap(a -> THIS.rx_selectNumericInput(WEIGHT_M))
+            .flatMap(a -> THIS.rx_confirmNumericChoiceInput())
 
-            .flatMap(a -> THIS.rxClickInputField(Weight.CHILD_LB))
-            .flatMap(a -> THIS.rxClickInputField(ChoiceInput.WEIGHT))
-            .flatMap(a -> THIS.rxSelectNumericInput(WEIGHT_I))
-            .flatMap(a -> THIS.rxConfirmNumericChoiceInput());
+            .flatMap(a -> THIS.rx_clickInputField(Weight.LB))
+            .flatMap(a -> THIS.rx_clickInputField(ChoiceInput.WEIGHT))
+            .flatMap(a -> THIS.rx_selectNumericInput(WEIGHT_I))
+            .flatMap(a -> THIS.rx_confirmNumericChoiceInput());
     }
 
     /**
@@ -66,66 +68,68 @@ public interface AcceptableAgeTestHelperType extends AcceptableAgeActionType {
      * already in the acceptable age input screen.
      * @param MODE A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rxConfirmAcceptableAgeInputs()
+     * @see #rx_confirmAcceptableAgeInputs()
      */
     @NotNull
     @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxValidateAcceptableAgeEmptyInputErrors(@NotNull final UserMode MODE) {
-        final AcceptableAgeActionType THIS = this;
         final BaseEngine<?> ENGINE = engine();
 
         /* If we are testing on iOS, there is not need to check for empty
          * error messages, since the confirm button is not enabled until
          * all inputs are filled */
-        if (ENGINE.platform().equals(Platform.IOS)) {
+        if (ENGINE instanceof IOSEngine) {
             return Flowable.just(true);
         }
 
+        final AcceptableAgeActionType THIS = this;
+        PlatformType platform = ENGINE.platform();
+
         final Gender GENDER = CollectionTestUtil.randomElement(Gender.values());
-        final double HEIGHT_CM = Height.CHILD_CM.randomValue();
-        final double HEIGHT_FT = Height.CHILD_FT.randomValue();
-        final double WEIGHT_KG = Weight.CHILD_KG.randomValue();
-        final double WEIGHT_LB = Weight.CHILD_LB.randomValue();
+        final List<Pair<Height,Double>> HEIGHT_M = Height.random(platform, MODE, UnitSystem.METRIC);
+        final List<Pair<Height,Double>> HEIGHT_I = Height.random(platform, MODE, UnitSystem.IMPERIAL);
+        final List<Pair<Weight,Double>> WEIGHT_M = Weight.random(platform, MODE, UnitSystem.METRIC);
+        final List<Pair<Weight,Double>> WEIGHT_I = Weight.random(platform, MODE, UnitSystem.IMPERIAL);
         final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
         final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
 
         /* At this stage, the gender error message should be shown */
-        return rxConfirmAcceptableAgeInputs()
+        return rx_confirmAcceptableAgeInputs()
             .flatMap(a -> THIS.rxIsShowingError(GENDER.emptyInputError(MODE)))
-            .flatMap(a -> THIS.rxClickInputField(GENDER))
+            .flatMap(a -> THIS.rx_clickInputField(GENDER))
 
             /* At this stage, the height error message should be shown */
-            .flatMap(a -> THIS.rxClickInputField(Height.CHILD_CM))
-            .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
-            .flatMap(a -> THIS.rxIsShowingError(Height.CHILD_CM.emptyInputError(MODE)))
-            .flatMap(a -> THIS.rxSelectNumericInput(Height.CHILD_CM, HEIGHT_CM))
+            .flatMap(a -> THIS.rx_clickInputField(Height.CM))
+            .flatMap(a -> THIS.rx_confirmAcceptableAgeInputs())
+            .flatMap(a -> THIS.rxIsShowingError(Height.CM.emptyInputError(MODE)))
+            .flatMap(a -> THIS.rx_selectNumericInput(HEIGHT_M))
 
             /* At this stage, the height error message should be shown */
-            .flatMap(a -> THIS.rxClickInputField(Height.CHILD_FT))
-            .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
-            .flatMap(a -> THIS.rxIsShowingError(Height.CHILD_FT.emptyInputError(MODE)))
-            .flatMap(a -> THIS.rxSelectNumericInput(Height.CHILD_FT, HEIGHT_FT))
+            .flatMap(a -> THIS.rx_clickInputField(Height.FT))
+            .flatMap(a -> THIS.rx_confirmAcceptableAgeInputs())
+            .flatMap(a -> THIS.rxIsShowingError(Height.FT.emptyInputError(MODE)))
+            .flatMap(a -> THIS.rx_selectNumericInput(HEIGHT_I))
 
             /* At this stage, the weight error message should be shown */
-            .flatMap(a -> THIS.rxClickInputField(Weight.CHILD_KG))
-            .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
-            .flatMap(a -> THIS.rxIsShowingError(Weight.CHILD_KG.emptyInputError(MODE)))
-            .flatMap(a -> THIS.rxSelectNumericInput(Weight.CHILD_KG, WEIGHT_KG))
+            .flatMap(a -> THIS.rx_clickInputField(Weight.KG))
+            .flatMap(a -> THIS.rx_confirmAcceptableAgeInputs())
+            .flatMap(a -> THIS.rxIsShowingError(Weight.KG.emptyInputError(MODE)))
+            .flatMap(a -> THIS.rx_selectNumericInput(WEIGHT_M))
 
             /* At this stage, the weight error message should be shown */
-            .flatMap(a -> THIS.rxClickInputField(Weight.CHILD_LB))
-            .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
-            .flatMap(a -> THIS.rxIsShowingError(Weight.CHILD_LB.emptyInputError(MODE)))
-            .flatMap(a -> THIS.rxSelectNumericInput(Weight.CHILD_LB, WEIGHT_LB))
+            .flatMap(a -> THIS.rx_clickInputField(Weight.LB))
+            .flatMap(a -> THIS.rx_confirmAcceptableAgeInputs())
+            .flatMap(a -> THIS.rxIsShowingError(Weight.LB.emptyInputError(MODE)))
+            .flatMap(a -> THIS.rx_selectNumericInput(WEIGHT_I))
 
             /* At this stage, the ethnicity error message should be shown */
-            .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
+            .flatMap(a -> THIS.rx_confirmAcceptableAgeInputs())
             .flatMap(a -> THIS.rxIsShowingError(ChoiceInput.ETHNICITY.emptyInputError(MODE)))
-            .flatMap(a -> THIS.rxSelectEthnicity(ETH))
+            .flatMap(a -> THIS.rx_selectEthnicity(ETH))
 
             /* At this stage, the coach pref error message should be shown */
-            .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
-            .flatMap(a -> THIS.rxIsShowingError(ChoiceInput.COACH_PREFERENCE.emptyInputError(MODE)))
-            .flatMap(a -> THIS.rxSelectCoachPref(CP));
+            .flatMap(a -> THIS.rx_confirmAcceptableAgeInputs())
+            .flatMap(a -> THIS.rxIsShowingError(ChoiceInput.COACH_PREF.emptyInputError(MODE)))
+            .flatMap(a -> THIS.rx_selectCoachPref(CP));
     }
 }

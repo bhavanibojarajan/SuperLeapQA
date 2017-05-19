@@ -52,13 +52,13 @@ public interface DashboardActionType extends
      * Click the Use App Now button.
      * @return A {@link Flowable} instance.
      * @see #rxUseAppNowButton()
-     * @see BaseEngine#rxClick(WebElement)
+     * @see BaseEngine#rx_click(WebElement)
      * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
     default Flowable<Boolean> rxUseAppNow() {
         final BaseEngine<?> ENGINE = engine();
-        return rxUseAppNowButton().flatMap(ENGINE::rxClick).map(BooleanUtil::toTrue);
+        return rxUseAppNowButton().flatMap(ENGINE::rx_click).map(BooleanUtil::toTrue);
     }
 
     /**

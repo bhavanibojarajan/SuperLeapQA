@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
-import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.element.action.date.type.DateType;
@@ -108,7 +107,7 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
      * for parent sign up and teen sign up.
      * @return A {@link Flowable} instance.
      * @see #rxDoBEditField()
-     * @see BaseEngine#rxClick(WebElement)
+     * @see BaseEngine#rx_click(WebElement)
      * @see BaseEngine#rxImplicitlyWait(DelayType)
      */
     @NotNull
@@ -116,7 +115,7 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
         final BaseEngine<?> ENGINE = engine();
 
         return rxDoBEditField()
-            .flatMap(ENGINE::rxClick).map(a -> true)
+            .flatMap(ENGINE::rx_click).map(a -> true)
             .delay(generalDelay(), TimeUnit.MILLISECONDS, Schedulers.trampoline())
             .flatMap(a -> ENGINE.rxImplicitlyWait(this::generalDelay))
             .all(BooleanUtil::isTrue)
@@ -130,7 +129,7 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
      * stored in the DoB text field, we need to navigate back once.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String...)
-     * @see BaseEngine#rxClick(WebElement)
+     * @see BaseEngine#rx_click(WebElement)
      * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
@@ -140,7 +139,7 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
         if (ENGINE instanceof AndroidEngine) {
             return ENGINE
                 .rxElementContainingText("ok")
-                .flatMap(ENGINE::rxClick)
+                .flatMap(ENGINE::rx_click)
                 .map(BooleanUtil::toTrue);
         } else {
             return RxUtil.error(NOT_IMPLEMENTED);
@@ -152,11 +151,11 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
      * DoB picker screen.
      * @param DATE A {@link Date} instance.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxSelectDate(DateType)
+     * @see BaseEngine#rx_selectDate(DateType)
      */
     @NotNull
     default Flowable<Boolean> rxSelectDoB(@NotNull final Date DATE) {
-        return engine().rxSelectDate(() -> DATE);
+        return engine().rx_selectDate(() -> DATE);
     }
 
     /**

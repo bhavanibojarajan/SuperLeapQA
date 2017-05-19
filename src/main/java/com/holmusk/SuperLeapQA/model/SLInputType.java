@@ -3,7 +3,6 @@ package com.holmusk.SuperLeapQA.model;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.xtestkit.base.element.action.input.type.InputType;
-import org.swiften.xtestkit.base.element.action.input.type.NumericInputType;
 import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 
 /**

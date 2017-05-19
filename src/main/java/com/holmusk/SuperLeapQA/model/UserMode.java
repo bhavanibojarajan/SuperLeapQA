@@ -25,6 +25,32 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     }
 
     /**
+     * Check if the current {@link UserMode} is in the teen category.
+     * @return A {@link Boolean} instance.
+     * @see #TEEN_UNDER_18
+     * @see #TEEN_ABOVE_18
+     */
+    public boolean isTeen() {
+        switch (this) {
+            case TEEN_ABOVE_18:
+            case TEEN_UNDER_18:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Check if the current {@link UserMode} is in the parent category.
+     * @return A {@link Boolean} instance.
+     * @see #PARENT
+     */
+    public boolean isParent() {
+        return this.equals(PARENT);
+    }
+
+    /**
      * Get the id of the register button for the current {@link UserMode} on
      * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
      * @return A {@link String} value.

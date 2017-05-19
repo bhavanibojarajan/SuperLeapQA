@@ -121,7 +121,7 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
                 rxEditFieldForInput(Weight.CHILD_LB),
                 rxEditFieldForInput(Weight.CHILD_KG),
                 rxEditFieldForInput(ChoiceInput.ETHNICITY),
-                rxEditFieldForInput(ChoiceInput.COACH_PREFERENCE),
+                rxEditFieldForInput(ChoiceInput.COACH_PREF),
                 rxAcceptableAgeConfirmButton(),
                 rxAcceptableAgeInputTitleLabel()
             )
@@ -157,7 +157,7 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
      * @see BaseEngine#rxElementContainingID(String...)
      */
     @NotNull
-    default Flowable<WebElement> rxNumericChoiceInputConfirmButton() {
+    default Flowable<WebElement> rx_numericChoiceInputConfirmButton() {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {

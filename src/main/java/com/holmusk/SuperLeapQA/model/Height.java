@@ -2,13 +2,15 @@ package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Pair;
-import org.swiften.xtestkit.base.element.action.input.type.NumericInputType;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseErrorType;
+import org.swiften.xtestkit.base.type.PlatformType;
+import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidChoiceInputType;
 import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,49 +18,55 @@ import java.util.stream.Collectors;
  * Created by haipham on 5/10/17.
  */
 public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputType {
-    CHILD_FT,
-    CHILD_INCH,
-    CHILD_CM,
-    CHILD_CM_DEC,
-    TEEN_FT,
-    TEEN_INCH,
-    TEEN_CM,
-    TEEN_CM_DEC;
+    FT,
+    INCH,
+    CM,
+    CM_DEC;
 
     /**
-     * Get the {@link Height} instances for metric unit of measurement.
-     * @param mode A {@link UserMode} instance.
+     * Get the {@link Height} instances for {@link UnitSystem#METRIC}.
+     * @param platform A {@link PlatformType} instance.
      * @return A {@link List} of {@link Height}.
+     * @see Platform#ANDROID
      */
     @NotNull
-    public static List<Height> metric(@NotNull UserMode mode) {
-        switch (mode) {
-            case PARENT:
-                return Arrays.asList(CHILD_CM, CHILD_CM_DEC);
-
-            case TEEN_ABOVE_18:
-            case TEEN_UNDER_18:
-                return Arrays.asList(TEEN_CM, TEEN_CM_DEC);
-
-            default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+    public static List<Height> metric(@NotNull PlatformType platform) {
+        if (platform.equals(Platform.ANDROID)) {
+            return Collections.singletonList(CM);
+        } else {
+            return Arrays.asList(CM, CM_DEC);
         }
     }
 
     /**
-     * Get the {@link Height} instances for imperial unit of measurement.
-     * @param mode A {@link UserMode} instance.
+     * Get the {@link Height} instances for {@link UnitSystem#IMPERIAL}.
+     * @param platform A {@link PlatformType} instance.
      * @return A {@link List} of {@link Height}.
      */
     @NotNull
-    public static List<Height> imperial(@NotNull UserMode mode) {
-        switch (mode) {
-            case PARENT:
-                return Arrays.asList(CHILD_FT, CHILD_INCH);
+    public static List<Height> imperial(@NotNull PlatformType platform) {
+        return Arrays.asList(FT, INCH);
+    }
 
-            case TEEN_ABOVE_18:
-            case TEEN_UNDER_18:
-                return Arrays.asList(TEEN_FT, TEEN_INCH);
+    /**
+     * Get a {@link List} of {@link Height} instances, based on
+     * {@link Platform} and {@link UnitSystem}.
+     * @param platform A {@link PlatformType} instance.
+     * @param unit A {@link UnitSystem} instance.
+     * @return A {@link List} of {@link Height}.
+     * @see #metric(PlatformType)
+     * @see #imperial(PlatformType)
+     * @see #NOT_IMPLEMENTED
+     */
+    @NotNull
+    public static List<Height> instances(@NotNull PlatformType platform,
+                                         @NotNull UnitSystem unit) {
+        switch (unit) {
+            case METRIC:
+                return metric(platform);
+
+            case IMPERIAL:
+                return imperial(platform);
 
             default:
                 throw new RuntimeException(NOT_IMPLEMENTED);
@@ -67,29 +75,19 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
 
     /**
      * Get a {@link List} of random metric input values.
-     * @param mode A {@link UserMode} instance.
+     * @param platform A {@link PlatformType} instance.
+     * @param MODE A {@link UserMode} instance.
+     * @param unit A {@link UnitSystem} instance.
      * @return A {@link List} of {@link Pair}.
-     * @see #metric(UserMode)
-     * @see NumericInputType#randomValue()
+     * @see #instances(PlatformType, UnitSystem)
+     * @see SLNumericInputType#randomValue(UserMode)
      */
     @NotNull
-    public static List<Pair<Height,Double>> randomMetric(@NotNull UserMode mode) {
-        return metric(mode).stream()
-            .map(a -> new Pair<>(a, a.randomValue()))
-            .collect(Collectors.toList());
-    }
-
-    /**
-     * Get a {@link List} of random imperial input values.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link List} of {@link Pair}.
-     * @see #imperial(UserMode)
-     * @see NumericInputType#randomValue()
-     */
-    @NotNull
-    public static List<Pair<Height,Double>> randomImperial(@NotNull UserMode mode) {
-        return imperial(mode).stream()
-            .map(a -> new Pair<>(a, a.randomValue()))
+    public static List<Pair<Height,Double>> random(@NotNull PlatformType platform,
+                                                   @NotNull final UserMode MODE,
+                                                   @NotNull UnitSystem unit) {
+        return instances(platform, unit).stream()
+            .map(a -> new Pair<>(a, a.randomValue(MODE)))
             .collect(Collectors.toList());
     }
 
@@ -108,22 +106,18 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * with which we are selecting a value for the current {@link Height}. This
      * is useful for when there are multiple
      * {@link org.openqa.selenium.WebElement} with the same id (e.g. picking
-     * {@link #CHILD_FT} and {@link #CHILD_INCH} at the same time).
+     * {@link #FT} and {@link #INCH} at the same time).
      * @return An {@link Integer} value.
      * @see #NOT_IMPLEMENTED
      */
     public int androidViewIndex() {
         switch (this) {
-            case CHILD_FT:
-            case CHILD_CM:
-            case TEEN_FT:
-            case TEEN_CM:
+            case FT:
+            case CM:
                 return 0;
 
-            case CHILD_INCH:
-            case CHILD_CM_DEC:
-            case TEEN_INCH:
-            case TEEN_CM_DEC:
+            case INCH:
+            case CM_DEC:
                 return 1;
 
             default:
@@ -134,33 +128,12 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     /**
      * @return A {@link XPath} value.
      * @see AndroidInputType#androidViewXPath()
-     * @see #newXPathBuilder()
+     * @see #NOT_IMPLEMENTED
      */
     @NotNull
     @Override
     public XPath androidViewXPath() {
-        final String ID;
-
-        switch (this) {
-            case CHILD_FT:
-            case CHILD_INCH:
-            case TEEN_FT:
-            case TEEN_INCH:
-                ID = "btn_ft";
-                break;
-
-            case CHILD_CM:
-            case CHILD_CM_DEC:
-            case TEEN_CM:
-            case TEEN_CM_DEC:
-                ID = "btn_cm";
-                break;
-
-            default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
-        }
-
-        return newXPathBuilder().containsID(ID).build();
+        throw new RuntimeException(NOT_IMPLEMENTED);
     }
 
     /**
@@ -183,6 +156,7 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * @see #newXPathBuilder()
      * @see #androidViewIndex()
      */
+    @NotNull
     @Override
     public XPath androidScrollViewItemXPath() {
         String id = "numberpicker_input";
@@ -195,7 +169,7 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * the type of {@link Height}.
      * @param value A {@link Double} value.
      * @return A {@link String} value.
-     * @see NumericInputType#stringValue(double)
+     * @see SLNumericInputType#stringValue(double)
      */
     @NotNull
     @Override
@@ -205,30 +179,24 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
 
     /**
      * Get the minimum selectable height.
+     * @param mode A {@link UserMode} instance.
      * @return A {@link Double} value.
-     * @see NumericInputType#minSelectableNumericValue()
+     * @see SLNumericInputType#minSelectableNumericValue(UserMode)
+     * @see UserMode#isParent()
+     * @see #NOT_IMPLEMENTED
      */
-    public double minSelectableNumericValue() {
+    @Override
+    public double minSelectableNumericValue(@NotNull UserMode mode) {
         switch (this) {
-            case CHILD_CM:
-                return 50;
-
-            case CHILD_FT:
-                return 1;
-
-            case TEEN_CM:
-                return 120;
-
-            case TEEN_FT:
-                return 3;
-
-            case TEEN_CM_DEC:
-            case CHILD_CM_DEC:
+            case INCH:
+            case CM_DEC:
                 return 0;
 
-            case TEEN_INCH:
-            case CHILD_INCH:
-                return 0;
+            case FT:
+                return mode.isParent() ? 1 : 3;
+
+            case CM:
+                return mode.isParent() ? 50 : 120;
 
             default:
                 throw new RuntimeException(NOT_IMPLEMENTED);
@@ -238,31 +206,26 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     /**
      * Get the maximum selectable height. Return a lower value to avoid
      * {@link StackOverflowError} from too much scrolling.
+     * @param mode A {@link UserMode} instance.
      * @return A {@link Double} value.
-     * @see NumericInputType#maxSelectableNumericValue()
+     * @see SLNumericInputType#maxSelectableNumericValue(UserMode)
+     * @see UserMode#isParent()
+     * @see #NOT_IMPLEMENTED
      */
     @Override
-    public double maxSelectableNumericValue() {
+    public double maxSelectableNumericValue(@NotNull UserMode mode) {
         switch (this) {
-            case CHILD_CM:
-                return 120;
+            case INCH:
+                return 11;
 
-            case CHILD_FT:
-                return 3;
-
-            case TEEN_CM:
-                return 250;
-
-            case TEEN_FT:
-                return 8;
-
-            case TEEN_CM_DEC:
-            case CHILD_CM_DEC:
+            case CM_DEC:
                 return 9;
 
-            case TEEN_INCH:
-            case CHILD_INCH:
-                return 11;
+            case FT:
+                return mode.isParent() ? 3 : 8;
+
+            case CM:
+                return mode.isParent() ? 120 : 250;
 
             default:
                 throw new RuntimeException(NOT_IMPLEMENTED);

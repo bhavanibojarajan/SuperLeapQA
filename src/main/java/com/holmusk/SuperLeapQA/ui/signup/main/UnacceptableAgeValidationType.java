@@ -63,7 +63,7 @@ public interface UnacceptableAgeValidationType extends DOBPickerValidationType {
      * @return A {@link Flowable} instance.
      * @see #engine()
      * @see #rxUnacceptableAgeInputOkButton()
-     * @see BaseEngine#rxClick(WebElement)
+     * @see BaseEngine#rx_click(WebElement)
      * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
@@ -71,7 +71,7 @@ public interface UnacceptableAgeValidationType extends DOBPickerValidationType {
         final BaseEngine<?> ENGINE = engine();
 
         return rxUnacceptableAgeInputOkButton()
-            .flatMap(ENGINE::rxClick)
+            .flatMap(ENGINE::rx_click)
             .map(BooleanUtil::toTrue);
     }
 

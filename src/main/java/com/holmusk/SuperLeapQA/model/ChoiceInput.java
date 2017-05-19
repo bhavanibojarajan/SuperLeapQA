@@ -14,7 +14,7 @@ public enum ChoiceInput implements BaseErrorType, SLInputType, AndroidChoiceInpu
     HEIGHT,
     WEIGHT,
     ETHNICITY,
-    COACH_PREFERENCE;
+    COACH_PREF;
 
     /**
      * @return A {@link XPath} value.
@@ -40,7 +40,7 @@ public enum ChoiceInput implements BaseErrorType, SLInputType, AndroidChoiceInpu
                 ID = "et_eth";
                 break;
 
-            case COACH_PREFERENCE:
+            case COACH_PREF:
                 ID = "et_coachpref";
                 break;
 
@@ -82,7 +82,7 @@ public enum ChoiceInput implements BaseErrorType, SLInputType, AndroidChoiceInpu
         String error;
 
         switch (this) {
-            case COACH_PREFERENCE:
+            case COACH_PREF:
                 error = "register_error_coachPrefNotSet";
                 break;
 

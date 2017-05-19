@@ -46,7 +46,7 @@ public interface UnacceptableAgeTestHelperType extends UnacceptableAgeActionType
      * @return A {@link Flowable} instance.
      * @see #rxEnterRandomInput(SLTextInputType)
      * @see #unacceptableAgeInputConfirmDelay()
-     * @see BaseEngine#rxClick(WebElement)
+     * @see BaseEngine#rx_click(WebElement)
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -62,7 +62,7 @@ public interface UnacceptableAgeTestHelperType extends UnacceptableAgeActionType
             .flatMap(a -> THIS.rxValidateUnacceptableAgeInputConfirmation())
             .delay(delay, TimeUnit.MILLISECONDS, Schedulers.trampoline())
             .flatMap(a -> THIS.rxUnacceptableAgeInputOkButton())
-            .flatMap(ENGINE::rxClick).map(a -> true)
+            .flatMap(ENGINE::rx_click).map(a -> true)
             .flatMap(a -> THIS.rxValidateWelcomeScreen());
     }
 }

@@ -3,7 +3,6 @@ package com.holmusk.SuperLeapQA.ui.signup.main;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
-import org.intellij.lang.annotations.Flow;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
@@ -11,11 +10,8 @@ import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
 
 /**
  * Created by haipham on 17/5/17.
@@ -54,7 +50,7 @@ public interface DOBPickerValidationType extends SignUpActionType {
      * Validate the DoB picker screen.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String...)
-     * @see BaseEngine#rxClick(WebElement)
+     * @see BaseEngine#rx_click(WebElement)
      * @see BaseEngine#rxNavigateBackOnce()
      * @see #rxDoBEditField()
      * @see #rxDoBElements()
@@ -81,7 +77,7 @@ public interface DOBPickerValidationType extends SignUpActionType {
 
             /* Open the DoB dialog and verify that all elements are there */
             .flatMap(a -> rxDoBEditField())
-            .flatMap(ENGINE::rxClick)
+            .flatMap(ENGINE::rx_click)
             .flatMap(a -> rxDoBElements().all(ObjectUtil::nonNull).toFlowable())
             .delay(delay, TimeUnit.MILLISECONDS, Schedulers.trampoline())
 

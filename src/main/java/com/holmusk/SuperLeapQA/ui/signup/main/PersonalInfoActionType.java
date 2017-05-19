@@ -3,27 +3,17 @@ package com.holmusk.SuperLeapQA.ui.signup.main;
 import com.holmusk.SuperLeapQA.model.SLInputType;
 import com.holmusk.SuperLeapQA.model.SLTextInputType;
 import org.swiften.xtestkit.base.element.action.input.type.InputType;
-import com.holmusk.SuperLeapQA.model.TextInput;
-import org.swiften.xtestkit.base.element.action.input.type.TextInputType;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
-import io.reactivex.schedulers.Schedulers;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
-import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
-import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
-import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidTextInputType;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * Created by haipham on 17/5/17.
@@ -97,7 +87,7 @@ public interface PersonalInfoActionType extends
      * Click the submit button to confirm personal info inputs.
      * @return A {@link Flowable} instance.
      * @see #rxPersonalInfoSubmitButton()
-     * @see BaseEngine#rxClick(WebElement)
+     * @see BaseEngine#rx_click(WebElement)
      * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
@@ -105,7 +95,7 @@ public interface PersonalInfoActionType extends
         final BaseEngine<?> ENGINE = engine();
 
         return rxPersonalInfoSubmitButton()
-            .flatMap(ENGINE::rxClick)
+            .flatMap(ENGINE::rx_click)
             .map(BooleanUtil::toTrue);
     }
 
@@ -123,7 +113,7 @@ public interface PersonalInfoActionType extends
         final BaseEngine<?> ENGINE = engine();
 
         return rxTOCCheckBox()
-            .flatMap(a -> ENGINE.rxSetCheckBoxState(a, ACCEPTED))
+            .flatMap(a -> ENGINE.rx_setCheckBoxState(a, ACCEPTED))
             .map(BooleanUtil::toTrue);
     }
 

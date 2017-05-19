@@ -1,16 +1,10 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
-import com.holmusk.SuperLeapQA.model.SLTextInputType;
-import com.holmusk.SuperLeapQA.model.TextInput;
-import org.swiften.xtestkit.base.element.action.input.type.TextInputType;
 import io.reactivex.Flowable;
-import io.reactivex.schedulers.Schedulers;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.xtestkit.base.BaseEngine;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by haipham on 17/5/17.
@@ -23,14 +17,14 @@ public interface UnacceptableAgeActionType extends
      * @return A {@link Flowable} instance.
      * @see #engine()
      * @see #rxUnacceptableAgeSubmitButton()
-     * @see BaseEngine#rxClick(WebElement)
+     * @see BaseEngine#rx_click(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rxConfirmUnacceptableAgeInput() {
         final BaseEngine<?> ENGINE = engine();
 
         return rxUnacceptableAgeSubmitButton()
-            .flatMap(ENGINE::rxClick)
+            .flatMap(ENGINE::rx_click)
             .map(BooleanUtil::toTrue);
     }
 }

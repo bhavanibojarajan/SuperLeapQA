@@ -2,10 +2,12 @@ package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Pair;
-import org.swiften.xtestkit.base.element.action.input.type.NumericInputType;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseErrorType;
+import org.swiften.xtestkit.base.type.PlatformType;
+import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidChoiceInputType;
+import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,49 +17,50 @@ import java.util.stream.Collectors;
  * Created by haipham on 5/10/17.
  */
 public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputType {
-    CHILD_KG,
-    CHILD_KG_DEC,
-    CHILD_LB,
-    CHILD_LB_DEC,
-    TEEN_KG,
-    TEEN_KG_DEC,
-    TEEN_LB,
-    TEEN_LB_DEC;
+    KG,
+    KG_DEC,
+    LB,
+    LB_DEC;
 
     /**
      * Get the {@link Weight} instances for metric unit of measurement.
-     * @param mode A {@link UserMode} instance.
+     * @param platform A {@link PlatformType} instance.
      * @return A {@link List} of {@link Weight}.
      */
     @NotNull
-    public static List<Weight> metric(@NotNull UserMode mode) {
-        switch (mode) {
-            case PARENT:
-                return Arrays.asList(CHILD_KG, CHILD_KG_DEC);
-
-            case TEEN_ABOVE_18:
-            case TEEN_UNDER_18:
-                return Arrays.asList(TEEN_KG, TEEN_KG_DEC);
-
-            default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
-        }
+    public static List<Weight> metric(@NotNull PlatformType platform) {
+        return Arrays.asList(KG, KG_DEC);
     }
 
     /**
      * Get the {@link Weight} instances for imperial unit of measurement.
-     * @param mode A {@link UserMode} instance.
+     * @param platform A {@link UserMode} instance.
      * @return A {@link List} of {@link Weight}.
      */
     @NotNull
-    public static List<Weight> imperial(@NotNull UserMode mode) {
-        switch (mode) {
-            case PARENT:
-                return Arrays.asList(CHILD_LB, CHILD_LB_DEC);
+    public static List<Weight> imperial(@NotNull PlatformType platform) {
+        return Arrays.asList(LB, LB_DEC);
+    }
 
-            case TEEN_ABOVE_18:
-            case TEEN_UNDER_18:
-                return Arrays.asList(TEEN_LB, TEEN_LB_DEC);
+    /**
+     * Get a {@link List} of {@link Weight} instances, based on
+     * {@link UserMode} and {@link UnitSystem}.
+     * @param platform A {@link PlatformType} instance.
+     * @param unit A {@link UnitSystem} instance.
+     * @return A {@link List} of {@link Weight}.
+     * @see #metric(PlatformType)
+     * @see #imperial(PlatformType)
+     * @see #NOT_IMPLEMENTED
+     */
+    @NotNull
+    public static List<Weight> instances(@NotNull PlatformType platform,
+                                         @NotNull UnitSystem unit) {
+        switch (unit) {
+            case METRIC:
+                return metric(platform);
+
+            case IMPERIAL:
+                return imperial(platform);
 
             default:
                 throw new RuntimeException(NOT_IMPLEMENTED);
@@ -66,29 +69,19 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
 
     /**
      * Get a {@link List} of random metric input values.
-     * @param mode A {@link UserMode} instance.
+     * @param platform A {@link PlatformType} instance.
+     * @param MODE A {@link UserMode} instance.
+     * @param unit A {@link UnitSystem} instance.
      * @return A {@link List} of {@link Pair}.
-     * @see #metric(UserMode)
-     * @see NumericInputType#randomValue()
+     * @see #instances(PlatformType, UnitSystem)
+     * @see SLNumericInputType#randomValue(UserMode)
      */
     @NotNull
-    public static List<Pair<Weight,Double>> randomMetric(@NotNull UserMode mode) {
-        return metric(mode).stream()
-            .map(a -> new Pair<>(a, a.randomValue()))
-            .collect(Collectors.toList());
-    }
-
-    /**
-     * Get a {@link List} of random imperial input values.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link List} of {@link Pair}.
-     * @see #imperial(UserMode)
-     * @see NumericInputType#randomValue()
-     */
-    @NotNull
-    public static List<Pair<Weight,Double>> randomImperial(@NotNull UserMode mode) {
-        return imperial(mode).stream()
-            .map(a -> new Pair<>(a, a.randomValue()))
+    public static List<Pair<Weight,Double>> random(@NotNull PlatformType platform,
+                                                   @NotNull final UserMode MODE,
+                                                   @NotNull UnitSystem unit) {
+        return instances(platform, unit).stream()
+            .map(a -> new Pair<>(a, a.randomValue(MODE)))
             .collect(Collectors.toList());
     }
 
@@ -113,22 +106,18 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * with which we are selecting a value for the current {@link Weight}. This
      * is useful for when there are multiple
      * {@link org.openqa.selenium.WebElement} with the same id (e.g. picking
-     * {@link #CHILD_KG} and {@link #CHILD_KG_DEC} at the same time).
+     * {@link #KG} and {@link #KG_DEC} at the same time).
      * @return An {@link Integer} value.
      * @see #NOT_IMPLEMENTED
      */
     public int androidViewIndex() {
         switch (this) {
-            case CHILD_KG:
-            case CHILD_LB:
-            case TEEN_KG:
-            case TEEN_LB:
+            case KG:
+            case LB:
                 return 0;
 
-            case CHILD_KG_DEC:
-            case CHILD_LB_DEC:
-            case TEEN_KG_DEC:
-            case TEEN_LB_DEC:
+            case KG_DEC:
+            case LB_DEC:
                 return 1;
 
             default:
@@ -137,28 +126,24 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     }
 
     /**
-     * Get the view id for {@link org.swiften.xtestkit.mobile.Platform#ANDROID}
-     * locator.
      * @return A {@link XPath} value.
+     * @see AndroidInputType#androidViewXPath()
      * @see #newXPathBuilder()
      * @see #NOT_IMPLEMENTED
      */
     @NotNull
+    @Override
     public XPath androidViewXPath() {
         final String ID;
 
         switch (this) {
-            case CHILD_LB:
-            case CHILD_LB_DEC:
-            case TEEN_LB:
-            case TEEN_LB_DEC:
+            case LB:
+            case LB_DEC:
                 ID = "btn_lb";
                 break;
 
-            case CHILD_KG:
-            case CHILD_KG_DEC:
-            case TEEN_KG:
-            case TEEN_KG_DEC:
+            case KG:
+            case KG_DEC:
                 ID = "btn_kg";
                 break;
 
@@ -201,7 +186,7 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * the type of {@link Weight}.
      * @param value A {@link Double} value.
      * @return A {@link String} value.
-     * @see NumericInputType#stringValue(double)
+     * @see SLNumericInputType#stringValue(double)
      */
     @NotNull
     @Override
@@ -210,62 +195,51 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     }
 
     /**
-     * Get the minimum selectable weight.
+     * @param mode A {@link UserMode} instance.
      * @return A {@link Double} value.
-     * @see NumericInputType#minSelectableNumericValue()
+     * @see SLNumericInputType#minSelectableNumericValue(UserMode)
+     * @see UserMode#isParent()
+     * @see #NOT_IMPLEMENTED
      */
     @Override
-    public double minSelectableNumericValue() {
+    public double minSelectableNumericValue(@NotNull UserMode mode) {
         switch (this) {
-            case CHILD_KG:
-                return 10;
-
-            case CHILD_LB:
-                return 22;
-
-            case TEEN_KG:
-                return 50;
-
-            case TEEN_LB:
-                return 110;
-
-            case CHILD_KG_DEC:
-            case TEEN_KG_DEC:
-            case CHILD_LB_DEC:
-            case TEEN_LB_DEC:
+            case KG_DEC:
+            case LB_DEC:
                 return 0;
+
+            case LB:
+                return mode.isParent() ? 22 : 110;
+
+            case KG:
+                return mode.isParent() ? 10 : 50;
 
             default:
-                return 0;
+                throw new RuntimeException(NOT_IMPLEMENTED);
         }
     }
 
     /**
      * Get the maximum selectable weight. Return a lower value to avoid
      * {@link StackOverflowError} from too much scrolling.
+     * @param mode A {@link UserMode} instance.
      * @return A {@link Double} value.
-     * @see NumericInputType#maxSelectableNumericValue()
+     * @see SLNumericInputType#maxSelectableNumericValue(UserMode)
+     * @see UserMode#isParent()
+     * @see #NOT_IMPLEMENTED
      */
     @Override
-    public double maxSelectableNumericValue() {
+    public double maxSelectableNumericValue(@NotNull UserMode mode) {
         switch (this) {
-            case CHILD_KG:
-                return 80;
-
-            case CHILD_LB:
-                return 176;
-
-            case TEEN_KG:
-                return 250;
-
-            case TEEN_LB:
-                return 485;
-
-            case CHILD_KG_DEC:
-            case TEEN_KG_DEC:
-            case CHILD_LB_DEC:
-            case TEEN_LB_DEC:
+            case KG_DEC:
+            case LB_DEC:
                 return 9;
+
+            case KG:
+                return mode.isParent() ? 80 : 250;
+
+            case LB:
+                return mode.isParent() ? 176 : 485;
 
             default:
                 throw new RuntimeException(NOT_IMPLEMENTED);

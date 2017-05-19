@@ -12,8 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
-import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidTextInputType;
 
 /**
  * Created by haipham on 5/8/17.
@@ -62,11 +60,11 @@ public interface SignUpActionType extends
      * @param <P> Generics parameter.
      * @return A {@link Flowable} instance.
      * @see #rxEditFieldForInput(SLInputType)  )
-     * @see BaseEngine#rxClick(WebElement)
+     * @see BaseEngine#rx_click(WebElement)
      */
     @NotNull
     default <P extends SLInputType>
-    Flowable<Boolean> rxClickInputField(@NotNull P input) {
-        return rxEditFieldForInput(input).flatMap(engine()::rxClick).map(BooleanUtil::toTrue);
+    Flowable<Boolean> rx_clickInputField(@NotNull P input) {
+        return rxEditFieldForInput(input).flatMap(engine()::rx_click).map(BooleanUtil::toTrue);
     }
 }

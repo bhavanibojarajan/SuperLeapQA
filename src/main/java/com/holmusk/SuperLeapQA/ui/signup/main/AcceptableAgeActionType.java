@@ -15,8 +15,6 @@ import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatComparison
 import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatType;
 import org.swiften.xtestkit.base.element.action.swipe.type.SwipeType;
 import org.swiften.xtestkit.base.element.locator.general.param.TextParam;
-import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkit.base.element.action.input.type.NumericInputType;
 import org.swiften.xtestkit.mobile.android.AndroidEngine;
 
 import java.util.List;
@@ -24,52 +22,55 @@ import java.util.List;
 /**
  * Created by haipham on 17/5/17.
  */
-public interface AcceptableAgeActionType extends
-    AcceptableInputValidationType, DOBPickerActionType
-{
+public interface AcceptableAgeActionType extends AcceptableInputValidationType, DOBPickerActionType {
     //region Bridged Navigation
     /**
      * Bridge method that helps navigate from splash screen to personal info
      * input.
-     * @param mode A {@link UserMode} instance.
+     * @param MODE A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      * @see #rx_splash_acceptableAge(UserMode)
-     * @see #rx_acceptableAge_personalInfo()
+     * @see #rx_acceptableAge_personalInfo(UserMode)
      */
     @NotNull
-    default Flowable<Boolean> rx_splash_personalInfo(@NotNull UserMode mode) {
+    default Flowable<Boolean> rx_splash_personalInfo(@NotNull final UserMode MODE) {
         final AcceptableAgeActionType THIS = this;
-        return rx_splash_acceptableAge(mode).flatMap(a -> THIS.rx_acceptableAge_personalInfo());
+
+        return rx_splash_acceptableAge(MODE)
+            .flatMap(a -> THIS.rx_acceptableAge_personalInfo(MODE));
     }
     //endregion
 
     /**
      * Navigate from the acceptable age input to the personal info input
      * screen.
+     * @param MODE A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rxEnterAcceptableAgeInputs()
-     * @see #rxConfirmAcceptableAgeInputs()
+     * @see #rx_enterAcceptableAgeInputs(UserMode)
+     * @see #rx_confirmAcceptableAgeInputs()
      */
     @NotNull
-    default Flowable<Boolean> rx_acceptableAge_personalInfo() {
+    default Flowable<Boolean> rx_acceptableAge_personalInfo(@NotNull final UserMode MODE) {
         final AcceptableAgeActionType THIS = this;
-        return rxEnterAcceptableAgeInputs().flatMap(a -> THIS.rxConfirmAcceptableAgeInputs());
+
+        return rx_enterAcceptableAgeInputs(MODE)
+            .flatMap(a -> THIS.rx_confirmAcceptableAgeInputs());
     }
 
     /**
      * Select a value, assuming the user is in the value selection screen.
-     * @param MODE A {@link NumericInputType} instance.
+     * @param MODE A {@link SLNumericInputType} instance.
      * @param NUMERIC_VALUE A {@link Double} value.
      * @return A {@link Flowable} instance.
      * @see #rxPickerItemViews(SLChoiceInputType)
-     * @see BaseEngine#rxClick(WebElement)
-     * @see SwipeRepeatComparisonType#rxScrollViewChildCount()
+     * @see BaseEngine#rx_click(WebElement)
+     * @see SwipeRepeatComparisonType#rx_scrollViewChildCount()
      */
     @NotNull
     @SuppressWarnings("Convert2MethodRef")
     default <P extends SLChoiceInputType & SLNumericInputType>
-    Flowable<Boolean> rxSelectNumericInput(@NotNull final P MODE,
-                                           final double NUMERIC_VALUE) {
+    Flowable<Boolean> rx_selectNumericInput(@NotNull final P MODE,
+                                            final double NUMERIC_VALUE) {
         final AcceptableAgeActionType THIS = this;
         final BaseEngine<?> ENGINE = engine();
         final String STR_VALUE = MODE.stringValue(NUMERIC_VALUE);
@@ -83,7 +84,7 @@ public interface AcceptableAgeActionType extends
         SwipeRepeatType repeater = new SwipeRepeatComparisonType() {
             @NotNull
             @Override
-            public Flowable<Integer> rxInitialDifference(@NotNull WebElement element) {
+            public Flowable<Integer> rx_initialDifference(@NotNull WebElement element) {
                 return Flowable.just(element)
                     .map(ENGINE::getText)
                     .map(a -> MODE.numericValue(a))
@@ -93,7 +94,7 @@ public interface AcceptableAgeActionType extends
 
             @NotNull
             @Override
-            public Flowable<?> rxCompareFirst(@NotNull WebElement element) {
+            public Flowable<?> rx_compareFirst(@NotNull WebElement element) {
                 return Flowable.just(element)
                     .map(ENGINE::getText)
                     .map(a -> MODE.numericValue(a))
@@ -102,7 +103,7 @@ public interface AcceptableAgeActionType extends
 
             @NotNull
             @Override
-            public Flowable<?> rxCompareLast(@NotNull WebElement element) {
+            public Flowable<?> rx_compareLast(@NotNull WebElement element) {
                 return Flowable.just(element)
                     .map(ENGINE::getText)
                     .map(a -> MODE.numericValue(a))
@@ -111,19 +112,19 @@ public interface AcceptableAgeActionType extends
 
             @NotNull
             @Override
-            public Flowable<WebElement> rxScrollViewChildItems() {
+            public Flowable<WebElement> rx_scrollViewChildItems() {
                 return THIS.rxPickerItemViews(MODE);
             }
 
             @NotNull
-            public Flowable<Long> rxScrollViewChildCount() {
+            public Flowable<Long> rx_scrollViewChildCount() {
                 /* We need to override this for Android because it is using
                  * a NumberPicker, which displays 3+ elements but only return
                  * one active element when queries with XPath */
                 if (ENGINE instanceof AndroidEngine) {
                     return Flowable.just(3L);
                 } else {
-                    return SwipeRepeatComparisonType.super.rxScrollViewChildCount();
+                    return SwipeRepeatComparisonType.super.rx_scrollViewChildCount();
                 }
             }
 
@@ -134,28 +135,28 @@ public interface AcceptableAgeActionType extends
 
             @NotNull
             @Override
-            public Flowable<Boolean> rxShouldKeepSwiping() {
+            public Flowable<Boolean> rx_shouldKeepSwiping() {
                 return ENGINE
                     .rxElementWithText(TEXT_PARAM)
                     .filter(a -> ENGINE.getText(a).equals(STR_VALUE))
-                    .flatMap(ENGINE::rxClick)
+                    .flatMap(ENGINE::rx_click)
                     .map(BooleanUtil::toTrue);
             }
 
             @NotNull
             @Override
-            public Flowable<WebElement> rxScrollableViewToSwipe() {
+            public Flowable<WebElement> rx_scrollableViewToSwipe() {
                 return rxScrollableChoicePicker(MODE);
             }
 
             @NotNull
             @Override
-            public Flowable<Boolean> rxSwipeOnce(@NotNull SwipeType param) {
-                return ENGINE.rxSwipeOnce(param);
+            public Flowable<Boolean> rx_swipeOnce(@NotNull SwipeType param) {
+                return ENGINE.rx_swipeOnce(param);
             }
         };
 
-        return repeater.rxRepeatSwipe();
+        return repeater.rx_repeatSwipe();
     }
 
     /**
@@ -163,17 +164,17 @@ public interface AcceptableAgeActionType extends
      * useful when we want to select {@link Height} or {@link Weight} based
      * on different units of measurement (metric/imperial), since the app
      * requires a combination of two inputs from two
-     * {@link SLNumericInputType} (e.g. {@link Height#CHILD_CM} and
-     * {@link Height#CHILD_CM_DEC}).
+     * {@link SLNumericInputType} (e.g. {@link Height#CM} and
+     * {@link Height#CM_DEC}).
      * @param inputs A {@link List} of {@link Pair} instances.
      * @return A {@link Flowable} instance.
-     * @see #rxSelectNumericInput(SLChoiceInputType, double)
+     * @see #rx_selectNumericInput(SLChoiceInputType, double)
      * @see BooleanUtil#isTrue(boolean)
      */
     @NotNull
     @SuppressWarnings("ConstantConditions")
     default <P extends SLChoiceInputType & SLNumericInputType>
-    Flowable<Boolean> rxSelectNumericInput(@NotNull List<Pair<P,Double>> inputs) {
+    Flowable<Boolean> rx_selectNumericInput(@NotNull List<Pair<P,Double>> inputs) {
         final AcceptableAgeActionType THIS = this;
         LogUtil.printfThread("Selecting inputs for %s", inputs);
 
@@ -182,7 +183,7 @@ public interface AcceptableAgeActionType extends
             .concatMap(a -> {
                 if (ObjectUtil.nonNull(a.A, a.B)) {
                     return THIS
-                        .rxSelectNumericInput(a.A, a.B)
+                        .rx_selectNumericInput(a.A, a.B)
 
                         /* We need this statement because each app may have
                          * different set of required numeric choice inputs.
@@ -203,15 +204,15 @@ public interface AcceptableAgeActionType extends
      * {@link Weight}).
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rxClick(WebElement)
+     * @see BaseEngine#rx_click(WebElement)
      * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
-    default Flowable<Boolean> rxConfirmNumericChoiceInput() {
+    default Flowable<Boolean> rx_confirmNumericChoiceInput() {
         final BaseEngine<?> ENGINE = engine();
 
-        return rxNumericChoiceInputConfirmButton()
-            .flatMap(ENGINE::rxClick)
+        return rx_numericChoiceInputConfirmButton()
+            .flatMap(ENGINE::rx_click)
             .map(BooleanUtil::toTrue);
     }
 
@@ -220,34 +221,34 @@ public interface AcceptableAgeActionType extends
      * @param E An {@link Ethnicity} instance.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String...)
-     * @see #rxClickInputField(SLInputType)
-     * @see BaseEngine#rxClick(WebElement)
+     * @see #rx_clickInputField(SLInputType)
+     * @see BaseEngine#rx_click(WebElement)
      */
     @NotNull
-    default Flowable<Boolean> rxSelectEthnicity(@NotNull final Ethnicity E) {
+    default Flowable<Boolean> rx_selectEthnicity(@NotNull final Ethnicity E) {
         final BaseEngine<?> ENGINE = engine();
 
-        return rxClickInputField(ChoiceInput.ETHNICITY)
+        return rx_clickInputField(ChoiceInput.ETHNICITY)
             .flatMap(a -> ENGINE.rxElementContainingText(E.value()))
-            .flatMap(ENGINE::rxClick)
+            .flatMap(ENGINE::rx_click)
             .map(BooleanUtil::toTrue);
     }
 
     /**
-     * Select a {@link CoachPref} for {@link ChoiceInput#COACH_PREFERENCE}.
+     * Select a {@link CoachPref} for {@link ChoiceInput#COACH_PREF}.
      * @param CP A {@link CoachPref} instance.
      * @return A {@link Flowable} instance.
      * @see BaseEngine#rxElementContainingText(String...)
-     * @see #rxClickInputField(SLInputType)
-     * @see BaseEngine#rxClick(WebElement)
+     * @see #rx_clickInputField(SLInputType)
+     * @see BaseEngine#rx_click(WebElement)
      */
     @NotNull
-    default Flowable<Boolean> rxSelectCoachPref(@NotNull final CoachPref CP) {
+    default Flowable<Boolean> rx_selectCoachPref(@NotNull final CoachPref CP) {
         final BaseEngine<?> ENGINE = engine();
 
-        return rxClickInputField(ChoiceInput.COACH_PREFERENCE)
+        return rx_clickInputField(ChoiceInput.COACH_PREF)
             .flatMap(a -> ENGINE.rxElementContainingText(CP.value()))
-            .flatMap(ENGINE::rxClick)
+            .flatMap(ENGINE::rx_click)
             .map(BooleanUtil::toTrue);
     }
 
@@ -256,46 +257,49 @@ public interface AcceptableAgeActionType extends
      * the user is already in the acceptable age input screen.
      * @return A {@link Flowable} instance.
      * @see #rxAcceptableAgeConfirmButton()
-     * @see BaseEngine#rxClick(WebElement)
+     * @see BaseEngine#rx_click(WebElement)
      */
     @NotNull
-    default Flowable<Boolean> rxConfirmAcceptableAgeInputs() {
-        return rxAcceptableAgeConfirmButton().flatMap(engine()::rxClick).map(a -> true);
+    default Flowable<Boolean> rx_confirmAcceptableAgeInputs() {
+        return rxAcceptableAgeConfirmButton().flatMap(engine()::rx_click).map(a -> true);
     }
 
     /**
      * Enter random acceptable age inputs in order to access the personal
      * information input screen.
+     * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rxClickInputField(SLInputType)
-     * @see #rxSelectEthnicity(Ethnicity)
-     * @see #rxSelectCoachPref(CoachPref)
-     * @see #rxSelectNumericInput(SLChoiceInputType, double)
+     * @see Height#randomValue(UserMode)
+     * @see Weight#randomValue(UserMode)
+     * @see #rx_clickInputField(SLInputType)
+     * @see #rx_selectEthnicity(Ethnicity)
+     * @see #rx_selectCoachPref(CoachPref)
+     * @see #rx_selectNumericInput(SLChoiceInputType, double)
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<Boolean> rxEnterAcceptableAgeInputs() {
+    default Flowable<Boolean> rx_enterAcceptableAgeInputs(@NotNull UserMode mode) {
         final AcceptableAgeActionType THIS = this;
         final Gender GENDER = CollectionTestUtil.randomElement(Gender.values());
         final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
         final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
 //        final Height HEIGHT_MODE = CollectionTestUtil.randomElement(Height.values());
 //        final Weight WEIGHT_MODE = CollectionTestUtil.randomElement(Weight.values());
-        final Height HEIGHT_MODE = Height.CHILD_CM; // TODO: Randomize when ft bug is fixed
-        final Weight WEIGHT_MODE = Weight.CHILD_KG; // TODO: Randomize when lb bug is fixed
-        final double HEIGHT = HEIGHT_MODE.randomValue();
-        final double WEIGHT = WEIGHT_MODE.randomValue();
+        final Height HEIGHT_MODE = Height.CM; // TODO: Randomize when ft bug is fixed
+        final Weight WEIGHT_MODE = Weight.KG; // TODO: Randomize when lb bug is fixed
+        final double HEIGHT = HEIGHT_MODE.randomValue(mode);
+        final double WEIGHT = WEIGHT_MODE.randomValue(mode);
 
-        return rxClickInputField(GENDER)
-            .flatMap(a -> rxSelectEthnicity(ETH))
-            .flatMap(a -> rxSelectCoachPref(CP))
+        return rx_clickInputField(GENDER)
+            .flatMap(a -> rx_selectEthnicity(ETH))
+            .flatMap(a -> rx_selectCoachPref(CP))
 
-            .flatMap(a -> rxClickInputField(HEIGHT_MODE))
-            .flatMap(a -> THIS.rxClickInputField(ChoiceInput.HEIGHT))
-            .flatMap(a -> THIS.rxSelectNumericInput(HEIGHT_MODE, HEIGHT))
+            .flatMap(a -> rx_clickInputField(HEIGHT_MODE))
+            .flatMap(a -> THIS.rx_clickInputField(ChoiceInput.HEIGHT))
+            .flatMap(a -> THIS.rx_selectNumericInput(HEIGHT_MODE, HEIGHT))
 
-            .flatMap(a -> rxClickInputField(WEIGHT_MODE))
-            .flatMap(a -> THIS.rxClickInputField(ChoiceInput.WEIGHT))
-            .flatMap(a -> THIS.rxSelectNumericInput(WEIGHT_MODE, WEIGHT));
+            .flatMap(a -> rx_clickInputField(WEIGHT_MODE))
+            .flatMap(a -> THIS.rx_clickInputField(ChoiceInput.WEIGHT))
+            .flatMap(a -> THIS.rx_selectNumericInput(WEIGHT_MODE, WEIGHT));
     }
 }

@@ -29,14 +29,14 @@ public interface BaseActionType extends
      * @see #generalDelay()
      * @see #rxBackButton()
      * @see #engine()
-     * @see org.swiften.xtestkit.base.BaseEngine#rxClick(WebElement)
+     * @see org.swiften.xtestkit.base.BaseEngine#rx_click(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rxNavigateBackWithBackButton() {
         long delay = generalDelay();
 
         return rxBackButton()
-            .flatMap(engine()::rxClick).map(a -> true)
+            .flatMap(engine()::rx_click).map(a -> true)
             .delay(delay, TimeUnit.MILLISECONDS, Schedulers.trampoline());
     }
 

@@ -66,7 +66,7 @@ public class UISignUpTest extends UIBaseTest implements
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
-    public void test_DoBPickerScreen_containsCorrectElements(@NotNull UserMode mode) {
+    public void test_DoBPickerScreen_isValidScreen(@NotNull UserMode mode) {
         // Setup
         final UISignUpTest THIS = this;
         TestSubscriber subscriber = CustomTestSubscriber.create();
@@ -97,7 +97,7 @@ public class UISignUpTest extends UIBaseTest implements
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
-    public void test_DoBPickerDialog_containsCorrectElements(@NotNull UserMode mode) {
+    public void test_DoBPickerDialog_isValidScreen(@NotNull UserMode mode) {
         // Setup
         final UISignUpTest THIS = this;
         TestSubscriber subscriber = CustomTestSubscriber.create();
@@ -119,13 +119,13 @@ public class UISignUpTest extends UIBaseTest implements
      * submit button without filling in require inputs should fail.
      * @param mode A {@link UserMode} instance.
      * @see #rx_splash_unacceptableAgeInput(UserMode)
-     * @see #rxClickInputField(SLInputType)
+     * @see #rx_clickInputField(SLInputType)
      * @see #generalUserModeProvider()
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
-    public void test_unacceptableAgeInputs_containsCorrectElements(@NotNull UserMode mode) {
+    public void test_unacceptableAgeInputs_isValidScreen(@NotNull UserMode mode) {
         // Setup
         final UISignUpTest THIS = this;
         TestSubscriber subscriber = CustomTestSubscriber.create();
@@ -133,7 +133,7 @@ public class UISignUpTest extends UIBaseTest implements
         // When
         rx_splash_unacceptableAgeInput(mode)
             .flatMap(a -> THIS.rxConfirmUnacceptableAgeInput())
-            .flatMap(a -> THIS.rxClickInputField(TextInput.NAME))
+            .flatMap(a -> THIS.rx_clickInputField(TextInput.NAME))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -154,7 +154,7 @@ public class UISignUpTest extends UIBaseTest implements
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
-    public void test_acceptableAgeInputs_containsCorrectElements(@NotNull final UserMode MODE) {
+    public void test_acceptableAgeInputs_isValidScreen(@NotNull final UserMode MODE) {
         // Setup
         final UISignUpTest THIS = this;
         TestSubscriber subscriber = CustomTestSubscriber.create();
@@ -182,7 +182,7 @@ public class UISignUpTest extends UIBaseTest implements
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
-    public void test_personalInfoScreen_containsCorrectElements(@NotNull final UserMode MODE) {
+    public void test_personalInfoScreen_isValidScreen(@NotNull final UserMode MODE) {
         // Setup
         final UISignUpTest THIS = this;
         TestSubscriber subscriber = CustomTestSubscriber.create();

@@ -34,14 +34,14 @@ public interface WelcomeActionType extends BaseActionType, WelcomeValidationType
      * on the welcome screen.
      * @return A {@link Flowable} instance.
      * @see #rxWelcomeRegisterButton()
-     * @see BaseEngine#rxClick(WebElement)
+     * @see BaseEngine#rx_click(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rx_welcome_register() {
         final BaseEngine<?> ENGINE = engine();
 
         return rxWelcomeRegisterButton()
-            .flatMap(ENGINE::rxClick)
+            .flatMap(ENGINE::rx_click)
             .map(BooleanUtil::toTrue);
     }
 
