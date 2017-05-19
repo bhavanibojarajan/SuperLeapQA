@@ -17,14 +17,14 @@ import org.swiften.xtestkit.base.element.action.swipe.type.SwipeType;
 import org.swiften.xtestkit.base.element.locator.general.param.TextParam;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.base.element.action.input.type.NumericInputType;
-import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
+import org.swiften.xtestkit.mobile.android.AndroidEngine;
 
 import java.util.List;
 
 /**
  * Created by haipham on 17/5/17.
  */
-public interface AcceptableAgeInputType extends
+public interface AcceptableAgeActionType extends
     AcceptableInputValidationType, DOBPickerActionType
 {
     //region Bridged Navigation
@@ -38,7 +38,7 @@ public interface AcceptableAgeInputType extends
      */
     @NotNull
     default Flowable<Boolean> rx_splash_personalInfo(@NotNull UserMode mode) {
-        final AcceptableAgeInputType THIS = this;
+        final AcceptableAgeActionType THIS = this;
         return rx_splash_acceptableAge(mode).flatMap(a -> THIS.rx_acceptableAge_personalInfo());
     }
     //endregion
@@ -52,7 +52,7 @@ public interface AcceptableAgeInputType extends
      */
     @NotNull
     default Flowable<Boolean> rx_acceptableAge_personalInfo() {
-        final AcceptableAgeInputType THIS = this;
+        final AcceptableAgeActionType THIS = this;
         return rxEnterAcceptableAgeInputs().flatMap(a -> THIS.rxConfirmAcceptableAgeInputs());
     }
 
@@ -63,14 +63,17 @@ public interface AcceptableAgeInputType extends
      * @return A {@link Flowable} instance.
      * @see #rxPickerItemViews(SLChoiceInputType)
      * @see BaseEngine#rxClick(WebElement)
+     * @see SwipeRepeatComparisonType#rxScrollViewChildCount()
      */
     @NotNull
+    @SuppressWarnings("Convert2MethodRef")
     default <P extends SLChoiceInputType & SLNumericInputType>
     Flowable<Boolean> rxSelectNumericInput(@NotNull final P MODE,
                                            final double NUMERIC_VALUE) {
-        final AcceptableAgeInputType THIS = this;
+        final AcceptableAgeActionType THIS = this;
         final BaseEngine<?> ENGINE = engine();
         final String STR_VALUE = MODE.stringValue(NUMERIC_VALUE);
+        LogUtil.printfThread("Selecting %d for %s", (int)NUMERIC_VALUE, MODE);
 
         final TextParam TEXT_PARAM = TextParam.builder()
             .withText(STR_VALUE)
@@ -110,6 +113,18 @@ public interface AcceptableAgeInputType extends
             @Override
             public Flowable<WebElement> rxScrollViewChildItems() {
                 return THIS.rxPickerItemViews(MODE);
+            }
+
+            @NotNull
+            public Flowable<Long> rxScrollViewChildCount() {
+                /* We need to override this for Android because it is using
+                 * a NumberPicker, which displays 3+ elements but only return
+                 * one active element when queries with XPath */
+                if (ENGINE instanceof AndroidEngine) {
+                    return Flowable.just(3L);
+                } else {
+                    return SwipeRepeatComparisonType.super.rxScrollViewChildCount();
+                }
             }
 
             @Override
@@ -153,23 +168,51 @@ public interface AcceptableAgeInputType extends
      * @param inputs A {@link List} of {@link Pair} instances.
      * @return A {@link Flowable} instance.
      * @see #rxSelectNumericInput(SLChoiceInputType, double)
+     * @see BooleanUtil#isTrue(boolean)
      */
     @NotNull
+    @SuppressWarnings("ConstantConditions")
     default <P extends SLChoiceInputType & SLNumericInputType>
     Flowable<Boolean> rxSelectNumericInput(@NotNull List<Pair<P,Double>> inputs) {
-        final AcceptableAgeInputType THIS = this;
+        final AcceptableAgeActionType THIS = this;
+        LogUtil.printfThread("Selecting inputs for %s", inputs);
 
         return Flowable
             .fromIterable(inputs)
             .concatMap(a -> {
-                if (ObjectUtil.nonNull(a.A) && ObjectUtil.nonNull(a.B)) {
-                    return THIS.rxSelectNumericInput(a.A, a.B);
+                if (ObjectUtil.nonNull(a.A, a.B)) {
+                    return THIS
+                        .rxSelectNumericInput(a.A, a.B)
+
+                        /* We need this statement because each app may have
+                         * different set of required numeric choice inputs.
+                         * For e.g., on Android there is no cm decimal field
+                         * so if we do not catch the error, the test will
+                         * fail */
+                        .onErrorReturnItem(true);
                 } else {
                     return RxUtil.error(NOT_IMPLEMENTED);
                 }
             })
             .all(BooleanUtil::isTrue)
             .toFlowable();
+    }
+
+    /**
+     * Confirm numeric choice input (e.g. for {@link Height} and
+     * {@link Weight}).
+     * @return A {@link Flowable} instance.
+     * @see #engine()
+     * @see BaseEngine#rxClick(WebElement)
+     * @see BooleanUtil#toTrue(Object)
+     */
+    @NotNull
+    default Flowable<Boolean> rxConfirmNumericChoiceInput() {
+        final BaseEngine<?> ENGINE = engine();
+
+        return rxNumericChoiceInputConfirmButton()
+            .flatMap(ENGINE::rxClick)
+            .map(BooleanUtil::toTrue);
     }
 
     /**
@@ -232,7 +275,7 @@ public interface AcceptableAgeInputType extends
     @NotNull
     @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxEnterAcceptableAgeInputs() {
-        final AcceptableAgeInputType THIS = this;
+        final AcceptableAgeActionType THIS = this;
         final Gender GENDER = CollectionTestUtil.randomElement(Gender.values());
         final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
         final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
@@ -254,116 +297,5 @@ public interface AcceptableAgeInputType extends
             .flatMap(a -> rxClickInputField(WEIGHT_MODE))
             .flatMap(a -> THIS.rxClickInputField(ChoiceInput.WEIGHT))
             .flatMap(a -> THIS.rxSelectNumericInput(WEIGHT_MODE, WEIGHT));
-    }
-
-    /**
-     * Enter random inputs for acceptable age screen, assuming the user is
-     * already in the acceptable age input screen.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
-     * @see #rxClickInputField(SLInputType)
-     * @see #rxSelectNumericInput(List)
-     * @see #rxEditFieldHasValue(SLInputType, String)
-     */
-    @NotNull
-    @SuppressWarnings("unchecked")
-    default Flowable<Boolean> rxEnterAndValidateAcceptableAgeInputs(@NotNull UserMode mode) {
-        final AcceptableAgeInputType THIS = this;
-        final List<Pair<Height,Double>> HEIGHT_M = Height.randomMetric(mode);
-        final List<Pair<Weight,Double>> WEIGHT_M = Weight.randomMetric(mode);
-        final List<Pair<Height,Double>> HEIGHT_I = Height.randomImperial(mode);
-        final List<Pair<Weight,Double>> WEIGHT_I = Weight.randomImperial(mode);
-        final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
-        final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
-
-        return rxClickInputField(Gender.MALE)
-            .flatMap(a -> THIS.rxClickInputField(Gender.FEMALE))
-            .flatMap(a -> THIS.rxSelectEthnicity(ETH))
-            .flatMap(a -> THIS.rxSelectCoachPref(CP))
-
-            .flatMap(a -> THIS.rxClickInputField(Height.CHILD_CM))
-            .flatMap(a -> THIS.rxClickInputField(ChoiceInput.HEIGHT))
-            .flatMap(a -> THIS.rxSelectNumericInput(HEIGHT_M))
-
-            .flatMap(a -> THIS.rxClickInputField(Height.CHILD_FT))
-            .flatMap(a -> THIS.rxClickInputField(ChoiceInput.HEIGHT))
-            .flatMap(a -> THIS.rxSelectNumericInput(HEIGHT_I))
-
-            .flatMap(a -> THIS.rxClickInputField(Weight.CHILD_KG))
-            .flatMap(a -> THIS.rxClickInputField(ChoiceInput.WEIGHT))
-            .flatMap(a -> THIS.rxSelectNumericInput(WEIGHT_M))
-
-            .flatMap(a -> THIS.rxClickInputField(Weight.CHILD_LB))
-            .flatMap(a -> THIS.rxClickInputField(ChoiceInput.WEIGHT))
-            .flatMap(a -> THIS.rxSelectNumericInput(WEIGHT_I));
-    }
-
-    /**
-     * Sequentially validate error messages due to empty inputs (refer to
-     * {@link TextInput} and {@link ChoiceInput}, assuming the user is
-     * already in the acceptable age input screen.
-     * @param MODE A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
-     * @see #rxConfirmAcceptableAgeInputs()
-     */
-    @NotNull
-    @SuppressWarnings("unchecked")
-    default Flowable<Boolean> rxValidateAcceptableAgeEmptyInputErrors(@NotNull final UserMode MODE) {
-        final AcceptableAgeInputType THIS = this;
-        final BaseEngine<?> ENGINE = engine();
-
-        /* If we are testing on iOS, there is not need to check for empty
-         * error messages, since the confirm button is not enabled until
-         * all inputs are filled */
-        if (ENGINE.platform().equals(Platform.IOS)) {
-            return Flowable.just(true);
-        }
-
-        final Gender GENDER = CollectionTestUtil.randomElement(Gender.values());
-        final double HEIGHT_CM = Height.CHILD_CM.randomValue();
-        final double HEIGHT_FT = Height.CHILD_FT.randomValue();
-        final double WEIGHT_KG = Weight.CHILD_KG.randomValue();
-        final double WEIGHT_LB = Weight.CHILD_LB.randomValue();
-        final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
-        final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
-
-        /* At this stage, the gender error message should be shown */
-        return rxConfirmAcceptableAgeInputs()
-            .flatMap(a -> THIS.rxIsShowingError(GENDER.emptyInputError(MODE)))
-            .flatMap(a -> THIS.rxClickInputField(GENDER))
-
-            /* At this stage, the height error message should be shown */
-            .flatMap(a -> THIS.rxClickInputField(Height.CHILD_CM))
-            .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
-            .flatMap(a -> THIS.rxIsShowingError(Height.CHILD_CM.emptyInputError(MODE)))
-            .flatMap(a -> THIS.rxSelectNumericInput(Height.CHILD_CM, HEIGHT_CM))
-
-            /* At this stage, the height error message should be shown */
-            .flatMap(a -> THIS.rxClickInputField(Height.CHILD_FT))
-            .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
-            .flatMap(a -> THIS.rxIsShowingError(Height.CHILD_FT.emptyInputError(MODE)))
-            .flatMap(a -> THIS.rxSelectNumericInput(Height.CHILD_FT, HEIGHT_FT))
-
-            /* At this stage, the weight error message should be shown */
-            .flatMap(a -> THIS.rxClickInputField(Weight.CHILD_KG))
-            .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
-            .flatMap(a -> THIS.rxIsShowingError(Weight.CHILD_KG.emptyInputError(MODE)))
-            .flatMap(a -> THIS.rxSelectNumericInput(Weight.CHILD_KG, WEIGHT_KG))
-
-            /* At this stage, the weight error message should be shown */
-            .flatMap(a -> THIS.rxClickInputField(Weight.CHILD_LB))
-            .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
-            .flatMap(a -> THIS.rxIsShowingError(Weight.CHILD_LB.emptyInputError(MODE)))
-            .flatMap(a -> THIS.rxSelectNumericInput(Weight.CHILD_LB, WEIGHT_LB))
-
-            /* At this stage, the ethnicity error message should be shown */
-            .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
-            .flatMap(a -> THIS.rxIsShowingError(ChoiceInput.ETHNICITY.emptyInputError(MODE)))
-            .flatMap(a -> THIS.rxSelectEthnicity(ETH))
-
-            /* At this stage, the coach pref error message should be shown */
-            .flatMap(a -> THIS.rxConfirmAcceptableAgeInputs())
-            .flatMap(a -> THIS.rxIsShowingError(ChoiceInput.COACH_PREFERENCE.emptyInputError(MODE)))
-            .flatMap(a -> THIS.rxSelectCoachPref(CP));
     }
 }

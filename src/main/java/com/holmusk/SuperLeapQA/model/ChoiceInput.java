@@ -63,12 +63,13 @@ public enum ChoiceInput implements BaseErrorType, SLInputType, AndroidChoiceInpu
     }
 
     /**
-     * @return A {@link String} value.
+     * @return A {@link XPath} value.
      * @see AndroidChoiceInputType#androidScrollViewItemXPath()
+     * @see #newXPathBuilder()
      */
     @Override
-    public String androidScrollViewItemXPath() {
-        return "text1";
+    public XPath androidScrollViewItemXPath() {
+        return newXPathBuilder().containsID("text1").build();
     }
 
     /**

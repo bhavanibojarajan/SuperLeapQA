@@ -25,6 +25,26 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     }
 
     /**
+     * Get the id of the register button for the current {@link UserMode} on
+     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
+     * @return A {@link String} value.
+     */
+    @NotNull
+    public String androidRegisterButtonId() {
+        switch (this) {
+            case PARENT:
+                return "btnRegChild";
+
+            case TEEN_ABOVE_18:
+            case TEEN_UNDER_18:
+                return "btnRegSelf";
+
+            default:
+                throw new RuntimeException(NOT_IMPLEMENTED);
+        }
+    }
+
+    /**
      * Get the personal information inputs for this {@link UserMode}.
      * @return A {@link List} of {@link SLInputType}.
      */

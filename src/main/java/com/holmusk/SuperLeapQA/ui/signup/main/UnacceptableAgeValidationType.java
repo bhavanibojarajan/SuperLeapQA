@@ -12,7 +12,7 @@ import org.swiften.xtestkit.base.BaseEngine;
 /**
  * Created by haipham on 17/5/17.
  */
-public interface UnacceptableAgeInputValidationType extends DOBPickerValidationType {
+public interface UnacceptableAgeValidationType extends DOBPickerValidationType {
     /**
      * Validate the screen after the DoB picker whereby the user is notified
      * that he/she/the child is not qualified for the program due to age

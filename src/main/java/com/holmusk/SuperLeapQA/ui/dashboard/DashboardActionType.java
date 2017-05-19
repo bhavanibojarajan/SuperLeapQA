@@ -12,11 +12,8 @@ import org.swiften.xtestkit.base.BaseEngine;
  * Created by haipham on 5/16/17.
  */
 public interface DashboardActionType extends
-    SignUpActionType,
-    DOBPickerActionType,
-    UnacceptableAgeInputActionType,
-    AcceptableAgeInputType,
-    PersonalInfoInputActionType,
+    UnacceptableAgeActionType,
+    PersonalInfoActionType,
     DashboardValidationType
 {
     //region Bridged Navigation

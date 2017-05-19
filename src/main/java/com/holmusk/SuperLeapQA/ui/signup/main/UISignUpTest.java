@@ -2,7 +2,6 @@ package com.holmusk.SuperLeapQA.ui.signup.main;
 
 import com.holmusk.SuperLeapQA.model.SLInputType;
 import org.swiften.xtestkit.base.element.action.input.type.InputType;
-import org.swiften.xtestkit.base.element.action.input.type.TextInputType;
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.TextInput;
@@ -11,7 +10,6 @@ import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
-import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
@@ -25,12 +23,10 @@ import java.util.List;
  * Created by haipham on 5/13/17.
  */
 public class UISignUpTest extends UIBaseTest implements
-    SignUpActionType,
-    SignUpValidationType,
-    DOBPickerActionType,
-    UnacceptableAgeInputActionType,
-    AcceptableAgeInputType,
-    PersonalInfoInputActionType
+    DOBPickerTestHelperType,
+    AcceptableAgeTestHelperType,
+    UnacceptableAgeTestHelperType,
+    PersonalInfoTestHelperType
 {
     @Factory(
         dataProviderClass = TestRunner.class,

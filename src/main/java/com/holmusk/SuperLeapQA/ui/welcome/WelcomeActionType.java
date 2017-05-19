@@ -39,7 +39,6 @@ public interface WelcomeActionType extends BaseActionType, WelcomeValidationType
     @NotNull
     default Flowable<Boolean> rx_welcome_register() {
         final BaseEngine<?> ENGINE = engine();
-        long delay = generalDelay();
 
         return rxWelcomeRegisterButton()
             .flatMap(ENGINE::rxClick)

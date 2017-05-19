@@ -92,7 +92,7 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rxElementContainingID(input.androidScrollViewItemXPath());
+            return engine.rxElementWithXPath(input.androidScrollViewItemXPath());
         } else {
             return RxUtil.error(NOT_IMPLEMENTED);
         }
@@ -139,13 +139,32 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
      */
     @NotNull
     default <P extends SLInputType>
-    Flowable<Boolean> rxEditFieldHasValue(@NotNull final P INPUT, @NotNull final String VALUE) {
+    Flowable<Boolean> rxEditFieldHasValue(@NotNull final P INPUT,
+                                          @NotNull final String VALUE) {
         return rxEditFieldForInput(INPUT)
             .map(engine()::getText)
             .doOnNext(a -> LogUtil.printfThread("Current value for %s: %s", INPUT, a))
             .filter(a -> a.equals(VALUE))
             .switchIfEmpty(RxUtil.errorF("Value for %s does not equal %s", INPUT, VALUE))
             .map(BooleanUtil::toTrue);
+    }
+
+    /**
+     * Get the confirm button for numeric choice inputs (e.g. {@link Height}
+     * and {@link Weight}).
+     * @return A {@link Flowable} instance.
+     * @see #engine()
+     * @see BaseEngine#rxElementContainingID(String...)
+     */
+    @NotNull
+    default Flowable<WebElement> rxNumericChoiceInputConfirmButton() {
+        BaseEngine<?> engine = engine();
+
+        if (engine instanceof AndroidEngine) {
+            return engine.rxElementContainingID("btnDone");
+        } else {
+            return RxUtil.error(NOT_IMPLEMENTED);
+        }
     }
 
     /**

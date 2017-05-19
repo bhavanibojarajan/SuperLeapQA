@@ -12,10 +12,7 @@ import org.testng.annotations.Test;
 /**
  * Created by haipham on 5/7/17.
  */
-public final class UIRegisterModeTest extends UIBaseTest implements
-    WelcomeActionType,
-    RegisterModeActionType
-{
+public final class UIRegisterModeTest extends UIBaseTest implements RegisterModeActionType {
     @Factory(
         dataProviderClass = TestRunner.class,
         dataProvider = "dataProvider"

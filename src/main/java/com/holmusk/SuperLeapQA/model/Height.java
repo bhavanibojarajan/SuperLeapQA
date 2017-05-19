@@ -104,6 +104,34 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     }
 
     /**
+     * Get the index associated with the {@link org.openqa.selenium.WebElement}
+     * with which we are selecting a value for the current {@link Height}. This
+     * is useful for when there are multiple
+     * {@link org.openqa.selenium.WebElement} with the same id (e.g. picking
+     * {@link #CHILD_FT} and {@link #CHILD_INCH} at the same time).
+     * @return An {@link Integer} value.
+     * @see #NOT_IMPLEMENTED
+     */
+    public int androidViewIndex() {
+        switch (this) {
+            case CHILD_FT:
+            case CHILD_CM:
+            case TEEN_FT:
+            case TEEN_CM:
+                return 0;
+
+            case CHILD_INCH:
+            case CHILD_CM_DEC:
+            case TEEN_INCH:
+            case TEEN_CM_DEC:
+                return 1;
+
+            default:
+                throw new RuntimeException(NOT_IMPLEMENTED);
+        }
+    }
+
+    /**
      * @return A {@link XPath} value.
      * @see AndroidInputType#androidViewXPath()
      * @see #newXPathBuilder()
@@ -139,42 +167,27 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * @return Return a {@link XPath} value.
      * @see AndroidChoiceInputType#androidScrollViewPickerXPath()
      * @see #newXPathBuilder()
+     * @see #androidViewIndex()
      */
     @NotNull
     @Override
     public XPath androidScrollViewPickerXPath() {
-        final int INDEX;
-
-        switch (this) {
-            case CHILD_FT:
-            case CHILD_CM:
-            case TEEN_FT:
-            case TEEN_CM:
-                INDEX = 0;
-                break;
-
-            case CHILD_INCH:
-            case CHILD_CM_DEC:
-            case TEEN_INCH:
-            case TEEN_CM_DEC:
-                INDEX = 1;
-                break;
-
-            default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
-        }
-
         String cls = "NumberPicker";
-        return newXPathBuilder().atIndex(INDEX).ofClass(cls).build();
+        int index = androidViewIndex();
+        return newXPathBuilder().atIndex(index).ofClass(cls).build();
     }
 
     /**
-     * @return A {@link String} value.
+     * @return A {@link XPath} value.
      * @see AndroidChoiceInputType#androidScrollViewItemXPath()
+     * @see #newXPathBuilder()
+     * @see #androidViewIndex()
      */
     @Override
-    public String androidScrollViewItemXPath() {
-        return "numberpicker_input";
+    public XPath androidScrollViewItemXPath() {
+        String id = "numberpicker_input";
+        int index = androidViewIndex();
+        return newXPathBuilder().containsID(id).ofInstance(index).build();
     }
 
     /**

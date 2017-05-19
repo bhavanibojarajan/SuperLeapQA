@@ -14,11 +14,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by haipham on 5/8/17.
  */
-public interface RegisterModeActionType extends
-    BaseActionType,
-    WelcomeActionType,
-    RegisterModeValidationType
-{
+public interface RegisterModeActionType extends WelcomeActionType, RegisterModeValidationType {
     //region Bridged Navigation
     /**
      * Bridge method that helps navigate from splash screen to sign up.

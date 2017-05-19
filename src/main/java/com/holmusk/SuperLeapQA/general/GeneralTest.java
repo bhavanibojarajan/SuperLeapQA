@@ -58,8 +58,8 @@ public final class GeneralTest {
     public void test_birthDayCalculation_shouldBeCorrect() {
         // Setup
         Calendar calendar = Calendar.getInstance();
-        LocalDate date1 = LocalDate.of(2017, 5, 18);
-        LocalDate date2 = LocalDate.of(1999, 5, 18);
+        LocalDate date1 = LocalDate.of(2017, 5, 19);
+        LocalDate date2 = LocalDate.of(2001, 5, 19);
 
         // When
         long yearDiff = ChronoUnit.YEARS.between(date1, date2);

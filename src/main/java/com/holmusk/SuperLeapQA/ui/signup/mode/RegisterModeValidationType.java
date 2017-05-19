@@ -16,15 +16,13 @@ import org.swiften.xtestkit.mobile.android.AndroidEngine;
 /**
  * Created by haipham on 5/8/17.
  */
-public interface RegisterModeValidationType extends
-    BaseValidationType,
-    WelcomeValidationType
-{
+public interface RegisterModeValidationType extends WelcomeValidationType {
     /**
      * Get the sign up button that corresponds to a {@link UserMode}.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      * @see #engine()
+     * @see UserMode#androidRegisterButtonId()
      * @see BaseEngine#rxElementContainingID(String...)
      * @see RxUtil#error(String)
      * @see #NOT_IMPLEMENTED
@@ -34,7 +32,7 @@ public interface RegisterModeValidationType extends
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rxElementContainingID("btnRegChild", "btnRegSelf");
+            return engine.rxElementContainingID(mode.androidRegisterButtonId());
         } else {
             return RxUtil.error(NOT_IMPLEMENTED);
         }
