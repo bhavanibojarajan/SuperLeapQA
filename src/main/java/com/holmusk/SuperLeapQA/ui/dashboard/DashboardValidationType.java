@@ -18,14 +18,14 @@ public interface DashboardValidationType extends BaseValidationType {
      */
     @NotNull
     default Flowable<WebElement> rxUseAppNowButton() {
-        return engine().rxElementContainingText("dashboard_title_useAppNow");
+        return engine().rx_elementContainingText("dashboard_title_useAppNow");
     }
 
     /**
      * Validate the Use App Now screen after the user finishes sign up.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rxElementContainingText(String...)
+     * @see BaseEngine#rx_elementContainingText(String...)
      * @see #rxUseAppNowButton()
      * @see ObjectUtil#nonNull(Object)
      */
@@ -37,8 +37,8 @@ public interface DashboardValidationType extends BaseValidationType {
 
         return Flowable
             .concatArray(
-                ENGINE.rxElementContainingText("dashboard_title_accountReadyToUse"),
-                ENGINE.rxElementContainingText("dashboard_title_rememberCheckEmail"),
+                ENGINE.rx_elementContainingText("dashboard_title_accountReadyToUse"),
+                ENGINE.rx_elementContainingText("dashboard_title_rememberCheckEmail"),
                 THIS.rxUseAppNowButton()
             )
             .all(ObjectUtil::nonNull)
@@ -50,13 +50,13 @@ public interface DashboardValidationType extends BaseValidationType {
      * up.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rxElementContainingText(String...)
+     * @see BaseEngine#rx_elementContainingText(String...)
      * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
     default Flowable<Boolean> rxValidateDashboardTutorialScreen() {
         return engine()
-            .rxElementContainingText("dashboard_title_tapHereToMakeFirstEntry")
+            .rx_elementContainingText("dashboard_title_tapHereToMakeFirstEntry")
             .map(BooleanUtil::toTrue);
     }
 }

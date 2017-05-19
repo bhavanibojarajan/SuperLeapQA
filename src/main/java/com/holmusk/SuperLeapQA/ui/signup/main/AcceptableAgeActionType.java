@@ -128,16 +128,28 @@ public interface AcceptableAgeActionType extends AcceptableInputValidationType, 
                 }
             }
 
+            @NotNull
             @Override
-            public double elementSwipeRatio() {
-                return 0.7d;
+            public Flowable<Double> rx_elementSwipeRatio() {
+                double ratio;
+
+                if (ENGINE instanceof AndroidEngine) {
+                    /* Since NumberPicker only shows 1 element at at time,
+                     * we need to scroll very slowly in order to arrive at
+                     * the element that we want */
+                    ratio = 1d / 3;
+                } else {
+                    ratio = 0.7;
+                }
+
+                return Flowable.just(ratio);
             }
 
             @NotNull
             @Override
             public Flowable<Boolean> rx_shouldKeepSwiping() {
                 return ENGINE
-                    .rxElementWithText(TEXT_PARAM)
+                    .rx_elementWithText(TEXT_PARAM)
                     .filter(a -> ENGINE.getText(a).equals(STR_VALUE))
                     .flatMap(ENGINE::rx_click)
                     .map(BooleanUtil::toTrue);
@@ -220,7 +232,7 @@ public interface AcceptableAgeActionType extends AcceptableInputValidationType, 
      * Select an {@link Ethnicity} for {@link ChoiceInput#ETHNICITY}.
      * @param E An {@link Ethnicity} instance.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingText(String...)
+     * @see BaseEngine#rx_elementContainingText(String...)
      * @see #rx_clickInputField(SLInputType)
      * @see BaseEngine#rx_click(WebElement)
      */
@@ -229,7 +241,7 @@ public interface AcceptableAgeActionType extends AcceptableInputValidationType, 
         final BaseEngine<?> ENGINE = engine();
 
         return rx_clickInputField(ChoiceInput.ETHNICITY)
-            .flatMap(a -> ENGINE.rxElementContainingText(E.value()))
+            .flatMap(a -> ENGINE.rx_elementContainingText(E.value()))
             .flatMap(ENGINE::rx_click)
             .map(BooleanUtil::toTrue);
     }
@@ -238,7 +250,7 @@ public interface AcceptableAgeActionType extends AcceptableInputValidationType, 
      * Select a {@link CoachPref} for {@link ChoiceInput#COACH_PREF}.
      * @param CP A {@link CoachPref} instance.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingText(String...)
+     * @see BaseEngine#rx_elementContainingText(String...)
      * @see #rx_clickInputField(SLInputType)
      * @see BaseEngine#rx_click(WebElement)
      */
@@ -247,7 +259,7 @@ public interface AcceptableAgeActionType extends AcceptableInputValidationType, 
         final BaseEngine<?> ENGINE = engine();
 
         return rx_clickInputField(ChoiceInput.COACH_PREF)
-            .flatMap(a -> ENGINE.rxElementContainingText(CP.value()))
+            .flatMap(a -> ENGINE.rx_elementContainingText(CP.value()))
             .flatMap(ENGINE::rx_click)
             .map(BooleanUtil::toTrue);
     }

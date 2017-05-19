@@ -29,7 +29,7 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
      * @return A {@link Flowable} instance.
      * @see UserMode#acceptableAgeCategoryRange()
      * @see #rxOpenDoBPicker()
-     * @see #rxValidateAcceptableAgeScreen()
+     * @see #rx_validateAcceptableAgeScreen()
      * @see #rxValidateUnacceptableAgeScreen(UserMode)
      * @see #rxNavigateBackWithBackButton()
      */
@@ -54,7 +54,7 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
                         .flatMap(a -> THIS.rxConfirmDoB())
                         .flatMap(a -> {
                             if (VALID) {
-                                return THIS.rxValidateAcceptableAgeScreen();
+                                return THIS.rx_validateAcceptableAgeScreen();
                             } else {
                                 return THIS.rxValidateUnacceptableAgeScreen(MODE);
                             }

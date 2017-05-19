@@ -59,7 +59,7 @@ public interface PersonalInfoActionType extends
      * @param MODE A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      * @see #rxEnterExtraPersonalInfo(UserMode)
-     * @see #rxConfirmExtraPersonalInfo(UserMode)
+     * @see #rx_confirmExtraPersonalInfo(UserMode)
      * @see #rxWatchProgressBarUntilHidden()
      * @see #rxWatchPersonalInfoScreenUntilHidden()
      * @see BooleanUtil#isTrue(boolean)
@@ -69,7 +69,7 @@ public interface PersonalInfoActionType extends
         final PersonalInfoActionType THIS = this;
 
         return rxEnterExtraPersonalInfo(MODE)
-            .flatMap(a -> THIS.rxConfirmExtraPersonalInfo(MODE))
+            .flatMap(a -> THIS.rx_confirmExtraPersonalInfo(MODE))
 
             /* First progress bar appears immediately after the submit button
              * is clicked */
@@ -125,11 +125,11 @@ public interface PersonalInfoActionType extends
      * @return A {@link Flowable} instance.
      * @see #engine()
      * @see #rxEnterRandomInput(SLTextInputType)
-     * @see BaseEngine#rxNavigateBackOnce()
+     * @see BaseEngine#rx_navigateBackOnce()
      * @see #rxToggleTOC(boolean)
      */
     @NotNull
-    default Flowable<Boolean> rxEnterPersonalInfo(@NotNull List<SLInputType> inputs) {
+    default Flowable<Boolean> rx_enterPersonalInfo(@NotNull List<SLInputType> inputs) {
         final PersonalInfoActionType THIS = this;
         final BaseEngine<?> ENGINE = engine();
 
@@ -137,7 +137,7 @@ public interface PersonalInfoActionType extends
             .fromIterable(inputs)
             .ofType(SLTextInputType.class)
             .concatMap(THIS::rxEnterRandomInput)
-            .flatMap(ENGINE::rxToggleNextInput)
+            .flatMap(ENGINE::rx_toggleNextInput)
             .all(ObjectUtil::nonNull)
             .toFlowable();
     }
@@ -148,17 +148,17 @@ public interface PersonalInfoActionType extends
      * @return A {@link Flowable} instance.
      * @see #engine()
      * @see UserMode#personalInformation()
-     * @see #rxEnterPersonalInfo(List)
-     * @see BaseEngine#rxHideKeyboard()
+     * @see #rx_enterPersonalInfo(List)
+     * @see BaseEngine#rx_hideKeyboard()
      * @see #rxToggleTOC(boolean)
      */
     @NotNull
-    default Flowable<Boolean> rxEnterPersonalInfo(@NotNull UserMode mode) {
+    default Flowable<Boolean> rx_enterPersonalInfo(@NotNull UserMode mode) {
         final PersonalInfoActionType THIS = this;
         final BaseEngine<?> ENGINE = THIS.engine();
 
-        return rxEnterPersonalInfo(mode.personalInformation())
-            .flatMap(a -> ENGINE.rxHideKeyboard())
+        return rx_enterPersonalInfo(mode.personalInformation())
+            .flatMap(a -> ENGINE.rx_hideKeyboard())
             .flatMap(a -> THIS.rxToggleTOC(true));
     }
 
@@ -167,14 +167,14 @@ public interface PersonalInfoActionType extends
      * next screen. This is only relevant for {@link UserMode#requiresGuarantor()}.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rxEnterPersonalInfo(List)
+     * @see #rx_enterPersonalInfo(List)
      * @see UserMode#extraPersonalInformation()
      * @see UserMode#requiresGuarantor()
      */
     @NotNull
     default Flowable<Boolean> rxEnterExtraPersonalInfo(@NotNull UserMode mode) {
         if (mode.requiresGuarantor()) {
-            return rxEnterPersonalInfo(mode.extraPersonalInformation());
+            return rx_enterPersonalInfo(mode.extraPersonalInformation());
         } else {
             return Flowable.just(true);
         }
@@ -189,7 +189,7 @@ public interface PersonalInfoActionType extends
      * @see UserMode#requiresGuarantor()
      */
     @NotNull
-    default Flowable<Boolean> rxConfirmExtraPersonalInfo(@NotNull UserMode mode) {
+    default Flowable<Boolean> rx_confirmExtraPersonalInfo(@NotNull UserMode mode) {
         if (mode.requiresGuarantor()) {
             return rxConfirmPersonalInfo();
         } else {
@@ -201,14 +201,14 @@ public interface PersonalInfoActionType extends
      * Watch until the personal info screen is no longer visible.
      * @return A {@link Flowable} instance.
      * @see #rxPersonalInfoSubmitButton()
-     * @see BaseEngine#rxWatchUntilHidden(WebElement)
+     * @see BaseEngine#rx_watchUntilHidden(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rxWatchPersonalInfoScreenUntilHidden() {
         final BaseEngine<?> ENGINE = engine();
 
         return rxPersonalInfoSubmitButton()
-            .flatMap(ENGINE::rxWatchUntilHidden)
+            .flatMap(ENGINE::rx_watchUntilHidden)
             .onErrorReturnItem(true);
     }
 
@@ -219,14 +219,14 @@ public interface PersonalInfoActionType extends
      * this method will go directly to the dashboard.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rxEnterPersonalInfo(UserMode)
+     * @see #rx_enterPersonalInfo(UserMode)
      * @see #rxConfirmPersonalInfo()
      * @see UserMode#requiresGuarantor()
      */
     @NotNull
     default Flowable<Boolean> rx_personalInfo_extraInfo(@NotNull UserMode mode) {
         final PersonalInfoActionType THIS = this;
-        return rxEnterPersonalInfo(mode).flatMap(a -> THIS.rxConfirmPersonalInfo());
+        return rx_enterPersonalInfo(mode).flatMap(a -> THIS.rxConfirmPersonalInfo());
     }
 
     /**
@@ -250,6 +250,6 @@ public interface PersonalInfoActionType extends
                 int x = point.getX(), y = point.getY(), h = size.getHeight();
                 return new Point(x + 10, y + h - 3);
             })
-            .flatMap(a -> ENGINE.rxTap(a.getX(), a.getY()));
+            .flatMap(a -> ENGINE.rx_tap(a.getX(), a.getY()));
     }
 }

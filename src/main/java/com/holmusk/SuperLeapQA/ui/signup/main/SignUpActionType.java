@@ -28,14 +28,14 @@ public interface SignUpActionType extends
      * @param TEXT A {@link String} value.
      * @param <P> Generics parameter.
      * @return A {@link Flowable} instance.
-     * @see #rxEditFieldForInput(SLInputType)
+     * @see #rx_editFieldForInput(SLInputType)
      * @see BaseEngine#rxSendKey(WebElement, String...)
      */
     @NotNull
     default <P extends SLInputType>
     Flowable<WebElement> rxEnterInput(@NotNull P input, @NotNull final String TEXT) {
         final BaseEngine<?> ENGINE = engine();
-        return rxEditFieldForInput(input).flatMap(a -> ENGINE.rxSendKey(a, TEXT));
+        return rx_editFieldForInput(input).flatMap(a -> ENGINE.rxSendKey(a, TEXT));
     }
 
     /**
@@ -59,12 +59,12 @@ public interface SignUpActionType extends
      * @param input A {@link InputType} instance.
      * @param <P> Generics parameter.
      * @return A {@link Flowable} instance.
-     * @see #rxEditFieldForInput(SLInputType)  )
+     * @see #rx_editFieldForInput(SLInputType)  )
      * @see BaseEngine#rx_click(WebElement)
      */
     @NotNull
     default <P extends SLInputType>
     Flowable<Boolean> rx_clickInputField(@NotNull P input) {
-        return rxEditFieldForInput(input).flatMap(engine()::rx_click).map(BooleanUtil::toTrue);
+        return rx_editFieldForInput(input).flatMap(engine()::rx_click).map(BooleanUtil::toTrue);
     }
 }

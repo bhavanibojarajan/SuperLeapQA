@@ -24,7 +24,7 @@ public interface DOBPickerValidationType extends SignUpActionType {
      * @return A {@link Flowable} instance.
      */
     @NotNull
-    Flowable<Boolean> rxValidateAcceptableAgeScreen();
+    Flowable<Boolean> rx_validateAcceptableAgeScreen();
 
     /**
      * Validate the unacceptable age screen, after the user picks DoB. This
@@ -49,9 +49,9 @@ public interface DOBPickerValidationType extends SignUpActionType {
     /**
      * Validate the DoB picker screen.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingText(String...)
+     * @see BaseEngine#rx_elementContainingText(String...)
      * @see BaseEngine#rx_click(WebElement)
-     * @see BaseEngine#rxNavigateBackOnce()
+     * @see BaseEngine#rx_navigateBackOnce()
      * @see #rxDoBEditField()
      * @see #rxDoBElements()
      * @see #generalDelay()
@@ -66,8 +66,8 @@ public interface DOBPickerValidationType extends SignUpActionType {
         return Flowable
             .concatArray(
                 rxDoBEditField(),
-                ENGINE.rxElementContainingText("register_title_dateOfBirth"),
-                ENGINE.rxElementContainingText(
+                ENGINE.rx_elementContainingText("register_title_dateOfBirth"),
+                ENGINE.rx_elementContainingText(
                     "parentSignUp_title_whatIsYourChild",
                     "teenSignUp_title_whatIsYour"
                 )
@@ -82,7 +82,7 @@ public interface DOBPickerValidationType extends SignUpActionType {
             .delay(delay, TimeUnit.MILLISECONDS, Schedulers.trampoline())
 
             /* Dismiss the dialog by navigating back once */
-            .flatMap(a -> ENGINE.rxNavigateBackOnce())
+            .flatMap(a -> ENGINE.rx_navigateBackOnce())
             .delay(delay, TimeUnit.MILLISECONDS, Schedulers.trampoline())
             .map(BooleanUtil::toTrue);
     }
@@ -93,7 +93,7 @@ public interface DOBPickerValidationType extends SignUpActionType {
      */
     @NotNull
     default Flowable<WebElement> rxDoBEditField() {
-        return engine().rxAllEditableElements().firstElement().toFlowable();
+        return engine().rx_allEditableElements().firstElement().toFlowable();
     }
 
     /**
@@ -102,13 +102,13 @@ public interface DOBPickerValidationType extends SignUpActionType {
      * pre-DoB picker screen.
      * @param date A {@link Date} instance.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingText(String...)
+     * @see BaseEngine#rx_elementContainingText(String...)
      * @see SimpleDateFormat#format(Date)
      */
     @NotNull
     default Flowable<Boolean> rxDoBEditFieldHasDate(@NotNull Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
         String string = formatter.format(date);
-        return engine().rxElementContainingText(string).map(ObjectUtil::nonNull);
+        return engine().rx_elementContainingText(string).map(ObjectUtil::nonNull);
     }
 }

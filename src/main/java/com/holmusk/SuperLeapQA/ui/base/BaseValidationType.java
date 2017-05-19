@@ -11,7 +11,6 @@ import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
-import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.mobile.android.AndroidEngine;
 import org.swiften.xtestkit.test.type.BaseTestType;
 
@@ -25,7 +24,7 @@ public interface BaseValidationType extends BaseTestType, BaseErrorType, AppDela
      * @return A {@link Flowable} instance.
      * @see #engine()
      * @see BaseEngine#platform()
-     * @see BaseEngine#rxElementContainingID(String...)
+     * @see BaseEngine#rx_elementContainingID(String...)
      */
     @NotNull
     default Flowable<WebElement> rxBackButton() {
@@ -33,7 +32,7 @@ public interface BaseValidationType extends BaseTestType, BaseErrorType, AppDela
         PlatformType platform = engine.platform();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rxElementContainingID("btnBack");
+            return engine.rx_elementContainingID("btnBack");
         } else {
             return RxUtil.error();
         }
@@ -43,14 +42,14 @@ public interface BaseValidationType extends BaseTestType, BaseErrorType, AppDela
      * Get the common probress bar.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rxElementContainingID(String...)
+     * @see BaseEngine#rx_elementContainingID(String...)
      */
     @NotNull
-    default Flowable<WebElement> rxProgressBar() {
+    default Flowable<WebElement> rx_progressBar() {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rxElementContainingID("pb_general");
+            return engine.rx_elementContainingID("pb_general");
         } else {
             return RxUtil.error();
         }

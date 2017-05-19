@@ -1,6 +1,5 @@
 package com.holmusk.SuperLeapQA.ui.signup.mode;
 
-import com.holmusk.SuperLeapQA.ui.base.BaseValidationType;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.ui.welcome.WelcomeValidationType;
 import io.reactivex.Flowable;
@@ -9,8 +8,6 @@ import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
-import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.android.AndroidEngine;
 
 /**
@@ -23,7 +20,7 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
      * @return A {@link Flowable} instance.
      * @see #engine()
      * @see UserMode#androidRegisterButtonId()
-     * @see BaseEngine#rxElementContainingID(String...)
+     * @see BaseEngine#rx_elementContainingID(String...)
      * @see RxUtil#error(String)
      * @see #NOT_IMPLEMENTED
      */
@@ -32,7 +29,7 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rxElementContainingID(mode.androidRegisterButtonId());
+            return engine.rx_elementContainingID(mode.androidRegisterButtonId());
         } else {
             return RxUtil.error(NOT_IMPLEMENTED);
         }
@@ -42,7 +39,7 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
      * Get the back button's title label.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rxElementContainingText(String...)
+     * @see BaseEngine#rx_elementContainingText(String...)
      * @see RxUtil#error(String)
      * @see #NOT_IMPLEMENTED
      */
@@ -51,7 +48,7 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rxElementContainingText("register_title_whichOneBestDescribes");
+            return engine.rx_elementContainingText("register_title_whichOneBestDescribes");
         } else {
             return RxUtil.error(NOT_IMPLEMENTED);
         }
@@ -66,12 +63,12 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
     default Flowable<Boolean> rxValidateRegisterScreen() {
         final BaseEngine<?> ENGINE = engine();
 
-        return ENGINE.rxElementContainingText("register_title_iAmParent")
-            .flatMap(a -> ENGINE.rxElementContainingText("register_title_iRegisterForChild"))
-            .flatMap(a -> ENGINE.rxElementContainingText("register_title_iAmTeen"))
-            .flatMap(a -> ENGINE.rxElementContainingText("register_title_iRegisterForSelf"))
-            .flatMap(a -> ENGINE.rxElementContainingText("register_title_or"))
-            .flatMap(a -> ENGINE.rxElementContainingText("register_title_initiativeByHPB"))
+        return ENGINE.rx_elementContainingText("register_title_iAmParent")
+            .flatMap(a -> ENGINE.rx_elementContainingText("register_title_iRegisterForChild"))
+            .flatMap(a -> ENGINE.rx_elementContainingText("register_title_iAmTeen"))
+            .flatMap(a -> ENGINE.rx_elementContainingText("register_title_iRegisterForSelf"))
+            .flatMap(a -> ENGINE.rx_elementContainingText("register_title_or"))
+            .flatMap(a -> ENGINE.rx_elementContainingText("register_title_initiativeByHPB"))
             .flatMap(a -> rxSignUpButton(UserMode.PARENT))
             .flatMap(a -> rxSignUpButton(UserMode.TEEN_UNDER_18))
             .flatMap(a -> rxBackButtonTitleLabel())

@@ -44,15 +44,15 @@ public interface BaseActionType extends
      * Watch the progress bar until it's no longer visible.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see #rxProgressBar()
-     * @see BaseEngine#rxWatchUntilHidden(WebElement)
+     * @see #rx_progressBar()
+     * @see BaseEngine#rx_watchUntilHidden(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rxWatchProgressBarUntilHidden() {
         final BaseEngine<?> ENGINE = engine();
 
-        return rxProgressBar()
-            .flatMap(ENGINE::rxWatchUntilHidden)
+        return rx_progressBar()
+            .flatMap(ENGINE::rx_watchUntilHidden)
             .onErrorReturnItem(true);
     }
 }

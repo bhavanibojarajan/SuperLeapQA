@@ -211,6 +211,7 @@ public class UISignUpTest extends UIBaseTest implements
      * @see #rx_splash_DoBPicker(UserMode)
      * @see #rxValidateDoBs(UserMode, List)
      * @see #generalUserModeProvider()
+     * @see #assertCorrectness(TestSubscriber)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -243,6 +244,7 @@ public class UISignUpTest extends UIBaseTest implements
      * @see #rx_splash_unacceptableAgeInput(UserMode)
      * @see #rxCheckUnacceptableAgeInputRequired(TextInput)
      * @see #generalUserModeProvider()
+     * @see #assertCorrectness(TestSubscriber)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -276,6 +278,7 @@ public class UISignUpTest extends UIBaseTest implements
      * @see #rx_splash_unacceptableAgeInput(UserMode)
      * @see #rxEnterAndValidateUnacceptableAgeInputs()
      * @see #generalUserModeProvider()
+     * @see #assertCorrectness(TestSubscriber)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -297,14 +300,46 @@ public class UISignUpTest extends UIBaseTest implements
     }
 
     /**
+     * Confirm that when the user selects
+     * {@link com.holmusk.SuperLeapQA.model.ChoiceInput#HEIGHT} in
+     * {@link com.holmusk.SuperLeapQA.model.Height#FT}, every 12
+     * {@link com.holmusk.SuperLeapQA.model.Height#INCH} is converted to
+     * {@link com.holmusk.SuperLeapQA.model.Height#FT}.
+     * @param MODE A {@link UserMode} instance.
+     * @see #rx_splash_acceptableAge(UserMode)
+     * @see #rx_validate12InchConvertedToAFoot(UserMode)
+     * @see #generalUserModeProvider()
+     * @see #assertCorrectness(TestSubscriber)
+     */
+    @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
+    @Test(dataProvider = "generalUserModeProvider")
+    public void test_12Inch_shouldBeConvertedTo1Foot(@NotNull final UserMode MODE) {
+        // Setup
+        final UISignUpTest THIS = this;
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_splash_acceptableAge(MODE)
+            .flatMap(a -> THIS.rx_validate12InchConvertedToAFoot(MODE))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
      * This test validates that the acceptable age inputs show the correct
      * empty input errors, by sequentially entering/selecting inputs and
      * clicking the confirm button. If the inputs are not completed, the
      * user will be notified.
      * @param mode A {@link UserMode} instance.
      * @see #rx_splash_acceptableAge(UserMode)
-     * @see #rxValidateAcceptableAgeEmptyInputErrors(UserMode)
+     * @see #rx_validateAcceptableAgeEmptyInputErrors(UserMode)
      * @see #generalUserModeProvider()
+     * @see #assertCorrectness(TestSubscriber)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -316,7 +351,7 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_acceptableAge(mode)
-            .flatMap(a -> THIS.rxValidateAcceptableAgeEmptyInputErrors(mode))
+            .flatMap(a -> THIS.rx_validateAcceptableAgeEmptyInputErrors(mode))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -333,10 +368,11 @@ public class UISignUpTest extends UIBaseTest implements
      * that provides {@link InputType}.
      * @param inputs A {@link List} of {@link InputType}.
      * @see #rx_splash_extraInfo(UserMode)
-     * @see #rxEnterPersonalInfo(UserMode)
-     * @see #rxConfirmExtraPersonalInfo(UserMode)
-     * @see #rxProgressBar()
+     * @see #rx_enterPersonalInfo(UserMode)
+     * @see #rx_confirmExtraPersonalInfo(UserMode)
+     * @see #rx_progressBar()
      * @see #parentPersonalInfoProvider()
+     * @see #assertCorrectness(TestSubscriber)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -349,12 +385,12 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_extraInfo(MODE)
-            .flatMap(a -> THIS.rxEnterPersonalInfo(inputs))
-            .flatMap(a -> THIS.rxConfirmExtraPersonalInfo(MODE))
+            .flatMap(a -> THIS.rx_enterPersonalInfo(inputs))
+            .flatMap(a -> THIS.rx_confirmExtraPersonalInfo(MODE))
 
             /* If all inputs are valid, the progress bar should be visible
              * to indicate data being processed */
-            .flatMap(a -> THIS.rxProgressBar())
+            .flatMap(a -> THIS.rx_progressBar())
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -370,20 +406,21 @@ public class UISignUpTest extends UIBaseTest implements
      * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
      * @param MODE A {@link UserMode} instance.
      * @see #rx_splash_personalInfo(UserMode)
-     * @see #rxValidatePersonalInfoStateSaved(UserMode)
+     * @see #rx_validatePersonalInfoStateSaved(UserMode)
      * @see #generalUserModeProvider()
+     * @see #assertCorrectness(TestSubscriber)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider")
-    public void test_navigateAwayFromPersonalInfo_shouldSaveState(@NotNull final UserMode MODE) {
+    public void test_leavePersonalInfo_shouldSaveState(@NotNull final UserMode MODE) {
         // Setup
         final UISignUpTest THIS = this;
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         rx_splash_personalInfo(MODE)
-            .flatMap(a -> THIS.rxValidatePersonalInfoStateSaved(MODE))
+            .flatMap(a -> THIS.rx_validatePersonalInfoStateSaved(MODE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -400,6 +437,7 @@ public class UISignUpTest extends UIBaseTest implements
      * @param MODE A {@link UserMode} instance.
      * @see #rx_splash_useApp(UserMode)
      * @see #guarantorSpecificUserModeProvider()
+     * @see #assertCorrectness(TestSubscriber)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = true)
@@ -425,7 +463,8 @@ public class UISignUpTest extends UIBaseTest implements
      * input screen.
      * @param MODE A {@link UserMode} instance.
      * @see #rx_splash_personalInfo(UserMode)
-     * @see #rxValidateTOCCheckedBeforeProceeding(UserMode)
+     * @see #rx_validateTOCCheckedBeforeProceeding(UserMode)
+     * @see #assertCorrectness(TestSubscriber)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -437,7 +476,7 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_personalInfo(MODE)
-            .flatMap(a -> THIS.rxValidateTOCCheckedBeforeProceeding(MODE))
+            .flatMap(a -> THIS.rx_validateTOCCheckedBeforeProceeding(MODE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

@@ -77,10 +77,10 @@ public interface DashboardActionType extends
      * user is in the tutorial screen (i.e. using for the first time).
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rxNavigateBackOnce()
+     * @see BaseEngine#rx_navigateBackOnce()
      */
     @NotNull
     default Flowable<Boolean> rx_tutorial_dashboard() {
-        return engine().rxNavigateBackOnce();
+        return engine().rx_navigateBackOnce();
     }
 }

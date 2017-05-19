@@ -1,6 +1,5 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
-import org.swiften.xtestkit.base.element.action.input.type.InputType;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +20,7 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
      * current {@link UserMode}, the confirm button text may change.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rxElementContainingID(String...)
+     * @see BaseEngine#rx_elementContainingID(String...)
      * @see RxUtil#error(String)
      */
     @NotNull
@@ -30,7 +29,7 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rxElementsContainingID("btnNext");
+            return engine.rx_elementsContainingID("btnNext");
         } else {
             return RxUtil.error(NOT_IMPLEMENTED);
         }
@@ -40,7 +39,7 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
      * Get the Terms and Conditions checkbox.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rxElementContainingID(String...)
+     * @see BaseEngine#rx_elementContainingID(String...)
      * @see RxUtil#error(String)
      * @see #NOT_IMPLEMENTED
      */
@@ -49,7 +48,7 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rxElementContainingID("ctv_toc");
+            return engine.rx_elementContainingID("ctv_toc");
         } else {
             return RxUtil.error(NOT_IMPLEMENTED);
         }
@@ -59,11 +58,11 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
      * Get the Terms and Condition acceptance label.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rxElementsContainingText(String...)
+     * @see BaseEngine#rx_elementsContainingText(String...)
      */
     @NotNull
     default Flowable<WebElement> rxTOCAcceptanceLabel() {
-        return engine().rxElementContainingText("register_title_readAndAcceptTOC");
+        return engine().rx_elementContainingText("register_title_readAndAcceptTOC");
     }
 
     /**
@@ -82,7 +81,7 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
         final PersonalInfoValidationType THIS = this;
 
         return Flowable.fromIterable(mode.personalInformation())
-            .flatMap(THIS::rxEditFieldForInput)
+            .flatMap(THIS::rx_editFieldForInput)
             .concatWith(THIS.rxPersonalInfoSubmitButton())
             .all(ObjectUtil::nonNull)
             .toFlowable()

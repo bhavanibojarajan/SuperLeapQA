@@ -33,7 +33,7 @@ public interface UnacceptableAgeTestHelperType extends UnacceptableAgeActionType
 
         return rxEnterRandomInput(TextInput.NAME)
             .flatMap(a -> THIS.rxEnterRandomInput(input))
-            .flatMap(a -> ENGINE.rxHideKeyboard())
+            .flatMap(a -> ENGINE.rx_hideKeyboard())
             .flatMap(a -> THIS.rxConfirmUnacceptableAgeInput())
             .flatMap(a -> THIS.rxWatchProgressBarUntilHidden())
             .flatMap(a -> THIS.rxValidateUnacceptableAgeInputConfirmation())

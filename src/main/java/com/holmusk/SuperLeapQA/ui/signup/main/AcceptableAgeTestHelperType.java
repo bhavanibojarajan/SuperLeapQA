@@ -5,10 +5,12 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.collection.Pair;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.ios.IOSEngine;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -22,7 +24,7 @@ public interface AcceptableAgeTestHelperType extends AcceptableAgeActionType {
      * @return A {@link Flowable} instance.
      * @see #rx_clickInputField(SLInputType)
      * @see #rx_selectNumericInput(List)
-     * @see #rxEditFieldHasValue(SLInputType, String)
+     * @see #rx_editFieldHasValue(SLInputType, String)
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -72,7 +74,7 @@ public interface AcceptableAgeTestHelperType extends AcceptableAgeActionType {
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<Boolean> rxValidateAcceptableAgeEmptyInputErrors(@NotNull final UserMode MODE) {
+    default Flowable<Boolean> rx_validateAcceptableAgeEmptyInputErrors(@NotNull final UserMode MODE) {
         final BaseEngine<?> ENGINE = engine();
 
         /* If we are testing on iOS, there is not need to check for empty
@@ -131,5 +133,43 @@ public interface AcceptableAgeTestHelperType extends AcceptableAgeActionType {
             .flatMap(a -> THIS.rx_confirmAcceptableAgeInputs())
             .flatMap(a -> THIS.rxIsShowingError(ChoiceInput.COACH_PREF.emptyInputError(MODE)))
             .flatMap(a -> THIS.rx_selectCoachPref(CP));
+    }
+
+    /**
+     * Confirm that 12 {@link Height#INCH} is converted to a {@link Height#FT}
+     * when we are picking {@link ChoiceInput#HEIGHT}, assuming the user
+     * is already in the acceptable age screen.
+     * @return A {@link Flowable} instance.
+     * @see Height#stringValue(PlatformType, UnitSystem, List)
+     * @see #rx_selectNumericInput(List)
+     * @see #rx_confirmNumericChoiceInput()
+     * @see #rx_editFieldHasValue(SLInputType, String)
+     */
+    @NotNull
+    default Flowable<Boolean> rx_validate12InchConvertedToAFoot(@NotNull UserMode mode) {
+        PlatformType platform = engine().platform();
+        final AcceptableAgeTestHelperType THIS = this;
+
+        final double FT = Math.max(
+            Height.FT.randomValue(mode),
+            Height.FT.minSelectableNumericValue(mode) + 1
+        );
+
+        final double INCH = 0;
+
+        final List<Pair<Height,Double>> INPUTS = Arrays.asList(
+            new Pair<>(Height.FT, FT),
+            new Pair<>(Height.INCH, INCH)
+        );
+
+        final String STRING_VAL = Height.stringValue(platform, UnitSystem.IMPERIAL, INPUTS);
+
+        LogUtil.println(INPUTS);
+
+        return rx_clickInputField(Height.FT)
+            .flatMap(a -> THIS.rx_clickInputField(ChoiceInput.HEIGHT))
+            .flatMap(a -> THIS.rx_selectNumericInput(INPUTS))
+            .flatMap(a -> THIS.rx_confirmNumericChoiceInput())
+            .flatMap(a -> THIS.rx_editFieldHasValue(ChoiceInput.HEIGHT, STRING_VAL));
     }
 }

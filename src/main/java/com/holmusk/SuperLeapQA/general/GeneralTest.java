@@ -20,14 +20,14 @@ public final class GeneralTest {
         // Setup & When
         LCFormat parent_gender = Gender.FEMALE.emptyInputError(UserMode.PARENT);
         LCFormat teen_gender = Gender.MALE.emptyInputError(UserMode.TEEN_UNDER_18);
-        LCFormat parent_ft_height = Height.CHILD_FT.emptyInputError(UserMode.PARENT);
-        LCFormat parent_cm_height = Height.CHILD_CM.emptyInputError(UserMode.PARENT);
-        LCFormat parent_kg_weight = Weight.CHILD_KG.emptyInputError(UserMode.PARENT);
-        LCFormat parent_lb_weight = Weight.CHILD_LB.emptyInputError(UserMode.PARENT);
-        LCFormat teen_ft_height = Height.CHILD_FT.emptyInputError(UserMode.TEEN_UNDER_18);
-        LCFormat teen_cm_height = Height.CHILD_CM.emptyInputError(UserMode.TEEN_UNDER_18);
-        LCFormat teen_kg_weight = Weight.CHILD_KG.emptyInputError(UserMode.TEEN_UNDER_18);
-        LCFormat teen_lb_weight = Weight.CHILD_LB.emptyInputError(UserMode.TEEN_UNDER_18);
+        LCFormat parent_ft_height = Height.FT.emptyInputError(UserMode.PARENT);
+        LCFormat parent_cm_height = Height.CM.emptyInputError(UserMode.PARENT);
+        LCFormat parent_kg_weight = Weight.KG.emptyInputError(UserMode.PARENT);
+        LCFormat parent_lb_weight = Weight.LB.emptyInputError(UserMode.PARENT);
+        LCFormat teen_ft_height = Height.FT.emptyInputError(UserMode.TEEN_UNDER_18);
+        LCFormat teen_cm_height = Height.CM.emptyInputError(UserMode.TEEN_UNDER_18);
+        LCFormat teen_kg_weight = Weight.KG.emptyInputError(UserMode.TEEN_UNDER_18);
+        LCFormat teen_lb_weight = Weight.LB.emptyInputError(UserMode.TEEN_UNDER_18);
         Localizer localizer = Localizer.builder().addBundle("Strings", Locale.US).build();
 
         // Then

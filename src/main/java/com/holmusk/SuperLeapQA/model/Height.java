@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
 
 /**
  * Created by haipham on 5/10/17.
@@ -92,6 +93,35 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     }
 
     /**
+     * Get a {@link String} representation of {@link Height} values, based
+     * on {@link UnitSystem}.
+     * @param platform A {@link PlatformType} instance.
+     * @param unit A {@link UnitSystem} instance.
+     * @param inputs A {@link List} of {@link Pair}.
+     * @return A {@link String} value.
+     * @see #NOT_IMPLEMENTED
+     */
+    @NotNull
+    @SuppressWarnings("ConstantConditions")
+    public static String stringValue(@NotNull PlatformType platform,
+                                     @NotNull UnitSystem unit,
+                                     @NotNull List<Pair<Height,Double>> inputs) {
+        double a = inputs.get(0).B;
+        double b = inputs.size() > 1 ? inputs.get(1).B : 0;
+
+        switch (unit) {
+            case METRIC:
+                return String.format("%.0f.%.0f cm", a, b);
+
+            case IMPERIAL:
+                return String.format("%.0f'%.0f\"", a, b);
+
+            default:
+                throw new RuntimeException(NOT_IMPLEMENTED);
+        }
+    }
+
+    /**
      * @return A {@link String} value.
      * @see SLNumericInputType#emptyInputError(UserMode)
      */
@@ -133,7 +163,24 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     @NotNull
     @Override
     public XPath androidViewXPath() {
-        throw new RuntimeException(NOT_IMPLEMENTED);
+        final String ID;
+
+        switch (this) {
+            case CM:
+            case CM_DEC:
+                ID = "btn_cm";
+                break;
+
+            case FT:
+            case INCH:
+                ID = "btn_ft";
+                break;
+
+            default:
+                throw new RuntimeException(NOT_IMPLEMENTED);
+        }
+
+        return newXPathBuilder().containsID(ID).build();
     }
 
     /**

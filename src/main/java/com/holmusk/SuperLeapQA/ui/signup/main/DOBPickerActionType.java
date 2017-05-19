@@ -108,7 +108,7 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
      * @return A {@link Flowable} instance.
      * @see #rxDoBEditField()
      * @see BaseEngine#rx_click(WebElement)
-     * @see BaseEngine#rxImplicitlyWait(DelayType)
+     * @see BaseEngine#rx_implicitlyWait(DelayType)
      */
     @NotNull
     default Flowable<Boolean> rxOpenDoBPicker() {
@@ -117,7 +117,7 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
         return rxDoBEditField()
             .flatMap(ENGINE::rx_click).map(a -> true)
             .delay(generalDelay(), TimeUnit.MILLISECONDS, Schedulers.trampoline())
-            .flatMap(a -> ENGINE.rxImplicitlyWait(this::generalDelay))
+            .flatMap(a -> ENGINE.rx_implicitlyWait(this::generalDelay))
             .all(BooleanUtil::isTrue)
             .toFlowable();
     }
@@ -128,7 +128,7 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
      * the next screen, so if we want to check whether the date was properly
      * stored in the DoB text field, we need to navigate back once.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxElementContainingText(String...)
+     * @see BaseEngine#rx_elementContainingText(String...)
      * @see BaseEngine#rx_click(WebElement)
      * @see BooleanUtil#toTrue(Object)
      */
@@ -138,7 +138,7 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
 
         if (ENGINE instanceof AndroidEngine) {
             return ENGINE
-                .rxElementContainingText("ok")
+                .rx_elementContainingText("ok")
                 .flatMap(ENGINE::rx_click)
                 .map(BooleanUtil::toTrue);
         } else {

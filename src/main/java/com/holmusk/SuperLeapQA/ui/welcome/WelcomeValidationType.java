@@ -19,22 +19,22 @@ public interface WelcomeValidationType extends BaseValidationType {
      * Get the register button on the welcome screen.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rxElementContainingText(String...)
+     * @see BaseEngine#rx_elementContainingText(String...)
      */
     @NotNull
     default Flowable<WebElement> rxWelcomeRegisterButton() {
-        return engine().rxElementContainingText("welcome_title_register");
+        return engine().rx_elementContainingText("welcome_title_register");
     }
 
     /**
      * Get the sign in button on the welcome screen.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rxElementContainingText(String...)
+     * @see BaseEngine#rx_elementContainingText(String...)
      */
     @NotNull
     default Flowable<WebElement> rxWelcomeSignInButton() {
-        return engine().rxElementContainingText("welcome_title_signIn");
+        return engine().rx_elementContainingText("welcome_title_signIn");
     }
 
     /**
@@ -58,8 +58,8 @@ public interface WelcomeValidationType extends BaseValidationType {
      * Validate the swipeable splash screens.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rxElementContainingText(String...)
-     * @see BaseEngine#rxSwipeGenericLR(DurationType)
+     * @see BaseEngine#rx_elementContainingText(String...)
+     * @see BaseEngine#rx_swipeGenericLR(DurationType)
      * @see BaseEngine#rxSwipeGenericRL(DurationType)
      */
     @NonNull
@@ -92,7 +92,7 @@ public interface WelcomeValidationType extends BaseValidationType {
                     String[] messages = MESSAGES[INDEX];
 
                     return Flowable.fromArray(messages)
-                        .flatMap(ENGINE::rxElementContainingText)
+                        .flatMap(ENGINE::rx_elementContainingText)
                         .all(ObjectUtil::nonNull)
                         .toFlowable()
 
@@ -111,7 +111,7 @@ public interface WelcomeValidationType extends BaseValidationType {
         }
 
         return ENGINE
-            .rxSwipeGenericLR(
+            .rx_swipeGenericLR(
                 UnidirectionalSwipeParam.builder()
                     .withTimes(LENGTH)
                     .withDuration(0)

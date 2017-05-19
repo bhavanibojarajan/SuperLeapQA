@@ -22,17 +22,17 @@ public interface SignUpValidationType extends BaseActionType {
      * @param <P> Generics parameter.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rxElementWithXPath(XPath...)
+     * @see BaseEngine#rx_elementWithXPath(XPath...)
      * @see RxUtil#error(String)
      * @see #NOT_IMPLEMENTED
      */
     @NotNull
     default <P extends SLInputType> Flowable<WebElement>
-    rxEditFieldForInput(@NotNull P input) {
+    rx_editFieldForInput(@NotNull P input) {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rxElementWithXPath(input.androidViewXPath());
+            return engine.rx_elementWithXPath(input.androidViewXPath());
         } else {
             return RxUtil.error(NOT_IMPLEMENTED);
         }
