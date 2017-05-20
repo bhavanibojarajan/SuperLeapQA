@@ -2,7 +2,6 @@ package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
-import org.swiften.xtestkit.base.element.action.input.type.InputType;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.util.type.ValueRangeConverterType;
 
@@ -66,7 +65,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
                 return "btnRegSelf";
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 
@@ -98,7 +97,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
                 );
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 
@@ -156,7 +155,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
                 return 18;
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 
@@ -176,7 +175,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
                 return 19;
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 
@@ -199,7 +198,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
                 return TEEN_UNDER_18.minAcceptableAge();
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 
@@ -222,7 +221,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
                 return TEEN_ABOVE_18.maxAcceptableAge();
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 

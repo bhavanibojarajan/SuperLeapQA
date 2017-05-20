@@ -128,7 +128,7 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
      * the next screen, so if we want to check whether the date was properly
      * stored in the DoB text field, we need to navigate back once.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rx_elementContainingText(String...)
+     * @see BaseEngine#rx_elementsContainingText(String...)
      * @see BaseEngine#rx_click(WebElement)
      * @see BooleanUtil#toTrue(Object)
      */
@@ -138,11 +138,13 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
 
         if (ENGINE instanceof AndroidEngine) {
             return ENGINE
-                .rx_elementContainingText("ok")
+                .rx_elementsContainingText("ok")
+                .firstElement()
+                .toFlowable()
                 .flatMap(ENGINE::rx_click)
                 .map(BooleanUtil::toTrue);
         } else {
-            return RxUtil.error(NOT_IMPLEMENTED);
+            return RxUtil.error(NOT_AVAILABLE);
         }
     }
 

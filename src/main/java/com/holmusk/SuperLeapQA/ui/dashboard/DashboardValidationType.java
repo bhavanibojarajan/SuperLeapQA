@@ -18,14 +18,17 @@ public interface DashboardValidationType extends BaseValidationType {
      */
     @NotNull
     default Flowable<WebElement> rxUseAppNowButton() {
-        return engine().rx_elementContainingText("dashboard_title_useAppNow");
+        return engine()
+            .rx_elementsContainingText("dashboard_title_useAppNow")
+            .firstElement()
+            .toFlowable();
     }
 
     /**
      * Validate the Use App Now screen after the user finishes sign up.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rx_elementContainingText(String...)
+     * @see BaseEngine#rx_elementsContainingText(String...)
      * @see #rxUseAppNowButton()
      * @see ObjectUtil#nonNull(Object)
      */
@@ -36,9 +39,9 @@ public interface DashboardValidationType extends BaseValidationType {
         final BaseEngine<?> ENGINE = engine();
 
         return Flowable
-            .concatArray(
-                ENGINE.rx_elementContainingText("dashboard_title_accountReadyToUse"),
-                ENGINE.rx_elementContainingText("dashboard_title_rememberCheckEmail"),
+            .mergeArray(
+                ENGINE.rx_elementsContainingText("dashboard_title_accountReadyToUse"),
+                ENGINE.rx_elementsContainingText("dashboard_title_rememberCheckEmail"),
                 THIS.rxUseAppNowButton()
             )
             .all(ObjectUtil::nonNull)
@@ -50,13 +53,13 @@ public interface DashboardValidationType extends BaseValidationType {
      * up.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rx_elementContainingText(String...)
+     * @see BaseEngine#rx_elementsContainingText(String...)
      * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
     default Flowable<Boolean> rxValidateDashboardTutorialScreen() {
         return engine()
-            .rx_elementContainingText("dashboard_title_tapHereToMakeFirstEntry")
+            .rx_elementsContainingText("dashboard_title_tapHereToMakeFirstEntry")
             .map(BooleanUtil::toTrue);
     }
 }

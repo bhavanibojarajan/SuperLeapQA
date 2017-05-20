@@ -1,5 +1,7 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
+import com.holmusk.SuperLeapQA.model.SLInputType;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.element.action.input.type.InputType;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.UserMode;
@@ -20,8 +22,8 @@ public interface UnacceptableAgeValidationType extends DOBPickerValidationType {
      * @param MODE A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      * @see DOBPickerValidationType#rxValidateUnacceptableAgeScreen(UserMode)
-     * @see BaseEngine#rx_elementContainingText(String...)
-     * @see #rxEditFieldForInput(InputType)
+     * @see BaseEngine#rx_elementsContainingText(String...)
+     * @see #rx_editFieldForInput(SLInputType)
      */
     @NotNull
     @Override
@@ -29,33 +31,43 @@ public interface UnacceptableAgeValidationType extends DOBPickerValidationType {
     default Flowable<Boolean> rxValidateUnacceptableAgeScreen(@NotNull final UserMode MODE) {
         final BaseEngine<?> ENGINE = engine();
 
-        return ENGINE.rx_elementContainingText("register_title_weAreOnlyAccepting")
-            .flatMap(a -> ENGINE.rx_elementContainingText(MODE.acceptableAgeCategoryRangeString()))
-            .flatMap(a -> ENGINE.rx_elementContainingText("+65"))
-            .flatMap(a -> rx_editFieldForInput(TextInput.NAME))
-            .flatMap(a -> rx_editFieldForInput(TextInput.PHONE))
-            .flatMap(a -> rx_editFieldForInput(TextInput.EMAIL))
-            .map(BooleanUtil::toTrue);
+        return Flowable
+            .mergeArray(
+                ENGINE.rx_elementsContainingText("register_title_weAreOnlyAccepting"),
+                ENGINE.rx_elementsContainingText(MODE.acceptableAgeCategoryRangeString()),
+                ENGINE.rx_elementsContainingText("+65"),
+                rx_editFieldForInput(TextInput.NAME),
+                rx_editFieldForInput(TextInput.PHONE),
+                rx_editFieldForInput(TextInput.EMAIL)
+            )
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
     }
 
     /**
      * Get the confirm button for the unacceptable age inputs.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rx_elementContainingText(String...)
+     * @see BaseEngine#rx_elementsContainingText(String...)
      */
     @NotNull
     default Flowable<WebElement> rxUnacceptableAgeSubmitButton() {
-        return engine().rx_elementContainingText("register_title_submit");
+        return engine()
+            .rx_elementsContainingText("register_title_submit")
+            .firstElement()
+            .toFlowable();
     }
 
     /**
      * Get the continue button after the unacceptable age input is confirmed.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rx_elementContainingText(String...)
+     * @see BaseEngine#rx_elementsContainingText(String...)
      */
     @NotNull
     default Flowable<WebElement> rxUnacceptableAgeInputOkButton() {
-        return engine().rx_elementContainingText("register_title_ok");
+        return engine()
+            .rx_elementsContainingText("register_title_ok")
+            .firstElement()
+            .toFlowable();
     }
 
     /**
@@ -80,16 +92,21 @@ public interface UnacceptableAgeValidationType extends DOBPickerValidationType {
      * submitted.
      * @return A {@link Flowable} instance.
      * @see #rxUnacceptableAgeInputOkButton()
-     * @see BaseEngine#rx_elementContainingText(String...)
-     * @see BooleanUtil#toTrue(Object)
+     * @see BaseEngine#rx_elementsContainingText(String...)
+     * @see ObjectUtil#nonNull(Object)
      */
     @NotNull
+    @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxValidateUnacceptableAgeInputConfirmation() {
         final BaseEngine<?> ENGINE = engine();
 
-        return rxUnacceptableAgeInputOkButton()
-            .flatMap(a -> ENGINE.rx_elementContainingText("register_title_thanksForInterest"))
-            .flatMap(a -> ENGINE.rx_elementContainingText("register_title_notifyOnLaunch"))
-            .map(BooleanUtil::toTrue);
+        return Flowable
+            .mergeArray(
+                rxUnacceptableAgeInputOkButton(),
+                ENGINE.rx_elementsContainingText("register_title_thanksForInterest"),
+                ENGINE.rx_elementsContainingText("register_title_notifyOnLaunch")
+            )
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
     }
 }

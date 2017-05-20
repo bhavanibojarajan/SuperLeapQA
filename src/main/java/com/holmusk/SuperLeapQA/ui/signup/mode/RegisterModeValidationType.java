@@ -6,6 +6,7 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.mobile.android.AndroidEngine;
@@ -20,18 +21,21 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
      * @return A {@link Flowable} instance.
      * @see #engine()
      * @see UserMode#androidRegisterButtonId()
-     * @see BaseEngine#rx_elementContainingID(String...)
+     * @see BaseEngine#rx_elementsContainingID(String...)
      * @see RxUtil#error(String)
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxSignUpButton(@NotNull UserMode mode) {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rx_elementContainingID(mode.androidRegisterButtonId());
+            return engine
+                .rx_elementsContainingID(mode.androidRegisterButtonId())
+                .firstElement()
+                .toFlowable();
         } else {
-            return RxUtil.error(NOT_IMPLEMENTED);
+            return RxUtil.error(NOT_AVAILABLE);
         }
     }
 
@@ -39,39 +43,51 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
      * Get the back button's title label.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rx_elementContainingText(String...)
+     * @see BaseEngine#rx_elementsContainingText(String...)
      * @see RxUtil#error(String)
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxBackButtonTitleLabel() {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rx_elementContainingText("register_title_whichOneBestDescribes");
+            return engine
+                .rx_elementsContainingText("register_title_whichOneBestDescribes")
+                .firstElement()
+                .toFlowable();
         } else {
-            return RxUtil.error(NOT_IMPLEMENTED);
+            return RxUtil.error(NOT_AVAILABLE);
         }
     }
 
     /**
      * Validate the register screen.
      * @return A {@link Flowable} instance.
+     * @see #engine()
+     * @see BaseEngine#rx_elementsContainingText(String...)
+     * @see #rxSignUpButton(UserMode)
+     * @see #rxBackButtonTitleLabel()
+     * @see ObjectUtil#nonNull(Object)
      */
     @NotNull
     @SuppressWarnings("unchecked")
     default Flowable<Boolean> rxValidateRegisterScreen() {
         final BaseEngine<?> ENGINE = engine();
 
-        return ENGINE.rx_elementContainingText("register_title_iAmParent")
-            .flatMap(a -> ENGINE.rx_elementContainingText("register_title_iRegisterForChild"))
-            .flatMap(a -> ENGINE.rx_elementContainingText("register_title_iAmTeen"))
-            .flatMap(a -> ENGINE.rx_elementContainingText("register_title_iRegisterForSelf"))
-            .flatMap(a -> ENGINE.rx_elementContainingText("register_title_or"))
-            .flatMap(a -> ENGINE.rx_elementContainingText("register_title_initiativeByHPB"))
-            .flatMap(a -> rxSignUpButton(UserMode.PARENT))
-            .flatMap(a -> rxSignUpButton(UserMode.TEEN_UNDER_18))
-            .flatMap(a -> rxBackButtonTitleLabel())
-            .map(BooleanUtil::toTrue);
+        return Flowable
+            .mergeArray(
+                ENGINE.rx_elementsContainingText("register_title_iAmParent"),
+                ENGINE.rx_elementsContainingText("register_title_iRegisterForChild"),
+                ENGINE.rx_elementsContainingText("register_title_iAmTeen"),
+                ENGINE.rx_elementsContainingText("register_title_iRegisterForSelf"),
+                ENGINE.rx_elementsContainingText("register_title_or"),
+                ENGINE.rx_elementsContainingText("register_title_initiativeByHPB"),
+                rxSignUpButton(UserMode.PARENT),
+                rxSignUpButton(UserMode.TEEN_UNDER_18),
+                rxBackButtonTitleLabel()
+            )
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
     }
 }

@@ -4,7 +4,7 @@ import com.holmusk.SuperLeapQA.model.*;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
-import org.swiften.javautilities.collection.Pair;
+import org.swiften.javautilities.collection.Zipped;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.BaseEngine;
 import org.swiften.xtestkit.base.type.PlatformType;
@@ -31,10 +31,10 @@ public interface AcceptableAgeTestHelperType extends AcceptableAgeActionType {
     default Flowable<Boolean> rxEnterAndValidateAcceptableAgeInputs(@NotNull UserMode mode) {
         PlatformType platform = engine().platform();
         final AcceptableAgeActionType THIS = this;
-        final List<Pair<Height,Double>> HEIGHT_M = Height.random(platform, mode, UnitSystem.METRIC);
-        final List<Pair<Height,Double>> HEIGHT_I = Height.random(platform, mode, UnitSystem.IMPERIAL);
-        final List<Pair<Weight,Double>> WEIGHT_M = Weight.random(platform, mode, UnitSystem.METRIC);
-        final List<Pair<Weight,Double>> WEIGHT_I = Weight.random(platform, mode, UnitSystem.IMPERIAL);
+        final List<Zipped<Height,Double>> HEIGHT_M = Height.random(platform, mode, UnitSystem.METRIC);
+        final List<Zipped<Height,Double>> HEIGHT_I = Height.random(platform, mode, UnitSystem.IMPERIAL);
+        final List<Zipped<Weight,Double>> WEIGHT_M = Weight.random(platform, mode, UnitSystem.METRIC);
+        final List<Zipped<Weight,Double>> WEIGHT_I = Weight.random(platform, mode, UnitSystem.IMPERIAL);
         final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
         final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
 
@@ -88,10 +88,10 @@ public interface AcceptableAgeTestHelperType extends AcceptableAgeActionType {
         PlatformType platform = ENGINE.platform();
 
         final Gender GENDER = CollectionTestUtil.randomElement(Gender.values());
-        final List<Pair<Height,Double>> HEIGHT_M = Height.random(platform, MODE, UnitSystem.METRIC);
-        final List<Pair<Height,Double>> HEIGHT_I = Height.random(platform, MODE, UnitSystem.IMPERIAL);
-        final List<Pair<Weight,Double>> WEIGHT_M = Weight.random(platform, MODE, UnitSystem.METRIC);
-        final List<Pair<Weight,Double>> WEIGHT_I = Weight.random(platform, MODE, UnitSystem.IMPERIAL);
+        final List<Zipped<Height,Double>> HEIGHT_M = Height.random(platform, MODE, UnitSystem.METRIC);
+        final List<Zipped<Height,Double>> HEIGHT_I = Height.random(platform, MODE, UnitSystem.IMPERIAL);
+        final List<Zipped<Weight,Double>> WEIGHT_M = Weight.random(platform, MODE, UnitSystem.METRIC);
+        final List<Zipped<Weight,Double>> WEIGHT_I = Weight.random(platform, MODE, UnitSystem.IMPERIAL);
         final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
         final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
 
@@ -157,9 +157,9 @@ public interface AcceptableAgeTestHelperType extends AcceptableAgeActionType {
 
         final double INCH = 0;
 
-        final List<Pair<Height,Double>> INPUTS = Arrays.asList(
-            new Pair<>(Height.FT, FT),
-            new Pair<>(Height.INCH, INCH)
+        final List<Zipped<Height,Double>> INPUTS = Arrays.asList(
+            new Zipped<>(Height.FT, FT),
+            new Zipped<>(Height.INCH, INCH)
         );
 
         final String STRING_VAL = Height.stringValue(platform, UnitSystem.IMPERIAL, INPUTS);

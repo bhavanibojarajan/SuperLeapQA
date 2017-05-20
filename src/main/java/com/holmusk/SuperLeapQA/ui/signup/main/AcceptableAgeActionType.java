@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
-import org.swiften.javautilities.collection.Pair;
+import org.swiften.javautilities.collection.Zipped;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Created by haipham on 17/5/17.
  */
-public interface AcceptableAgeActionType extends AcceptableInputValidationType, DOBPickerActionType {
+public interface AcceptableAgeActionType extends AcceptableAgeValidationType, DOBPickerActionType {
     //region Bridged Navigation
     /**
      * Bridge method that helps navigate from splash screen to personal info
@@ -149,7 +149,9 @@ public interface AcceptableAgeActionType extends AcceptableInputValidationType, 
             @Override
             public Flowable<Boolean> rx_shouldKeepSwiping() {
                 return ENGINE
-                    .rx_elementWithText(TEXT_PARAM)
+                    .rx_elementsWithText(TEXT_PARAM)
+                    .firstElement()
+                    .toFlowable()
                     .filter(a -> ENGINE.getText(a).equals(STR_VALUE))
                     .flatMap(ENGINE::rx_click)
                     .map(BooleanUtil::toTrue);
@@ -178,7 +180,7 @@ public interface AcceptableAgeActionType extends AcceptableInputValidationType, 
      * requires a combination of two inputs from two
      * {@link SLNumericInputType} (e.g. {@link Height#CM} and
      * {@link Height#CM_DEC}).
-     * @param inputs A {@link List} of {@link Pair} instances.
+     * @param inputs A {@link List} of {@link Zipped} instances.
      * @return A {@link Flowable} instance.
      * @see #rx_selectNumericInput(SLChoiceInputType, double)
      * @see BooleanUtil#isTrue(boolean)
@@ -186,7 +188,7 @@ public interface AcceptableAgeActionType extends AcceptableInputValidationType, 
     @NotNull
     @SuppressWarnings("ConstantConditions")
     default <P extends SLChoiceInputType & SLNumericInputType>
-    Flowable<Boolean> rx_selectNumericInput(@NotNull List<Pair<P,Double>> inputs) {
+    Flowable<Boolean> rx_selectNumericInput(@NotNull List<Zipped<P,Double>> inputs) {
         final AcceptableAgeActionType THIS = this;
         LogUtil.printfThread("Selecting inputs for %s", inputs);
 
@@ -204,7 +206,7 @@ public interface AcceptableAgeActionType extends AcceptableInputValidationType, 
                          * fail */
                         .onErrorReturnItem(true);
                 } else {
-                    return RxUtil.error(NOT_IMPLEMENTED);
+                    return RxUtil.error(NOT_AVAILABLE);
                 }
             })
             .all(BooleanUtil::isTrue)
@@ -232,7 +234,7 @@ public interface AcceptableAgeActionType extends AcceptableInputValidationType, 
      * Select an {@link Ethnicity} for {@link ChoiceInput#ETHNICITY}.
      * @param E An {@link Ethnicity} instance.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rx_elementContainingText(String...)
+     * @see BaseEngine#rx_elementsContainingText(String...)
      * @see #rx_clickInputField(SLInputType)
      * @see BaseEngine#rx_click(WebElement)
      */
@@ -241,7 +243,9 @@ public interface AcceptableAgeActionType extends AcceptableInputValidationType, 
         final BaseEngine<?> ENGINE = engine();
 
         return rx_clickInputField(ChoiceInput.ETHNICITY)
-            .flatMap(a -> ENGINE.rx_elementContainingText(E.value()))
+            .flatMap(a -> ENGINE.rx_elementsContainingText(E.value()))
+            .firstElement()
+            .toFlowable()
             .flatMap(ENGINE::rx_click)
             .map(BooleanUtil::toTrue);
     }
@@ -250,7 +254,7 @@ public interface AcceptableAgeActionType extends AcceptableInputValidationType, 
      * Select a {@link CoachPref} for {@link ChoiceInput#COACH_PREF}.
      * @param CP A {@link CoachPref} instance.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rx_elementContainingText(String...)
+     * @see BaseEngine#rx_elementsContainingText(String...)
      * @see #rx_clickInputField(SLInputType)
      * @see BaseEngine#rx_click(WebElement)
      */
@@ -259,7 +263,9 @@ public interface AcceptableAgeActionType extends AcceptableInputValidationType, 
         final BaseEngine<?> ENGINE = engine();
 
         return rx_clickInputField(ChoiceInput.COACH_PREF)
-            .flatMap(a -> ENGINE.rx_elementContainingText(CP.value()))
+            .flatMap(a -> ENGINE.rx_elementsContainingText(CP.value()))
+            .firstElement()
+            .toFlowable()
             .flatMap(ENGINE::rx_click)
             .map(BooleanUtil::toTrue);
     }
@@ -309,9 +315,11 @@ public interface AcceptableAgeActionType extends AcceptableInputValidationType, 
             .flatMap(a -> rx_clickInputField(HEIGHT_MODE))
             .flatMap(a -> THIS.rx_clickInputField(ChoiceInput.HEIGHT))
             .flatMap(a -> THIS.rx_selectNumericInput(HEIGHT_MODE, HEIGHT))
+            .flatMap(a -> THIS.rx_confirmNumericChoiceInput())
 
             .flatMap(a -> rx_clickInputField(WEIGHT_MODE))
             .flatMap(a -> THIS.rx_clickInputField(ChoiceInput.WEIGHT))
-            .flatMap(a -> THIS.rx_selectNumericInput(WEIGHT_MODE, WEIGHT));
+            .flatMap(a -> THIS.rx_selectNumericInput(WEIGHT_MODE, WEIGHT))
+            .flatMap(a -> THIS.rx_confirmNumericChoiceInput());
     }
 }

@@ -9,7 +9,7 @@ import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInpu
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Gender implements BaseErrorType, AndroidInputType, SLInputType {
+public enum Gender implements BaseErrorType, SLInputType {
     MALE,
     FEMALE;
 
@@ -17,7 +17,7 @@ public enum Gender implements BaseErrorType, AndroidInputType, SLInputType {
      * @return A {@link XPath} value.
      * @see AndroidInputType#androidViewXPath()
      * @see #newXPathBuilder()
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
@@ -34,7 +34,7 @@ public enum Gender implements BaseErrorType, AndroidInputType, SLInputType {
                 break;
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
 
         return newXPathBuilder().containsID(ID).build();

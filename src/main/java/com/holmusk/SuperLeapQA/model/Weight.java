@@ -1,11 +1,10 @@
 package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.collection.Pair;
+import org.swiften.javautilities.collection.Zipped;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
-import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidChoiceInputType;
 import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 
@@ -50,7 +49,7 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * @return A {@link List} of {@link Weight}.
      * @see #metric(PlatformType)
      * @see #imperial(PlatformType)
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     public static List<Weight> instances(@NotNull PlatformType platform,
@@ -63,7 +62,7 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
                 return imperial(platform);
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 
@@ -72,16 +71,16 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * @param platform A {@link PlatformType} instance.
      * @param MODE A {@link UserMode} instance.
      * @param unit A {@link UnitSystem} instance.
-     * @return A {@link List} of {@link Pair}.
+     * @return A {@link List} of {@link Zipped}.
      * @see #instances(PlatformType, UnitSystem)
      * @see SLNumericInputType#randomValue(UserMode)
      */
     @NotNull
-    public static List<Pair<Weight,Double>> random(@NotNull PlatformType platform,
-                                                   @NotNull final UserMode MODE,
-                                                   @NotNull UnitSystem unit) {
+    public static List<Zipped<Weight,Double>> random(@NotNull PlatformType platform,
+                                                     @NotNull final UserMode MODE,
+                                                     @NotNull UnitSystem unit) {
         return instances(platform, unit).stream()
-            .map(a -> new Pair<>(a, a.randomValue(MODE)))
+            .map(a -> new Zipped<>(a, a.randomValue(MODE)))
             .collect(Collectors.toList());
     }
 
@@ -108,7 +107,7 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * {@link org.openqa.selenium.WebElement} with the same id (e.g. picking
      * {@link #KG} and {@link #KG_DEC} at the same time).
      * @return An {@link Integer} value.
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     public int androidViewIndex() {
         switch (this) {
@@ -121,7 +120,7 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
                 return 1;
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 
@@ -129,7 +128,7 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * @return A {@link XPath} value.
      * @see AndroidInputType#androidViewXPath()
      * @see #newXPathBuilder()
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
@@ -148,7 +147,7 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
                 break;
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
 
         return newXPathBuilder().containsID(ID).build();
@@ -199,7 +198,7 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * @return A {@link Double} value.
      * @see SLNumericInputType#minSelectableNumericValue(UserMode)
      * @see UserMode#isParent()
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     @Override
     public double minSelectableNumericValue(@NotNull UserMode mode) {
@@ -215,7 +214,7 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
                 return mode.isParent() ? 10 : 50;
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 
@@ -226,7 +225,7 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * @return A {@link Double} value.
      * @see SLNumericInputType#maxSelectableNumericValue(UserMode)
      * @see UserMode#isParent()
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     @Override
     public double maxSelectableNumericValue(@NotNull UserMode mode) {
@@ -242,7 +241,7 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
                 return mode.isParent() ? 176 : 485;
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 }

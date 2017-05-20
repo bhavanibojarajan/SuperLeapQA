@@ -16,7 +16,7 @@ public interface SLInputType extends AndroidInputType {
     /**
      * Get the relevant empty input error messages for sign up, where applicable.
      * Some {@link InputType} may not have a standard error message, however.
-     * (e.g. {@link NumericInputType}.
+     * (e.g. {@link SLNumericInputType}.
      * where min/max values are taken into account).
      * @return A {@link LCFormat} value.
      */

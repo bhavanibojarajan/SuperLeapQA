@@ -8,7 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.BaseEngine;
-import org.swiften.xtestkit.base.param.UnidirectionalSwipeParam;
+import org.swiften.xtestkit.base.param.UnidirectionParam;
 import org.swiften.xtestkit.base.type.DurationType;
 
 /**
@@ -19,22 +19,28 @@ public interface WelcomeValidationType extends BaseValidationType {
      * Get the register button on the welcome screen.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rx_elementContainingText(String...)
+     * @see BaseEngine#rx_elementsContainingText(String...)
      */
     @NotNull
     default Flowable<WebElement> rxWelcomeRegisterButton() {
-        return engine().rx_elementContainingText("welcome_title_register");
+        return engine()
+            .rx_elementsContainingText("welcome_title_register")
+            .firstElement()
+            .toFlowable();
     }
 
     /**
      * Get the sign in button on the welcome screen.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rx_elementContainingText(String...)
+     * @see BaseEngine#rx_elementsContainingText(String...)
      */
     @NotNull
     default Flowable<WebElement> rxWelcomeSignInButton() {
-        return engine().rx_elementContainingText("welcome_title_signIn");
+        return engine()
+            .rx_elementsContainingText("welcome_title_signIn")
+            .firstElement()
+            .toFlowable();
     }
 
     /**
@@ -58,7 +64,7 @@ public interface WelcomeValidationType extends BaseValidationType {
      * Validate the swipeable splash screens.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rx_elementContainingText(String...)
+     * @see BaseEngine#rx_elementsContainingText(String...)
      * @see BaseEngine#rx_swipeGenericLR(DurationType)
      * @see BaseEngine#rxSwipeGenericRL(DurationType)
      */
@@ -92,13 +98,13 @@ public interface WelcomeValidationType extends BaseValidationType {
                     String[] messages = MESSAGES[INDEX];
 
                     return Flowable.fromArray(messages)
-                        .flatMap(ENGINE::rx_elementContainingText)
+                        .flatMap(ENGINE::rx_elementsContainingText)
                         .all(ObjectUtil::nonNull)
                         .toFlowable()
 
                         /* Swipe once from right to left */
                         .flatMap(a -> ENGINE.rxSwipeGenericRL(
-                            UnidirectionalSwipeParam.builder()
+                            UnidirectionParam.builder()
                                 .withTimes(1)
                                 .withDuration(0)
                                 .build()
@@ -112,7 +118,7 @@ public interface WelcomeValidationType extends BaseValidationType {
 
         return ENGINE
             .rx_swipeGenericLR(
-                UnidirectionalSwipeParam.builder()
+                UnidirectionParam.builder()
                     .withTimes(LENGTH)
                     .withDuration(0)
                     .build()

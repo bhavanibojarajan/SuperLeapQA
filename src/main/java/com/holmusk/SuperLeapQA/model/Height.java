@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.collection.Pair;
+import org.swiften.javautilities.collection.Zipped;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
@@ -13,7 +13,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
 
 /**
  * Created by haipham on 5/10/17.
@@ -57,7 +56,7 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * @return A {@link List} of {@link Height}.
      * @see #metric(PlatformType)
      * @see #imperial(PlatformType)
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     public static List<Height> instances(@NotNull PlatformType platform,
@@ -70,7 +69,7 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
                 return imperial(platform);
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 
@@ -79,16 +78,16 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * @param platform A {@link PlatformType} instance.
      * @param MODE A {@link UserMode} instance.
      * @param unit A {@link UnitSystem} instance.
-     * @return A {@link List} of {@link Pair}.
+     * @return A {@link List} of {@link Zipped}.
      * @see #instances(PlatformType, UnitSystem)
      * @see SLNumericInputType#randomValue(UserMode)
      */
     @NotNull
-    public static List<Pair<Height,Double>> random(@NotNull PlatformType platform,
-                                                   @NotNull final UserMode MODE,
-                                                   @NotNull UnitSystem unit) {
+    public static List<Zipped<Height,Double>> random(@NotNull PlatformType platform,
+                                                     @NotNull final UserMode MODE,
+                                                     @NotNull UnitSystem unit) {
         return instances(platform, unit).stream()
-            .map(a -> new Pair<>(a, a.randomValue(MODE)))
+            .map(a -> new Zipped<>(a, a.randomValue(MODE)))
             .collect(Collectors.toList());
     }
 
@@ -97,15 +96,15 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * on {@link UnitSystem}.
      * @param platform A {@link PlatformType} instance.
      * @param unit A {@link UnitSystem} instance.
-     * @param inputs A {@link List} of {@link Pair}.
+     * @param inputs A {@link List} of {@link Zipped}.
      * @return A {@link String} value.
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     @SuppressWarnings("ConstantConditions")
     public static String stringValue(@NotNull PlatformType platform,
                                      @NotNull UnitSystem unit,
-                                     @NotNull List<Pair<Height,Double>> inputs) {
+                                     @NotNull List<Zipped<Height,Double>> inputs) {
         double a = inputs.get(0).B;
         double b = inputs.size() > 1 ? inputs.get(1).B : 0;
 
@@ -117,7 +116,7 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
                 return String.format("%.0f'%.0f\"", a, b);
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 
@@ -138,7 +137,7 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * {@link org.openqa.selenium.WebElement} with the same id (e.g. picking
      * {@link #FT} and {@link #INCH} at the same time).
      * @return An {@link Integer} value.
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     public int androidViewIndex() {
         switch (this) {
@@ -151,14 +150,14 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
                 return 1;
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 
     /**
      * @return A {@link XPath} value.
      * @see AndroidInputType#androidViewXPath()
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
@@ -177,7 +176,7 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
                 break;
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
 
         return newXPathBuilder().containsID(ID).build();
@@ -230,7 +229,7 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * @return A {@link Double} value.
      * @see SLNumericInputType#minSelectableNumericValue(UserMode)
      * @see UserMode#isParent()
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     @Override
     public double minSelectableNumericValue(@NotNull UserMode mode) {
@@ -246,7 +245,7 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
                 return mode.isParent() ? 50 : 120;
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 
@@ -257,7 +256,7 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * @return A {@link Double} value.
      * @see SLNumericInputType#maxSelectableNumericValue(UserMode)
      * @see UserMode#isParent()
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     @Override
     public double maxSelectableNumericValue(@NotNull UserMode mode) {
@@ -275,7 +274,7 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
                 return mode.isParent() ? 120 : 250;
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 }

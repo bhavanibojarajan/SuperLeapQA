@@ -24,7 +24,7 @@ public interface BaseValidationType extends BaseTestType, BaseErrorType, AppDela
      * @return A {@link Flowable} instance.
      * @see #engine()
      * @see BaseEngine#platform()
-     * @see BaseEngine#rx_elementContainingID(String...)
+     * @see BaseEngine#rx_elementsContainingID(String...)
      */
     @NotNull
     default Flowable<WebElement> rxBackButton() {
@@ -32,7 +32,10 @@ public interface BaseValidationType extends BaseTestType, BaseErrorType, AppDela
         PlatformType platform = engine.platform();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rx_elementContainingID("btnBack");
+            return engine
+                .rx_elementsContainingID("btnBack")
+                .firstElement()
+                .toFlowable();
         } else {
             return RxUtil.error();
         }
@@ -42,14 +45,17 @@ public interface BaseValidationType extends BaseTestType, BaseErrorType, AppDela
      * Get the common probress bar.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rx_elementContainingID(String...)
+     * @see BaseEngine#rx_elementsContainingID(String...)
      */
     @NotNull
     default Flowable<WebElement> rx_progressBar() {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rx_elementContainingID("pb_general");
+            return engine
+                .rx_elementsContainingID("pb_general")
+                .firstElement()
+                .toFlowable();
         } else {
             return RxUtil.error();
         }

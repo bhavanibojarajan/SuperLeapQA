@@ -49,7 +49,7 @@ public interface DOBPickerValidationType extends SignUpActionType {
     /**
      * Validate the DoB picker screen.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rx_elementContainingText(String...)
+     * @see BaseEngine#rx_elementsContainingText(String...)
      * @see BaseEngine#rx_click(WebElement)
      * @see BaseEngine#rx_navigateBackOnce()
      * @see #rxDoBEditField()
@@ -64,10 +64,10 @@ public interface DOBPickerValidationType extends SignUpActionType {
         long delay = generalDelay();
 
         return Flowable
-            .concatArray(
+            .mergeArray(
                 rxDoBEditField(),
-                ENGINE.rx_elementContainingText("register_title_dateOfBirth"),
-                ENGINE.rx_elementContainingText(
+                ENGINE.rx_elementsContainingText("register_title_dateOfBirth"),
+                ENGINE.rx_elementsContainingText(
                     "parentSignUp_title_whatIsYourChild",
                     "teenSignUp_title_whatIsYour"
                 )
@@ -102,13 +102,18 @@ public interface DOBPickerValidationType extends SignUpActionType {
      * pre-DoB picker screen.
      * @param date A {@link Date} instance.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rx_elementContainingText(String...)
+     * @see BaseEngine#rx_elementsContainingText(String...)
      * @see SimpleDateFormat#format(Date)
      */
     @NotNull
     default Flowable<Boolean> rxDoBEditFieldHasDate(@NotNull Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
         String string = formatter.format(date);
-        return engine().rx_elementContainingText(string).map(ObjectUtil::nonNull);
+
+        return engine()
+            .rx_elementsContainingText(string)
+            .firstElement()
+            .toFlowable()
+            .map(ObjectUtil::nonNull);
     }
 }

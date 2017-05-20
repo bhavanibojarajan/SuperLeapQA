@@ -20,7 +20,7 @@ public enum ChoiceInput implements BaseErrorType, SLInputType, AndroidChoiceInpu
      * @return A {@link XPath} value.
      * @see AndroidInputType#androidViewXPath()
      * @see #newXPathBuilder()
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
@@ -45,7 +45,7 @@ public enum ChoiceInput implements BaseErrorType, SLInputType, AndroidChoiceInpu
                 break;
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
 
         return newXPathBuilder().containsID(ID).build();
@@ -91,7 +91,7 @@ public enum ChoiceInput implements BaseErrorType, SLInputType, AndroidChoiceInpu
                 break;
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
 
         return LCFormat.builder().withPattern(error).build();

@@ -1,5 +1,6 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
+import com.holmusk.SuperLeapQA.model.SLInputType;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +21,7 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
      * current {@link UserMode}, the confirm button text may change.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rx_elementContainingID(String...)
+     * @see BaseEngine#rx_elementsContainingID(String...)
      * @see RxUtil#error(String)
      */
     @NotNull
@@ -29,9 +30,12 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rx_elementsContainingID("btnNext");
+            return engine
+                .rx_elementsContainingID("btnNext")
+                .firstElement()
+                .toFlowable();
         } else {
-            return RxUtil.error(NOT_IMPLEMENTED);
+            return RxUtil.error(NOT_AVAILABLE);
         }
     }
 
@@ -39,18 +43,21 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
      * Get the Terms and Conditions checkbox.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rx_elementContainingID(String...)
+     * @see BaseEngine#rx_elementsContainingID(String...)
      * @see RxUtil#error(String)
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxTOCCheckBox() {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rx_elementContainingID("ctv_toc");
+            return engine
+                .rx_elementsContainingID("ctv_toc")
+                .firstElement()
+                .toFlowable();
         } else {
-            return RxUtil.error(NOT_IMPLEMENTED);
+            return RxUtil.error(NOT_AVAILABLE);
         }
     }
 
@@ -62,7 +69,10 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
      */
     @NotNull
     default Flowable<WebElement> rxTOCAcceptanceLabel() {
-        return engine().rx_elementContainingText("register_title_readAndAcceptTOC");
+        return engine()
+            .rx_elementsContainingText("register_title_readAndAcceptTOC")
+            .firstElement()
+            .toFlowable();
     }
 
     /**
@@ -71,7 +81,7 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      * @see UserMode#personalInformation()
-     * @see #rxEditFieldForInput(AndroidInputType)
+     * @see #rx_editFieldForInput(SLInputType)
      * @see #rxPersonalInfoSubmitButton()
      * @see ObjectUtil#nonNull(Object)
      * @see BooleanUtil#toTrue(Object)

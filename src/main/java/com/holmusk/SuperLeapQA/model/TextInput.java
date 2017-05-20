@@ -33,7 +33,7 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
      * @return A {@link XPath} value.
      * @see AndroidInputType#androidViewXPath()
      * @see #newXPathBuilder()
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
@@ -73,7 +73,7 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
                 break;
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
 
         return newXPathBuilder().containsID(ID).build();
@@ -134,7 +134,7 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
                 return "testQA-" + baseEmail + "@gmail.com";
 
             default:
-                throw new RuntimeException(NOT_IMPLEMENTED);
+                throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 

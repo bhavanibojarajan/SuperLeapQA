@@ -19,36 +19,42 @@ import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidChoi
 /**
  * Created by haipham on 17/5/17.
  */
-public interface AcceptableInputValidationType extends DOBPickerValidationType {
+public interface AcceptableAgeValidationType extends DOBPickerValidationType {
     /**
      * Get the next confirm button for acceptable age input screen.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rx_elementContainingText(String...)
+     * @see BaseEngine#rx_elementsContainingText(String...)
      */
     @NotNull
     default Flowable<WebElement> rxAcceptableAgeConfirmButton() {
-        return engine().rx_elementContainingText("register_title_next");
+        return engine()
+            .rx_elementsContainingText("register_title_next")
+            .firstElement()
+            .toFlowable();
     }
 
     /**
      * Get the back button's title label.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rx_elementContainingText(String...)
+     * @see BaseEngine#rx_elementsContainingText(String...)
      * @see RxUtil#error(String)
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxAcceptableAgeInputTitleLabel() {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rx_elementContainingText(
-                "parentSignUp_title_enterChildDetails",
-                "teenSignUp_title_enterDetails"
-            );
+            return engine
+                .rx_elementsContainingText(
+                    "parentSignUp_title_enterChildDetails",
+                    "teenSignUp_title_enterDetails"
+                )
+                .firstElement()
+                .toFlowable();
         } else {
-            return RxUtil.error(NOT_IMPLEMENTED);
+            return RxUtil.error(NOT_AVAILABLE);
         }
     }
 
@@ -58,9 +64,9 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
      * @param input A {@link ChoiceInput} instance.
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rx_elementWithXPath(XPath...)
+     * @see BaseEngine#rx_elementsWithXPath(XPath...)
      * @see RxUtil#error(String)
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default <P extends AndroidChoiceInputType> Flowable<WebElement>
@@ -68,9 +74,12 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rx_elementWithXPath(input.androidScrollViewPickerXPath());
+            return engine
+                .rx_elementsWithXPath(input.androidScrollViewPickerXPath())
+                .firstElement()
+                .toFlowable();
         } else {
-            return RxUtil.error(NOT_IMPLEMENTED);
+            return RxUtil.error(NOT_AVAILABLE);
         }
     }
 
@@ -84,7 +93,7 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
      * @see BaseEngine#rx_elementsByXPath(ByXPath)
      * @see BaseEngine#newXPathBuilder()
      * @see RxUtil#error(String)
-     * @see #NOT_IMPLEMENTED
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default <P extends SLChoiceInputType & SLNumericInputType>
@@ -92,9 +101,12 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rx_elementWithXPath(input.androidScrollViewItemXPath());
+            return engine
+                .rx_elementsWithXPath(input.androidScrollViewItemXPath())
+                .firstElement()
+                .toFlowable();
         } else {
-            return RxUtil.error(NOT_IMPLEMENTED);
+            return RxUtil.error(NOT_AVAILABLE);
         }
     }
 
@@ -111,7 +123,7 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
     @SuppressWarnings("unchecked")
     default Flowable<Boolean> rx_validateAcceptableAgeScreen() {
         return Flowable
-            .concatArray(
+            .mergeArray(
                 rx_editFieldForInput(Gender.MALE),
                 rx_editFieldForInput(Gender.FEMALE),
                 rx_editFieldForInput(ChoiceInput.HEIGHT),
@@ -154,16 +166,19 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
      * and {@link Weight}).
      * @return A {@link Flowable} instance.
      * @see #engine()
-     * @see BaseEngine#rx_elementContainingID(String...)
+     * @see BaseEngine#rx_elementsContainingID(String...)
      */
     @NotNull
     default Flowable<WebElement> rx_numericChoiceInputConfirmButton() {
         BaseEngine<?> engine = engine();
 
         if (engine instanceof AndroidEngine) {
-            return engine.rx_elementContainingID("btnDone");
+            return engine
+                .rx_elementsContainingID("btnDone")
+                .firstElement()
+                .toFlowable();
         } else {
-            return RxUtil.error(NOT_IMPLEMENTED);
+            return RxUtil.error(NOT_AVAILABLE);
         }
     }
 
@@ -172,11 +187,14 @@ public interface AcceptableInputValidationType extends DOBPickerValidationType {
      * only works in specific cases however, so use with care.
      * @param error A {@link LCFormat} value.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rx_elementContainingText(String...)
+     * @see BaseEngine#rx_elementsContainingText(String...)
      */
     @NotNull
     default Flowable<WebElement> rxErrorPopup(@NotNull LCFormat error) {
-        return engine().rx_elementContainingText(error);
+        return engine()
+            .rx_elementsContainingText(error)
+            .firstElement()
+            .toFlowable();
     }
 
     /**
