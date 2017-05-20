@@ -1,7 +1,6 @@
 package com.holmusk.SuperLeapQA.ui.signup.mode;
 
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
-import com.holmusk.SuperLeapQA.ui.welcome.WelcomeActionType;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
@@ -40,10 +39,10 @@ public final class UIRegisterModeTest extends UIBaseTest implements RegisterMode
 
         // When
         rx_splash_register()
-            .flatMap(a -> THIS.rxValidateRegisterScreen())
+            .flatMap(a -> THIS.rx_v_registerScreen())
 
             /* Make sure the back button works */
-            .flatMap(a -> THIS.rxNavigateBackWithBackButton())
+            .flatMap(a -> THIS.rx_a_clickBackButton())
             .flatMap(a -> THIS.rxValidateWelcomeScreen())
             .subscribe(subscriber);
 

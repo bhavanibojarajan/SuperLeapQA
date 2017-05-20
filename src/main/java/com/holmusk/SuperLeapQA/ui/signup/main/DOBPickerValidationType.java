@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
-import org.swiften.xtestkit.base.BaseEngine;
+import org.swiften.xtestkit.base.Engine;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,79 +21,44 @@ public interface DOBPickerValidationType extends SignUpActionType {
      * Validate the acceptable age screen, after the user picks DoB. This
      * method is used to check that the screen that follows matches the
      * age requirements specified by each {@link UserMode}.
+     * @param engine {@link Engine} instance.
      * @return A {@link Flowable} instance.
      */
     @NotNull
-    Flowable<Boolean> rx_validateAcceptableAgeScreen();
+    Flowable<?> rx_v_acceptableAgeScreen(@NotNull Engine<?> engine);
 
     /**
      * Validate the unacceptable age screen, after the user picks DoB. This
      * method is used to check that the screen that follows matches the
      * age requirements specified by each {@link UserMode}.
+     * @param engine {@link Engine} instance.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
      */
     @NotNull
-    Flowable<Boolean> rxValidateUnacceptableAgeScreen(UserMode mode);
+    Flowable<?> rx_v_unacceptableAgeScreen(@NotNull Engine<?> engine,
+                                           @NotNull UserMode mode);
 
     /**
      * Get all calendar {@link WebElement} instances.
+     ** @param engine {@link Engine} instance.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rxAllCalendarElements()
+     * @see Engine#rxAllCalendarElements()
      */
     @NotNull
-    default Flowable<WebElement> rxDoBElements() {
-        return engine().rxAllCalendarElements();
-    }
-
-    /**
-     * Validate the DoB picker screen.
-     * @return A {@link Flowable} instance.
-     * @see BaseEngine#rx_elementsContainingText(String...)
-     * @see BaseEngine#rx_click(WebElement)
-     * @see BaseEngine#rx_navigateBackOnce()
-     * @see #rxDoBEditField()
-     * @see #rxDoBElements()
-     * @see #generalDelay()
-     * @see ObjectUtil#nonNull(Object)
-     */
-    @NotNull
-    @SuppressWarnings("unchecked")
-    default Flowable<Boolean> rxValidateDoBPickerScreen() {
-        final BaseEngine<?> ENGINE = engine();
-        long delay = generalDelay();
-
-        return Flowable
-            .mergeArray(
-                rxDoBEditField(),
-                ENGINE.rx_elementsContainingText("register_title_dateOfBirth"),
-                ENGINE.rx_elementsContainingText(
-                    "parentSignUp_title_whatIsYourChild",
-                    "teenSignUp_title_whatIsYour"
-                )
-            )
-            .all(ObjectUtil::nonNull)
-            .toFlowable()
-
-            /* Open the DoB dialog and verify that all elements are there */
-            .flatMap(a -> rxDoBEditField())
-            .flatMap(ENGINE::rx_click)
-            .flatMap(a -> rxDoBElements().all(ObjectUtil::nonNull).toFlowable())
-            .delay(delay, TimeUnit.MILLISECONDS, Schedulers.trampoline())
-
-            /* Dismiss the dialog by navigating back once */
-            .flatMap(a -> ENGINE.rx_navigateBackOnce())
-            .delay(delay, TimeUnit.MILLISECONDS, Schedulers.trampoline())
-            .map(BooleanUtil::toTrue);
+    default Flowable<WebElement> rx_e_DoBElements(@NotNull Engine<?> engine) {
+        return engine.rxAllCalendarElements();
     }
 
     /**
      * Get the DoB's editable text field.
+     * @param engine {@link Engine} instance.
      * @return A {@link Flowable} instance.
+     * @see Engine#rx_editable()
      */
     @NotNull
-    default Flowable<WebElement> rxDoBEditField() {
-        return engine().rx_allEditableElements().firstElement().toFlowable();
+    default Flowable<WebElement> rx_e_DoBEditField(@NotNull Engine<?> engine) {
+        return engine.rx_editable().firstElement().toFlowable();
     }
 
     /**
@@ -102,18 +67,14 @@ public interface DOBPickerValidationType extends SignUpActionType {
      * pre-DoB picker screen.
      * @param date A {@link Date} instance.
      * @return A {@link Flowable} instance.
-     * @see BaseEngine#rx_elementsContainingText(String...)
+     * @see Engine#rx_containsText(String...)
      * @see SimpleDateFormat#format(Date)
      */
     @NotNull
-    default Flowable<Boolean> rxDoBEditFieldHasDate(@NotNull Date date) {
+    default Flowable<?> rx_v_DoBEditFieldHasDate(@NotNull Engine<?> engine,
+                                                 @NotNull Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
         String string = formatter.format(date);
-
-        return engine()
-            .rx_elementsContainingText(string)
-            .firstElement()
-            .toFlowable()
-            .map(ObjectUtil::nonNull);
+        return engine.rx_containsText(string).firstElement().toFlowable();
     }
 }

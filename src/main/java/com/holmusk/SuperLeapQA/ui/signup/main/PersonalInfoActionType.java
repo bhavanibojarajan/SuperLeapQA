@@ -2,6 +2,7 @@ package com.holmusk.SuperLeapQA.ui.signup.main;
 
 import com.holmusk.SuperLeapQA.model.SLInputType;
 import com.holmusk.SuperLeapQA.model.SLTextInputType;
+import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.action.input.type.InputType;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
@@ -11,132 +12,60 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
-import org.swiften.xtestkit.base.BaseEngine;
 
 import java.util.List;
 
 /**
  * Created by haipham on 17/5/17.
  */
-public interface PersonalInfoActionType extends
-    PersonalInfoValidationType, AcceptableAgeActionType
-{
-    //region Bridged Navigation
-    /**
-     * Bridge method that helps navigate from splash screen to extra personal
-     * info screen. Only applicable to {@link UserMode#TEEN_UNDER_18}.
-     * @param MODE A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
-     * @see #rx_splash_personalInfo(UserMode)
-     * @see #rx_personalInfo_extraInfo(UserMode)
-     */
-    @NotNull
-    default Flowable<Boolean> rx_splash_extraInfo(@NotNull final UserMode MODE) {
-        final PersonalInfoActionType THIS = this;
-        return rx_splash_personalInfo(MODE).flatMap(a -> THIS.rx_personalInfo_extraInfo(MODE));
-    }
-
-    /**
-     * Bridge method that helps navigate from the splash screen to the
-     * Use App Now screen.
-     * @param MODE A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
-     * @see #rx_splash_extraInfo(UserMode)
-     * @see #rx_extraInfo_useApp(UserMode)
-     */
-    @NotNull
-    default Flowable<Boolean> rx_splash_useApp(@NotNull final UserMode MODE) {
-        final PersonalInfoActionType THIS = this;
-        return rx_splash_extraInfo(MODE).flatMap(a -> THIS.rx_extraInfo_useApp(MODE));
-    }
-    //endregion
-
-    /**
-     * Navigate from the extra info screen to the Use App Now screen. Note
-     * that the extra info screen only exists for {@link UserMode#TEEN_UNDER_18}.
-     * For other {@link UserMode} instances, this screen should be the
-     * personal info screen.
-     * @param MODE A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
-     * @see #rxEnterExtraPersonalInfo(UserMode)
-     * @see #rx_confirmExtraPersonalInfo(UserMode)
-     * @see #rxWatchProgressBarUntilHidden()
-     * @see #rxWatchPersonalInfoScreenUntilHidden()
-     * @see BooleanUtil#isTrue(boolean)
-     */
-    @NotNull
-    default Flowable<Boolean> rx_extraInfo_useApp(@NotNull final UserMode MODE) {
-        final PersonalInfoActionType THIS = this;
-
-        return rxEnterExtraPersonalInfo(MODE)
-            .flatMap(a -> THIS.rx_confirmExtraPersonalInfo(MODE))
-
-            /* First progress bar appears immediately after the submit button
-             * is clicked */
-            .flatMap(a -> THIS.rxWatchProgressBarUntilHidden())
-
-            /* There is a short delay between the first and the second
-             * progress bar */
-            .flatMap(a -> THIS.rxWatchPersonalInfoScreenUntilHidden())
-
-            /* The second progress bar appears */
-            .flatMap(a -> THIS.rxWatchProgressBarUntilHidden());
-    }
-
+public interface PersonalInfoActionType extends PersonalInfoValidationType, AcceptableAgeActionType {
     /**
      * Click the submit button to confirm personal info inputs.
+     * @param ENGINE {@link Engine} instance.
      * @return A {@link Flowable} instance.
-     * @see #rxPersonalInfoSubmitButton()
-     * @see BaseEngine#rx_click(WebElement)
+     * @see #rx_e_personalInfoSubmit(Engine)
+     * @see Engine#rx_click(WebElement)
      * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
-    default Flowable<Boolean> rxConfirmPersonalInfo() {
-        final BaseEngine<?> ENGINE = engine();
-
-        return rxPersonalInfoSubmitButton()
-            .flatMap(ENGINE::rx_click)
-            .map(BooleanUtil::toTrue);
+    default Flowable<?> rx_a_confirmPersonalInfo(@NotNull final Engine<?> ENGINE) {
+        return rx_e_personalInfoSubmit(ENGINE).flatMap(ENGINE::rx_click);
     }
 
     /**
      * Toggle the TOC checkbox to be accepted/rejected.
+     * @param ENGINE {@link Engine} instance.
      * @param ACCEPTED A {@link Boolean} value.
      * @return A {@link Flowable} instance.
-     * @see #engine()
-     * @see #rxTOCCheckBox()
-     * @see BaseEngine#isCheckBoxChecked(WebElement)
-     * @see BaseEngine#click(WebElement)
+     * @see #rx_e_TOCCheckBox(Engine)
+     * @see Engine#toggleCheckBox(WebElement, boolean)
+     * @see Engine#click(WebElement)
      */
     @NotNull
-    default Flowable<Boolean> rxToggleTOC(final boolean ACCEPTED) {
-        final BaseEngine<?> ENGINE = engine();
-
-        return rxTOCCheckBox()
-            .flatMap(a -> ENGINE.rx_setCheckBoxState(a, ACCEPTED))
-            .map(BooleanUtil::toTrue);
+    default Flowable<?> rx_a_toggleTOC(@NotNull final Engine<?> ENGINE,
+                                       final boolean ACCEPTED) {
+        return rx_e_TOCCheckBox(ENGINE).flatMap(a -> ENGINE.toggleCheckBox(a, ACCEPTED));
     }
 
     /**
      * Enter random personal info inputs in order to access the next screen.
      * This method can be used for {@link UserMode#personalInformation()}
      * and {@link UserMode#extraPersonalInformation()}.
+     * @param ENGINE {@link Engine} instance.
      * @param inputs A {@link List} of {@link InputType}.
      * @return A {@link Flowable} instance.
-     * @see #engine()
-     * @see #rxEnterRandomInput(SLTextInputType)
-     * @see BaseEngine#rx_navigateBackOnce()
-     * @see #rxToggleTOC(boolean)
+     * @see #rx_a_enterRandomInput(Engine, SLTextInputType)
+     * @see Engine#rx_navigateBackOnce()
+     * @see #rx_a_toggleTOC(Engine, boolean)
      */
     @NotNull
-    default Flowable<Boolean> rx_enterPersonalInfo(@NotNull List<SLInputType> inputs) {
+    default Flowable<?> rx_a_enterPersonalInfo(@NotNull final Engine<?> ENGINE,
+                                               @NotNull List<SLInputType> inputs) {
         final PersonalInfoActionType THIS = this;
-        final BaseEngine<?> ENGINE = engine();
-
         return Flowable
             .fromIterable(inputs)
             .ofType(SLTextInputType.class)
-            .concatMap(THIS::rxEnterRandomInput)
+            .concatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, a))
             .flatMap(ENGINE::rx_toggleNextInput)
             .all(ObjectUtil::nonNull)
             .toFlowable();
@@ -146,35 +75,36 @@ public interface PersonalInfoActionType extends
      * Enter random personal info inputs in order to access the next screen.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #engine()
      * @see UserMode#personalInformation()
-     * @see #rx_enterPersonalInfo(List)
-     * @see BaseEngine#rx_hideKeyboard()
-     * @see #rxToggleTOC(boolean)
+     * @see #rx_a_enterPersonalInfo(Engine, List)
+     * @see Engine#rx_hideKeyboard()
+     * @see #rx_a_toggleTOC(Engine, boolean)
      */
     @NotNull
-    default Flowable<Boolean> rx_enterPersonalInfo(@NotNull UserMode mode) {
+    default Flowable<?> rx_a_enterPersonalInfo(@NotNull final Engine<?> ENGINE,
+                                               @NotNull UserMode mode) {
         final PersonalInfoActionType THIS = this;
-        final BaseEngine<?> ENGINE = THIS.engine();
 
-        return rx_enterPersonalInfo(mode.personalInformation())
+        return rx_a_enterPersonalInfo(ENGINE, mode.personalInformation())
             .flatMap(a -> ENGINE.rx_hideKeyboard())
-            .flatMap(a -> THIS.rxToggleTOC(true));
+            .flatMap(a -> THIS.rx_a_toggleTOC(ENGINE, true));
     }
 
     /**
      * Enter random additional personal info inputs in order to access the
      * next screen. This is only relevant for {@link UserMode#requiresGuarantor()}.
+     * @param engine {@link Engine} instance.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rx_enterPersonalInfo(List)
+     * @see #rx_a_enterPersonalInfo(Engine, List)
      * @see UserMode#extraPersonalInformation()
      * @see UserMode#requiresGuarantor()
      */
     @NotNull
-    default Flowable<Boolean> rxEnterExtraPersonalInfo(@NotNull UserMode mode) {
+    default Flowable<?> rx_a_enterExtraPersonalInfo(@NotNull Engine<?> engine,
+                                                    @NotNull UserMode mode) {
         if (mode.requiresGuarantor()) {
-            return rx_enterPersonalInfo(mode.extraPersonalInformation());
+            return rx_a_enterPersonalInfo(engine, mode.extraPersonalInformation());
         } else {
             return Flowable.just(true);
         }
@@ -183,15 +113,17 @@ public interface PersonalInfoActionType extends
     /**
      * Confirm additional personal inputs. This is only relevant to
      * {@link UserMode#requiresGuarantor()}.
+     * @param engine {@link Engine} instance.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #rxConfirmPersonalInfo()
+     * @see #rx_a_confirmPersonalInfo(Engine)
      * @see UserMode#requiresGuarantor()
      */
     @NotNull
-    default Flowable<Boolean> rx_confirmExtraPersonalInfo(@NotNull UserMode mode) {
+    default Flowable<?> rx_a_confirmExtraPersonalInfo(@NotNull Engine<?> engine,
+                                                      @NotNull UserMode mode) {
         if (mode.requiresGuarantor()) {
-            return rxConfirmPersonalInfo();
+            return rx_a_confirmPersonalInfo(engine);
         } else {
             return Flowable.just(true);
         }
@@ -199,34 +131,16 @@ public interface PersonalInfoActionType extends
 
     /**
      * Watch until the personal info screen is no longer visible.
+     * @param ENGINE {@link Engine} instance.
      * @return A {@link Flowable} instance.
-     * @see #rxPersonalInfoSubmitButton()
-     * @see BaseEngine#rx_watchUntilHidden(WebElement)
+     * @see #rx_e_personalInfoSubmit(Engine)
+     * @see Engine#rx_watchUntilHidden(WebElement)
      */
     @NotNull
-    default Flowable<Boolean> rxWatchPersonalInfoScreenUntilHidden() {
-        final BaseEngine<?> ENGINE = engine();
-
-        return rxPersonalInfoSubmitButton()
+    default Flowable<?> rx_a_watchPersonalInfoScreen(@NotNull final Engine<?> ENGINE) {
+        return rx_e_personalInfoSubmit(ENGINE)
             .flatMap(ENGINE::rx_watchUntilHidden)
             .onErrorReturnItem(true);
-    }
-
-    /**
-     * Navigate from the personal info input screen to the extra info input
-     * screen. Only applicable to {@link UserMode#requiresGuarantor()}.
-     * If {@link UserMode#requiresGuarantor()} is {@link Boolean#FALSE},
-     * this method will go directly to the dashboard.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
-     * @see #rx_enterPersonalInfo(UserMode)
-     * @see #rxConfirmPersonalInfo()
-     * @see UserMode#requiresGuarantor()
-     */
-    @NotNull
-    default Flowable<Boolean> rx_personalInfo_extraInfo(@NotNull UserMode mode) {
-        final PersonalInfoActionType THIS = this;
-        return rx_enterPersonalInfo(mode).flatMap(a -> THIS.rxConfirmPersonalInfo());
     }
 
     /**
@@ -237,13 +151,12 @@ public interface PersonalInfoActionType extends
      * text is not a separate view, so we need to manually calculate an
      * approximate position, a press/tap on which will open up the web
      * browser.
+     * @param ENGINE {@link Engine} instance.
      * @return A {@link Flowable} instance.
      */
     @NotNull
-    default Flowable<Boolean> rxOpenTOCWebsite() {
-        final BaseEngine<?> ENGINE = engine();
-
-        return rxTOCAcceptanceLabel()
+    default Flowable<?> rx_a_OpenTOC(@NotNull final Engine<?> ENGINE) {
+        return rx_e_TOCAcceptanceLabel(ENGINE)
             .map(a -> {
                 Point point = a.getLocation();
                 Dimension size = a.getSize();

@@ -3,17 +3,64 @@ package com.holmusk.SuperLeapQA.ui.signup.main;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.Flowable;
+import io.reactivex.schedulers.Schedulers;
 import org.jetbrains.annotations.NotNull;
+import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.number.NumberTestUtil;
+import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.xtestkit.base.Engine;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by haipham on 19/5/17.
  */
 public interface DOBPickerTestHelperType extends DOBPickerActionType {
+    /**
+     * Validate the DoB picker screen.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rx_containsText(String...)
+     * @see Engine#rx_click(WebElement)
+     * @see Engine#rx_navigateBackOnce()
+     * @see #rx_e_DoBEditField(Engine)
+     * @see #rx_e_DoBElements(Engine)
+     * @see #generalDelay()
+     * @see ObjectUtil#nonNull(Object)
+     */
+    @NotNull
+    @SuppressWarnings("unchecked")
+    default Flowable<?> rx_h_DoBPickerScreen(@NotNull final Engine<?> ENGINE) {
+        long delay = generalDelay();
+
+        return Flowable
+            .mergeArray(
+                rx_e_DoBEditField(ENGINE),
+                ENGINE.rx_containsText("register_title_dateOfBirth"),
+                ENGINE.rx_containsText(
+                    "parentSignUp_title_whatIsYourChild",
+                    "teenSignUp_title_whatIsYour"
+                )
+            )
+            .all(ObjectUtil::nonNull)
+            .toFlowable()
+
+            /* Open the DoB dialog and verify that all elements are there */
+            .flatMap(a -> rx_e_DoBEditField(ENGINE))
+            .flatMap(ENGINE::rx_click)
+            .flatMap(a -> rx_e_DoBElements(ENGINE).all(ObjectUtil::nonNull).toFlowable())
+            .delay(delay, TimeUnit.MILLISECONDS, Schedulers.trampoline())
+
+            /* Dismiss the dialog by navigating back once */
+            .flatMap(a -> ENGINE.rx_navigateBackOnce())
+            .delay(delay, TimeUnit.MILLISECONDS, Schedulers.trampoline())
+            .map(BooleanUtil::toTrue);
+    }
+
     /**
      * Sequentially select DoBs and validate that DoBs that fall out of
      * {@link UserMode#acceptableAgeCategoryRange()} should not bring the user
@@ -24,62 +71,64 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
      * be treated the same. This is why we use
      * {@link UserMode#acceptableAgeCategoryRange()} instead of
      * {@link UserMode#acceptableAgeRange()}.
+     * @param ENGINE {@link Engine} instance.
      * @param MODE A {@link UserMode} instance.
      * @param AGES A {@link List} of {@link Integer}.
      * @return A {@link Flowable} instance.
      * @see UserMode#acceptableAgeCategoryRange()
-     * @see #rxOpenDoBPicker()
-     * @see #rx_validateAcceptableAgeScreen()
-     * @see #rxValidateUnacceptableAgeScreen(UserMode)
-     * @see #rxNavigateBackWithBackButton()
+     * @see #rx_a_openDoBPicker(Engine)
+     * @see #rx_v_acceptableAgeScreen(Engine)
+     * @see #rx_v_unacceptableAgeScreen(Engine, UserMode)
+     * @see #rx_a_clickBackButton(Engine)
      */
     @NotNull
     @GuarantorAware(value = false)
-    default Flowable<Boolean> rxValidateDoBs(@NotNull final UserMode MODE,
-                                             @NotNull final List<Integer> AGES) {
+    default Flowable<?> rx_h_validateDoBs(@NotNull final Engine<?> ENGINE,
+                                          @NotNull final UserMode MODE,
+                                          @NotNull final List<Integer> AGES) {
         final DOBPickerActionType THIS = this;
         final List<Integer> RANGE = MODE.acceptableAgeCategoryRange();
         final int LENGTH = AGES.size();
 
-        class IterateDoBs {
+        class Repeater {
             @NotNull
-            @SuppressWarnings("WeakerAccess")
-            Flowable<Boolean> repeat(final int INDEX) {
+            private Flowable<?> repeat(final int INDEX) {
                 if (INDEX < LENGTH) {
                     final int AGE = AGES.get(INDEX);
                     final boolean VALID = RANGE.contains(AGE);
 
-                    return THIS.rxOpenDoBPicker()
-                        .flatMap(a -> THIS.rxSelectDoBToBeOfAge(AGE))
-                        .flatMap(a -> THIS.rxConfirmDoB())
+                    return THIS.rx_a_openDoBPicker(ENGINE)
+                        .flatMap(a -> THIS.rx_a_selectDoBToBeOfAge(ENGINE, AGE))
+                        .flatMap(a -> THIS.rxConfirmDoB(ENGINE))
                         .flatMap(a -> {
                             if (VALID) {
-                                return THIS.rx_validateAcceptableAgeScreen();
+                                return THIS.rx_v_acceptableAgeScreen(ENGINE);
                             } else {
-                                return THIS.rxValidateUnacceptableAgeScreen(MODE);
+                                return THIS.rx_v_unacceptableAgeScreen(ENGINE, MODE);
                             }
                         })
-                        .flatMap(a -> THIS.rxNavigateBackWithBackButton())
-                        .flatMap(a -> new IterateDoBs().repeat(INDEX + 1));
+                        .flatMap(a -> THIS.rx_a_clickBackButton(ENGINE))
+                        .flatMap(a -> new Repeater().repeat(INDEX + 1));
                 } else {
                     return Flowable.just(true);
                 }
             }
         }
 
-        return new IterateDoBs().repeat(0);
+        return new Repeater().repeat(0);
     }
 
     /**
      * Check that the DoB dialog has correct elements.
-     * @return A {@link Flowable} instance.
-     * @see #rxOpenDoBPicker()
-     * @see #rxSelectDoB(Date)
-     * @see #rxNavigateBackWithBackButton()
-     * @see #rxDoBEditFieldHasDate(Date)
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rx_a_openDoBPicker(Engine)
+     * @see #rx_a_selectDoB(Engine, Date)
+     * @see #rx_a_clickBackButton(Engine)
+     * @see #rx_v_DoBEditFieldHasDate(Engine, Date)
      */
     @NotNull
-    default Flowable<Boolean> rxCheckDoBDialogHasCorrectElements() {
+    default Flowable<?> rxCheckDoBDialogHasCorrectElements(@NotNull final Engine<?> ENGINE) {
         final DOBPickerActionType THIS = this;
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, NumberTestUtil.randomBetween(1, 28));
@@ -87,10 +136,10 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
         calendar.set(Calendar.YEAR, NumberTestUtil.randomBetween(1970, 2000));
         final Date DATE = calendar.getTime();
 
-        return rxOpenDoBPicker()
-            .flatMap(a -> THIS.rxSelectDoB(DATE))
-            .flatMap(a -> THIS.rxConfirmDoB())
-            .flatMap(a -> THIS.rxNavigateBackWithBackButton())
-            .flatMap(a -> THIS.rxDoBEditFieldHasDate(DATE));
+        return rx_a_openDoBPicker(ENGINE)
+            .flatMap(a -> THIS.rx_a_selectDoB(ENGINE, DATE))
+            .flatMap(a -> THIS.rxConfirmDoB(ENGINE))
+            .flatMap(a -> THIS.rx_a_clickBackButton(ENGINE))
+            .flatMap(a -> THIS.rx_v_DoBEditFieldHasDate(ENGINE, DATE));
     }
 }

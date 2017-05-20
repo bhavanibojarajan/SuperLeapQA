@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
-import org.swiften.xtestkit.base.BaseEngine;
+import org.swiften.xtestkit.base.Engine;
 
 /**
  * Created by haipham on 5/16/17.
@@ -14,35 +14,36 @@ import org.swiften.xtestkit.base.BaseEngine;
 public interface DashboardValidationType extends BaseValidationType {
     /**
      * Get the Use App Now button.
+     * @param engine {@link Engine} instance.
      * @return A {@link Flowable} instance.
+     * @see Engine#rx_containsText(String...)
      */
     @NotNull
-    default Flowable<WebElement> rxUseAppNowButton() {
-        return engine()
-            .rx_elementsContainingText("dashboard_title_useAppNow")
+    default Flowable<WebElement> rxUseAppNowButton(@NotNull Engine<?> engine) {
+        return engine
+            .rx_containsText("dashboard_title_useAppNow")
             .firstElement()
             .toFlowable();
     }
 
     /**
      * Validate the Use App Now screen after the user finishes sign up.
+     * @param engine {@link Engine} instance.
      * @return A {@link Flowable} instance.
-     * @see #engine()
-     * @see BaseEngine#rx_elementsContainingText(String...)
-     * @see #rxUseAppNowButton()
+     * @see Engine#rx_containsText(String...)
+     * @see #rxUseAppNowButton(Engine)
      * @see ObjectUtil#nonNull(Object)
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<Boolean> rxValidateUseAppNowScreen() {
+    default Flowable<?> rxValidateUseAppNowScreen(@NotNull Engine<?> engine) {
         final DashboardValidationType THIS = this;
-        final BaseEngine<?> ENGINE = engine();
 
         return Flowable
             .mergeArray(
-                ENGINE.rx_elementsContainingText("dashboard_title_accountReadyToUse"),
-                ENGINE.rx_elementsContainingText("dashboard_title_rememberCheckEmail"),
-                THIS.rxUseAppNowButton()
+                engine.rx_containsText("dashboard_title_accountReadyToUse"),
+                engine.rx_containsText("dashboard_title_rememberCheckEmail"),
+                THIS.rxUseAppNowButton(engine)
             )
             .all(ObjectUtil::nonNull)
             .toFlowable();
@@ -52,14 +53,10 @@ public interface DashboardValidationType extends BaseValidationType {
      * Validate that the tutorial screen is present when the user first signs
      * up.
      * @return A {@link Flowable} instance.
-     * @see #engine()
-     * @see BaseEngine#rx_elementsContainingText(String...)
-     * @see BooleanUtil#toTrue(Object)
+     * @see Engine#rx_containsText(String...)
      */
     @NotNull
-    default Flowable<Boolean> rxValidateDashboardTutorialScreen() {
-        return engine()
-            .rx_elementsContainingText("dashboard_title_tapHereToMakeFirstEntry")
-            .map(BooleanUtil::toTrue);
+    default Flowable<?> rxValidateDashboardTutorialScreen(@NotNull Engine<?> engine) {
+        return engine.rx_containsText("dashboard_title_tapHereToMakeFirstEntry");
     }
 }

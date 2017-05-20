@@ -8,9 +8,8 @@ import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
-import org.swiften.xtestkit.base.BaseEngine;
+import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.mobile.android.AndroidEngine;
-import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 
 /**
  * Created by haipham on 17/5/17.
@@ -19,21 +18,16 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
     /**
      * Get the submit button for the personal info screen. Depending on the
      * current {@link UserMode}, the confirm button text may change.
+     * @param engine {@link Engine} instance.
      * @return A {@link Flowable} instance.
-     * @see #engine()
-     * @see BaseEngine#rx_elementsContainingID(String...)
+     * @see Engine#rx_containsID(String...)
      * @see RxUtil#error(String)
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<WebElement> rxPersonalInfoSubmitButton() {
-        BaseEngine<?> engine = engine();
-
+    default Flowable<WebElement> rx_e_personalInfoSubmit(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
-            return engine
-                .rx_elementsContainingID("btnNext")
-                .firstElement()
-                .toFlowable();
+            return engine.rx_containsID("btnNext").firstElement().toFlowable();
         } else {
             return RxUtil.error(NOT_AVAILABLE);
         }
@@ -41,21 +35,16 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
 
     /**
      * Get the Terms and Conditions checkbox.
+     * @param engine {@link Engine} instance.
      * @return A {@link Flowable} instance.
-     * @see #engine()
-     * @see BaseEngine#rx_elementsContainingID(String...)
+     * @see Engine#rx_containsID(String...)
      * @see RxUtil#error(String)
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<WebElement> rxTOCCheckBox() {
-        BaseEngine<?> engine = engine();
-
+    default Flowable<WebElement> rx_e_TOCCheckBox(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
-            return engine
-                .rx_elementsContainingID("ctv_toc")
-                .firstElement()
-                .toFlowable();
+            return engine.rx_containsID("ctv_toc").firstElement().toFlowable();
         } else {
             return RxUtil.error(NOT_AVAILABLE);
         }
@@ -63,14 +52,14 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
 
     /**
      * Get the Terms and Condition acceptance label.
+     * @param engine {@link Engine} instance.
      * @return A {@link Flowable} instance.
-     * @see #engine()
-     * @see BaseEngine#rx_elementsContainingText(String...)
+     * @see Engine#rx_containsText(String...)
      */
     @NotNull
-    default Flowable<WebElement> rxTOCAcceptanceLabel() {
-        return engine()
-            .rx_elementsContainingText("register_title_readAndAcceptTOC")
+    default Flowable<WebElement> rx_e_TOCAcceptanceLabel(@NotNull Engine<?> engine) {
+        return engine
+            .rx_containsText("register_title_readAndAcceptTOC")
             .firstElement()
             .toFlowable();
     }
@@ -82,19 +71,19 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
      * @return A {@link Flowable} instance.
      * @see UserMode#personalInformation()
      * @see #rx_editFieldForInput(SLInputType)
-     * @see #rxPersonalInfoSubmitButton()
+     * @see #rx_e_personalInfoSubmit(Engine)
      * @see ObjectUtil#nonNull(Object)
      * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
-    default Flowable<Boolean> rxValidatePersonalInfoScreen(@NotNull UserMode mode) {
+    default Flowable<?> rx_v_personalInfoScreen(@NotNull final Engine<?> ENGINE,
+                                                @NotNull UserMode mode) {
         final PersonalInfoValidationType THIS = this;
 
         return Flowable.fromIterable(mode.personalInformation())
-            .flatMap(THIS::rx_editFieldForInput)
-            .concatWith(THIS.rxPersonalInfoSubmitButton())
+            .flatMap(THIS::rx_e_editField)
+            .concatWith(THIS.rx_e_personalInfoSubmit(ENGINE))
             .all(ObjectUtil::nonNull)
-            .toFlowable()
-            .map(BooleanUtil::toTrue);
+            .toFlowable();
     }
 }

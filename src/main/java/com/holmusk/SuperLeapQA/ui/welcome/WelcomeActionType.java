@@ -7,7 +7,7 @@ import io.reactivex.schedulers.Schedulers;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.xtestkit.base.BaseEngine;
+import org.swiften.xtestkit.base.Engine;
 
 import java.util.concurrent.TimeUnit;
 
@@ -15,32 +15,17 @@ import java.util.concurrent.TimeUnit;
  * Created by haipham on 5/7/17.
  */
 public interface WelcomeActionType extends BaseActionType, WelcomeValidationType {
-    //region Bridged Navigation
-    /**
-     * Bridge method that helps navigate from splash to register.
-     * @return A {@link Flowable} instance.
-     * @see #rx_splash_welcome()
-     * @see #rx_welcome_register()
-     */
-    @NotNull
-    default Flowable<Boolean> rx_splash_register() {
-        final WelcomeActionType THIS = this;
-        return rx_splash_welcome().flatMap(a -> THIS.rx_welcome_register());
-    }
-    //endregion
-
     /**
      * Navigate from welcome to register screen, assuming the user is already
      * on the welcome screen.
+     * @param ENGINE {@link Engine} instance.
      * @return A {@link Flowable} instance.
-     * @see #rxWelcomeRegisterButton()
-     * @see BaseEngine#rx_click(WebElement)
+     * @see #rx_e_welcomeRegister(Engine)
+     * @see Engine#rx_click(WebElement)
      */
     @NotNull
-    default Flowable<Boolean> rx_welcome_register() {
-        final BaseEngine<?> ENGINE = engine();
-
-        return rxWelcomeRegisterButton()
+    default Flowable<?> rx_welcome_register(@NotNull final Engine<?> ENGINE) {
+        return rx_e_welcomeRegister(ENGINE)
             .flatMap(ENGINE::rx_click)
             .map(BooleanUtil::toTrue);
     }
@@ -52,10 +37,9 @@ public interface WelcomeActionType extends BaseActionType, WelcomeValidationType
      * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
-    default Flowable<Boolean> rx_splash_welcome() {
+    default Flowable<?> rx_splash_welcome() {
         long delay = splashDelay();
         TimeUnit unit = TimeUnit.MILLISECONDS;
-        Scheduler scheduler = Schedulers.trampoline();
-        return Flowable.timer(delay, unit, scheduler).map(BooleanUtil::toTrue);
+        return Flowable.timer(delay, unit);
     }
 }

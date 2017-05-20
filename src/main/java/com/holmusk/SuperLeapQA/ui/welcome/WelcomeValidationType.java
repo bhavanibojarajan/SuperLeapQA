@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
-import org.swiften.xtestkit.base.BaseEngine;
+import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.param.UnidirectionParam;
 import org.swiften.xtestkit.base.type.DurationType;
 
@@ -17,62 +17,54 @@ import org.swiften.xtestkit.base.type.DurationType;
 public interface WelcomeValidationType extends BaseValidationType {
     /**
      * Get the register button on the welcome screen.
+     * @param engine {@link Engine} instance.
      * @return A {@link Flowable} instance.
-     * @see #engine()
-     * @see BaseEngine#rx_elementsContainingText(String...)
+     * @see Engine#rx_containsText(String...)
      */
     @NotNull
-    default Flowable<WebElement> rxWelcomeRegisterButton() {
-        return engine()
-            .rx_elementsContainingText("welcome_title_register")
-            .firstElement()
-            .toFlowable();
+    default Flowable<WebElement> rx_e_welcomeRegister(@NotNull Engine<?> engine) {
+        return engine.rx_containsText("welcome_title_register").firstElement().toFlowable();
     }
 
     /**
      * Get the sign in button on the welcome screen.
+     * @param engine {@link Engine} instance.
      * @return A {@link Flowable} instance.
-     * @see #engine()
-     * @see BaseEngine#rx_elementsContainingText(String...)
+     * @see Engine#rx_containsText(String...)
      */
     @NotNull
-    default Flowable<WebElement> rxWelcomeSignInButton() {
-        return engine()
-            .rx_elementsContainingText("welcome_title_signIn")
-            .firstElement()
-            .toFlowable();
+    default Flowable<WebElement> rx_e_welcomeSignIn(@NotNull Engine<?> engine) {
+        return engine.rx_containsText("welcome_title_signIn").firstElement().toFlowable();
     }
 
     /**
      * Validate that all views are present in splash screen.
+     * @param engine {@link Engine} instance.
      * @return A {@link Flowable} instance.
-     * @see #rxWelcomeSignInButton()
-     * @see #rxWelcomeRegisterButton()
+     * @see #rx_e_welcomeSignIn(Engine)
+     * @see #rx_e_welcomeRegister(Engine)
      * @see ObjectUtil#nonNull(Object)
      * @see BooleanUtil#toTrue(Object)
      */
     @SuppressWarnings("unchecked")
-    default Flowable<Boolean> rxValidateWelcomeScreen() {
+    default Flowable<?> rxValidateWelcomeScreen(@NotNull Engine<?> engine) {
         return Flowable
-            .concat(rxWelcomeSignInButton(), rxWelcomeRegisterButton())
+            .concat(rx_e_welcomeSignIn(engine), rx_e_welcomeRegister(engine))
             .all(ObjectUtil::nonNull)
-            .map(BooleanUtil::toTrue)
             .toFlowable();
     }
 
     /**
      * Validate the swipeable splash screens.
+     * @param ENGINE {@link Engine} instance.
      * @return A {@link Flowable} instance.
-     * @see #engine()
-     * @see BaseEngine#rx_elementsContainingText(String...)
-     * @see BaseEngine#rx_swipeGenericLR(DurationType)
-     * @see BaseEngine#rxSwipeGenericRL(DurationType)
+     * @see Engine#rx_containsText(String...)
+     * @see Engine#rx_swipeGenericLR(DurationType)
+     * @see Engine#rxSwipeGenericRL(DurationType)
      */
     @NonNull
     @SuppressWarnings("unchecked")
-    default Flowable<Boolean> rxValidateSwipes() {
-        final BaseEngine<?> ENGINE = engine();
-
+    default Flowable<?> rxValidateSwipes(@NotNull final Engine<?> ENGINE) {
         final String[][] MESSAGES = new String[][] {
             {
                 "welcome_title_oneLiner",
@@ -98,7 +90,7 @@ public interface WelcomeValidationType extends BaseValidationType {
                     String[] messages = MESSAGES[INDEX];
 
                     return Flowable.fromArray(messages)
-                        .flatMap(ENGINE::rx_elementsContainingText)
+                        .flatMap(ENGINE::rx_containsText)
                         .all(ObjectUtil::nonNull)
                         .toFlowable()
 
@@ -117,12 +109,10 @@ public interface WelcomeValidationType extends BaseValidationType {
         }
 
         return ENGINE
-            .rx_swipeGenericLR(
-                UnidirectionParam.builder()
-                    .withTimes(LENGTH)
-                    .withDuration(0)
-                    .build()
-            )
+            .rx_swipeGenericLR(UnidirectionParam.builder()
+                .withTimes(LENGTH)
+                .withDuration(0)
+                .build())
             .flatMap(a -> new CheckScreen().checkScreen(0));
     }
 }

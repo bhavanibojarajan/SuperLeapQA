@@ -117,7 +117,7 @@ public class UIBaseTest implements BaseActionType, BaseValidationType {
 
     @BeforeClass
     public void beforeClass() {
-        /* Calling beforeClass() here ensures that each BaseEngine will
+        /* Calling beforeClass() here ensures that each Engine will
          * only start the test environment once */
         TEST_KIT.beforeClass(beforeClassParam());
     }

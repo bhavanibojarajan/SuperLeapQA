@@ -8,34 +8,26 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.rx.RxUtil;
-import org.swiften.xtestkit.base.BaseEngine;
+import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.type.BaseErrorType;
-import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.android.AndroidEngine;
-import org.swiften.xtestkit.test.type.BaseTestType;
 
 /**
  * Interfaces that extend this should declare methods that assist with app
  * validation (e.g. make sure all views are present).
  */
-public interface BaseValidationType extends BaseTestType, BaseErrorType, AppDelayType {
+public interface BaseValidationType extends BaseErrorType, AppDelayType {
     /**
      * Get the common back button.
+     * @param engine {@link Engine} instance.
      * @return A {@link Flowable} instance.
-     * @see #engine()
-     * @see BaseEngine#platform()
-     * @see BaseEngine#rx_elementsContainingID(String...)
+     * @see Engine#platform()
+     * @see Engine#rx_containsID(String...)
      */
     @NotNull
-    default Flowable<WebElement> rxBackButton() {
-        BaseEngine<?> engine = engine();
-        PlatformType platform = engine.platform();
-
+    default Flowable<WebElement> rxBackButton(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
-            return engine
-                .rx_elementsContainingID("btnBack")
-                .firstElement()
-                .toFlowable();
+            return engine.rx_containsID("btnBack").firstElement().toFlowable();
         } else {
             return RxUtil.error();
         }
@@ -43,19 +35,14 @@ public interface BaseValidationType extends BaseTestType, BaseErrorType, AppDela
 
     /**
      * Get the common probress bar.
+     * @param engine {@link Engine} instance.
      * @return A {@link Flowable} instance.
-     * @see #engine()
-     * @see BaseEngine#rx_elementsContainingID(String...)
+     * @see Engine#rx_containsID(String...)
      */
     @NotNull
-    default Flowable<WebElement> rx_progressBar() {
-        BaseEngine<?> engine = engine();
-
+    default Flowable<WebElement> rx_progressBar(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
-            return engine
-                .rx_elementsContainingID("pb_general")
-                .firstElement()
-                .toFlowable();
+            return engine.rx_containsID("pb_general").firstElement().toFlowable();
         } else {
             return RxUtil.error();
         }

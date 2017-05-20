@@ -1,5 +1,6 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
+import com.holmusk.SuperLeapQA.model.ChoiceInput;
 import com.holmusk.SuperLeapQA.model.SLInputType;
 import org.swiften.xtestkit.base.element.action.input.type.InputType;
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
@@ -73,9 +74,9 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_DoBPicker(mode)
-            .flatMap(a -> THIS.rxValidateDoBPickerScreen())
-            .flatMap(a -> THIS.rxNavigateBackWithBackButton())
-            .flatMap(a -> THIS.rxValidateRegisterScreen())
+            .flatMap(a -> THIS.rx_h_DoBPickerScreen())
+            .flatMap(a -> THIS.rx_a_clickBackButton())
+            .flatMap(a -> THIS.rx_v_registerScreen())
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -119,7 +120,7 @@ public class UISignUpTest extends UIBaseTest implements
      * submit button without filling in require inputs should fail.
      * @param mode A {@link UserMode} instance.
      * @see #rx_splash_unacceptableAgeInput(UserMode)
-     * @see #rx_clickInputField(SLInputType)
+     * @see #rx_a_clickInputField(SLInputType)
      * @see #generalUserModeProvider()
      */
     @SuppressWarnings("unchecked")
@@ -132,8 +133,8 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_unacceptableAgeInput(mode)
-            .flatMap(a -> THIS.rxConfirmUnacceptableAgeInput())
-            .flatMap(a -> THIS.rx_clickInputField(TextInput.NAME))
+            .flatMap(a -> THIS.rx_a_confirmUnacceptableAgeInput())
+            .flatMap(a -> THIS.rx_a_clickInputField(TextInput.NAME))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -161,7 +162,7 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_acceptableAge(MODE)
-            .flatMap(a -> THIS.rxEnterAndValidateAcceptableAgeInputs(MODE))
+            .flatMap(a -> THIS.rx_h_enterAndCheckAcceptableAgeInputs(MODE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -189,7 +190,7 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_personalInfo(MODE)
-            .flatMap(a -> THIS.rxValidatePersonalInfoScreen(MODE))
+            .flatMap(a -> THIS.rx_v_personalInfoScreen(MODE))
             .flatMap(a -> THIS.rxEnterAndValidatePersonalInfo(MODE))
             .subscribe(subscriber);
 
@@ -209,7 +210,7 @@ public class UISignUpTest extends UIBaseTest implements
      * @param MODE A {@link UserMode} instance.
      * @see UserMode#offsetFromCategoryAcceptableRange(int)
      * @see #rx_splash_DoBPicker(UserMode)
-     * @see #rxValidateDoBs(UserMode, List)
+     * @see #rx_h_validateDoBs(UserMode, List)
      * @see #generalUserModeProvider()
      * @see #assertCorrectness(TestSubscriber)
      */
@@ -224,7 +225,7 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_DoBPicker(MODE)
-            .flatMap(a -> THIS.rxValidateDoBs(MODE, AGES))
+            .flatMap(a -> THIS.rx_h_validateDoBs(MODE, AGES))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -257,11 +258,11 @@ public class UISignUpTest extends UIBaseTest implements
         // When
         /* Check that if phone is entered, we don't need email */
         rx_splash_unacceptableAgeInput(mode)
-            .flatMap(a -> THIS.rxCheckUnacceptableAgeInputRequired(TextInput.PHONE))
+            .flatMap(a -> THIS.rx_h_unacceptableAgeInputRequired(TextInput.PHONE))
 
             /* Check that if email is entered, we don't need phone */
             .flatMap(a -> THIS.rx_splash_unacceptableAgeInput(mode))
-            .flatMap(a -> THIS.rxCheckUnacceptableAgeInputRequired(TextInput.EMAIL))
+            .flatMap(a -> THIS.rx_h_unacceptableAgeInputRequired(TextInput.EMAIL))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -290,7 +291,7 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_unacceptableAgeInput(mode)
-            .flatMap(a -> THIS.rxEnterAndValidateUnacceptableAgeInputs())
+            .flatMap(a -> THIS.rx_h_enterAndCheckUnacceptableAgeInputs())
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -301,7 +302,7 @@ public class UISignUpTest extends UIBaseTest implements
 
     /**
      * Confirm that when the user selects
-     * {@link com.holmusk.SuperLeapQA.model.ChoiceInput#HEIGHT} in
+     * {@link ChoiceInput#HEIGHT} in
      * {@link com.holmusk.SuperLeapQA.model.Height#FT}, every 12
      * {@link com.holmusk.SuperLeapQA.model.Height#INCH} is converted to
      * {@link com.holmusk.SuperLeapQA.model.Height#FT}.
@@ -337,7 +338,7 @@ public class UISignUpTest extends UIBaseTest implements
      * user will be notified.
      * @param mode A {@link UserMode} instance.
      * @see #rx_splash_acceptableAge(UserMode)
-     * @see #rx_validateAcceptableAgeEmptyInputErrors(UserMode)
+     * @see #rx_h_acceptableAgeEmptyInputErrors(UserMode)
      * @see #generalUserModeProvider()
      * @see #assertCorrectness(TestSubscriber)
      */
@@ -351,7 +352,7 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_splash_acceptableAge(mode)
-            .flatMap(a -> THIS.rx_validateAcceptableAgeEmptyInputErrors(mode))
+            .flatMap(a -> THIS.rx_h_acceptableAgeEmptyInputErrors(mode))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -386,7 +387,7 @@ public class UISignUpTest extends UIBaseTest implements
         // When
         rx_splash_extraInfo(MODE)
             .flatMap(a -> THIS.rx_enterPersonalInfo(inputs))
-            .flatMap(a -> THIS.rx_confirmExtraPersonalInfo(MODE))
+            .flatMap(a -> THIS.rx_a_confirmExtraPersonalInfo(MODE))
 
             /* If all inputs are valid, the progress bar should be visible
              * to indicate data being processed */

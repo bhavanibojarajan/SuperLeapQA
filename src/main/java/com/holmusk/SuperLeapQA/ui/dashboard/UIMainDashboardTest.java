@@ -46,9 +46,9 @@ public class UIMainDashboardTest extends UIBaseTest implements DashboardTestHelp
         // When
         rx_splash_useApp(mode)
             .flatMap(a -> THIS.rxValidateUseAppNowScreen())
-            .flatMap(a -> THIS.rxUseAppNow())
+            .flatMap(a -> THIS.rx_a_useAppNow())
             .flatMap(a -> THIS.rxValidateDashboardTutorialScreen())
-            .flatMap(a -> THIS.rx_tutorial_dashboard())
+            .flatMap(a -> THIS.rx_n_tutorial_dashboard())
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

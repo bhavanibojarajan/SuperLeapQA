@@ -5,10 +5,9 @@ import com.holmusk.SuperLeapQA.ui.welcome.WelcomeValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
-import org.swiften.xtestkit.base.BaseEngine;
+import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.mobile.android.AndroidEngine;
 
 /**
@@ -17,21 +16,20 @@ import org.swiften.xtestkit.mobile.android.AndroidEngine;
 public interface RegisterModeValidationType extends WelcomeValidationType {
     /**
      * Get the sign up button that corresponds to a {@link UserMode}.
+     * @param engine {@link Engine} instance.
      * @param mode A {@link UserMode} instance.
      * @return A {@link Flowable} instance.
-     * @see #engine()
      * @see UserMode#androidRegisterButtonId()
-     * @see BaseEngine#rx_elementsContainingID(String...)
+     * @see Engine#rx_containsID(String...)
      * @see RxUtil#error(String)
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<WebElement> rxSignUpButton(@NotNull UserMode mode) {
-        BaseEngine<?> engine = engine();
-
+    default Flowable<WebElement> rx_e_signUp(@NotNull Engine<?> engine,
+                                             @NotNull UserMode mode) {
         if (engine instanceof AndroidEngine) {
             return engine
-                .rx_elementsContainingID(mode.androidRegisterButtonId())
+                .rx_containsID(mode.androidRegisterButtonId())
                 .firstElement()
                 .toFlowable();
         } else {
@@ -41,19 +39,17 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
 
     /**
      * Get the back button's title label.
+     * @param engine {@link Engine} instance.
      * @return A {@link Flowable} instance.
-     * @see #engine()
-     * @see BaseEngine#rx_elementsContainingText(String...)
+     * @see Engine#rx_containsText(String...)
      * @see RxUtil#error(String)
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<WebElement> rxBackButtonTitleLabel() {
-        BaseEngine<?> engine = engine();
-
+    default Flowable<WebElement> rx_e_backButtonTitle(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             return engine
-                .rx_elementsContainingText("register_title_whichOneBestDescribes")
+                .rx_containsText("register_title_whichOneBestDescribes")
                 .firstElement()
                 .toFlowable();
         } else {
@@ -63,29 +59,27 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
 
     /**
      * Validate the register screen.
+     * @param engine {@link Engine} instance.
      * @return A {@link Flowable} instance.
-     * @see #engine()
-     * @see BaseEngine#rx_elementsContainingText(String...)
-     * @see #rxSignUpButton(UserMode)
-     * @see #rxBackButtonTitleLabel()
+     * @see Engine#rx_containsText(String...)
+     * @see #rx_e_signUp(Engine, UserMode)
+     * @see #rx_e_backButtonTitle(Engine)
      * @see ObjectUtil#nonNull(Object)
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<Boolean> rxValidateRegisterScreen() {
-        final BaseEngine<?> ENGINE = engine();
-
+    default Flowable<?> rx_v_registerScreen(@NotNull Engine<?> engine) {
         return Flowable
             .mergeArray(
-                ENGINE.rx_elementsContainingText("register_title_iAmParent"),
-                ENGINE.rx_elementsContainingText("register_title_iRegisterForChild"),
-                ENGINE.rx_elementsContainingText("register_title_iAmTeen"),
-                ENGINE.rx_elementsContainingText("register_title_iRegisterForSelf"),
-                ENGINE.rx_elementsContainingText("register_title_or"),
-                ENGINE.rx_elementsContainingText("register_title_initiativeByHPB"),
-                rxSignUpButton(UserMode.PARENT),
-                rxSignUpButton(UserMode.TEEN_UNDER_18),
-                rxBackButtonTitleLabel()
+                engine.rx_containsText("register_title_iAmParent"),
+                engine.rx_containsText("register_title_iRegisterForChild"),
+                engine.rx_containsText("register_title_iAmTeen"),
+                engine.rx_containsText("register_title_iRegisterForSelf"),
+                engine.rx_containsText("register_title_or"),
+                engine.rx_containsText("register_title_initiativeByHPB"),
+                rx_e_signUp(engine, UserMode.PARENT),
+                rx_e_signUp(engine, UserMode.TEEN_UNDER_18),
+                rx_e_backButtonTitle(engine)
             )
             .all(ObjectUtil::nonNull)
             .toFlowable();
