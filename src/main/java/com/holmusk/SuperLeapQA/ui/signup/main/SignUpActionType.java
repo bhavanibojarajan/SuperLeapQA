@@ -15,11 +15,11 @@ import org.swiften.xtestkit.mobile.Platform;
  */
 public interface SignUpActionType extends SignUpValidationType, RegisterModeActionType {
     /**
-     * Enter an input for a {@link TextInput}.
-     * @param input A {@link TextInputType} instance.
-     * @param TEXT A {@link String} value.
+     * Enter an input for {@link TextInput}.
+     * @param input {@link TextInputType} instance.
+     * @param TEXT {@link String} value.
      * @param <P> Generics parameter.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_e_editField(Engine, SLInputType)
      * @see Engine#rxSendKey(WebElement, String...)
      */
@@ -34,9 +34,9 @@ public interface SignUpActionType extends SignUpValidationType, RegisterModeActi
     /**
      * Enter a random input using {@link TextInputType#randomInput()}.
      * @param engine {@link Engine} instance.
-     * @param input A {@link TextInputType} instance.
+     * @param input {@link TextInputType} instance.
      * @param <P> Generics parameter.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_a_enterInput(Engine, SLInputType, String)
      * @see TextInputType#randomInput()
      */
@@ -50,9 +50,9 @@ public interface SignUpActionType extends SignUpValidationType, RegisterModeActi
      * Perform a click action on an editable field. This is useful when
      * the editable field is showing an error circle that can be shown if
      * clicked (however, this is only applicable to {@link Platform#ANDROID}.
-     * @param input A {@link InputType} instance.
+     * @param input {@link InputType} instance.
      * @param <P> Generics parameter.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_e_editField(Engine, SLInputType)   )
      * @see Engine#rx_click(WebElement)
      */

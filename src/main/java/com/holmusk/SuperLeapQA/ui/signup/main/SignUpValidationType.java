@@ -19,9 +19,9 @@ public interface SignUpValidationType extends BaseActionType {
      * Get the editable {@link WebElement} that corresponds to a
      * {@link InputType}.
      * @param engine {@link Engine} instance.
-     * @param input A {@link InputType} instance.
+     * @param input {@link InputType} instance.
      * @param <P> Generics parameter.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_withXPath(XPath...)
      * @see RxUtil#error(String)
      * @see #NOT_AVAILABLE

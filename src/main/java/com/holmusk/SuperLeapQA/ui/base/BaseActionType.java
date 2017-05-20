@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 public interface BaseActionType extends BaseErrorType, BaseValidationType, BaseLocatorErrorType {
     /**
      * Navigate backwards by clicking the back button.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @param ENGINE {@link Engine} instance.
      * @see #generalDelay()
      * @see #rxBackButton(Engine)
@@ -40,7 +40,7 @@ public interface BaseActionType extends BaseErrorType, BaseValidationType, BaseL
     /**
      * Watch the progress bar until it's no longer visible.
      * @param ENGINE {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_progressBar(Engine)
      * @see Engine#rx_watchUntilHidden(WebElement)
      */

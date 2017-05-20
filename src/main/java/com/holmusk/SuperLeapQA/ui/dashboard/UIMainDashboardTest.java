@@ -22,38 +22,38 @@ public class UIMainDashboardTest extends UIBaseTest implements DashboardTestHelp
         super(index);
     }
 
-    /**
-     * This test builds upon
-     * {@link com.holmusk.SuperLeapQA.ui.signup.main.UISignUpTest#test_guarantorNeeded_shouldRequireParentInfo(UserMode)},
-     * but also provides validations for the dashboard screen. It will check
-     * the Use App Now popup and the dashboard tutorial as well.
-     * @param mode A {@link UserMode} instance.
-     * @see #rx_splash_useApp(UserMode)
-     * @see #rxValidateUseAppNowScreen()
-     * @see #rxUseAppNow()
-     * @see #rxValidateDashboardTutorialScreen()
-     * @see #rx_tutorial_dashboard()
-     * @see #guarantorSpecificUserModeProvider()
-     */
-    @SuppressWarnings("unchecked")
-    @GuarantorAware(value = true)
-    @Test(dataProvider = "guarantorSpecificUserModeProvider")
-    public void test_signUpNewAccount_shouldSucceed(@NotNull UserMode mode) {
-        // Setup
-        final UIMainDashboardTest THIS = this;
-        TestSubscriber subscriber = CustomTestSubscriber.create();
-
-        // When
-        rx_splash_useApp(mode)
-            .flatMap(a -> THIS.rxValidateUseAppNowScreen())
-            .flatMap(a -> THIS.rx_a_useAppNow())
-            .flatMap(a -> THIS.rxValidateDashboardTutorialScreen())
-            .flatMap(a -> THIS.rx_n_tutorial_dashboard())
-            .subscribe(subscriber);
-
-        subscriber.awaitTerminalEvent();
-
-        // Then
-        assertCorrectness(subscriber);
-    }
+//    /**
+//     * This test builds upon
+//     * {@link com.holmusk.SuperLeapQA.ui.signup.main.UISignUpTest#test_guarantorNeeded_shouldRequireParentInfo(UserMode)},
+//     * but also provides validations for the dashboard screen. It will check
+//     * the Use App Now popup and the dashboard tutorial as well.
+//     * @param mode {@link UserMode} instance.
+//     * @see #rx_splash_useApp(UserMode)
+//     * @see #rxValidateUseAppNowScreen()
+//     * @see #rxUseAppNow()
+//     * @see #rxValidateDashboardTutorialScreen()
+//     * @see #rx_tutorial_dashboard()
+//     * @see #guarantorSpecificUserModeProvider()
+//     */
+//    @SuppressWarnings("unchecked")
+//    @GuarantorAware(value = true)
+//    @Test(dataProvider = "guarantorSpecificUserModeProvider")
+//    public void test_signUpNewAccount_shouldSucceed(@NotNull UserMode mode) {
+//        // Setup
+//        final UIMainDashboardTest THIS = this;
+//        TestSubscriber subscriber = CustomTestSubscriber.create();
+//
+//        // When
+//        rx_splash_useApp(mode)
+//            .flatMap(a -> THIS.rxValidateUseAppNowScreen())
+//            .flatMap(a -> THIS.rx_a_useAppNow())
+//            .flatMap(a -> THIS.rxValidateDashboardTutorialScreen())
+//            .flatMap(a -> THIS.rx_n_tutorial_dashboard())
+//            .subscribe(subscriber);
+//
+//        subscriber.awaitTerminalEvent();
+//
+//        // Then
+//        assertCorrectness(subscriber);
+//    }
 }

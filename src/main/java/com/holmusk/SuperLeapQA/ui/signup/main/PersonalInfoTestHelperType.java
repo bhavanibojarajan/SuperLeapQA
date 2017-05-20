@@ -27,10 +27,11 @@ public interface PersonalInfoTestHelperType extends PersonalInfoActionType {
     /**
      * Enter random inputs and validate that the input views can be properly
      * interacted with.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
-     * @see #rxEnterRandomInput(SLTextInputType)
-     * @see #rx_editFieldForInput(SLInputType)
+     * @param ENGINE {@link Engine} instance.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Flowable} instance.
+     * @see #rx_a_enterRandomInput(Engine, SLTextInputType)
+     * @see #rx_e_editField(Engine, SLInputType)
      * @see Engine#rx_toggleNextOrDoneInput(WebElement)
      * @see Engine#rx_togglePasswordMask(WebElement)
      * @see Engine#isShowingPassword(WebElement)
@@ -38,19 +39,18 @@ public interface PersonalInfoTestHelperType extends PersonalInfoActionType {
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<Boolean> rxEnterAndValidatePersonalInfo(@NotNull UserMode mode) {
+    default Flowable<?> rx_h_enterAndCheckPersonalInfo(@NotNull final Engine<?> ENGINE,
+                                                       @NotNull UserMode mode) {
         final PersonalInfoActionType THIS = this;
-        final Engine<?> ENGINE = engine();
-
         return Flowable.fromIterable(mode.personalInformation())
             .ofType(SLTextInputType.class)
-            .concatMap(THIS::rx_a_enterRandomInput)
+            .concatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, a))
             .flatMap(ENGINE::rx_toggleNextOrDoneInput)
             .all(ObjectUtil::nonNull)
             .toFlowable()
 
-            .flatMap(a -> THIS.rx_a_enterRandomInput(TextInput.PASSWORD))
-            .flatMap(a -> THIS.rx_e_editField(TextInput.PASSWORD))
+            .flatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, TextInput.PASSWORD))
+            .flatMap(a -> THIS.rx_e_editField(ENGINE, TextInput.PASSWORD))
             .flatMap(a -> ENGINE.rx_toggleNextOrDoneInput(a).flatMap(b ->
                 ENGINE.rx_togglePasswordMask(a)
             ))
@@ -62,24 +62,23 @@ public interface PersonalInfoTestHelperType extends PersonalInfoActionType {
     /**
      * Validate that the TOC checkbox has the be checked before the user can
      * proceed to the next screen.
-     * @param MODE A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
-     * @see #engine()
+     * @param MODE {@link UserMode} instance.
+     * @return {@link Flowable} instance.
      * @see UserMode#personalInformation()
-     * @see #rx_enterPersonalInfo(List)
+     * @see #rx_a_enterPersonalInfo(Engine, List)
      * @see Engine#rx_hideKeyboard()
-     * @see #rxConfirmPersonalInfo()
-     * @see #rx_v_personalInfoScreen(UserMode)
+     * @see #rx_a_confirmPersonalInfo(Engine)
+     * @see #rx_v_personalInfoScreen(Engine, UserMode)
      */
     @NotNull
-    default Flowable<Boolean> rx_validateTOCCheckedBeforeProceeding(@NotNull final UserMode MODE) {
+    default Flowable<?> rx_h_checkTOCCBeforeProceeding(@NotNull final Engine<?> ENGINE,
+                                                       @NotNull final UserMode MODE) {
         final PersonalInfoActionType THIS = this;
-        final Engine<?> ENGINE = engine();
 
-        return rx_enterPersonalInfo(MODE.personalInformation())
+        return rx_a_enterPersonalInfo(ENGINE, MODE.personalInformation())
             .flatMap(a -> ENGINE.rx_hideKeyboard())
-            .flatMap(a -> THIS.rx_a_confirmPersonalInfo())
-            .flatMap(a -> THIS.rx_v_personalInfoScreen((MODE)));
+            .flatMap(a -> THIS.rx_a_confirmPersonalInfo(ENGINE))
+            .flatMap(a -> THIS.rx_v_personalInfoScreen(ENGINE, MODE));
     }
 
     /**
@@ -87,19 +86,18 @@ public interface PersonalInfoTestHelperType extends PersonalInfoActionType {
      * open the TOC website then back, and finally validate that all inputs
      * are saved and restored. This assumes the use is already in the
      * personal info page.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
-     * @see #engine()
+     * @param mode {@link UserMode} instance.
+     * @return {@link Flowable} instance.
      * @see UserMode#personalInformation()
-     * @see #rxEnterInput(SLInputType, String)
+     * @see #rx_a_enterInput(Engine, SLInputType, String)
      * @see ObjectUtil#nonNull(Object)
-     * @see #rxOpenTOCWebsite()
-     * @see #rx_editFieldHasValue(SLInputType, String)
+     * @see #rx_a_OpenTOC(Engine)
+     * @see #rx_v_editFieldHasValue(Engine, SLInputType, String)
      */
     @NotNull
-    default Flowable<Boolean> rx_validatePersonalInfoStateSaved(@NotNull UserMode mode) {
+    default Flowable<?> rx_h_checkPersonalInfoStateSaved(@NotNull final Engine<?> ENGINE,
+                                                         @NotNull UserMode mode) {
         final PersonalInfoActionType THIS = this;
-        final Engine<?> ENGINE = engine();
         final Map<String,String> INPUTS = new HashMap<>();
         List<SLInputType> info = mode.personalInformation();
 
@@ -112,7 +110,7 @@ public interface PersonalInfoTestHelperType extends PersonalInfoActionType {
 
         return Flowable
             .fromIterable(TEXT_INFO)
-            .concatMap(a -> THIS.rx_a_enterInput(a, INPUTS.get(a.toString())))
+            .concatMap(a -> THIS.rx_a_enterInput(ENGINE, a, INPUTS.get(a.toString())))
             .flatMap(ENGINE::rx_toggleNextInput)
             .all(ObjectUtil::nonNull)
             .toFlowable()
@@ -120,13 +118,13 @@ public interface PersonalInfoTestHelperType extends PersonalInfoActionType {
 
             /* We need to unmask the password field so that later its text
              * can be verified. Otherwise, the text returned will be empty */
-            .flatMap(a -> THIS.rx_e_editField(TextInput.PASSWORD))
+            .flatMap(a -> THIS.rx_e_editField(ENGINE, TextInput.PASSWORD))
             .flatMap(ENGINE::rx_togglePasswordMask)
 
-            .flatMap(a -> THIS.rx_a_OpenTOC())
+            .flatMap(a -> THIS.rx_a_OpenTOC(ENGINE))
             .delay(webViewDelay(), TimeUnit.MILLISECONDS, Schedulers.trampoline())
             .flatMap(a -> ENGINE.rx_navigateBackOnce())
             .flatMapIterable(a -> TEXT_INFO)
-            .concatMap(a -> THIS.rx_v_editFieldHasValue(a, INPUTS.get(a.toString())));
+            .concatMap(a -> THIS.rx_v_editFieldHasValue(ENGINE, a, INPUTS.get(a.toString())));
     }
 }

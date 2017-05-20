@@ -25,7 +25,7 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
      * Open the DoB dialog in the sign up screen. This can be used both
      * for parent sign up and teen sign up.
      * @param ENGINE {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_e_DoBEditField(Engine)
      * @see Engine#rx_click(WebElement)
      * @see Engine#rx_implicitlyWait(DelayType)
@@ -46,7 +46,7 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
      * the next screen, so if we want to check whether the date was properly
      * stored in the DoB text field, we need to navigate back once.
      * @param ENGINE {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      * @see Engine#rx_click(WebElement)
      * @see BooleanUtil#toTrue(Object)
@@ -68,8 +68,8 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
      * Select a DoB without confirming, assuming the user is already in the
      * DoB picker screen.
      * @param engine {@link Engine} instance.
-     * @param DATE A {@link Date} instance.
-     * @return A {@link Flowable} instance.
+     * @param DATE {@link Date} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_selectDate(DateType)
      */
     @NotNull
@@ -81,8 +81,8 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
     /**
      * Select a DoB so that the user is of a certain age.
      * @param engine {@link Engine} instance.
-     * @param age An {@link Integer} value.
-     * @return A {@link Flowable} instance.
+     * @param age {@link Integer} value.
+     * @return {@link Flowable} instance.
      * @see #rx_a_selectDoB(Engine, Date)
      */
     @NotNull

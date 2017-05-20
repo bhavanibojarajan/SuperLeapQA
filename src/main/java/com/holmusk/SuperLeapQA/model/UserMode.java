@@ -25,7 +25,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
 
     /**
      * Check if the current {@link UserMode} is in the teen category.
-     * @return A {@link Boolean} instance.
+     * @return {@link Boolean} instance.
      * @see #TEEN_UNDER_18
      * @see #TEEN_ABOVE_18
      */
@@ -42,7 +42,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
 
     /**
      * Check if the current {@link UserMode} is in the parent category.
-     * @return A {@link Boolean} instance.
+     * @return {@link Boolean} instance.
      * @see #PARENT
      */
     public boolean isParent() {
@@ -52,7 +52,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     /**
      * Get the id of the register button for the current {@link UserMode} on
      * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
-     * @return A {@link String} value.
+     * @return {@link String} value.
      */
     @NotNull
     public String androidRegisterButtonId() {
@@ -71,7 +71,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
 
     /**
      * Get the personal information inputs for this {@link UserMode}.
-     * @return A {@link List} of {@link SLInputType}.
+     * @return {@link List} of {@link SLInputType}.
      */
     @NotNull
     public List<SLInputType> personalInformation() {
@@ -104,7 +104,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     /**
      * Get additional personal inputs, esp. for {@link UserMode#TEEN_UNDER_18} since
      * users will need to enter parent's information as well.
-     * @return A {@link List} of {@link SLInputType}.
+     * @return {@link List} of {@link SLInputType}.
      * @see Arrays#asList(Object[])
      * @see Collections#emptyList()
      */
@@ -127,7 +127,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     /**
      * Check whether the current use requires guarantor information. This
      * is only applicable for {@link #TEEN_UNDER_18}.
-     * @return A {@link Boolean} value.
+     * @return {@link Boolean} value.
      */
     public boolean requiresGuarantor() {
         switch (this) {
@@ -141,7 +141,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
 
     /**
      * Get the minimum acceptable age for the current {@link UserMode}.
-     * @return An {@link Integer} value.
+     * @return {@link Integer} value.
      */
     public int minAcceptableAge() {
         switch (this) {
@@ -161,7 +161,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
 
     /**
      * Get the maximum acceptable age for the current {@link UserMode}.
-     * @return An {@link Integer} value.
+     * @return {@link Integer} value.
      */
     public int maxAcceptableAge() {
         switch (this) {
@@ -185,7 +185,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * {@link #TEEN_UNDER_18} and {@link #TEEN_ABOVE_18} technically have
      * the same {@link #minAcceptableAge()} and {@link #maxAcceptableAge()}
      * from the application's perspective.
-     * @return An {@link Integer} value.
+     * @return {@link Integer} value.
      * @see #maxAcceptableAge()
      */
     public int minCategoryAcceptableAge() {
@@ -208,7 +208,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * {@link #TEEN_UNDER_18} and {@link #TEEN_ABOVE_18} technically have
      * the same {@link #minAcceptableAge()} and {@link #maxAcceptableAge()}
      * from the application's perspective.
-     * @return An {@link Integer} value.
+     * @return {@link Integer} value.
      * @see #maxAcceptableAge()
      */
     public int maxCategoryAcceptableAge() {
@@ -227,7 +227,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
 
     /**
      * Get the acceptable age range for the current {@link UserMode}.
-     * @return A {@link List} of {@link Integer}.
+     * @return {@link List} of {@link Integer}.
      * @see #valueRange(Number, Number, Number)
      * @see #minAcceptableAge()
      * @see #maxAcceptableAge()
@@ -241,7 +241,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
 
     /**
      * Get the acceptable age category range for the current {@link UserMode}.
-     * @return A {@link List} of {@link Integer}.
+     * @return {@link List} of {@link Integer}.
      * @see #valueRange(Number, Number, Number)
      * @see #minCategoryAcceptableAge()
      * @see #maxCategoryAcceptableAge()
@@ -255,7 +255,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
 
     /**
      * Produce a random acceptable age.
-     * @return An {@link Integer} value.
+     * @return {@link Integer} value.
      * @see CollectionTestUtil#randomElement(List)
      * @see #acceptableAgeRange()
      */
@@ -268,8 +268,8 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * the min/max age by an offset value. Note that this does not take
      * into account {@link #requiresGuarantor()}, so the ranges for
      * {@link #TEEN_ABOVE_18} and {@link #TEEN_UNDER_18} are the same.
-     * @param offset An {@link Integer} value.
-     * @return A {@link List} of {@link Integer}.
+     * @param offset {@link Integer} value.
+     * @return {@link List} of {@link Integer}.
      * @see #valueRange(Number, Number, Number)
      * @see #minCategoryAcceptableAge()
      * @see #maxCategoryAcceptableAge()
@@ -286,7 +286,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * Note that this uses the {@link #minCategoryAcceptableAge()} and
      * {@link #maxCategoryAcceptableAge()} because {@link #TEEN_UNDER_18}
      * and {@link #TEEN_ABOVE_18} are technically in the same category.
-     * @return A {@link String} value.
+     * @return {@link String} value.
      * @see #acceptableAgeRange()
      * @see #minCategoryAcceptableAge()
      * @see #maxCategoryAcceptableAge()

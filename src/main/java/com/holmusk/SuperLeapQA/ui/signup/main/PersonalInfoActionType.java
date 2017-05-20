@@ -22,7 +22,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Acce
     /**
      * Click the submit button to confirm personal info inputs.
      * @param ENGINE {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_e_personalInfoSubmit(Engine)
      * @see Engine#rx_click(WebElement)
      * @see BooleanUtil#toTrue(Object)
@@ -35,8 +35,8 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Acce
     /**
      * Toggle the TOC checkbox to be accepted/rejected.
      * @param ENGINE {@link Engine} instance.
-     * @param ACCEPTED A {@link Boolean} value.
-     * @return A {@link Flowable} instance.
+     * @param ACCEPTED {@link Boolean} value.
+     * @return {@link Flowable} instance.
      * @see #rx_e_TOCCheckBox(Engine)
      * @see Engine#toggleCheckBox(WebElement, boolean)
      * @see Engine#click(WebElement)
@@ -52,8 +52,8 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Acce
      * This method can be used for {@link UserMode#personalInformation()}
      * and {@link UserMode#extraPersonalInformation()}.
      * @param ENGINE {@link Engine} instance.
-     * @param inputs A {@link List} of {@link InputType}.
-     * @return A {@link Flowable} instance.
+     * @param inputs {@link List} of {@link InputType}.
+     * @return {@link Flowable} instance.
      * @see #rx_a_enterRandomInput(Engine, SLTextInputType)
      * @see Engine#rx_navigateBackOnce()
      * @see #rx_a_toggleTOC(Engine, boolean)
@@ -73,8 +73,8 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Acce
 
     /**
      * Enter random personal info inputs in order to access the next screen.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Flowable} instance.
      * @see UserMode#personalInformation()
      * @see #rx_a_enterPersonalInfo(Engine, List)
      * @see Engine#rx_hideKeyboard()
@@ -94,8 +94,8 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Acce
      * Enter random additional personal info inputs in order to access the
      * next screen. This is only relevant for {@link UserMode#requiresGuarantor()}.
      * @param engine {@link Engine} instance.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_a_enterPersonalInfo(Engine, List)
      * @see UserMode#extraPersonalInformation()
      * @see UserMode#requiresGuarantor()
@@ -114,8 +114,8 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Acce
      * Confirm additional personal inputs. This is only relevant to
      * {@link UserMode#requiresGuarantor()}.
      * @param engine {@link Engine} instance.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_a_confirmPersonalInfo(Engine)
      * @see UserMode#requiresGuarantor()
      */
@@ -132,7 +132,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Acce
     /**
      * Watch until the personal info screen is no longer visible.
      * @param ENGINE {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_e_personalInfoSubmit(Engine)
      * @see Engine#rx_watchUntilHidden(WebElement)
      */
@@ -152,7 +152,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Acce
      * approximate position, a press/tap on which will open up the web
      * browser.
      * @param ENGINE {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      */
     @NotNull
     default Flowable<?> rx_a_OpenTOC(@NotNull final Engine<?> ENGINE) {

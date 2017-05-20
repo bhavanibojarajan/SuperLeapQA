@@ -26,9 +26,9 @@ public interface AcceptableAgeActionType extends AcceptableAgeValidationType, DO
     /**
      * Select a value, assuming the user is in the value selection screen.
      * @param ENGINE {@link Engine} instance.
-     * @param MODE A {@link SLNumericInputType} instance.
-     * @param NUMERIC_VALUE A {@link Double} value.
-     * @return A {@link Flowable} instance.
+     * @param MODE {@link SLNumericInputType} instance.
+     * @param NUMERIC_VALUE {@link Double} value.
+     * @return {@link Flowable} instance.
      * @see #rx_e_pickerItemViews(Engine, SLChoiceInputType)
      * @see Engine#rx_click(WebElement)
      * @see SwipeRepeatComparisonType#rx_scrollViewChildCount()
@@ -148,8 +148,8 @@ public interface AcceptableAgeActionType extends AcceptableAgeValidationType, DO
      * {@link SLNumericInputType} (e.g. {@link Height#CM} and
      * {@link Height#CM_DEC}).
      * @param ENGINE {@link Engine} instance.
-     * @param inputs A {@link List} of {@link Zipped} instances.
-     * @return A {@link Flowable} instance.
+     * @param inputs {@link List} of {@link Zipped} instances.
+     * @return {@link Flowable} instance.
      * @see #rx_a_selectNumericInput(Engine, SLChoiceInputType, double)
      * @see BooleanUtil#isTrue(boolean)
      */
@@ -186,7 +186,7 @@ public interface AcceptableAgeActionType extends AcceptableAgeValidationType, DO
     /**
      * Confirm numeric choice input (e.g. for {@link Height} and {@link Weight}).
      * @param ENGINE {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_click(WebElement)
      * @see BooleanUtil#toTrue(Object)
      */
@@ -196,10 +196,10 @@ public interface AcceptableAgeActionType extends AcceptableAgeValidationType, DO
     }
 
     /**
-     * Select an {@link Ethnicity} for {@link ChoiceInput#ETHNICITY}.
+     * Select {@link Ethnicity} for {@link ChoiceInput#ETHNICITY}.
      * @param ENGINE {@link Engine} instance.
-     * @param E An {@link Ethnicity} instance.
-     * @return A {@link Flowable} instance.
+     * @param E {@link Ethnicity} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      * @see #rx_a_clickInputField(Engine, SLInputType)
      * @see Engine#rx_click(WebElement)
@@ -216,10 +216,10 @@ public interface AcceptableAgeActionType extends AcceptableAgeValidationType, DO
     }
 
     /**
-     * Select a {@link CoachPref} for {@link ChoiceInput#COACH_PREF}.
+     * Select {@link CoachPref} for {@link ChoiceInput#COACH_PREF}.
      * @param ENGINE {@link Engine} instance.
-     * @param CP A {@link CoachPref} instance.
-     * @return A {@link Flowable} instance.
+     * @param CP {@link CoachPref} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      * @see #rx_a_clickInputField(Engine, SLInputType)
      * @see Engine#rx_click(WebElement)
@@ -238,7 +238,7 @@ public interface AcceptableAgeActionType extends AcceptableAgeValidationType, DO
     /**
      * Confirm the acceptable age inputs by clicking the next button, assuming
      * the user is already in the acceptable age input screen.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_e_acceptableAgeConfirm(Engine)
      * @see Engine#rx_click(WebElement)
      */
@@ -250,8 +250,8 @@ public interface AcceptableAgeActionType extends AcceptableAgeValidationType, DO
     /**
      * Enter random acceptable age inputs in order to access the personal
      * information input screen.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Flowable} instance.
      * @see Height#randomValue(UserMode)
      * @see Weight#randomValue(UserMode)
      * @see #rx_a_clickInputField(Engine, SLInputType)

@@ -20,8 +20,8 @@ public interface AcceptableAgeTestHelperType extends AcceptableAgeActionType {
      * Enter random inputs for acceptable age screen, assuming the user is
      * already in the acceptable age input screen.
      * @param E {@link Engine} instance.
-     * @param m A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
+     * @param m {@link UserMode} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_a_clickInputField(Engine, SLInputType)
      * @see #rx_a_selectNumericInput(Engine, List)
      * @see #rx_v_editFieldHasValue(Engine, SLInputType, String)
@@ -70,8 +70,8 @@ public interface AcceptableAgeTestHelperType extends AcceptableAgeActionType {
      * {@link TextInput} and {@link ChoiceInput}, assuming the user is
      * already in the acceptable age input screen.
      * @param E {@link Engine} instance.
-     * @param M A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
+     * @param M {@link UserMode} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_a_confirmAcceptableAgeInputs(Engine)
      */
     @NotNull
@@ -134,11 +134,11 @@ public interface AcceptableAgeTestHelperType extends AcceptableAgeActionType {
     }
 
     /**
-     * Confirm that 12 {@link Height#INCH} is converted to a {@link Height#FT}
+     * Confirm that 12 {@link Height#INCH} is converted to {@link Height#FT}
      * when we are picking {@link ChoiceInput#HEIGHT}, assuming the user
      * is already in the acceptable age screen.
      * @param ENGINE {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Height#stringValue(PlatformType, UnitSystem, List)
      * @see #rx_a_selectNumericInput(Engine, List)
      * @see #rx_a_confirmNumericChoice(Engine)

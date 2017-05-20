@@ -10,6 +10,7 @@ import org.swiften.xtestkit.kit.param.AfterClassParam;
 import org.swiften.xtestkit.kit.param.AfterParam;
 import org.swiften.xtestkit.kit.param.BeforeClassParam;
 import org.swiften.xtestkit.kit.param.BeforeParam;
+import org.swiften.xtestkit.test.type.BaseTestType;
 import org.testng.annotations.*;
 
 import java.util.Iterator;
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * Created by haipham on 4/4/17.
  */
-public class UIBaseTest implements BaseActionType, BaseValidationType {
+public class UIBaseTest implements BaseTestType, BaseActionType, BaseValidationType {
     @NotNull
     @DataProvider(parallel = true)
     public static Iterator<Object[]> dataProvider() {
@@ -45,7 +46,7 @@ public class UIBaseTest implements BaseActionType, BaseValidationType {
     /**
      * This {@link DataProvider} provides {@link UserMode} instances that
      * do not care whether a guarantor is required.
-     * @return A {@link Iterator} instance.
+     * @return {@link Iterator} instance.
      * @see UserMode#PARENT
      * @see UserMode#TEEN_UNDER_18
      */
@@ -67,7 +68,7 @@ public class UIBaseTest implements BaseActionType, BaseValidationType {
      * specifically request for guarantor information. For example, personal
      * information input tests will require {@link UserMode#requiresGuarantor()}
      * to decide whether the parent info screen is required.
-     * @return A {@link Iterator} instance.
+     * @return {@link Iterator} instance.
      * @see UserMode#TEEN_UNDER_18
      * @see UserMode#TEEN_ABOVE_18
      */

@@ -20,7 +20,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
     /**
      * Get the common back button.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#platform()
      * @see Engine#rx_containsID(String...)
      */
@@ -36,7 +36,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
     /**
      * Get the common probress bar.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsID(String...)
      */
     @NotNull

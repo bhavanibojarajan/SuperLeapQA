@@ -25,8 +25,8 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
 
     /**
      * Get the {@link Height} instances for {@link UnitSystem#METRIC}.
-     * @param platform A {@link PlatformType} instance.
-     * @return A {@link List} of {@link Height}.
+     * @param platform {@link PlatformType} instance.
+     * @return {@link List} of {@link Height}.
      * @see Platform#ANDROID
      */
     @NotNull
@@ -40,8 +40,8 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
 
     /**
      * Get the {@link Height} instances for {@link UnitSystem#IMPERIAL}.
-     * @param platform A {@link PlatformType} instance.
-     * @return A {@link List} of {@link Height}.
+     * @param platform {@link PlatformType} instance.
+     * @return {@link List} of {@link Height}.
      */
     @NotNull
     public static List<Height> imperial(@NotNull PlatformType platform) {
@@ -49,11 +49,11 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     }
 
     /**
-     * Get a {@link List} of {@link Height} instances, based on
+     * Get {@link List} of {@link Height} instances, based on
      * {@link Platform} and {@link UnitSystem}.
-     * @param platform A {@link PlatformType} instance.
-     * @param unit A {@link UnitSystem} instance.
-     * @return A {@link List} of {@link Height}.
+     * @param platform {@link PlatformType} instance.
+     * @param unit {@link UnitSystem} instance.
+     * @return {@link List} of {@link Height}.
      * @see #metric(PlatformType)
      * @see #imperial(PlatformType)
      * @see #NOT_AVAILABLE
@@ -74,11 +74,11 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     }
 
     /**
-     * Get a {@link List} of random metric input values.
-     * @param platform A {@link PlatformType} instance.
-     * @param MODE A {@link UserMode} instance.
-     * @param unit A {@link UnitSystem} instance.
-     * @return A {@link List} of {@link Zipped}.
+     * Get {@link List} of random metric input values.
+     * @param platform {@link PlatformType} instance.
+     * @param MODE {@link UserMode} instance.
+     * @param unit {@link UnitSystem} instance.
+     * @return {@link List} of {@link Zipped}.
      * @see #instances(PlatformType, UnitSystem)
      * @see SLNumericInputType#randomValue(UserMode)
      */
@@ -92,12 +92,12 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     }
 
     /**
-     * Get a {@link String} representation of {@link Height} values, based
+     * Get {@link String} representation of {@link Height} values, based
      * on {@link UnitSystem}.
-     * @param platform A {@link PlatformType} instance.
-     * @param unit A {@link UnitSystem} instance.
-     * @param inputs A {@link List} of {@link Zipped}.
-     * @return A {@link String} value.
+     * @param platform {@link PlatformType} instance.
+     * @param unit {@link UnitSystem} instance.
+     * @param inputs {@link List} of {@link Zipped}.
+     * @return {@link String} value.
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -121,7 +121,7 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     }
 
     /**
-     * @return A {@link String} value.
+     * @return {@link String} value.
      * @see SLNumericInputType#emptyInputError(UserMode)
      */
     @NotNull
@@ -136,7 +136,7 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * is useful for when there are multiple
      * {@link org.openqa.selenium.WebElement} with the same id (e.g. picking
      * {@link #FT} and {@link #INCH} at the same time).
-     * @return An {@link Integer} value.
+     * @return {@link Integer} value.
      * @see #NOT_AVAILABLE
      */
     public int androidViewIndex() {
@@ -155,7 +155,7 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     }
 
     /**
-     * @return A {@link XPath} value.
+     * @return {@link XPath} value.
      * @see AndroidInputType#androidViewXPath()
      * @see #NOT_AVAILABLE
      */
@@ -183,7 +183,7 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     }
 
     /**
-     * @return Return a {@link XPath} value.
+     * @return Return {@link XPath} value.
      * @see AndroidChoiceInputType#androidScrollViewPickerXPath()
      * @see #newXPathBuilder()
      * @see #androidViewIndex()
@@ -197,7 +197,7 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     }
 
     /**
-     * @return A {@link XPath} value.
+     * @return {@link XPath} value.
      * @see AndroidChoiceInputType#androidScrollViewItemXPath()
      * @see #newXPathBuilder()
      * @see #androidViewIndex()
@@ -213,8 +213,8 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     /**
      * Get the appropriately formatted height {@link String}, depending on
      * the type of {@link Height}.
-     * @param value A {@link Double} value.
-     * @return A {@link String} value.
+     * @param value {@link Double} value.
+     * @return {@link String} value.
      * @see SLNumericInputType#stringValue(double)
      */
     @NotNull
@@ -225,8 +225,8 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
 
     /**
      * Get the minimum selectable height.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Double} value.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Double} value.
      * @see SLNumericInputType#minSelectableNumericValue(UserMode)
      * @see UserMode#isParent()
      * @see #NOT_AVAILABLE
@@ -252,8 +252,8 @@ public enum Height implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     /**
      * Get the maximum selectable height. Return a lower value to avoid
      * {@link StackOverflowError} from too much scrolling.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Double} value.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Double} value.
      * @see SLNumericInputType#maxSelectableNumericValue(UserMode)
      * @see UserMode#isParent()
      * @see #NOT_AVAILABLE

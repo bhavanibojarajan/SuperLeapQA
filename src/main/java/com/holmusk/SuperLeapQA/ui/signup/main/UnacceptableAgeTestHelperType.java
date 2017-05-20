@@ -18,9 +18,9 @@ public interface UnacceptableAgeTestHelperType extends UnacceptableAgeActionType
      * input is required, assuming the user is already in the unacceptable age
      * input screen.
      * @param ENGINE {@link Engine} instance.
-     * @param INPUT A {@link TextInput} instance. Should be either
+     * @param INPUT {@link TextInput} instance. Should be either
      * {@link TextInput#EMAIL} or {@link TextInput#PHONE}.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_a_enterRandomInput(Engine, SLTextInputType)
      * @see #rx_a_confirmUnacceptableAgeInput(Engine)
      * @see #rx_a_watchProgressBarUntilHidden(Engine)
@@ -44,7 +44,7 @@ public interface UnacceptableAgeTestHelperType extends UnacceptableAgeActionType
      * Enter random inputs for unacceptable age screen, then confirm and check
      * that the app shows a confirmation page.
      * @param ENGINE {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_a_enterRandomInput(Engine, SLTextInputType)
      * @see #unacceptableAgeInputConfirmDelay()
      * @see Engine#rx_click(WebElement)

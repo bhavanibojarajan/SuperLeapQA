@@ -21,7 +21,7 @@ public interface NavigationType extends DashboardTestHelperType {
     /**
      * Navigate to the parent sign up screen from register screen, assuming
      * the user is already on the register screen.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_e_signUp(Engine, UserMode)
      * @see Engine#rx_click(WebElement)
      */
@@ -34,8 +34,8 @@ public interface NavigationType extends DashboardTestHelperType {
     /**
      * Navigate to the appropriate screen, based on an age value.
      * @param ENGINE {@link Engine} instance.
-     * @param AGE An {@link Integer} value.
-     * @return A {@link Flowable} instance.
+     * @param AGE {@link Integer} value.
+     * @return {@link Flowable} instance.
      * @see #rx_a_openDoBPicker(Engine)
      * @see #rx_a_selectDoBToBeOfAge(Engine, int)
      * @see #rxConfirmDoB(Engine) )
@@ -54,8 +54,8 @@ public interface NavigationType extends DashboardTestHelperType {
      * Navigate to the acceptable age input screen by selecting a DoB that
      * results in an age that lies within {@link UserMode#acceptableAgeRange()}.
      * @param engine {@link Engine} instance.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_n_DoBPicker_inputScreenForAge(Engine, int)
      */
     @NotNull
@@ -71,8 +71,8 @@ public interface NavigationType extends DashboardTestHelperType {
      * results in an age that does not lie within
      * {@link UserMode#maxCategoryAcceptableAge()})
      * @param engine {@link Engine} instance.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Flowable} instance.
      * @see UserMode#maxCategoryAcceptableAge()
      * @see #rx_n_DoBPicker_inputScreenForAge(Engine, int)
      */
@@ -86,8 +86,8 @@ public interface NavigationType extends DashboardTestHelperType {
     /**
      * Navigate from the acceptable age input to the personal info input
      * screen.
-     * @param MODE A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
+     * @param MODE {@link UserMode} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_a_enterAcceptableAgeInputs(Engine, UserMode)
      * @see #rx_a_confirmAcceptableAgeInputs(Engine)
      */
@@ -106,8 +106,8 @@ public interface NavigationType extends DashboardTestHelperType {
      * If {@link UserMode#requiresGuarantor()} is {@link Boolean#FALSE},
      * this method will go directly to the dashboard.
      * @param ENGINE {@link Engine} instance.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_a_enterPersonalInfo(Engine, List)
      * @see #rx_a_confirmPersonalInfo(Engine)
      */
@@ -127,8 +127,8 @@ public interface NavigationType extends DashboardTestHelperType {
      * For other {@link UserMode} instances, this screen should be the
      * personal info screen.
      * @param ENGINE {@link Engine} instance.
-     * @param MODE A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
+     * @param MODE {@link UserMode} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_a_enterExtraPersonalInfo(Engine, UserMode)
      * @see #rx_a_confirmExtraPersonalInfo(Engine, UserMode)
      * @see #rx_a_watchProgressBarUntilHidden(Engine)
@@ -159,7 +159,7 @@ public interface NavigationType extends DashboardTestHelperType {
      * Navigate from the Use App Now screen to the Dashboard tutorial screen,
      * assuming the user is already in the Use App Now screen.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_a_useAppNow(Engine)
      */
     @NotNull
@@ -171,7 +171,7 @@ public interface NavigationType extends DashboardTestHelperType {
      * Navigate from the dashboard tutorial to the dashboard, assuming the
      * user is in the tutorial screen (i.e. using for the first time).
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_navigateBackOnce()
      */
     @NotNull

@@ -17,15 +17,15 @@ public interface SLNumericInputType extends SLInputType, ValueRangeConverterType
      * Get an error message format that can be used with
      * {@link #minSelectableNumericValue(UserMode)} and
      * {@link #maxSelectableNumericValue(UserMode)} to create an error message.
-     * @return A {@link String} value.
+     * @return {@link String} value.
      */
     @NotNull
     String emptyInputErrorFormat();
 
     /**
      * We provide a default implementation to make use of max and min values.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link org.swiften.javautilities.localizer.LCFormat} value.
+     * @param mode {@link UserMode} instance.
+     * @return {@link org.swiften.javautilities.localizer.LCFormat} value.
      * @see SLInputType#emptyInputError(UserMode)
      * @see #emptyInputErrorFormat()
      * @see #minSelectableNumericValue(UserMode)
@@ -49,9 +49,9 @@ public interface SLNumericInputType extends SLInputType, ValueRangeConverterType
     }
 
     /**
-     * Convert a {@link String} value into a numeric value.
-     * @param value A {@link Double} value.
-     * @return A {@link Double} value.
+     * Convert {@link String} value into a numeric value.
+     * @param value {@link Double} value.
+     * @return {@link Double} value.
      */
     default double numericValue(@NotNull String value) {
         return Double.valueOf(value);
@@ -59,8 +59,8 @@ public interface SLNumericInputType extends SLInputType, ValueRangeConverterType
 
     /**
      * Get the numeric value's {@link String} representation.
-     * @param value A {@link Double} value.
-     * @return A {@link String} value.
+     * @param value {@link Double} value.
+     * @return {@link String} value.
      */
     @NotNull
     default String stringValue(double value) {
@@ -69,31 +69,31 @@ public interface SLNumericInputType extends SLInputType, ValueRangeConverterType
 
     /**
      * Get the minimum numeric value that can be selected.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Double} value.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Double} value.
      */
     double minSelectableNumericValue(@NotNull UserMode mode);
 
     /**
      * Get the maximum numeric value that can be selected.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Double} value.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Double} value.
      */
     double maxSelectableNumericValue(@NotNull UserMode mode);
 
     /**
      * Get the difference between two consecutive numeric values.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Double} value.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Double} value.
      */
     default double selectableNumericValueStep(@NotNull UserMode mode) {
         return 1;
     }
 
     /**
-     * Limit the number of elements within a {@link List} of numeric range
+     * Limit the number of elements within {@link List} of numeric range
      * return by {@link #selectableNumericRange(UserMode)}.
-     * @return An {@link Integer} value.
+     * @return {@link Integer} value.
      */
     @NotNull
     default Optional<Integer> numericRangeLimit() {
@@ -102,8 +102,8 @@ public interface SLNumericInputType extends SLInputType, ValueRangeConverterType
 
     /**
      * Get the selectable numeric range.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link List} of {@link Double}.
+     * @param mode {@link UserMode} instance.
+     * @return {@link List} of {@link Double}.
      * @see #numericRangeLimit()
      * @see #valueRange(Number, Number, Number)
      * @see #minSelectableNumericValue(UserMode)
@@ -125,7 +125,7 @@ public interface SLNumericInputType extends SLInputType, ValueRangeConverterType
 
     /**
      * Get a random numeric value from {@link #selectableNumericRange(UserMode)}.
-     * @return A {@link Double} value.
+     * @return {@link Double} value.
      * @see #selectableNumericRange(UserMode)
      * @see CollectionTestUtil#randomElement(List)
      */

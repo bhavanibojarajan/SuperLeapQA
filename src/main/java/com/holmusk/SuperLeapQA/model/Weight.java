@@ -23,8 +23,8 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
 
     /**
      * Get the {@link Weight} instances for metric unit of measurement.
-     * @param platform A {@link PlatformType} instance.
-     * @return A {@link List} of {@link Weight}.
+     * @param platform {@link PlatformType} instance.
+     * @return {@link List} of {@link Weight}.
      */
     @NotNull
     public static List<Weight> metric(@NotNull PlatformType platform) {
@@ -33,8 +33,8 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
 
     /**
      * Get the {@link Weight} instances for imperial unit of measurement.
-     * @param platform A {@link UserMode} instance.
-     * @return A {@link List} of {@link Weight}.
+     * @param platform {@link UserMode} instance.
+     * @return {@link List} of {@link Weight}.
      */
     @NotNull
     public static List<Weight> imperial(@NotNull PlatformType platform) {
@@ -42,11 +42,11 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     }
 
     /**
-     * Get a {@link List} of {@link Weight} instances, based on
+     * Get {@link List} of {@link Weight} instances, based on
      * {@link UserMode} and {@link UnitSystem}.
-     * @param platform A {@link PlatformType} instance.
-     * @param unit A {@link UnitSystem} instance.
-     * @return A {@link List} of {@link Weight}.
+     * @param platform {@link PlatformType} instance.
+     * @param unit {@link UnitSystem} instance.
+     * @return {@link List} of {@link Weight}.
      * @see #metric(PlatformType)
      * @see #imperial(PlatformType)
      * @see #NOT_AVAILABLE
@@ -67,11 +67,11 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     }
 
     /**
-     * Get a {@link List} of random metric input values.
-     * @param platform A {@link PlatformType} instance.
-     * @param MODE A {@link UserMode} instance.
-     * @param unit A {@link UnitSystem} instance.
-     * @return A {@link List} of {@link Zipped}.
+     * Get {@link List} of random metric input values.
+     * @param platform {@link PlatformType} instance.
+     * @param MODE {@link UserMode} instance.
+     * @param unit {@link UnitSystem} instance.
+     * @return {@link List} of {@link Zipped}.
      * @see #instances(PlatformType, UnitSystem)
      * @see SLNumericInputType#randomValue(UserMode)
      */
@@ -85,7 +85,7 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     }
 
     /**
-     * @return A {@link String} value.
+     * @return {@link String} value.
      * @see SLNumericInputType#emptyInputError(UserMode)
      */
     @NotNull
@@ -106,7 +106,7 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * is useful for when there are multiple
      * {@link org.openqa.selenium.WebElement} with the same id (e.g. picking
      * {@link #KG} and {@link #KG_DEC} at the same time).
-     * @return An {@link Integer} value.
+     * @return {@link Integer} value.
      * @see #NOT_AVAILABLE
      */
     public int androidViewIndex() {
@@ -125,7 +125,7 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     }
 
     /**
-     * @return A {@link XPath} value.
+     * @return {@link XPath} value.
      * @see AndroidInputType#androidViewXPath()
      * @see #newXPathBuilder()
      * @see #NOT_AVAILABLE
@@ -154,7 +154,7 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     }
 
     /**
-     * @return Return a {@link XPath} value.
+     * @return Return {@link XPath} value.
      * @see AndroidChoiceInputType#androidScrollViewPickerXPath()
      * @see #newXPathBuilder()
      * @see #androidViewIndex()
@@ -168,7 +168,7 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     }
 
     /**
-     * @return A {@link XPath} value.
+     * @return {@link XPath} value.
      * @see AndroidChoiceInputType#androidScrollViewItemXPath()
      * @see #newXPathBuilder()
      * @see #androidViewIndex()
@@ -183,8 +183,8 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     /**
      * Get the appropriately formatted weight {@link String}, depending on
      * the type of {@link Weight}.
-     * @param value A {@link Double} value.
-     * @return A {@link String} value.
+     * @param value {@link Double} value.
+     * @return {@link String} value.
      * @see SLNumericInputType#stringValue(double)
      */
     @NotNull
@@ -194,8 +194,8 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     }
 
     /**
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Double} value.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Double} value.
      * @see SLNumericInputType#minSelectableNumericValue(UserMode)
      * @see UserMode#isParent()
      * @see #NOT_AVAILABLE
@@ -221,8 +221,8 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     /**
      * Get the maximum selectable weight. Return a lower value to avoid
      * {@link StackOverflowError} from too much scrolling.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Double} value.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Double} value.
      * @see SLNumericInputType#maxSelectableNumericValue(UserMode)
      * @see UserMode#isParent()
      * @see #NOT_AVAILABLE

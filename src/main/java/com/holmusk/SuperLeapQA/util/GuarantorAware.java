@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  */
 
 /**
- * Mark a {@link ElementType#METHOD} as {@link GuarantorAware} to
+ * Mark {@link ElementType#METHOD} as {@link GuarantorAware} to
  * distinguish between
  * {@link com.holmusk.SuperLeapQA.model.UserMode#TEEN_UNDER_18} and
  * {@link com.holmusk.SuperLeapQA.model.UserMode#TEEN_ABOVE_18}.

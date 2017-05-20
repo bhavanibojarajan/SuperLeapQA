@@ -11,11 +11,15 @@ import org.swiften.xtestkit.base.Engine;
 /**
  * Created by haipham on 5/16/17.
  */
-public interface DashboardActionType extends PersonalInfoActionType, DashboardValidationType {
+public interface DashboardActionType extends
+    PersonalInfoActionType,
+    UnacceptableAgeActionType,
+    DashboardValidationType
+{
     /**
      * Click the Use App Now button.
      * @param ENGINE {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see #rxUseAppNowButton(Engine)
      * @see Engine#rx_click(WebElement)
      * @see BooleanUtil#toTrue(Object)

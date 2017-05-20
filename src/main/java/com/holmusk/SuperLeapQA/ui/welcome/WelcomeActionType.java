@@ -19,7 +19,7 @@ public interface WelcomeActionType extends BaseActionType, WelcomeValidationType
      * Navigate from welcome to register screen, assuming the user is already
      * on the welcome screen.
      * @param ENGINE {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_e_welcomeRegister(Engine)
      * @see Engine#rx_click(WebElement)
      */
@@ -32,7 +32,7 @@ public interface WelcomeActionType extends BaseActionType, WelcomeValidationType
 
     /**
      * Wait for splash screen to finish and navigate to welcome screen.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see #splashDelay()
      * @see BooleanUtil#toTrue(Object)
      */

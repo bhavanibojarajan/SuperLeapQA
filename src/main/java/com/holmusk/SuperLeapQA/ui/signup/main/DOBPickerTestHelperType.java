@@ -72,9 +72,9 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
      * {@link UserMode#acceptableAgeCategoryRange()} instead of
      * {@link UserMode#acceptableAgeRange()}.
      * @param ENGINE {@link Engine} instance.
-     * @param MODE A {@link UserMode} instance.
-     * @param AGES A {@link List} of {@link Integer}.
-     * @return A {@link Flowable} instance.
+     * @param MODE {@link UserMode} instance.
+     * @param AGES {@link List} of {@link Integer}.
+     * @return {@link Flowable} instance.
      * @see UserMode#acceptableAgeCategoryRange()
      * @see #rx_a_openDoBPicker(Engine)
      * @see #rx_v_acceptableAgeScreen(Engine)

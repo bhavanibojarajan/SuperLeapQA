@@ -19,7 +19,7 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
      * Get the submit button for the personal info screen. Depending on the
      * current {@link UserMode}, the confirm button text may change.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsID(String...)
      * @see RxUtil#error(String)
      */
@@ -36,7 +36,7 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
     /**
      * Get the Terms and Conditions checkbox.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsID(String...)
      * @see RxUtil#error(String)
      * @see #NOT_AVAILABLE
@@ -53,7 +53,7 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
     /**
      * Get the Terms and Condition acceptance label.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      */
     @NotNull
@@ -67,10 +67,10 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
     /**
      * Validate that the personal info input screen contains correct
      * {@link WebElement}.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Flowable} instance.
      * @see UserMode#personalInformation()
-     * @see #rx_editFieldForInput(SLInputType)
+     * @see #rx_e_editField(Engine, SLInputType)
      * @see #rx_e_personalInfoSubmit(Engine)
      * @see ObjectUtil#nonNull(Object)
      * @see BooleanUtil#toTrue(Object)
@@ -81,7 +81,7 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
         final PersonalInfoValidationType THIS = this;
 
         return Flowable.fromIterable(mode.personalInformation())
-            .flatMap(THIS::rx_e_editField)
+            .flatMap(a -> THIS.rx_e_editField(ENGINE, a))
             .concatWith(THIS.rx_e_personalInfoSubmit(ENGINE))
             .all(ObjectUtil::nonNull)
             .toFlowable();

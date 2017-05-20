@@ -12,7 +12,7 @@ public interface UnacceptableAgeActionType extends UnacceptableAgeValidationType
     /**
      * Confirm email subscription for future program expansion.
      * @param ENGINE {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_e_unacceptableAgeSubmit(Engine)
      * @see Engine#rx_click(WebElement)
      */

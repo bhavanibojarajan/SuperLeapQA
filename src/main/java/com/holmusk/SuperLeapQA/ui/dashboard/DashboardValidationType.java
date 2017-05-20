@@ -15,7 +15,7 @@ public interface DashboardValidationType extends BaseValidationType {
     /**
      * Get the Use App Now button.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      */
     @NotNull
@@ -29,7 +29,7 @@ public interface DashboardValidationType extends BaseValidationType {
     /**
      * Validate the Use App Now screen after the user finishes sign up.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      * @see #rxUseAppNowButton(Engine)
      * @see ObjectUtil#nonNull(Object)
@@ -52,7 +52,7 @@ public interface DashboardValidationType extends BaseValidationType {
     /**
      * Validate that the tutorial screen is present when the user first signs
      * up.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      */
     @NotNull

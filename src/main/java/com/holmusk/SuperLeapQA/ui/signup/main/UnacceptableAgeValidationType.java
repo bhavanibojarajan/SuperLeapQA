@@ -19,8 +19,8 @@ public interface UnacceptableAgeValidationType extends DOBPickerValidationType {
      * that he/she/the child is not qualified for the program due to age
      * restrictions.
      * @param ENGINE {@link Engine} instance.
-     * @param MODE A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
+     * @param MODE {@link UserMode} instance.
+     * @return {@link Flowable} instance.
      * @see DOBPickerValidationType#rx_v_acceptableAgeScreen(Engine)
      * @see Engine#rx_containsText(String...)
      * @see #rx_e_editField(Engine, SLInputType)
@@ -46,7 +46,7 @@ public interface UnacceptableAgeValidationType extends DOBPickerValidationType {
     /**
      * Get the confirm button for the unacceptable age inputs.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      */
     @NotNull
@@ -57,7 +57,7 @@ public interface UnacceptableAgeValidationType extends DOBPickerValidationType {
     /**
      * Get the continue button after the unacceptable age input is confirmed.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      */
     @NotNull
@@ -68,7 +68,7 @@ public interface UnacceptableAgeValidationType extends DOBPickerValidationType {
     /**
      * Press the ok button after unacceptable age inputs have been completed.
      * @param ENGINE {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_e_unacceptableAgeOk(Engine)
      * @see Engine#rx_click(WebElement)
      * @see BooleanUtil#toTrue(Object)
@@ -83,7 +83,7 @@ public interface UnacceptableAgeValidationType extends DOBPickerValidationType {
     /**
      * Validate the confirmation screen after unacceptable age input is
      * submitted.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_e_unacceptableAgeOk(Engine)
      * @see Engine#rx_containsText(String...)
      * @see ObjectUtil#nonNull(Object)

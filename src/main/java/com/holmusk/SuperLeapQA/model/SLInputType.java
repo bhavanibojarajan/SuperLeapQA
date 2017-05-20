@@ -18,7 +18,7 @@ public interface SLInputType extends AndroidInputType {
      * Some {@link InputType} may not have a standard error message, however.
      * (e.g. {@link SLNumericInputType}.
      * where min/max values are taken into account).
-     * @return A {@link LCFormat} value.
+     * @return {@link LCFormat} value.
      */
     @NotNull
     LCFormat emptyInputError(@NotNull UserMode mode);

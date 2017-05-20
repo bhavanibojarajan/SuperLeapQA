@@ -15,10 +15,10 @@ import org.swiften.xtestkit.mobile.android.AndroidEngine;
  */
 public interface RegisterModeValidationType extends WelcomeValidationType {
     /**
-     * Get the sign up button that corresponds to a {@link UserMode}.
+     * Get the sign up button that corresponds to {@link UserMode}.
      * @param engine {@link Engine} instance.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Flowable} instance.
      * @see UserMode#androidRegisterButtonId()
      * @see Engine#rx_containsID(String...)
      * @see RxUtil#error(String)
@@ -40,7 +40,7 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
     /**
      * Get the back button's title label.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      * @see RxUtil#error(String)
      * @see #NOT_AVAILABLE
@@ -60,7 +60,7 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
     /**
      * Validate the register screen.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      * @see #rx_e_signUp(Engine, UserMode)
      * @see #rx_e_backButtonTitle(Engine)

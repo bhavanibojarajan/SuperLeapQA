@@ -30,7 +30,7 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
     /**
      * Get the view id for {@link org.swiften.xtestkit.mobile.Platform#ANDROID}
      * locator.
-     * @return A {@link XPath} value.
+     * @return {@link XPath} value.
      * @see AndroidInputType#androidViewXPath()
      * @see #newXPathBuilder()
      * @see #NOT_AVAILABLE
@@ -81,7 +81,7 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
 
     /**
      * Get a random text input.
-     * @return A {@link String} value.
+     * @return {@link String} value.
      * @see TextInputType#randomInput()
      */
     @NotNull
@@ -139,7 +139,7 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
     }
 
     /**
-     * @return A {@link String} value.
+     * @return {@link String} value.
      * @see SLInputType#emptyInputError(UserMode)
      */
     @NotNull

@@ -63,7 +63,7 @@ public enum Ethnicity implements AttributeType<String>, AndroidInputType, SLInpu
     }
 
     /**
-     * @return A {@link String} value.
+     * @return {@link String} value.
      * @see SLInputType#emptyInputError(UserMode)
      */
     @NotNull

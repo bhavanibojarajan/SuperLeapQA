@@ -22,7 +22,7 @@ public interface DOBPickerValidationType extends SignUpActionType {
      * method is used to check that the screen that follows matches the
      * age requirements specified by each {@link UserMode}.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      */
     @NotNull
     Flowable<?> rx_v_acceptableAgeScreen(@NotNull Engine<?> engine);
@@ -32,8 +32,8 @@ public interface DOBPickerValidationType extends SignUpActionType {
      * method is used to check that the screen that follows matches the
      * age requirements specified by each {@link UserMode}.
      * @param engine {@link Engine} instance.
-     * @param mode A {@link UserMode} instance.
-     * @return A {@link Flowable} instance.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Flowable} instance.
      */
     @NotNull
     Flowable<?> rx_v_unacceptableAgeScreen(@NotNull Engine<?> engine,
@@ -42,7 +42,7 @@ public interface DOBPickerValidationType extends SignUpActionType {
     /**
      * Get all calendar {@link WebElement} instances.
      ** @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rxAllCalendarElements()
      */
     @NotNull
@@ -53,7 +53,7 @@ public interface DOBPickerValidationType extends SignUpActionType {
     /**
      * Get the DoB's editable text field.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_editable()
      */
     @NotNull
@@ -62,11 +62,11 @@ public interface DOBPickerValidationType extends SignUpActionType {
     }
 
     /**
-     * Validate that the DoB editable field displays a {@link String}
-     * representation of a {@link Date}, assuming the user is in the
+     * Validate that the DoB editable field displays {@link String}
+     * representation of {@link Date}, assuming the user is in the
      * pre-DoB picker screen.
-     * @param date A {@link Date} instance.
-     * @return A {@link Flowable} instance.
+     * @param date {@link Date} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      * @see SimpleDateFormat#format(Date)
      */

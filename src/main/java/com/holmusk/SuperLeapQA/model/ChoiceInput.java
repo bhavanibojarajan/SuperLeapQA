@@ -17,7 +17,7 @@ public enum ChoiceInput implements BaseErrorType, SLInputType, AndroidChoiceInpu
     COACH_PREF;
 
     /**
-     * @return A {@link XPath} value.
+     * @return {@link XPath} value.
      * @see AndroidInputType#androidViewXPath()
      * @see #newXPathBuilder()
      * @see #NOT_AVAILABLE
@@ -52,7 +52,7 @@ public enum ChoiceInput implements BaseErrorType, SLInputType, AndroidChoiceInpu
     }
 
     /**
-     * @return A {@link XPath} value.
+     * @return {@link XPath} value.
      * @see AndroidChoiceInputType#androidScrollViewItemXPath()
      * @see #newXPathBuilder()
      */
@@ -63,7 +63,7 @@ public enum ChoiceInput implements BaseErrorType, SLInputType, AndroidChoiceInpu
     }
 
     /**
-     * @return A {@link XPath} value.
+     * @return {@link XPath} value.
      * @see AndroidChoiceInputType#androidScrollViewItemXPath()
      * @see #newXPathBuilder()
      */
@@ -73,7 +73,7 @@ public enum ChoiceInput implements BaseErrorType, SLInputType, AndroidChoiceInpu
     }
 
     /**
-     * @return A {@link String} value.
+     * @return {@link String} value.
      * @see SLInputType#emptyInputError(UserMode)
      */
     @NotNull

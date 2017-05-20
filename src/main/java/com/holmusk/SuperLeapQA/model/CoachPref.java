@@ -33,7 +33,7 @@ public enum CoachPref implements AttributeType<String>, AndroidInputType, SLInpu
     }
 
     /**
-     * @return A {@link XPath} value.
+     * @return {@link XPath} value.
      * @see AndroidInputType#androidViewXPath()
      * @see #newXPathBuilder()
      */
@@ -44,7 +44,7 @@ public enum CoachPref implements AttributeType<String>, AndroidInputType, SLInpu
     }
 
     /**
-     * @return A {@link String} value.
+     * @return {@link String} value.
      * @see SLInputType#emptyInputError(UserMode)
      */
     @NotNull

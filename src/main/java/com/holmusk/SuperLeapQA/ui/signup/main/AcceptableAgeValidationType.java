@@ -22,7 +22,7 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
     /**
      * Get the next confirm button for acceptable age input screen.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      */
     @NotNull
@@ -33,7 +33,7 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
     /**
      * Get the back button's title label.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      * @see RxUtil#error(String)
      * @see #NOT_AVAILABLE
@@ -53,8 +53,8 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
     /**
      * Get the scrollable height selector view, assuming the user is already
      * in the height picker window.
-     * @param input A {@link ChoiceInput} instance.
-     * @return A {@link Flowable} instance.
+     * @param input {@link ChoiceInput} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_withXPath(XPath...)
      * @see RxUtil#error(String)
      * @see #NOT_AVAILABLE
@@ -77,8 +77,8 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
      * {@link #rx_e_scrollableChoicePicker(Engine, SLChoiceInputType)},
      * assuming the user is already in the picker window.
      * @param engine {@link Engine} instance.
-     * @param input A {@link InputType} instance.
-     * @return A {@link Flowable} instance.
+     * @param input {@link InputType} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_byXPath(ByXPath)
      * @see Engine#newXPathBuilder()
      * @see RxUtil#error(String)
@@ -101,8 +101,8 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
      * Validate the screen after the DoB picker whereby the user qualifies
      * for the program.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
-     * @see #rx_editFieldForInput(SLInputType)
+     * @return {@link Flowable} instance.
+     * @see #rx_e_editField(Engine, SLInputType)
      * @see #rx_e_acceptableAgeConfirm(Engine)
      * @see #rx_e_acceptableAgeInputTitle(Engine)
      */
@@ -112,16 +112,16 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
     default Flowable<?> rx_v_acceptableAgeScreen(@NotNull Engine<?> engine) {
         return Flowable
             .mergeArray(
-                rx_e_editField(Gender.MALE),
-                rx_e_editField(Gender.FEMALE),
-                rx_e_editField(ChoiceInput.HEIGHT),
-                rx_e_editField(Height.FT),
-                rx_e_editField(Height.CM),
-                rx_e_editField(ChoiceInput.WEIGHT),
-                rx_e_editField(Weight.LB),
-                rx_e_editField(Weight.KG),
-                rx_e_editField(ChoiceInput.ETHNICITY),
-                rx_e_editField(ChoiceInput.COACH_PREF),
+                rx_e_editField(engine, Gender.MALE),
+                rx_e_editField(engine, Gender.FEMALE),
+                rx_e_editField(engine, ChoiceInput.HEIGHT),
+                rx_e_editField(engine, Height.FT),
+                rx_e_editField(engine, Height.CM),
+                rx_e_editField(engine, ChoiceInput.WEIGHT),
+                rx_e_editField(engine, Weight.LB),
+                rx_e_editField(engine, Weight.KG),
+                rx_e_editField(engine, ChoiceInput.ETHNICITY),
+                rx_e_editField(engine, ChoiceInput.COACH_PREF),
                 rx_e_acceptableAgeConfirm(engine),
                 rx_e_acceptableAgeInputTitle(engine)
             )
@@ -131,11 +131,11 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
 
     /**
      * Check if an editable field has an input.
-     * @param INPUT A {@link InputType} instance.
-     * @param VALUE A {@link String} value.
+     * @param INPUT {@link InputType} instance.
+     * @param VALUE {@link String} value.
      * @param <P> Generics parameter.
-     * @return A {@link Flowable} instance.
-     * @see #rx_editFieldForInput(SLInputType)
+     * @return {@link Flowable} instance.
+     * @see #rx_e_editField(Engine, SLInputType)
      * @see Engine#getText(WebElement)
      * @see BooleanUtil#toTrue(Object)
      */
@@ -144,7 +144,7 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
     rx_v_editFieldHasValue(@NotNull final Engine<?> ENGINE,
                            @NotNull final P INPUT,
                            @NotNull final String VALUE) {
-        return rx_e_editField(INPUT)
+        return rx_e_editField(ENGINE, INPUT)
             .map(ENGINE::getText)
             .doOnNext(a -> LogUtil.printfThread("Current value for %s: %s", INPUT, a))
             .filter(a -> a.equals(VALUE))
@@ -155,7 +155,7 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
     /**
      * Get the confirm button for numeric choice inputs (e.g. {@link Height}
      * and {@link Weight}).
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsID(String...)
      */
     @NotNull
@@ -170,8 +170,8 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
     /**
      * Get the view that pops up when an error is notified to the user. This
      * only works in specific cases however, so use with care.
-     * @param error A {@link LCFormat} value.
-     * @return A {@link Flowable} instance.
+     * @param error {@link LCFormat} value.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      */
     @NotNull
@@ -183,8 +183,8 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
     /**
      * Check whether an error is being shown to the user. This only works in
      * specific cases however, so use with care.
-     * @param error A {@link LCFormat} value.
-     * @return A {@link Flowable} instance.
+     * @param error {@link LCFormat} value.
+     * @return {@link Flowable} instance.
      * @see #rx_e_errorPopup(Engine, LCFormat)
      */
     @NotNull

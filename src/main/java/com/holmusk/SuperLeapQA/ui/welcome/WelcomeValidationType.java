@@ -18,7 +18,7 @@ public interface WelcomeValidationType extends BaseValidationType {
     /**
      * Get the register button on the welcome screen.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      */
     @NotNull
@@ -29,7 +29,7 @@ public interface WelcomeValidationType extends BaseValidationType {
     /**
      * Get the sign in button on the welcome screen.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      */
     @NotNull
@@ -40,7 +40,7 @@ public interface WelcomeValidationType extends BaseValidationType {
     /**
      * Validate that all views are present in splash screen.
      * @param engine {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see #rx_e_welcomeSignIn(Engine)
      * @see #rx_e_welcomeRegister(Engine)
      * @see ObjectUtil#nonNull(Object)
@@ -57,7 +57,7 @@ public interface WelcomeValidationType extends BaseValidationType {
     /**
      * Validate the swipeable splash screens.
      * @param ENGINE {@link Engine} instance.
-     * @return A {@link Flowable} instance.
+     * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      * @see Engine#rx_swipeGenericLR(DurationType)
      * @see Engine#rxSwipeGenericRL(DurationType)
