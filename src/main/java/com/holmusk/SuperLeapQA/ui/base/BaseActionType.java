@@ -41,12 +41,12 @@ public interface BaseActionType extends BaseErrorType, BaseValidationType, BaseL
      * Watch the progress bar until it's no longer visible.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_progressBar(Engine)
+     * @see #rx_e_progressBar(Engine)
      * @see Engine#rx_watchUntilHidden(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rx_a_watchProgressBarUntilHidden(@NotNull final Engine<?> ENGINE) {
-        return rx_progressBar(ENGINE)
+        return rx_e_progressBar(ENGINE)
             .flatMap(ENGINE::rx_watchUntilHidden)
             .onErrorReturnItem(true);
     }

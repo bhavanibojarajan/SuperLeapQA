@@ -1,6 +1,7 @@
 package com.holmusk.SuperLeapQA.ui.base;
 
 import com.holmusk.SuperLeapQA.config.Config;
+import com.holmusk.SuperLeapQA.model.SLScreenManagerType;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +21,7 @@ import java.util.List;
 /**
  * Created by haipham on 4/4/17.
  */
-public class UIBaseTest implements BaseTestType, BaseActionType, BaseValidationType {
+public class UIBaseTest implements BaseTestType, SLScreenManagerType {
     @NotNull
     @DataProvider(parallel = true)
     public static Iterator<Object[]> dataProvider() {
@@ -34,11 +35,15 @@ public class UIBaseTest implements BaseTestType, BaseActionType, BaseValidationT
     }
 
     @NotNull private final TestKit TEST_KIT;
+    @NotNull private final List<Node> FORWARD_NODES;
+    @NotNull private final List<Node> BACKWARD_NODES;
 
     private final int INDEX;
 
     public UIBaseTest(int index) {
         LogUtil.printfThread("Init new test with index %d", index);
+        FORWARD_NODES = new LinkedList<>();
+        BACKWARD_NODES = new LinkedList<>();
         INDEX = index;
         TEST_KIT = Config.TEST_KIT;
     }
@@ -48,13 +53,13 @@ public class UIBaseTest implements BaseTestType, BaseActionType, BaseValidationT
      * do not care whether a guarantor is required.
      * @return {@link Iterator} instance.
      * @see UserMode#PARENT
-     * @see UserMode#TEEN_UNDER_18
+     * @see UserMode#TEEN_U18
      */
     @NotNull
     @DataProvider
     public Iterator<Object[]> generalUserModeProvider() {
         List<Object[]> data = new LinkedList<>();
-        UserMode[] modes = new UserMode[] { UserMode.TEEN_UNDER_18};
+        UserMode[] modes = new UserMode[] { UserMode.TEEN_U18};
 
         for (UserMode mode : modes) {
             data.add(new Object[] { mode });
@@ -69,8 +74,8 @@ public class UIBaseTest implements BaseTestType, BaseActionType, BaseValidationT
      * information input tests will require {@link UserMode#requiresGuarantor()}
      * to decide whether the parent info screen is required.
      * @return {@link Iterator} instance.
-     * @see UserMode#TEEN_UNDER_18
-     * @see UserMode#TEEN_ABOVE_18
+     * @see UserMode#TEEN_U18
+     * @see UserMode#TEEN_A18
      */
     @NotNull
     @DataProvider
@@ -78,8 +83,8 @@ public class UIBaseTest implements BaseTestType, BaseActionType, BaseValidationT
         List<Object[]> data = new LinkedList<>();
 
         UserMode[] modes = new UserMode[] {
-            UserMode.TEEN_UNDER_18,
-            UserMode.TEEN_ABOVE_18
+            UserMode.TEEN_U18,
+            UserMode.TEEN_A18
         };
 
         for (UserMode mode : modes) {
@@ -99,6 +104,30 @@ public class UIBaseTest implements BaseTestType, BaseActionType, BaseValidationT
     @Override
     public int currentIndex() {
         return INDEX;
+    }
+    //endregion
+
+    //region SLScreenManagerType
+    @NotNull
+    @Override
+    public List<Node> registeredForwardNodes() {
+        return FORWARD_NODES;
+    }
+
+    @NotNull
+    @Override
+    public List<Node> registeredBackwardNodes() {
+        return BACKWARD_NODES;
+    }
+
+    @Override
+    public void addForwardNodes(@NotNull List<Node> nodes) {
+        FORWARD_NODES.addAll(nodes);
+    }
+
+    @Override
+    public void addBackwardNodes(@NotNull List<Node> nodes) {
+        BACKWARD_NODES.addAll(nodes);
     }
     //endregion
 
@@ -130,6 +159,7 @@ public class UIBaseTest implements BaseTestType, BaseActionType, BaseValidationT
 
     @BeforeMethod
     public void beforeMethod() {
+        registerScreenHolders();
         TEST_KIT.before(beforeParam());
     }
 

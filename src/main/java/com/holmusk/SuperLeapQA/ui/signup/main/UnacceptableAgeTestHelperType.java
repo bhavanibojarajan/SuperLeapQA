@@ -24,7 +24,7 @@ public interface UnacceptableAgeTestHelperType extends UnacceptableAgeActionType
      * @see #rx_a_enterRandomInput(Engine, SLTextInputType)
      * @see #rx_a_confirmUnacceptableAgeInput(Engine)
      * @see #rx_a_watchProgressBarUntilHidden(Engine)
-     * @see #rx_v_unacceptableAgeInputCompleted(Engine)
+     * @see #rx_a_completeUnacceptableAgeInput(Engine)
      */
     @NotNull
     default Flowable<?> rx_h_unacceptableAgeInputRequired(@NotNull final Engine<?> ENGINE,
@@ -37,7 +37,7 @@ public interface UnacceptableAgeTestHelperType extends UnacceptableAgeActionType
             .flatMap(a -> THIS.rx_a_confirmUnacceptableAgeInput(ENGINE))
             .flatMap(a -> THIS.rx_a_watchProgressBarUntilHidden(ENGINE))
             .flatMap(a -> THIS.rx_v_unacceptableAgeInputConfirmed(ENGINE))
-            .flatMap(a -> THIS.rx_v_unacceptableAgeInputCompleted(ENGINE));
+            .flatMap(a -> THIS.rx_a_completeUnacceptableAgeInput(ENGINE));
     }
 
     /**
@@ -63,6 +63,6 @@ public interface UnacceptableAgeTestHelperType extends UnacceptableAgeActionType
             .delay(delay, TimeUnit.MILLISECONDS)
             .flatMap(a -> THIS.rx_e_unacceptableAgeOk(ENGINE))
             .flatMap(ENGINE::rx_click)
-            .flatMap(a -> THIS.rxValidateWelcomeScreen(ENGINE));
+            .flatMap(a -> THIS.rx_v_welcomeScreen(ENGINE));
     }
 }

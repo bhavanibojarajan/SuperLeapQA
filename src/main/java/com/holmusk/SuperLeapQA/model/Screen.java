@@ -1,5 +1,6 @@
 package com.holmusk.SuperLeapQA.model;
 
+import com.holmusk.SuperLeapQA.navigation.NavigationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionUtil;
@@ -13,60 +14,18 @@ import java.util.List;
 /**
  * Created by haipham on 5/21/17.
  */
-public enum Screen implements ScreenType, BaseErrorType {
+public enum Screen {
     SPLASH,
     WELCOME,
     SIGN_IN,
+    FORGOT_PASSWORD,
     REGISTER,
-    PARENT_DOB_PICKER,
-    TEEN_DOB_PICKER;
-
-    /**
-     * @param engine {@link Engine} instance. This is necessary because
-     *               most of the time the navigation will rely on the
-     *               {@link org.openqa.selenium.WebDriver}.
-     * @return {@link List} of {@link ScreenType.Direction}
-     *
-     */
-    @NotNull
-    @Override
-    public List<Direction> accessibleFromHere(@NotNull Engine<?> engine) {
-        switch (this) {
-            case SPLASH:
-                return CollectionUtil.asList(
-                    new Direction(WELCOME, a -> Flowable.empty())
-                );
-
-            case WELCOME:
-                return CollectionUtil.asList(
-                    new Direction(SIGN_IN, a -> Flowable.empty()),
-                    new Direction(REGISTER, a -> Flowable.empty())
-                );
-
-            case SIGN_IN:
-                return CollectionUtil.asList(
-                    new Direction(REGISTER, a -> Flowable.empty())
-                );
-
-            case REGISTER:
-                return CollectionUtil.asList(
-                    new Direction(WELCOME, a -> Flowable.empty()),
-                    new Direction(PARENT_DOB_PICKER, a -> Flowable.empty()),
-                    new Direction(TEEN_DOB_PICKER, a -> Flowable.empty())
-                );
-
-            case PARENT_DOB_PICKER:
-                return CollectionUtil.asList(
-                    new Direction(REGISTER, a -> Flowable.empty())
-                );
-
-            case TEEN_DOB_PICKER:
-                return CollectionUtil.asList(
-                    new Direction(REGISTER, a -> Flowable.empty())
-                );
-
-            default:
-                throw new RuntimeException(NOT_AVAILABLE);
-        }
-    }
+    DOB_PICKER,
+    UNACCEPTABLE_AGE,
+    ACCEPTABLE_AGE,
+    PERSONAL_INFO,
+    EXTRA_PERSONAL_INFO,
+    USE_APP_NOW,
+    DASHBOARD_TUTORIAL,
+    DASHBOARD;
 }

@@ -78,7 +78,7 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
                 engine.rx_containsText("register_title_or"),
                 engine.rx_containsText("register_title_initiativeByHPB"),
                 rx_e_signUp(engine, UserMode.PARENT),
-                rx_e_signUp(engine, UserMode.TEEN_UNDER_18),
+                rx_e_signUp(engine, UserMode.TEEN_U18),
                 rx_e_backButtonTitle(engine)
             )
             .all(ObjectUtil::nonNull)

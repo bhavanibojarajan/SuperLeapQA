@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.TestMode;
 import org.swiften.xtestkit.kit.TestKit;
+import org.swiften.xtestkit.mobile.android.AndroidEngine;
 import org.swiften.xtestkit.mobile.ios.IOSEngine;
 
 import java.util.LinkedList;
@@ -33,13 +34,13 @@ public final class Config {
 //            .withTestMode(TestMode.SIMULATED)
 //            .build());
 //
-        ENGINES.add(IOSEngine.builder()
-            .withDeviceUID("CF6E7ACD-F818-4145-A140-75CF1F229A8C")
-            .withAppPackage(APP_PACKAGE)
-            .withDeviceName("iPhone 7 Plus")
-            .withPlatformVersion("10.2")
-            .withTestMode(TestMode.SIMULATED)
-            .build());
+//        ENGINES.add(IOSEngine.builder()
+//            .withDeviceUID("CF6E7ACD-F818-4145-A140-75CF1F229A8C")
+//            .withAppPackage(APP_PACKAGE)
+//            .withDeviceName("iPhone 7 Plus")
+//            .withPlatformVersion("10.2")
+//            .withTestMode(TestMode.SIMULATED)
+//            .build());
 
 //        ENGINES.add(AndroidEngine.builder()
 //            .withAppActivity(ANDROID_APP_ACTIVITY)
@@ -51,13 +52,13 @@ public final class Config {
 //            .withTestMode(TestMode.ACTUAL)
 //            .build());
 //
-//        ENGINES.add(AndroidEngine.builder()
-//            .withAppActivity(ANDROID_APP_ACTIVITY)
-//            .withAppPackage(APP_PACKAGE)
-//            .withDeviceName("Nexus_4_API_22")
-//            .withPlatformVersion("5.1")
-//            .withTestMode(TestMode.SIMULATED)
-//            .build());
+        ENGINES.add(AndroidEngine.builder()
+            .withAppActivity(ANDROID_APP_ACTIVITY)
+            .withAppPackage(APP_PACKAGE)
+            .withDeviceName("Nexus_4_API_22")
+            .withPlatformVersion("5.1")
+            .withTestMode(TestMode.SIMULATED)
+            .build());
 
 //        ENGINES.add(AndroidEngine.builder()
 //            .withAppActivity(ANDROID_APP_ACTIVITY)

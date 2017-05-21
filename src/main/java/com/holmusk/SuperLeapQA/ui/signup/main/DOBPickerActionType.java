@@ -52,7 +52,7 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
      * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
-    default Flowable<?> rxConfirmDoB(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rx_a_confirmDoB(@NotNull final Engine<?> ENGINE) {
         if (ENGINE instanceof AndroidEngine) {
             return ENGINE
                 .rx_containsText("ok")

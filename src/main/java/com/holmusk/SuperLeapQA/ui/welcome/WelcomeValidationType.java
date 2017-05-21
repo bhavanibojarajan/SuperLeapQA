@@ -47,7 +47,7 @@ public interface WelcomeValidationType extends BaseValidationType {
      * @see BooleanUtil#toTrue(Object)
      */
     @SuppressWarnings("unchecked")
-    default Flowable<?> rxValidateWelcomeScreen(@NotNull Engine<?> engine) {
+    default Flowable<?> rx_v_welcomeScreen(@NotNull Engine<?> engine) {
         return Flowable
             .concat(rx_e_welcomeSignIn(engine), rx_e_welcomeRegister(engine))
             .all(ObjectUtil::nonNull)
@@ -64,7 +64,7 @@ public interface WelcomeValidationType extends BaseValidationType {
      */
     @NonNull
     @SuppressWarnings("unchecked")
-    default Flowable<?> rxValidateSwipes(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rx_v_welcomeSwipes(@NotNull final Engine<?> ENGINE) {
         final String[][] MESSAGES = new String[][] {
             {
                 "welcome_title_oneLiner",

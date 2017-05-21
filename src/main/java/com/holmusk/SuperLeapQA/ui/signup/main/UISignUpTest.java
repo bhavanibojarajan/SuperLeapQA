@@ -1,11 +1,9 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
-import com.holmusk.SuperLeapQA.model.ChoiceInput;
-import com.holmusk.SuperLeapQA.model.SLInputType;
+import com.holmusk.SuperLeapQA.model.*;
+import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.action.input.type.InputType;
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
-import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.runner.TestRunner;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
@@ -52,437 +50,463 @@ public class UISignUpTest extends UIBaseTest implements
         return data.iterator();
     }
 
-//    //region Validate screen correctness
-//    /**
-//     * This test checks that the DoB screen has correct elements, by checking
-//     * that all {@link org.openqa.selenium.WebElement} are present and back
-//     * navigation shows the correct register screen.
-//     * @param mode {@link UserMode} instance.
-//     * @see #rx_splash_DoBPicker(UserMode)
-//     * @see #rxValidateDoBPickerScreen()
-//     * @see #rxNavigateBackWithBackButton()
-//     * @see #rxValidateRegisterScreen()
-//     * @see #generalUserModeProvider()
-//     */
-//    @SuppressWarnings("unchecked")
-//    @GuarantorAware(value = false)
-//    @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
-//    public void test_DoBPickerScreen_isValidScreen(@NotNull UserMode mode) {
-//        // Setup
-//        final UISignUpTest THIS = this;
-//        TestSubscriber subscriber = CustomTestSubscriber.create();
-//
-//        // When
-//        rx_splash_DoBPicker(mode)
-//            .flatMap(a -> THIS.rx_h_DoBPickerScreen())
-//            .flatMap(a -> THIS.rx_a_clickBackButton())
-//            .flatMap(a -> THIS.rx_v_registerScreen())
-//            .subscribe(subscriber);
-//
-//        subscriber.awaitTerminalEvent();
-//
-//        // Then
-//        assertCorrectness(subscriber);
-//    }
-//
-//    /**
-//     * This test checks that the DoB picker dialog has the correct elements,
-//     * by verifying that all required {@link org.openqa.selenium.WebElement}
-//     * are present. It selects a random {@link java.util.Date} with which
-//     * to interact with the calendar/date picker.
-//     * @param mode {@link UserMode} instance.
-//     * @see #rx_splash_DoBPicker(UserMode)
-//     * @see #rxCheckDoBDialogHasCorrectElements()
-//     * @see #generalUserModeProvider()
-//     */
-//    @SuppressWarnings("unchecked")
-//    @GuarantorAware(value = false)
-//    @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
-//    public void test_DoBPickerDialog_isValidScreen(@NotNull UserMode mode) {
-//        // Setup
-//        final UISignUpTest THIS = this;
-//        TestSubscriber subscriber = CustomTestSubscriber.create();
-//
-//        // When
-//        rx_splash_DoBPicker(mode)
-//            .flatMap(a -> THIS.rxCheckDoBDialogHasCorrectElements())
-//            .subscribe(subscriber);
-//
-//        subscriber.awaitTerminalEvent();
-//
-//        // Then
-//        assertCorrectness(subscriber);
-//    }
-//
-//    /**
-//     * This test validates that the unacceptable age input screen has the
-//     * correct {@link org.openqa.selenium.WebElement}, and clicking on the
-//     * submit button without filling in require inputs should fail.
-//     * @param mode {@link UserMode} instance.
-//     * @see #rx_splash_unacceptableAgeInput(UserMode)
-//     * @see #rx_a_clickInputField(SLInputType)
-//     * @see #generalUserModeProvider()
-//     */
-//    @SuppressWarnings("unchecked")
-//    @GuarantorAware(value = false)
-//    @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
-//    public void test_unacceptableAgeInputs_isValidScreen(@NotNull UserMode mode) {
-//        // Setup
-//        final UISignUpTest THIS = this;
-//        TestSubscriber subscriber = CustomTestSubscriber.create();
-//
-//        // When
-//        rx_splash_unacceptableAgeInput(mode)
-//            .flatMap(a -> THIS.rx_a_confirmUnacceptableAgeInput())
-//            .flatMap(a -> THIS.rx_a_clickInputField(TextInput.NAME))
-//            .subscribe(subscriber);
-//
-//        subscriber.awaitTerminalEvent();
-//
-//        // Then
-//        assertCorrectness(subscriber);
-//    }
-//
-//    /**
-//     * This test validates that the acceptable age inputs screen contains the
-//     * correct {@link org.openqa.selenium.WebElement} by verifying their
-//     * visibility,
-//     * @param MODE {@link UserMode} instance.
-//     * @see #rx_splash_acceptableAge(UserMode)
-//     * @see #rxEnterAndValidateAcceptableAgeInputs(UserMode)
-//     * @see #generalUserModeProvider()
-//     */
-//    @SuppressWarnings("unchecked")
-//    @GuarantorAware(value = false)
-//    @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
-//    public void test_acceptableAgeInputs_isValidScreen(@NotNull final UserMode MODE) {
-//        // Setup
-//        final UISignUpTest THIS = this;
-//        TestSubscriber subscriber = CustomTestSubscriber.create();
-//
-//        // When
-//        rx_splash_acceptableAge(MODE)
-//            .flatMap(a -> THIS.rx_h_enterAndCheckAcceptableAgeInputs(MODE))
-//            .subscribe(subscriber);
-//
-//        subscriber.awaitTerminalEvent();
-//
-//        // Then
-//        assertCorrectness(subscriber);
-//    }
-//
-//    /**
-//     * This test validates that the personal info input screen contains the
-//     * correct {@link org.openqa.selenium.WebElement} by verifying their
-//     * visibility and interacting with each of them.
-//     * @param MODE {@link UserMode} instance.
-//     * @see #rx_splash_personalInfo(UserMode)
-//     * @see #rx_h_enterAndCheckPersonalInfo(UserMode)
-//     * @see #generalUserModeProvider()
-//     */
-//    @SuppressWarnings("unchecked")
-//    @GuarantorAware(value = false)
-//    @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
-//    public void test_personalInfoScreen_isValidScreen(@NotNull final UserMode MODE) {
-//        // Setup
-//        final UISignUpTest THIS = this;
-//        TestSubscriber subscriber = CustomTestSubscriber.create();
-//
-//        // When
-//        rx_splash_personalInfo(MODE)
-//            .flatMap(a -> THIS.rx_v_personalInfoScreen(MODE))
-//            .flatMap(a -> THIS.rx_h_enterAndCheckPersonalInfo(MODE))
-//            .subscribe(subscriber);
-//
-//        subscriber.awaitTerminalEvent();
-//
-//        // Then
-//        assertCorrectness(subscriber);
-//    }
-//    //endregion
-//
-//    /**
-//     * This test validates that DoB selection works by sequentially selecting
-//     * DoBs from a range of {@link java.util.Date}.
-//     * Note that this test is not guarantor-aware, so
-//     * {@link UserMode#TEEN_UNDER_18} and {@link UserMode#TEEN_ABOVE_18} will
-//     * be treated the same.
-//     * @param MODE {@link UserMode} instance.
-//     * @see UserMode#offsetFromCategoryAcceptableRange(int)
-//     * @see #rx_splash_DoBPicker(UserMode)
-//     * @see #rx_h_validateDoBs(UserMode, List)
-//     * @see #generalUserModeProvider()
-//     * @see #assertCorrectness(TestSubscriber)
-//     */
-//    @SuppressWarnings("unchecked")
-//    @GuarantorAware(value = false)
-//    @Test(dataProvider = "generalUserModeProvider")
-//    public void test_DoBSelection_shouldWork(@NotNull final UserMode MODE) {
-//        // Setup
-//        final UISignUpTest THIS = this;
-//        TestSubscriber subscriber = CustomTestSubscriber.create();
-//        final List<Integer> AGES = MODE.offsetFromCategoryAcceptableRange(2);
-//
-//        // When
-//        rx_splash_DoBPicker(MODE)
-//            .flatMap(a -> THIS.rx_h_validateDoBs(MODE, AGES))
-//            .subscribe(subscriber);
-//
-//        subscriber.awaitTerminalEvent();
-//
-//        // Then
-//        assertCorrectness(subscriber);
-//    }
-//
-//    /**
-//     * This test validates that the unacceptable age inputs should only
-//     * require either {@link TextInput#PHONE} or {@link TextInput#EMAIL},
-//     * and not both. It sequentially substitutes {@link TextInput} into
-//     * {@link #rxEnterInput(SLInputType, String)}. We do not use
-//     * {@link DataProvider} with this method because we already have a
-//     * {@link Factory} for the constructor.
-//     * @param mode {@link UserMode} instance.
-//     * @see #rx_splash_unacceptableAgeInput(UserMode)
-//     * @see #rxCheckUnacceptableAgeInputRequired(TextInput)
-//     * @see #generalUserModeProvider()
-//     * @see #assertCorrectness(TestSubscriber)
-//     */
-//    @SuppressWarnings("unchecked")
-//    @GuarantorAware(value = false)
-//    @Test(dataProvider = "generalUserModeProvider")
-//    public void test_unacceptableAgeInput_shouldRequirePhoneOrEmail(@NotNull UserMode mode) {
-//        // Setup
-//        final UISignUpTest THIS = this;
-//        TestSubscriber subscriber = CustomTestSubscriber.create();
-//
-//        // When
-//        /* Check that if phone is entered, we don't need email */
-//        rx_splash_unacceptableAgeInput(mode)
-//            .flatMap(a -> THIS.rx_h_unacceptableAgeInputRequired(TextInput.PHONE))
-//
-//            /* Check that if email is entered, we don't need phone */
-//            .flatMap(a -> THIS.rx_splash_unacceptableAgeInput(mode))
-//            .flatMap(a -> THIS.rx_h_unacceptableAgeInputRequired(TextInput.EMAIL))
-//            .subscribe(subscriber);
-//
-//        subscriber.awaitTerminalEvent();
-//
-//        // Then
-//        assertCorrectness(subscriber);
-//    }
-//
-//    /**
-//     * This test validates that filling in unacceptable age inputs work
-//     * correctly, by checking that after the submit button is clicked, the
-//     * user should be brought to the confirm screen and the register page.
-//     * @param mode {@link UserMode} instance.
-//     * @see #rx_splash_unacceptableAgeInput(UserMode)
-//     * @see #rxEnterAndValidateUnacceptableAgeInputs()
-//     * @see #generalUserModeProvider()
-//     * @see #assertCorrectness(TestSubscriber)
-//     */
-//    @SuppressWarnings("unchecked")
-//    @GuarantorAware(value = false)
-//    @Test(dataProvider = "generalUserModeProvider")
-//    public void test_unacceptableAgeInput_shouldWork(@NotNull UserMode mode) {
-//        // Setup
-//        final UISignUpTest THIS = this;
-//        TestSubscriber subscriber = CustomTestSubscriber.create();
-//
-//        // When
-//        rx_splash_unacceptableAgeInput(mode)
-//            .flatMap(a -> THIS.rx_h_enterAndCheckUnacceptableAgeInputs())
-//            .subscribe(subscriber);
-//
-//        subscriber.awaitTerminalEvent();
-//
-//        // Then
-//        assertCorrectness(subscriber);
-//    }
-//
-//    /**
-//     * Confirm that when the user selects
-//     * {@link ChoiceInput#HEIGHT} in
-//     * {@link com.holmusk.SuperLeapQA.model.Height#FT}, every 12
-//     * {@link com.holmusk.SuperLeapQA.model.Height#INCH} is converted to
-//     * {@link com.holmusk.SuperLeapQA.model.Height#FT}.
-//     * @param MODE {@link UserMode} instance.
-//     * @see #rx_splash_acceptableAge(UserMode)
-//     * @see #rx_validate12InchConvertedToAFoot(UserMode)
-//     * @see #generalUserModeProvider()
-//     * @see #assertCorrectness(TestSubscriber)
-//     */
-//    @SuppressWarnings("unchecked")
-//    @GuarantorAware(value = false)
-//    @Test(dataProvider = "generalUserModeProvider")
-//    public void test_12Inch_shouldBeConvertedTo1Foot(@NotNull final UserMode MODE) {
-//        // Setup
-//        final UISignUpTest THIS = this;
-//        TestSubscriber subscriber = CustomTestSubscriber.create();
-//
-//        // When
-//        rx_splash_acceptableAge(MODE)
-//            .flatMap(a -> THIS.rx_validate12InchConvertedToAFoot(MODE))
-//            .subscribe(subscriber);
-//
-//        subscriber.awaitTerminalEvent();
-//
-//        // Then
-//        assertCorrectness(subscriber);
-//    }
-//
-//    /**
-//     * This test validates that the acceptable age inputs show the correct
-//     * empty input errors, by sequentially entering/selecting inputs and
-//     * clicking the confirm button. If the inputs are not completed, the
-//     * user will be notified.
-//     * @param mode {@link UserMode} instance.
-//     * @see #rx_splash_acceptableAge(UserMode)
-//     * @see #rx_h_acceptableAgeEmptyInputErrors(UserMode)
-//     * @see #generalUserModeProvider()
-//     * @see #assertCorrectness(TestSubscriber)
-//     */
-//    @SuppressWarnings("unchecked")
-//    @GuarantorAware(value = false)
-//    @Test(dataProvider = "generalUserModeProvider")
-//    public void test_acceptableAgeEmptyInputs_showCorrectErrors(@NotNull UserMode mode) {
-//        // Setup
-//        final UISignUpTest THIS = this;
-//        TestSubscriber subscriber = CustomTestSubscriber.create();
-//
-//        // When
-//        rx_splash_acceptableAge(mode)
-//            .flatMap(a -> THIS.rx_h_acceptableAgeEmptyInputErrors(mode))
-//            .subscribe(subscriber);
-//
-//        subscriber.awaitTerminalEvent();
-//
-//        // Then
-//        assertCorrectness(subscriber);
-//    }
-//
-//    /**
-//     * This test validates that the personal info inputs for parents/guarantors
-//     * should only require either {@link TextInput#PARENT_MOBILE} or
-//     * {@link TextInput#PARENT_EMAIL}. This test is only applicable for
-//     * {@link UserMode#TEEN_UNDER_18}, so we use {@link DataProvider}
-//     * that provides {@link InputType}.
-//     * @param inputs {@link List} of {@link InputType}.
-//     * @see #rx_splash_extraInfo(UserMode)
-//     * @see #rx_enterPersonalInfo(UserMode)
-//     * @see #rx_confirmExtraPersonalInfo(UserMode)
-//     * @see #rx_progressBar()
-//     * @see #parentPersonalInfoProvider()
-//     * @see #assertCorrectness(TestSubscriber)
-//     */
-//    @SuppressWarnings("unchecked")
-//    @GuarantorAware(value = false)
-//    @Test(dataProvider = "parentPersonalInfoProvider")
-//    public void test_parentInfoScreen_shouldRequirePhoneOrEmail(@NotNull List<SLInputType> inputs) {
-//        // Setup
-//        final UISignUpTest THIS = this;
-//        final UserMode MODE = UserMode.TEEN_UNDER_18;
-//        TestSubscriber subscriber = CustomTestSubscriber.create();
-//
-//        // When
-//        rx_splash_extraInfo(MODE)
-//            .flatMap(a -> THIS.rx_enterPersonalInfo(inputs))
-//            .flatMap(a -> THIS.rx_a_confirmExtraPersonalInfo(MODE))
-//
-//            /* If all inputs are valid, the progress bar should be visible
-//             * to indicate data being processed */
-//            .flatMap(a -> THIS.rx_progressBar())
-//            .subscribe(subscriber);
-//
-//        subscriber.awaitTerminalEvent();
-//
-//        // Then
-//        assertCorrectness(subscriber);
-//    }
-//
-//    /**
-//     * This test confirms that when the user clicks on the TOC and opens up
-//     * the Web browser, the personal info inputs are saved and then restored
-//     * when the user gets back to the app. This is more relevant for
-//     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
-//     * @param MODE {@link UserMode} instance.
-//     * @see #rx_splash_personalInfo(UserMode)
-//     * @see #rx_h_checkPersonalInfoStateSaved(UserMode)
-//     * @see #generalUserModeProvider()
-//     * @see #assertCorrectness(TestSubscriber)
-//     */
-//    @SuppressWarnings("unchecked")
-//    @GuarantorAware(value = false)
-//    @Test(dataProvider = "generalUserModeProvider")
-//    public void test_leavePersonalInfo_shouldSaveState(@NotNull final UserMode MODE) {
-//        // Setup
-//        final UISignUpTest THIS = this;
-//        TestSubscriber subscriber = CustomTestSubscriber.create();
-//
-//        // When
-//        rx_splash_personalInfo(MODE)
-//            .flatMap(a -> THIS.rx_h_checkPersonalInfoStateSaved(MODE))
-//            .subscribe(subscriber);
-//
-//        subscriber.awaitTerminalEvent();
-//
-//        // Then
-//        assertCorrectness(subscriber);
-//    }
-//
-//    /**
-//     * This test checks that {@link UserMode#TEEN_UNDER_18} will see the
-//     * parent information screen, while {@link UserMode#TEEN_ABOVE_18} will
-//     * not. It uses a custom {@link DataProvider} that provides only
-//     * {@link UserMode#TEEN_UNDER_18} and {@link UserMode#TEEN_ABOVE_18}.
-//     * @param MODE {@link UserMode} instance.
-//     * @see #rx_splash_useApp(UserMode)
-//     * @see #guarantorSpecificUserModeProvider()
-//     * @see #assertCorrectness(TestSubscriber)
-//     */
-//    @SuppressWarnings("unchecked")
-//    @GuarantorAware(value = true)
-//    @Test(dataProvider = "guarantorSpecificUserModeProvider")
-//    public void test_guarantorNeeded_shouldRequireParentInfo(@NotNull final UserMode MODE) {
-//        // Setup
-//        TestSubscriber subscriber = CustomTestSubscriber.create();
-//
-//        // When
-//        /* During the tests, if the current user requires a guarantor (i.e
-//         * below 18 years-old), we expect the parent information screen to
-//         * be present */
-//        rx_splash_useApp(MODE).subscribe(subscriber);
-//        subscriber.awaitTerminalEvent();
-//
-//        // Then
-//        assertCorrectness(subscriber);
-//    }
-//
-//    /**
-//     * This test checks that the TOC checkbox has to be ticked before the
-//     * user continues any further. The check happens in the personal info
-//     * input screen.
-//     * @param MODE {@link UserMode} instance.
-//     * @see #rx_splash_personalInfo(UserMode)
-//     * @see #rx_h_checkTOCCBeforeProceeding(UserMode)
-//     * @see #assertCorrectness(TestSubscriber)
-//     */
-//    @SuppressWarnings("unchecked")
-//    @GuarantorAware(value = false)
-//    @Test(dataProvider = "generalUserModeProvider")
-//    public void test_requireTOCAccepted_toProceedFurther(@NotNull final UserMode MODE) {
-//        // Setup
-//        final UISignUpTest THIS = this;
-//        TestSubscriber subscriber = CustomTestSubscriber.create();
-//
-//        // When
-//        rx_splash_personalInfo(MODE)
-//            .flatMap(a -> THIS.rx_h_checkTOCCBeforeProceeding(MODE))
-//            .subscribe(subscriber);
-//
-//        subscriber.awaitTerminalEvent();
-//
-//        // Then
-//        assertCorrectness(subscriber);
-//    }
+    //region Validate screen correctness
+    /**
+     * This test checks that the DoB screen has correct elements, by checking
+     * that all {@link org.openqa.selenium.WebElement} are present and back
+     * navigation shows the correct register screen.
+     * @param mode {@link UserMode} instance.
+     * @see #engine()
+     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rx_h_DoBPickerScreen(Engine)
+     * @see #rx_a_clickBackButton(Engine)
+     * @see #rx_v_registerScreen(Engine)
+     * @see #generalUserModeProvider()
+     */
+    @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
+    @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
+    public void test_DoBPickerScreen_isValidScreen(@NotNull UserMode mode) {
+        // Setup
+        final UISignUpTest THIS = this;
+        final Engine<?> ENGINE = engine();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_navigate(mode, Screen.SPLASH, Screen.DOB_PICKER)
+            .flatMap(a -> THIS.rx_h_DoBPickerScreen(ENGINE))
+            .flatMap(a -> THIS.rx_a_clickBackButton(ENGINE))
+            .flatMap(a -> THIS.rx_v_registerScreen(ENGINE))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * This test checks that the DoB picker dialog has the correct elements,
+     * by verifying that all required {@link org.openqa.selenium.WebElement}
+     * are present. It selects a random {@link java.util.Date} with which
+     * to interact with the calendar/date picker.
+     * @param mode {@link UserMode} instance.
+     * @see #engine()
+     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rx_h_checkDoBDialogElements(Engine)
+     * @see #generalUserModeProvider()
+     */
+    @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
+    @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
+    public void test_DoBPickerDialog_isValidScreen(@NotNull UserMode mode) {
+        // Setup
+        final UISignUpTest THIS = this;
+        final Engine<?> ENGINE = engine();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_navigate(mode, Screen.SPLASH, Screen.DOB_PICKER)
+            .flatMap(a -> THIS.rx_h_checkDoBDialogElements(ENGINE))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * This test validates that the unacceptable age input screen has the
+     * correct {@link org.openqa.selenium.WebElement}, and clicking on the
+     * submit button without filling in require inputs should fail.
+     * @param mode {@link UserMode} instance.
+     * @see #engine()
+     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rx_a_clickInputField(Engine, SLInputType)
+     * @see #generalUserModeProvider()
+     */
+    @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
+    @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
+    public void test_unacceptableAgeInputs_isValidScreen(@NotNull UserMode mode) {
+        // Setup
+        final UISignUpTest THIS = this;
+        final Engine<?> ENGINE = engine();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_navigate(mode, Screen.SPLASH, Screen.UNACCEPTABLE_AGE)
+            .flatMap(a -> THIS.rx_a_confirmUnacceptableAgeInput(ENGINE))
+            .flatMap(a -> THIS.rx_a_clickInputField(ENGINE, TextInput.NAME))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * This test validates that the acceptable age inputs screen contains the
+     * correct {@link org.openqa.selenium.WebElement} by verifying their
+     * visibility,
+     * @param MODE {@link UserMode} instance.
+     * @see #engine()
+     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rx_h_enterAndCheckAcceptableAgeInputs(Engine, UserMode)
+     * @see #generalUserModeProvider()
+     */
+    @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
+    @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
+    public void test_acceptableAgeInputs_isValidScreen(@NotNull final UserMode MODE) {
+        // Setup
+        final UISignUpTest THIS = this;
+        final Engine<?> ENGINE = engine();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_navigate(MODE, Screen.SPLASH, Screen.ACCEPTABLE_AGE)
+            .flatMap(a -> THIS.rx_h_enterAndCheckAcceptableAgeInputs(ENGINE, MODE))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * This test validates that the personal info input screen contains the
+     * correct {@link org.openqa.selenium.WebElement} by verifying their
+     * visibility and interacting with each of them.
+     * @param MODE {@link UserMode} instance.
+     * @see #engine()
+     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rx_h_enterAndCheckPersonalInfo(Engine, UserMode)
+     * @see #generalUserModeProvider()
+     */
+    @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
+    @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
+    public void test_personalInfoScreen_isValidScreen(@NotNull final UserMode MODE) {
+        // Setup
+        final UISignUpTest THIS = this;
+        final Engine<?> ENGINE = engine();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
+            .flatMap(a -> THIS.rx_v_personalInfoScreen(ENGINE, MODE))
+            .flatMap(a -> THIS.rx_h_enterAndCheckPersonalInfo(ENGINE, MODE))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+    //endregion
+
+    /**
+     * This test validates that DoB selection works by sequentially selecting
+     * DoBs from a range of {@link java.util.Date}.
+     * Note that this test is not guarantor-aware, so
+     * {@link UserMode#TEEN_U18} and {@link UserMode#TEEN_A18} will
+     * be treated the same.
+     * @param MODE {@link UserMode} instance.
+     * @see #engine()
+     * @see UserMode#offsetFromCategoryAcceptableRange(int)
+     * @see #rx_h_validateDoBs(Engine, UserMode, List)
+     * @see #generalUserModeProvider()
+     * @see #assertCorrectness(TestSubscriber)
+     */
+    @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
+    @Test(dataProvider = "generalUserModeProvider")
+    public void test_DoBSelection_shouldWork(@NotNull final UserMode MODE) {
+        // Setup
+        final UISignUpTest THIS = this;
+        final Engine<?> ENGINE = engine();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+        final List<Integer> AGES = MODE.offsetFromCategoryAcceptableRange(2);
+
+        // When
+        rx_navigate(MODE, Screen.SPLASH, Screen.DOB_PICKER)
+            .flatMap(a -> THIS.rx_h_validateDoBs(ENGINE, MODE, AGES))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * This test validates that the unacceptable age inputs should only
+     * require either {@link TextInput#PHONE} or {@link TextInput#EMAIL},
+     * and not both. It sequentially substitutes {@link TextInput} into
+     * {@link #rx_a_enterInput(Engine, SLInputType, String)}. We do not use
+     * {@link DataProvider} with this method because we already have a
+     * {@link Factory} for the constructor.
+     * @param MODE {@link UserMode} instance.
+     * @see #engine()
+     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rx_h_unacceptableAgeInputRequired(Engine, TextInput)
+     * @see #generalUserModeProvider()
+     * @see #assertCorrectness(TestSubscriber)
+     */
+    @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
+    @Test(dataProvider = "generalUserModeProvider")
+    public void test_unacceptableAgeInput_shouldRequirePhoneOrEmail(@NotNull final UserMode MODE) {
+        // Setup
+        final UISignUpTest THIS = this;
+        final Engine<?> ENGINE = engine();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        /* Check that if phone is entered, we don't need email */
+        rx_navigate(MODE, Screen.SPLASH, Screen.UNACCEPTABLE_AGE)
+            .flatMap(a -> THIS.rx_h_unacceptableAgeInputRequired(ENGINE, TextInput.PHONE))
+
+            /* Check that if email is entered, we don't need phone */
+            .flatMap(a -> THIS.rx_navigate(MODE, Screen.SPLASH, Screen.ACCEPTABLE_AGE))
+            .flatMap(a -> THIS.rx_h_unacceptableAgeInputRequired(ENGINE, TextInput.EMAIL))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * This test validates that filling in unacceptable age inputs work
+     * correctly, by checking that after the submit button is clicked, the
+     * user should be brought to the confirm screen and the register page.
+     * @param mode {@link UserMode} instance.
+     * @see #engine()
+     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rx_h_enterAndCheckUnacceptableAgeInputs(Engine)
+     * @see #generalUserModeProvider()
+     * @see #assertCorrectness(TestSubscriber)
+     */
+    @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
+    @Test(dataProvider = "generalUserModeProvider")
+    public void test_unacceptableAgeInput_shouldWork(@NotNull UserMode mode) {
+        // Setup
+        final UISignUpTest THIS = this;
+        final Engine<?> ENGINE = engine();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_navigate(mode, Screen.SPLASH, Screen.UNACCEPTABLE_AGE)
+            .flatMap(a -> THIS.rx_h_enterAndCheckUnacceptableAgeInputs(ENGINE))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * Confirm that when the user selects
+     * {@link ChoiceInput#HEIGHT} in
+     * {@link com.holmusk.SuperLeapQA.model.Height#FT}, every 12
+     * {@link com.holmusk.SuperLeapQA.model.Height#INCH} is converted to
+     * {@link com.holmusk.SuperLeapQA.model.Height#FT}.
+     * @param MODE {@link UserMode} instance.
+     * @see #engine()
+     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rx_validate12InchConvertedToAFoot(Engine, UserMode)
+     * @see #generalUserModeProvider()
+     * @see #assertCorrectness(TestSubscriber)
+     */
+    @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
+    @Test(dataProvider = "generalUserModeProvider")
+    public void test_12Inch_shouldBeConvertedTo1Foot(@NotNull final UserMode MODE) {
+        // Setup
+        final UISignUpTest THIS = this;
+        final Engine<?> ENGINE = engine();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_navigate(MODE, Screen.SPLASH, Screen.ACCEPTABLE_AGE)
+            .flatMap(a -> THIS.rx_validate12InchConvertedToAFoot(ENGINE, MODE))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * This test validates that the acceptable age inputs show the correct
+     * empty input errors, by sequentially entering/selecting inputs and
+     * clicking the confirm button. If the inputs are not completed, the
+     * user will be notified.
+     * @param MODE {@link UserMode} instance.
+     * @see #engine()
+     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rx_h_acceptableAgeEmptyInputErrors(Engine, UserMode)
+     * @see #generalUserModeProvider()
+     * @see #assertCorrectness(TestSubscriber)
+     */
+    @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
+    @Test(dataProvider = "generalUserModeProvider")
+    public void test_acceptableAgeEmptyInputs_showCorrectErrors(@NotNull final UserMode MODE) {
+        // Setup
+        final UISignUpTest THIS = this;
+        final Engine<?> ENGINE = engine();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_navigate(MODE, Screen.SPLASH, Screen.ACCEPTABLE_AGE)
+            .flatMap(a -> THIS.rx_h_acceptableAgeEmptyInputErrors(ENGINE, MODE))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * This test validates that the personal info inputs for parents/guarantors
+     * should only require either {@link TextInput#PARENT_MOBILE} or
+     * {@link TextInput#PARENT_EMAIL}. This test is only applicable for
+     * {@link UserMode#TEEN_U18}, so we use {@link DataProvider}
+     * that provides {@link InputType}.
+     * @param INPUTS {@link List} of {@link InputType}.
+     * @see #engine()
+     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rx_a_enterPersonalInfo(Engine, List)
+     * @see #rx_a_confirmExtraPersonalInfo(Engine, UserMode)
+     * @see #rx_e_progressBar(Engine)
+     * @see #parentPersonalInfoProvider()
+     * @see #assertCorrectness(TestSubscriber)
+     */
+    @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
+    @Test(dataProvider = "parentPersonalInfoProvider")
+    public void test_parentInfoScreen_shouldRequirePhoneOrEmail(@NotNull final List<SLInputType> INPUTS) {
+        // Setup
+        final UISignUpTest THIS = this;
+        final Engine<?> ENGINE = engine();
+        final UserMode MODE = UserMode.TEEN_U18;
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_navigate(MODE, Screen.SPLASH, Screen.EXTRA_PERSONAL_INFO)
+            .flatMap(a -> THIS.rx_a_enterPersonalInfo(ENGINE, INPUTS))
+            .flatMap(a -> THIS.rx_a_confirmExtraPersonalInfo(ENGINE, MODE))
+
+            /* If all inputs are valid, the progress bar should be visible
+             * to indicate data being processed */
+            .flatMap(a -> THIS.rx_e_progressBar(ENGINE))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * This test confirms that when the user clicks on the TOC and opens up
+     * the Web browser, the personal info inputs are saved and then restored
+     * when the user gets back to the app. This is more relevant for
+     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
+     * @param MODE {@link UserMode} instance.
+     * @see #engine()
+     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rx_h_checkPersonalInfoStateSaved(Engine, UserMode)
+     * @see #generalUserModeProvider()
+     * @see #assertCorrectness(TestSubscriber)
+     */
+    @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
+    @Test(dataProvider = "generalUserModeProvider")
+    public void test_leavePersonalInfo_shouldSaveState(@NotNull final UserMode MODE) {
+        // Setup
+        final UISignUpTest THIS = this;
+        final Engine<?> ENGINE = engine();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
+            .flatMap(a -> THIS.rx_h_checkPersonalInfoStateSaved(ENGINE, MODE))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * This test checks that {@link UserMode#TEEN_U18} will see the
+     * parent information screen, while {@link UserMode#TEEN_A18} will
+     * not. It uses a custom {@link DataProvider} that provides only
+     * {@link UserMode#TEEN_U18} and {@link UserMode#TEEN_A18}.
+     * @param MODE {@link UserMode} instance.
+     * @see #engine()
+     * @see #rx_navigate(UserMode, Screen...)
+     * @see #guarantorSpecificUserModeProvider()
+     * @see #assertCorrectness(TestSubscriber)
+     */
+    @SuppressWarnings("unchecked")
+    @GuarantorAware(value = true)
+    @Test(dataProvider = "guarantorSpecificUserModeProvider")
+    public void test_guarantorNeeded_shouldRequireParentInfo(@NotNull final UserMode MODE) {
+        // Setup
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        /* During the tests, if the current user requires a guarantor (i.e
+         * below 18 years-old), we expect the parent information screen to
+         * be present */
+        rx_navigate(MODE, Screen.SPLASH, Screen.USE_APP_NOW).subscribe(subscriber);
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * This test checks that the TOC checkbox has to be ticked before the
+     * user continues any further. The check happens in the personal info
+     * input screen.
+     * @param MODE {@link UserMode} instance.
+     * @see #engine()
+     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rx_h_checkTOCCBeforeProceeding(Engine, UserMode)
+     * @see #assertCorrectness(TestSubscriber)
+     */
+    @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
+    @Test(dataProvider = "generalUserModeProvider")
+    public void test_requireTOCAccepted_toProceedFurther(@NotNull final UserMode MODE) {
+        // Setup
+        final UISignUpTest THIS = this;
+        final Engine<?> ENGINE = engine();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rx_navigate(MODE, Screen.SPLASH, Screen.ACCEPTABLE_AGE)
+            .flatMap(a -> THIS.rx_h_checkTOCCBeforeProceeding(ENGINE, MODE))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
 }

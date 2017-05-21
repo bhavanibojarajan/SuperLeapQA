@@ -36,7 +36,7 @@ public interface DashboardValidationType extends BaseValidationType {
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<?> rxValidateUseAppNowScreen(@NotNull Engine<?> engine) {
+    default Flowable<?> rx_v_useAppNowScreen(@NotNull Engine<?> engine) {
         final DashboardValidationType THIS = this;
 
         return Flowable
@@ -56,7 +56,7 @@ public interface DashboardValidationType extends BaseValidationType {
      * @see Engine#rx_containsText(String...)
      */
     @NotNull
-    default Flowable<?> rxValidateDashboardTutorialScreen(@NotNull Engine<?> engine) {
+    default Flowable<?> rx_v_dashboardTutorialScreen(@NotNull Engine<?> engine) {
         return engine.rx_containsText("dashboard_title_tapHereToMakeFirstEntry");
     }
 }

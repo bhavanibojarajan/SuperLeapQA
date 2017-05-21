@@ -8,7 +8,6 @@ import org.swiften.javautilities.localizer.Localizer;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.navigation.ScreenManagerType;
-import static org.testng.Assert.*;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
@@ -23,15 +22,15 @@ public final class GeneralTest {
     public void test_emptyInputErrors_shouldBeCorrect() {
         // Setup & When
         LCFormat parent_gender = Gender.FEMALE.emptyInputError(UserMode.PARENT);
-        LCFormat teen_gender = Gender.MALE.emptyInputError(UserMode.TEEN_UNDER_18);
+        LCFormat teen_gender = Gender.MALE.emptyInputError(UserMode.TEEN_U18);
         LCFormat parent_ft_height = Height.FT.emptyInputError(UserMode.PARENT);
         LCFormat parent_cm_height = Height.CM.emptyInputError(UserMode.PARENT);
         LCFormat parent_kg_weight = Weight.KG.emptyInputError(UserMode.PARENT);
         LCFormat parent_lb_weight = Weight.LB.emptyInputError(UserMode.PARENT);
-        LCFormat teen_ft_height = Height.FT.emptyInputError(UserMode.TEEN_UNDER_18);
-        LCFormat teen_cm_height = Height.CM.emptyInputError(UserMode.TEEN_UNDER_18);
-        LCFormat teen_kg_weight = Weight.KG.emptyInputError(UserMode.TEEN_UNDER_18);
-        LCFormat teen_lb_weight = Weight.LB.emptyInputError(UserMode.TEEN_UNDER_18);
+        LCFormat teen_ft_height = Height.FT.emptyInputError(UserMode.TEEN_U18);
+        LCFormat teen_cm_height = Height.CM.emptyInputError(UserMode.TEEN_U18);
+        LCFormat teen_kg_weight = Weight.KG.emptyInputError(UserMode.TEEN_U18);
+        LCFormat teen_lb_weight = Weight.LB.emptyInputError(UserMode.TEEN_U18);
         Localizer localizer = Localizer.builder().addBundle("Strings", Locale.US).build();
 
         // Then
@@ -77,10 +76,10 @@ public final class GeneralTest {
         // Setup & When & Then
         LogUtil.println(UserMode.PARENT.acceptableAgeRange());
         LogUtil.println(UserMode.PARENT.acceptableAgeCategoryRangeString());
-        LogUtil.println(UserMode.TEEN_UNDER_18.acceptableAgeRange());
-        LogUtil.println(UserMode.TEEN_UNDER_18.acceptableAgeCategoryRangeString());
-        LogUtil.println(UserMode.TEEN_ABOVE_18.acceptableAgeRange());
-        LogUtil.println(UserMode.TEEN_ABOVE_18.acceptableAgeCategoryRangeString());
+        LogUtil.println(UserMode.TEEN_U18.acceptableAgeRange());
+        LogUtil.println(UserMode.TEEN_U18.acceptableAgeCategoryRangeString());
+        LogUtil.println(UserMode.TEEN_A18.acceptableAgeRange());
+        LogUtil.println(UserMode.TEEN_A18.acceptableAgeCategoryRangeString());
     }
 
     @Test
@@ -88,9 +87,10 @@ public final class GeneralTest {
     public void test_navigation_shouldWorkCorrectly() {
         // Setup
         final Engine<?> ENGINE = mock(Engine.class);
-        final List<ScreenManagerType.Node> NODES = new ArrayList<>();
+        final List<ScreenManagerType.Node> FN = new ArrayList<>();
+        final List<ScreenManagerType.Node> BN = new ArrayList<>();
 
-        ScreenManagerType manager = new ScreenManagerType() {
+        SLScreenManagerType manager = new SLScreenManagerType() {
             @NotNull
             @Override
             public Engine<?> engine() {
@@ -98,39 +98,39 @@ public final class GeneralTest {
             }
 
             @Override
-            public void addNodes(@NotNull List<Node> nodes) {
-                NODES.addAll(nodes);
+            public void addForwardNodes(@NotNull List<Node> nodes) {
+                FN.addAll(nodes);
+            }
+
+            @Override
+            public void addBackwardNodes(@NotNull List<Node> nodes) {
+                BN.addAll(nodes);
             }
 
             @NotNull
             @Override
-            public List<Node> registeredNodes() {
-                return NODES;
+            public List<Node> registeredForwardNodes() {
+                return FN;
+            }
+
+            @NotNull
+            @Override
+            public List<Node> registeredBackwardNodes() {
+                return BN;
             }
         };
 
-        manager.register(Screen.values());
+        manager.registerScreenHolders();
 
-        try {
-            // When
-            List<ScreenManagerType.Node> n1 = manager.nodes(Screen.SPLASH, Screen.REGISTER);
-            List<ScreenManagerType.Node> n2 = manager.nodes(Screen.SPLASH, Screen.SIGN_IN);
-            List<ScreenManagerType.Node> n3 = manager.nodes(Screen.SIGN_IN, Screen.REGISTER);
-            List<ScreenManagerType.Node> n4 = manager.nodes(Screen.WELCOME, Screen.REGISTER);
-            List<ScreenManagerType.Node> n5 = manager.nodes(Screen.SPLASH, Screen.TEEN_DOB_PICKER);
-            List<ScreenManagerType.Node> n6 = manager.nodes(Screen.SIGN_IN, Screen.PARENT_DOB_PICKER);
-            List<ScreenManagerType.Node> n7 = manager.nodes(Screen.SPLASH, Screen.SIGN_IN, Screen.TEEN_DOB_PICKER);
+        // When & Then
+//        LogUtil.println(manager.multipleShortest(UserMode.PARENT, Screen.SPLASH, Screen.REGISTER));
 
-            // Then
-            LogUtil.println(n1);
-            LogUtil.println(n2);
-            LogUtil.println(n3);
-            LogUtil.println(n4);
-            LogUtil.println(n5);
-            LogUtil.println(n6);
-            LogUtil.println(n7);
-        } catch (Exception e) {
-            LogUtil.println(e);
-        }
+        LogUtil.println(manager.nodes(
+            UserMode.PARENT,
+//            Screen.SPLASH,
+            Screen.FORGOT_PASSWORD,
+//            Screen.WELCOME,
+            Screen.USE_APP_NOW)
+        );
     }
 }

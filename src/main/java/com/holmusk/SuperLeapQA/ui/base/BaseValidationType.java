@@ -40,7 +40,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @see Engine#rx_containsID(String...)
      */
     @NotNull
-    default Flowable<WebElement> rx_progressBar(@NotNull Engine<?> engine) {
+    default Flowable<WebElement> rx_e_progressBar(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             return engine.rx_containsID("pb_general").firstElement().toFlowable();
         } else {

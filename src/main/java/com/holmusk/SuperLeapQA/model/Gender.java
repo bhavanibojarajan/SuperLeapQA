@@ -54,7 +54,7 @@ public enum Gender implements BaseErrorType, SLInputType {
                 error = "parentSignUp_error_genderNotSelected";
                 break;
 
-            case TEEN_UNDER_18:
+            case TEEN_U18:
                 error = "teenSignUp_error_genderNotSelected";
                 break;
 

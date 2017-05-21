@@ -13,11 +13,62 @@ import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.xtestkit.base.Engine;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by haipham on 5/21/17.
  */
 public interface NavigationType extends DashboardTestHelperType {
+    /**
+     * Wait for splash screen to finish and navigate to welcome screen.
+     * @return {@link Flowable} instance.
+     * @see #splashDelay()
+     * @see BooleanUtil#toTrue(Object)
+     */
+    @NotNull
+    default Flowable<?> rx_n_splash_welcome() {
+        long delay = splashDelay();
+        TimeUnit unit = TimeUnit.MILLISECONDS;
+        return Flowable.timer(delay, unit);
+    }
+
+    /**
+     * Navigate from the sign in screen to the welcome screen, assuming the
+     * user is already in the sign in screen.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rx_a_clickBackButton(Engine)
+     */
+    @NotNull
+    default Flowable<?> rx_n_signIn_welcome(@NotNull final Engine<?> ENGINE) {
+        return rx_a_clickBackButton(ENGINE);
+    }
+
+    /**
+     * Navigate from welcome to register screen, assuming the user is already
+     * in the welcome screen.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rx_e_welcomeRegister(Engine)
+     * @see Engine#rx_click(WebElement)
+     */
+    @NotNull
+    default Flowable<?> rx_n_welcome_register(@NotNull final Engine<?> ENGINE) {
+        return rx_e_welcomeRegister(ENGINE).flatMap(ENGINE::rx_click);
+    }
+
+    /**
+     * Navigate from the register screen to the welcome screen, assuming the
+     * user is already in the register screen.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rx_a_clickBackButton(Engine)
+     */
+    @NotNull
+    default Flowable<?> rx_n_register_welcome(@NotNull final Engine<?> ENGINE) {
+        return rx_a_clickBackButton(ENGINE);
+    }
+
     /**
      * Navigate to the parent sign up screen from register screen, assuming
      * the user is already on the register screen.
@@ -38,7 +89,7 @@ public interface NavigationType extends DashboardTestHelperType {
      * @return {@link Flowable} instance.
      * @see #rx_a_openDoBPicker(Engine)
      * @see #rx_a_selectDoBToBeOfAge(Engine, int)
-     * @see #rxConfirmDoB(Engine) )
+     * @see #rx_a_confirmDoB(Engine) )
      */
     @NotNull
     default Flowable<?> rx_n_DoBPicker_inputScreenForAge(@NotNull final Engine<?> ENGINE,
@@ -47,23 +98,7 @@ public interface NavigationType extends DashboardTestHelperType {
 
         return rx_a_openDoBPicker(ENGINE)
             .flatMap(a -> THIS.rx_a_selectDoBToBeOfAge(ENGINE, AGE))
-            .flatMap(a -> THIS.rxConfirmDoB(ENGINE));
-    }
-
-    /**
-     * Navigate to the acceptable age input screen by selecting a DoB that
-     * results in an age that lies within {@link UserMode#acceptableAgeRange()}.
-     * @param engine {@link Engine} instance.
-     * @param mode {@link UserMode} instance.
-     * @return {@link Flowable} instance.
-     * @see #rx_n_DoBPicker_inputScreenForAge(Engine, int)
-     */
-    @NotNull
-    default Flowable<?> rx_n_DoBPicker_acceptableAge(@NotNull Engine<?> engine,
-                                                     @NotNull UserMode mode) {
-        List<Integer> range = mode.acceptableAgeRange();
-        int age = CollectionTestUtil.randomElement(range);
-        return rx_n_DoBPicker_inputScreenForAge(engine, age);
+            .flatMap(a -> THIS.rx_a_confirmDoB(ENGINE));
     }
 
     /**
@@ -84,8 +119,59 @@ public interface NavigationType extends DashboardTestHelperType {
     }
 
     /**
+     * Navigate from the unacceptable age input screen to the DoB picker
+     * screen.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rx_a_clickBackButton(Engine)
+     */
+    @NotNull
+    default Flowable<?> rx_n_unacceptableAge_DOBPicker(@NotNull Engine<?> engine) {
+        return rx_a_clickBackButton(engine);
+    }
+
+    /**
+     * Navigate from the unacceptable age screen to the welcome screen.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rx_h_enterAndCheckUnacceptableAgeInputs(Engine)
+     */
+    @NotNull
+    default Flowable<?> rx_n_unacceptableAge_welcome(@NotNull final Engine<?> ENGINE) {
+        return rx_h_enterAndCheckUnacceptableAgeInputs(ENGINE);
+    }
+
+    /**
+     * Navigate to the acceptable age input screen by selecting a DoB that
+     * results in an age that lies within {@link UserMode#acceptableAgeRange()}.
+     * @param engine {@link Engine} instance.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Flowable} instance.
+     * @see #rx_n_DoBPicker_inputScreenForAge(Engine, int)
+     */
+    @NotNull
+    default Flowable<?> rx_n_DoBPicker_acceptableAge(@NotNull Engine<?> engine,
+                                                     @NotNull UserMode mode) {
+        List<Integer> range = mode.acceptableAgeRange();
+        int age = CollectionTestUtil.randomElement(range);
+        return rx_n_DoBPicker_inputScreenForAge(engine, age);
+    }
+
+    /**
+     * Navigate from the acceptable age screen to the welcome screen.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rx_h_enterAndCheckUnacceptableAgeInputs(Engine)
+     */
+    @NotNull
+    default Flowable<?> rx_n_acceptableAge_welcome(@NotNull final Engine<?> ENGINE) {
+        return rx_h_enterAndCheckUnacceptableAgeInputs(ENGINE);
+    }
+
+    /**
      * Navigate from the acceptable age input to the personal info input
      * screen.
+     * @param ENGINE {@link Engine} instance.
      * @param MODE {@link UserMode} instance.
      * @return {@link Flowable} instance.
      * @see #rx_a_enterAcceptableAgeInputs(Engine, UserMode)
@@ -94,10 +180,21 @@ public interface NavigationType extends DashboardTestHelperType {
     @NotNull
     default Flowable<?> rx_n_acceptableAge_personalInfo(@NotNull final Engine<?> ENGINE,
                                                         @NotNull final UserMode MODE) {
-        final AcceptableAgeActionType THIS = this;
+        final NavigationType THIS = this;
 
         return rx_a_enterAcceptableAgeInputs(ENGINE, MODE)
             .flatMap(a -> THIS.rx_a_confirmAcceptableAgeInputs(ENGINE));
+    }
+
+    /**
+     * Navigate from the personal info screen to the acceptable age screen.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rx_a_clickBackButton(Engine)
+     */
+    @NotNull
+    default Flowable<?> rx_n_personalInfo_acceptableAge(@NotNull Engine<?> engine) {
+        return rx_a_clickBackButton(engine);
     }
 
     /**
@@ -122,8 +219,27 @@ public interface NavigationType extends DashboardTestHelperType {
     }
 
     /**
+     * Navigate from extra personal info screen to the personal info screen.
+     * Only applicable if {@link UserMode#requiresGuarantor()} is true.
+     * @param engine {@link Engine} instance.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Flowable} instance.
+     * @see UserMode#requiresGuarantor()
+     * @see #rx_a_clickBackButton(Engine)
+     */
+    @NotNull
+    default Flowable<?> rx_n_extraInfo_personalInfo(@NotNull Engine<?> engine,
+                                                    @NotNull UserMode mode) {
+        if (mode.requiresGuarantor()) {
+            return rx_a_clickBackButton(engine);
+        } else {
+            return Flowable.just(true);
+        }
+    }
+
+    /**
      * Navigate from the extra info screen to the Use App Now screen. Note
-     * that the extra info screen only exists for {@link UserMode#TEEN_UNDER_18}.
+     * that the extra info screen only exists for {@link UserMode#TEEN_U18}.
      * For other {@link UserMode} instances, this screen should be the
      * personal info screen.
      * @param ENGINE {@link Engine} instance.

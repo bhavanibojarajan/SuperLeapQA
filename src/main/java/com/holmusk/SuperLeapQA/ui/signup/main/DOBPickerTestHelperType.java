@@ -67,7 +67,7 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
      * to the correct sign up screen. This action assumes the user is in the DoB
      * selection screen, but has not opened the DoB picker yet.
      * Be aware that this method is not guarantor-aware.
-     * {@link UserMode#TEEN_UNDER_18} and {@link UserMode#TEEN_ABOVE_18} will
+     * {@link UserMode#TEEN_U18} and {@link UserMode#TEEN_A18} will
      * be treated the same. This is why we use
      * {@link UserMode#acceptableAgeCategoryRange()} instead of
      * {@link UserMode#acceptableAgeRange()}.
@@ -99,7 +99,7 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
 
                     return THIS.rx_a_openDoBPicker(ENGINE)
                         .flatMap(a -> THIS.rx_a_selectDoBToBeOfAge(ENGINE, AGE))
-                        .flatMap(a -> THIS.rxConfirmDoB(ENGINE))
+                        .flatMap(a -> THIS.rx_a_confirmDoB(ENGINE))
                         .flatMap(a -> {
                             if (VALID) {
                                 return THIS.rx_v_acceptableAgeScreen(ENGINE);
@@ -128,7 +128,7 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
      * @see #rx_v_DoBEditFieldHasDate(Engine, Date)
      */
     @NotNull
-    default Flowable<?> rxCheckDoBDialogHasCorrectElements(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rx_h_checkDoBDialogElements(@NotNull final Engine<?> ENGINE) {
         final DOBPickerActionType THIS = this;
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, NumberTestUtil.randomBetween(1, 28));
@@ -138,7 +138,7 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
 
         return rx_a_openDoBPicker(ENGINE)
             .flatMap(a -> THIS.rx_a_selectDoB(ENGINE, DATE))
-            .flatMap(a -> THIS.rxConfirmDoB(ENGINE))
+            .flatMap(a -> THIS.rx_a_confirmDoB(ENGINE))
             .flatMap(a -> THIS.rx_a_clickBackButton(ENGINE))
             .flatMap(a -> THIS.rx_v_DoBEditFieldHasDate(ENGINE, DATE));
     }

@@ -14,8 +14,8 @@ import java.util.List;
  */
 public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> {
     PARENT,
-    TEEN_UNDER_18,
-    TEEN_ABOVE_18;
+    TEEN_U18,
+    TEEN_A18;
 
     @NotNull
     @Override
@@ -26,13 +26,13 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     /**
      * Check if the current {@link UserMode} is in the teen category.
      * @return {@link Boolean} instance.
-     * @see #TEEN_UNDER_18
-     * @see #TEEN_ABOVE_18
+     * @see #TEEN_U18
+     * @see #TEEN_A18
      */
     public boolean isTeen() {
         switch (this) {
-            case TEEN_ABOVE_18:
-            case TEEN_UNDER_18:
+            case TEEN_A18:
+            case TEEN_U18:
                 return true;
 
             default:
@@ -47,26 +47,6 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      */
     public boolean isParent() {
         return this.equals(PARENT);
-    }
-
-    /**
-     * Get the id of the register button for the current {@link UserMode} on
-     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
-     * @return {@link String} value.
-     */
-    @NotNull
-    public String androidRegisterButtonId() {
-        switch (this) {
-            case PARENT:
-                return "btnRegChild";
-
-            case TEEN_ABOVE_18:
-            case TEEN_UNDER_18:
-                return "btnRegSelf";
-
-            default:
-                throw new RuntimeException(NOT_AVAILABLE);
-        }
     }
 
     /**
@@ -86,8 +66,8 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
                     TextInput.HOME
                 );
 
-            case TEEN_UNDER_18:
-            case TEEN_ABOVE_18:
+            case TEEN_U18:
+            case TEEN_A18:
                 return Arrays.asList(
                     TextInput.NAME,
                     TextInput.MOBILE,
@@ -102,7 +82,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     }
 
     /**
-     * Get additional personal inputs, esp. for {@link UserMode#TEEN_UNDER_18} since
+     * Get additional personal inputs, esp. for {@link UserMode#TEEN_U18} since
      * users will need to enter parent's information as well.
      * @return {@link List} of {@link SLInputType}.
      * @see Arrays#asList(Object[])
@@ -111,8 +91,8 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     @NotNull
     public List<SLInputType> extraPersonalInformation() {
         switch (this) {
-            case TEEN_UNDER_18:
-            case TEEN_ABOVE_18:
+            case TEEN_U18:
+            case TEEN_A18:
                 return Arrays.asList(
                     TextInput.PARENT_NAME,
                     TextInput.PARENT_MOBILE,
@@ -126,12 +106,12 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
 
     /**
      * Check whether the current use requires guarantor information. This
-     * is only applicable for {@link #TEEN_UNDER_18}.
+     * is only applicable for {@link #TEEN_U18}.
      * @return {@link Boolean} value.
      */
     public boolean requiresGuarantor() {
         switch (this) {
-            case TEEN_UNDER_18:
+            case TEEN_U18:
                 return true;
 
             default:
@@ -148,10 +128,10 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
             case PARENT:
                 return 5;
 
-            case TEEN_UNDER_18:
+            case TEEN_U18:
                 return 16;
 
-            case TEEN_ABOVE_18:
+            case TEEN_A18:
                 return 18;
 
             default:
@@ -168,10 +148,10 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
             case PARENT:
                 return 6;
 
-            case TEEN_UNDER_18:
+            case TEEN_U18:
                 return 17;
 
-            case TEEN_ABOVE_18:
+            case TEEN_A18:
                 return 19;
 
             default:
@@ -182,7 +162,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     /**
      * Get the minimum acceptable age for the current {@link UserMode}'s
      * category. This is different from {@link #minAcceptableAge()} because
-     * {@link #TEEN_UNDER_18} and {@link #TEEN_ABOVE_18} technically have
+     * {@link #TEEN_U18} and {@link #TEEN_A18} technically have
      * the same {@link #minAcceptableAge()} and {@link #maxAcceptableAge()}
      * from the application's perspective.
      * @return {@link Integer} value.
@@ -193,9 +173,9 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
             case PARENT:
                 return minAcceptableAge();
 
-            case TEEN_ABOVE_18:
-            case TEEN_UNDER_18:
-                return TEEN_UNDER_18.minAcceptableAge();
+            case TEEN_A18:
+            case TEEN_U18:
+                return TEEN_U18.minAcceptableAge();
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -205,7 +185,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     /**
      * Get the maximum acceptable age for the current {@link UserMode}'s
      * category. This is different from {@link #maxAcceptableAge()} because
-     * {@link #TEEN_UNDER_18} and {@link #TEEN_ABOVE_18} technically have
+     * {@link #TEEN_U18} and {@link #TEEN_A18} technically have
      * the same {@link #minAcceptableAge()} and {@link #maxAcceptableAge()}
      * from the application's perspective.
      * @return {@link Integer} value.
@@ -216,9 +196,9 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
             case PARENT:
                 return maxAcceptableAge();
 
-            case TEEN_ABOVE_18:
-            case TEEN_UNDER_18:
-                return TEEN_ABOVE_18.maxAcceptableAge();
+            case TEEN_A18:
+            case TEEN_U18:
+                return TEEN_A18.maxAcceptableAge();
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -254,20 +234,10 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     }
 
     /**
-     * Produce a random acceptable age.
-     * @return {@link Integer} value.
-     * @see CollectionTestUtil#randomElement(List)
-     * @see #acceptableAgeRange()
-     */
-    public int randomAcceptableAge() {
-        return CollectionTestUtil.randomElement(acceptableAgeRange());
-    }
-
-    /**
      * Get an age range with lower/upper bounds that are lower/higher than
      * the min/max age by an offset value. Note that this does not take
      * into account {@link #requiresGuarantor()}, so the ranges for
-     * {@link #TEEN_ABOVE_18} and {@link #TEEN_UNDER_18} are the same.
+     * {@link #TEEN_A18} and {@link #TEEN_U18} are the same.
      * @param offset {@link Integer} value.
      * @return {@link List} of {@link Integer}.
      * @see #valueRange(Number, Number, Number)
@@ -284,8 +254,8 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     /**
      * Get the {@link String} representation of the acceptable age range.
      * Note that this uses the {@link #minCategoryAcceptableAge()} and
-     * {@link #maxCategoryAcceptableAge()} because {@link #TEEN_UNDER_18}
-     * and {@link #TEEN_ABOVE_18} are technically in the same category.
+     * {@link #maxCategoryAcceptableAge()} because {@link #TEEN_U18}
+     * and {@link #TEEN_A18} are technically in the same category.
      * @return {@link String} value.
      * @see #acceptableAgeRange()
      * @see #minCategoryAcceptableAge()
@@ -296,5 +266,35 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
         int minAge = minCategoryAcceptableAge();
         int maxAge = maxCategoryAcceptableAge();
         return String.format("%1$d-%2$d", minAge, maxAge);
+    }
+
+    /**
+     * Produce a random acceptable age.
+     * @return {@link Integer} value.
+     * @see CollectionTestUtil#randomElement(List)
+     * @see #acceptableAgeRange()
+     */
+    public int randomAcceptableAge() {
+        return CollectionTestUtil.randomElement(acceptableAgeRange());
+    }
+
+    /**
+     * Get the id of the register button for the current {@link UserMode} on
+     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
+     * @return {@link String} value.
+     */
+    @NotNull
+    public String androidRegisterButtonId() {
+        switch (this) {
+            case PARENT:
+                return "btnRegChild";
+
+            case TEEN_A18:
+            case TEEN_U18:
+                return "btnRegSelf";
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 }

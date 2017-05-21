@@ -66,21 +66,6 @@ public interface UnacceptableAgeValidationType extends DOBPickerValidationType {
     }
 
     /**
-     * Press the ok button after unacceptable age inputs have been completed.
-     * @param ENGINE {@link Engine} instance.
-     * @return {@link Flowable} instance.
-     * @see #rx_e_unacceptableAgeOk(Engine)
-     * @see Engine#rx_click(WebElement)
-     * @see BooleanUtil#toTrue(Object)
-     */
-    @NotNull
-    default Flowable<?> rx_v_unacceptableAgeInputCompleted(@NotNull final Engine<?> ENGINE) {
-        return rx_e_unacceptableAgeOk(ENGINE)
-            .flatMap(ENGINE::rx_click)
-            .map(BooleanUtil::toTrue);
-    }
-
-    /**
      * Validate the confirmation screen after unacceptable age input is
      * submitted.
      * @return {@link Flowable} instance.
