@@ -131,7 +131,7 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     /**
      * @return {@link XPath} value.
      * @see AndroidInputType#androidViewXPath()
-     * @see #newXPathBuilder()
+     * @see #xPathBuilder()
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -154,13 +154,13 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
                 throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        return newXPathBuilder().containsID(ID).build();
+        return xPathBuilder().containsID(ID).build();
     }
 
     /**
      * @return Return {@link XPath} value.
      * @see AndroidChoiceInputType#androidScrollViewPickerXPath()
-     * @see #newXPathBuilder()
+     * @see #xPathBuilder()
      * @see #androidPickerItemIndex()
      */
     @NotNull
@@ -168,20 +168,20 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     public XPath androidScrollViewPickerXPath() {
         String cls = "NumberPicker";
         int index = androidPickerItemIndex();
-        return newXPathBuilder().atIndex(index).ofClass(cls).build();
+        return xPathBuilder().atIndex(index).ofClass(cls).build();
     }
 
     /**
      * @return {@link XPath} value.
      * @see AndroidChoiceInputType#androidScrollViewItemXPath()
-     * @see #newXPathBuilder()
+     * @see #xPathBuilder()
      * @see #androidPickerItemIndex()
      */
     @Override
     public XPath androidScrollViewItemXPath() {
         String id = "numberpicker_input";
         int index = androidPickerItemIndex();
-        return newXPathBuilder().containsID(id).ofInstance(index).build();
+        return xPathBuilder().containsID(id).ofInstance(index).build();
     }
 
     /**

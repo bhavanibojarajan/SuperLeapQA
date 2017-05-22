@@ -34,7 +34,7 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
      * locator.
      * @return {@link XPath} value.
      * @see AndroidInputType#androidViewXPath()
-     * @see #newXPathBuilder()
+     * @see #xPathBuilder()
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -78,7 +78,7 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
                 throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        return newXPathBuilder().containsID(ID).build();
+        return xPathBuilder().containsID(ID).build();
     }
 
     /**

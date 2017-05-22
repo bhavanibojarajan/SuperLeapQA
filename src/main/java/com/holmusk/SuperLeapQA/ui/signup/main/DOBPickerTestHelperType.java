@@ -27,7 +27,7 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
      * @see Engine#rx_containsText(String...)
      * @see Engine#rx_click(WebElement)
      * @see Engine#rx_navigateBackOnce()
-     * @see #rx_e_DoBEditField(Engine)
+     * @see #rx_a_openDoBPicker(Engine)
      * @see #rx_e_DoBElements(Engine)
      * @see #generalDelay()
      * @see ObjectUtil#nonNull(Object)
@@ -35,11 +35,10 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
     @NotNull
     @SuppressWarnings("unchecked")
     default Flowable<?> rx_h_DoBPickerScreen(@NotNull final Engine<?> ENGINE) {
-        long delay = generalDelay();
+        final DOBPickerTestHelperType THIS = this;
 
         return Flowable
             .mergeArray(
-                rx_e_DoBEditField(ENGINE),
                 ENGINE.rx_containsText("register_title_dateOfBirth"),
                 ENGINE.rx_containsText(
                     "parentSignUp_title_whatIsYourChild",
@@ -50,15 +49,13 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
             .toFlowable()
 
             /* Open the DoB dialog and verify that all elements are there */
-            .flatMap(a -> rx_e_DoBEditField(ENGINE))
-            .flatMap(ENGINE::rx_click)
-            .flatMap(a -> rx_e_DoBElements(ENGINE).all(ObjectUtil::nonNull).toFlowable())
-            .delay(delay, TimeUnit.MILLISECONDS, Schedulers.trampoline())
+            .flatMap(a -> THIS.rx_a_openDoBPicker(ENGINE))
+            .flatMap(a -> THIS.rx_e_DoBElements(ENGINE).all(ObjectUtil::nonNull).toFlowable())
+            .delay(THIS.generalDelay(), TimeUnit.MILLISECONDS)
 
             /* Dismiss the dialog by navigating back once */
             .flatMap(a -> ENGINE.rx_navigateBackOnce())
-            .delay(delay, TimeUnit.MILLISECONDS, Schedulers.trampoline())
-            .map(BooleanUtil::toTrue);
+            .delay(THIS.generalDelay(), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -83,9 +80,9 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
      */
     @NotNull
     @GuarantorAware(value = false)
-    default Flowable<?> rx_h_validateDoBs(@NotNull final Engine<?> ENGINE,
-                                          @NotNull final UserMode MODE,
-                                          @NotNull final List<Integer> AGES) {
+    default Flowable<?> rx_h_validateDoBsRecursive(@NotNull final Engine<?> ENGINE,
+                                                   @NotNull final UserMode MODE,
+                                                   @NotNull final List<Integer> AGES) {
         final DOBPickerActionType THIS = this;
         final List<Integer> RANGE = MODE.acceptableAgeCategoryRange();
         final int LENGTH = AGES.size();

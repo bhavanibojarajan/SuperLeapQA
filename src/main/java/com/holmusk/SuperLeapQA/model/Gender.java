@@ -17,7 +17,7 @@ public enum Gender implements BaseErrorType, SLInputType {
     /**
      * @return {@link XPath} value.
      * @see AndroidInputType#androidViewXPath()
-     * @see #newXPathBuilder()
+     * @see #xPathBuilder()
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -38,7 +38,7 @@ public enum Gender implements BaseErrorType, SLInputType {
                 throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        return newXPathBuilder().containsID(ID).build();
+        return xPathBuilder().containsID(ID).build();
     }
 
     /**

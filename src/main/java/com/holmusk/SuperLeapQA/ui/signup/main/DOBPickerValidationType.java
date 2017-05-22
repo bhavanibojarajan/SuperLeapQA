@@ -4,7 +4,9 @@ import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.mobile.android.AndroidEngine;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,14 +49,21 @@ public interface DOBPickerValidationType extends SignUpActionType {
     }
 
     /**
-     * Get the DoB's editable text field.
+     * Get the DoB's editable text field. Due to design differences, this
+     * {@link WebElement} only appears in
+     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rx_editable()
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rx_e_DoBEditField(@NotNull Engine<?> engine) {
-        return engine.rx_editable().firstElement().toFlowable();
+        if (engine instanceof AndroidEngine) {
+            return engine.rx_editable().firstElement().toFlowable();
+        } else {
+            return RxUtil.error(NOT_AVAILABLE);
+        }
     }
 
     /**

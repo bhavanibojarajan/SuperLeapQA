@@ -229,7 +229,7 @@ public class UISignUpTest extends UIBaseTest implements
      * @see Screen#DOB_PICKER
      * @see #engine()
      * @see UserMode#offsetFromCategoryAcceptableRange(int)
-     * @see #rx_h_validateDoBs(Engine, UserMode, List)
+     * @see #rx_h_validateDoBsRecursive(Engine, UserMode, List)
      * @see #generalUserModeProvider()
      * @see #assertCorrectness(TestSubscriber)
      */
@@ -245,7 +245,7 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_navigate(MODE, Screen.SPLASH, Screen.DOB_PICKER)
-            .flatMap(a -> THIS.rx_h_validateDoBs(ENGINE, MODE, AGES))
+            .flatMap(a -> THIS.rx_h_validateDoBsRecursive(ENGINE, MODE, AGES))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

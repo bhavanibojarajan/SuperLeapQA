@@ -20,7 +20,7 @@ public enum ChoiceInput implements BaseErrorType, SLInputType, AndroidChoiceInpu
     /**
      * @return {@link XPath} value.
      * @see AndroidInputType#androidViewXPath()
-     * @see #newXPathBuilder()
+     * @see #xPathBuilder()
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -49,28 +49,28 @@ public enum ChoiceInput implements BaseErrorType, SLInputType, AndroidChoiceInpu
                 throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        return newXPathBuilder().containsID(ID).build();
+        return xPathBuilder().containsID(ID).build();
     }
 
     /**
      * @return {@link XPath} value.
      * @see AndroidChoiceInputType#androidScrollViewItemXPath()
-     * @see #newXPathBuilder()
+     * @see #xPathBuilder()
      */
     @NotNull
     @Override
     public XPath androidScrollViewPickerXPath() {
-        return newXPathBuilder().containsID("select_dialog_listview").build();
+        return xPathBuilder().containsID("select_dialog_listview").build();
     }
 
     /**
      * @return {@link XPath} value.
      * @see AndroidChoiceInputType#androidScrollViewItemXPath()
-     * @see #newXPathBuilder()
+     * @see #xPathBuilder()
      */
     @Override
     public XPath androidScrollViewItemXPath() {
-        return newXPathBuilder().containsID("text1").build();
+        return xPathBuilder().containsID("text1").build();
     }
 
     /**

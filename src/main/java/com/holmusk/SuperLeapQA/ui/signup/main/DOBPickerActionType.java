@@ -24,6 +24,11 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
     /**
      * Open the DoB dialog in the sign up screen. This can be used both
      * for parent sign up and teen sign up.
+     * Due to design differences, only
+     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID} requires the
+     * DoB picker to be opened. On
+     * {@link org.swiften.xtestkit.mobile.Platform#IOS}, the picker is visible
+     * immediately upon entering the screen.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rx_e_DoBEditField(Engine)
@@ -32,12 +37,16 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
      */
     @NotNull
     default Flowable<?> rx_a_openDoBPicker(@NotNull Engine<?> ENGINE) {
-        return rx_e_DoBEditField(ENGINE)
-            .flatMap(ENGINE::rx_click)
-            .delay(generalDelay(), TimeUnit.MILLISECONDS)
-            .flatMap(a -> ENGINE.rx_implicitlyWait(this::generalDelay))
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+        if (ENGINE instanceof AndroidEngine) {
+            return rx_e_DoBEditField(ENGINE)
+                .flatMap(ENGINE::rx_click)
+                .delay(generalDelay(), TimeUnit.MILLISECONDS)
+                .flatMap(a -> ENGINE.rx_implicitlyWait(this::generalDelay))
+                .all(BooleanUtil::isTrue)
+                .toFlowable();
+        } else {
+            return Flowable.just(true);
+        }
     }
 
     /**

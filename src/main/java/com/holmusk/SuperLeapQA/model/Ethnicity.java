@@ -59,7 +59,7 @@ public enum Ethnicity implements AttributeType<String>, AndroidInputType, SLInpu
 
     @Override
     public XPath androidViewXPath() {
-        return newXPathBuilder().containsID("text1").build();
+        return xPathBuilder().containsID("text1").build();
     }
 
     /**

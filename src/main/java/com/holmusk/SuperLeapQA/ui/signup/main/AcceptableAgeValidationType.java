@@ -84,7 +84,7 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
      * @param input {@link InputType} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rx_byXPath(ByXPath)
-     * @see Engine#newXPathBuilder()
+     * @see Engine#xPathBuilder()
      * @see RxUtil#error(String)
      * @see #NOT_AVAILABLE
      */
@@ -115,7 +115,7 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
      * @param input {@link SLChoiceInputType} instance.
      * @param value {@link String} value that should be displayed by the item.
      * @return {@link ByXPath} instance.
-     * @see Engine#newXPathBuilder()
+     * @see Engine#xPathBuilder()
      * @see XPath.Builder#hasText(String)
      * @see XPath.Builder#ofClass(String)
      * @see XPath.Builder#ofInstance(int)
@@ -126,7 +126,7 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
     default ByXPath e_pickerItemQuery(@NotNull Engine<?> engine,
                                       @NotNull SLChoiceInputType input,
                                       @NotNull String value) {
-        XPath.Builder xPathBuilder = engine.newXPathBuilder().hasText(value);
+        XPath.Builder xPathBuilder = engine.xPathBuilder().hasText(value);
 
         if (engine instanceof AndroidEngine) {
             xPathBuilder
@@ -137,7 +137,7 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
         }
 
         XPath xPath = xPathBuilder.build();
-        return ByXPath.builder().withXPath(xPath).withRetryCount(1).build();
+        return ByXPath.builder().withXPath(xPath).withRetries(1).build();
     }
 
     /**

@@ -36,12 +36,12 @@ public enum CoachPref implements AttributeType<String>, AndroidInputType, SLInpu
     /**
      * @return {@link XPath} value.
      * @see AndroidInputType#androidViewXPath()
-     * @see #newXPathBuilder()
+     * @see #xPathBuilder()
      */
     @NotNull
     @Override
     public XPath androidViewXPath() {
-        return newXPathBuilder().containsID("text1").build();
+        return xPathBuilder().containsID("text1").build();
     }
 
     /**

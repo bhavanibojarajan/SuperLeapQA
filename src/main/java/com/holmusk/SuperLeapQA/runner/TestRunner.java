@@ -2,7 +2,6 @@ package com.holmusk.SuperLeapQA.runner;
 
 import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Ignore;
 import org.swiften.xtestkit.test.RepeatRunner;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -24,7 +23,7 @@ public final class TestRunner implements RepeatRunner.TestRunner {
         RUNNER = RepeatRunner.builder()
             .addListener(Config.TEST_KIT)
             .withParameterConsumer(Config.TEST_KIT)
-            .withRetryCount(Config.runCount())
+            .withRetries(Config.runCount())
             .withPartitionSize(Config.runCount())
             .withVerboseLevel(0)
             .build();

@@ -56,7 +56,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
     @Override
     public long animationDelay(@NotNull Engine<?> engine) {
         if (engine instanceof IOSEngine) {
-            return 1000;
+            return 1500;
         } else {
             return 0;
         }
