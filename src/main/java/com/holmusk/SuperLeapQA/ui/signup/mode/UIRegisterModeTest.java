@@ -24,9 +24,12 @@ public final class UIRegisterModeTest extends UIBaseTest implements RegisterMode
     }
 
     /**
-     * This test validates that the register mode screen contains the correct
+     * This test validates that {@link Screen#REGISTER} contains the correct
      * {@link org.openqa.selenium.WebElement} by checking their visibility,
-     * and then navigate back once to check the welcome screen.
+     * and then navigate back once to check {@link Screen#WELCOME}.
+     * @see Screen#REGISTER
+     * @see Screen#WELCOME
+     * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
      * @see #rx_v_registerScreen(Engine)
      * @see #rx_a_clickBackButton(Engine)

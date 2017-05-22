@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.model;
+package com.holmusk.SuperLeapQA.model.type;
 
 import org.swiften.xtestkit.base.element.action.input.type.TextInputType;
 import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidTextInputType;

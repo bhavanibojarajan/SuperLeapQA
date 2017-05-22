@@ -1,5 +1,7 @@
 package com.holmusk.SuperLeapQA.model;
 
+import com.holmusk.SuperLeapQA.model.type.SLChoiceInputType;
+import com.holmusk.SuperLeapQA.model.type.SLNumericInputType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zipped;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
@@ -107,9 +109,11 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * {@link org.openqa.selenium.WebElement} with the same id (e.g. picking
      * {@link #KG} and {@link #KG_DEC} at the same time).
      * @return {@link Integer} value.
+     * @see SLChoiceInputType#androidPickerItemIndex()
      * @see #NOT_AVAILABLE
      */
-    public int androidViewIndex() {
+    @Override
+    public int androidPickerItemIndex() {
         switch (this) {
             case KG:
             case LB:
@@ -157,13 +161,13 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * @return Return {@link XPath} value.
      * @see AndroidChoiceInputType#androidScrollViewPickerXPath()
      * @see #newXPathBuilder()
-     * @see #androidViewIndex()
+     * @see #androidPickerItemIndex()
      */
     @NotNull
     @Override
     public XPath androidScrollViewPickerXPath() {
         String cls = "NumberPicker";
-        int index = androidViewIndex();
+        int index = androidPickerItemIndex();
         return newXPathBuilder().atIndex(index).ofClass(cls).build();
     }
 
@@ -171,12 +175,12 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * @return {@link XPath} value.
      * @see AndroidChoiceInputType#androidScrollViewItemXPath()
      * @see #newXPathBuilder()
-     * @see #androidViewIndex()
+     * @see #androidPickerItemIndex()
      */
     @Override
     public XPath androidScrollViewItemXPath() {
         String id = "numberpicker_input";
-        int index = androidViewIndex();
+        int index = androidPickerItemIndex();
         return newXPathBuilder().containsID(id).ofInstance(index).build();
     }
 

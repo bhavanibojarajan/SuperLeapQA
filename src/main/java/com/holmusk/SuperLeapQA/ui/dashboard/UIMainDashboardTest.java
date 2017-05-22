@@ -27,9 +27,13 @@ public class UIMainDashboardTest extends UIBaseTest implements DashboardTestHelp
     /**
      * This test builds upon
      * {@link com.holmusk.SuperLeapQA.ui.signup.main.UISignUpTest#test_guarantorNeeded_shouldRequireParentInfo(UserMode)},
-     * but also provides validations for the dashboard screen. It will check
-     * the Use App Now popup and the dashboard tutorial as well.
+     * but also provides validations for {@link Screen#DASHBOARD}. It will
+     * check {@link Screen#USE_APP_NOW} and {@link Screen#DASHBOARD_TUTORIAL}
+     * as well.
      * @param mode {@link UserMode} instance.
+     * @see Screen#USE_APP_NOW
+     * @see Screen#DASHBOARD_TUTORIAL
+     * @see Screen#DASHBOARD
      * @see #engine()
      * @see #rx_v_useAppNowScreen(Engine)
      * @see #rx_a_useAppNow(Engine)

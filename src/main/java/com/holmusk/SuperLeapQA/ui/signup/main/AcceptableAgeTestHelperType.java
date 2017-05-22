@@ -1,10 +1,12 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
 import com.holmusk.SuperLeapQA.model.*;
+import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.collection.Zipped;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.ios.IOSEngine;
@@ -138,6 +140,7 @@ public interface AcceptableAgeTestHelperType extends AcceptableAgeActionType {
      * when we are picking {@link ChoiceInput#HEIGHT}, assuming the user
      * is already in the acceptable age screen.
      * @param ENGINE {@link Engine} instance.
+     * @param ft {@link Height#FT} value to be selected.
      * @return {@link Flowable} instance.
      * @see Height#stringValue(PlatformType, UnitSystem, List)
      * @see #rx_a_selectNumericInput(Engine, List)
@@ -145,20 +148,14 @@ public interface AcceptableAgeTestHelperType extends AcceptableAgeActionType {
      * @see #rx_v_editFieldHasValue(Engine, SLInputType, String)
      */
     @NotNull
-    default Flowable<?> rx_validate12InchConvertedToAFoot(@NotNull final Engine<?> ENGINE,
-                                                          @NotNull UserMode mode) {
+    default Flowable<?> rx_h_checkInchToFoot(@NotNull final Engine<?> ENGINE, double ft) {
         final AcceptableAgeTestHelperType THIS = this;
         PlatformType platform = ENGINE.platform();
-
-        final double FT = Math.max(
-            Height.FT.randomValue(mode),
-            Height.FT.minSelectableNumericValue(mode) + 1
-        );
 
         final double INCH = 0;
 
         final List<Zipped<Height,Double>> INPUTS = Arrays.asList(
-            new Zipped<>(Height.FT, FT),
+            new Zipped<>(Height.FT, ft),
             new Zipped<>(Height.INCH, INCH)
         );
 
@@ -169,5 +166,41 @@ public interface AcceptableAgeTestHelperType extends AcceptableAgeActionType {
             .flatMap(a -> THIS.rx_a_selectNumericInput(ENGINE, INPUTS))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(ENGINE))
             .flatMap(a -> THIS.rx_v_editFieldHasValue(ENGINE, ChoiceInput.HEIGHT, STR));
+    }
+
+    /**
+     * Recursively check all {@link Height#FT} selectable values and confirm
+     * that {@link Height#INCH} to {@link Height#FT} conversion works
+     * correctly.
+     * @param ENGINE {@link Engine} instance.
+     * @param MODE {@link UserMode} instance.
+     * @return {@link Flowable} instance.
+     * @see Height#FT
+     * @see Height#selectableNumericRange(UserMode)
+     * @see #rx_h_checkInchToFoot(Engine, double)
+     */
+    @NotNull
+    default Flowable<?> rx_h_checkInchToFootRecursive(@NotNull final Engine<?> ENGINE,
+                                                      @NotNull final UserMode MODE) {
+        final AcceptableAgeTestHelperType THIS = this;
+        final List<Double> SELECTABLE = Height.FT.selectableNumericRange(MODE);
+        final int LENGTH = SELECTABLE.size();
+
+        class Repeater {
+            @NotNull
+            private Flowable<?> repeat(final int INDEX) {
+                if (INDEX < LENGTH) {
+                    double ft = SELECTABLE.get(INDEX);
+
+                    return THIS
+                        .rx_h_checkInchToFoot(ENGINE, ft)
+                        .flatMap(a -> new Repeater().repeat(INDEX + 1));
+                } else {
+                    return Flowable.just(true);
+                }
+            }
+        }
+
+        return new Repeater().repeat(0);
     }
 }

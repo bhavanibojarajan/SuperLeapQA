@@ -1,10 +1,10 @@
 package com.holmusk.SuperLeapQA.model;
 
+import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.element.property.type.base.AttributeType;
-import org.swiften.xtestkit.mobile.android.AndroidView;
 import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
 
 /**

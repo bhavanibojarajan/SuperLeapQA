@@ -1,9 +1,12 @@
-package com.holmusk.SuperLeapQA.model;
+package com.holmusk.SuperLeapQA.model.type;
 
 /**
  * Created by haipham on 5/21/17.
  */
 
+import com.holmusk.SuperLeapQA.model.Screen;
+import com.holmusk.SuperLeapQA.model.ScreenHolder;
+import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.navigation.ScreenManagerType;

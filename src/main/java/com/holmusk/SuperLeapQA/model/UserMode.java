@@ -1,5 +1,6 @@
 package com.holmusk.SuperLeapQA.model;
 
+import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.xtestkit.base.type.BaseErrorType;

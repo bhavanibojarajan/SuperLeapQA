@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
-import com.holmusk.SuperLeapQA.model.SLInputType;
-import com.holmusk.SuperLeapQA.model.SLTextInputType;
+import com.holmusk.SuperLeapQA.model.type.SLInputType;
+import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;

@@ -1,5 +1,6 @@
 package com.holmusk.SuperLeapQA.model;
 
+import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;

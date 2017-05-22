@@ -24,8 +24,10 @@ public class UIWelcomeTest extends UIBaseTest implements WelcomeActionType {
     }
 
     /**
-     * This test validates the welcome screen by checking that all
+     * This test validates {@link Screen#WELCOME} by checking that all
      * {@link org.openqa.selenium.WebElement} are visible.
+     * @see Screen#WELCOME
+     * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
      * @see #rx_v_welcomeScreen(Engine)
      */

@@ -1,6 +1,8 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
 import com.holmusk.SuperLeapQA.model.*;
+import com.holmusk.SuperLeapQA.model.type.SLInputType;
+import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.action.input.type.InputType;
 import org.swiften.xtestkit.base.element.action.input.type.TextInputType;

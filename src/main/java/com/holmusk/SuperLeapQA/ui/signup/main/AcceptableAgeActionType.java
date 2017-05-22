@@ -1,6 +1,9 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
 import com.holmusk.SuperLeapQA.model.*;
+import com.holmusk.SuperLeapQA.model.type.SLChoiceInputType;
+import com.holmusk.SuperLeapQA.model.type.SLInputType;
+import com.holmusk.SuperLeapQA.model.type.SLNumericInputType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -14,7 +17,7 @@ import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatComparisonType;
 import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatType;
 import org.swiften.xtestkit.base.element.action.swipe.type.SwipeType;
-import org.swiften.xtestkit.base.element.locator.general.param.TextParam;
+import org.swiften.xtestkit.base.element.locator.general.param.ByXPath;
 import org.swiften.xtestkit.mobile.android.AndroidEngine;
 
 import java.util.List;
@@ -26,10 +29,11 @@ public interface AcceptableAgeActionType extends AcceptableAgeValidationType, DO
     /**
      * Select a value, assuming the user is in the value selection screen.
      * @param ENGINE {@link Engine} instance.
-     * @param MODE {@link SLNumericInputType} instance.
+     * @param INPUT {@link SLNumericInputType} instance.
      * @param NUMERIC_VALUE {@link Double} value.
      * @return {@link Flowable} instance.
      * @see #rx_e_pickerItemViews(Engine, SLChoiceInputType)
+     * @see #e_pickerItemQuery(Engine, SLChoiceInputType, String)
      * @see Engine#rx_click(WebElement)
      * @see SwipeRepeatComparisonType#rx_scrollViewChildCount()
      */
@@ -37,16 +41,12 @@ public interface AcceptableAgeActionType extends AcceptableAgeValidationType, DO
     @SuppressWarnings("Convert2MethodRef")
     default <P extends SLChoiceInputType & SLNumericInputType>
     Flowable<?> rx_a_selectNumericInput(@NotNull final Engine<?> ENGINE,
-                                        @NotNull final P MODE,
+                                        @NotNull final P INPUT,
                                         final double NUMERIC_VALUE) {
+        LogUtil.printfThread("Selecting %d for %s", (int)NUMERIC_VALUE, INPUT);
         final AcceptableAgeActionType THIS = this;
-        final String STR_VALUE = MODE.stringValue(NUMERIC_VALUE);
-        LogUtil.printfThread("Selecting %d for %s", (int)NUMERIC_VALUE, MODE);
-
-        final TextParam TEXT_PARAM = TextParam.builder()
-            .withText(STR_VALUE)
-            .withRetries(0)
-            .build();
+        final String STR_VALUE = INPUT.stringValue(NUMERIC_VALUE);
+        final ByXPath QUERY = e_pickerItemQuery(ENGINE, INPUT, STR_VALUE);
 
         SwipeRepeatType repeater = new SwipeRepeatComparisonType() {
             @NotNull
@@ -54,7 +54,7 @@ public interface AcceptableAgeActionType extends AcceptableAgeValidationType, DO
             public Flowable<Integer> rx_initialDifference(@NotNull WebElement element) {
                 return Flowable.just(element)
                     .map(ENGINE::getText)
-                    .map(a -> MODE.numericValue(a))
+                    .map(a -> INPUT.numericValue(a))
                     .map(a -> a - NUMERIC_VALUE)
                     .map(Double::intValue);
             }
@@ -64,7 +64,7 @@ public interface AcceptableAgeActionType extends AcceptableAgeValidationType, DO
             public Flowable<?> rx_compareFirst(@NotNull WebElement element) {
                 return Flowable.just(element)
                     .map(ENGINE::getText)
-                    .map(a -> MODE.numericValue(a))
+                    .map(a -> INPUT.numericValue(a))
                     .filter(a -> a > NUMERIC_VALUE);
             }
 
@@ -73,14 +73,14 @@ public interface AcceptableAgeActionType extends AcceptableAgeValidationType, DO
             public Flowable<?> rx_compareLast(@NotNull WebElement element) {
                 return Flowable.just(element)
                     .map(ENGINE::getText)
-                    .map(a -> MODE.numericValue(a))
+                    .map(a -> INPUT.numericValue(a))
                     .filter(a -> a < NUMERIC_VALUE);
             }
 
             @NotNull
             @Override
             public Flowable<WebElement> rx_scrollViewChildItems() {
-                return THIS.rx_e_pickerItemViews(ENGINE, MODE);
+                return THIS.rx_e_pickerItemViews(ENGINE, INPUT);
             }
 
             @NotNull
@@ -116,7 +116,7 @@ public interface AcceptableAgeActionType extends AcceptableAgeValidationType, DO
             @Override
             public Flowable<Boolean> rx_shouldKeepSwiping() {
                 return ENGINE
-                    .rx_withText(TEXT_PARAM)
+                    .rx_byXPath(QUERY)
                     .firstElement()
                     .toFlowable()
                     .filter(a -> ENGINE.getText(a).equals(STR_VALUE))
@@ -127,7 +127,7 @@ public interface AcceptableAgeActionType extends AcceptableAgeValidationType, DO
             @NotNull
             @Override
             public Flowable<WebElement> rx_scrollableViewToSwipe() {
-                return rx_e_scrollableChoicePicker(ENGINE, MODE);
+                return rx_e_scrollableChoicePicker(ENGINE, INPUT);
             }
 
             @NotNull
@@ -159,7 +159,6 @@ public interface AcceptableAgeActionType extends AcceptableAgeValidationType, DO
     Flowable<?> rx_a_selectNumericInput(@NotNull final Engine<?> ENGINE,
                                         @NotNull List<Zipped<P,Double>> inputs) {
         final AcceptableAgeActionType THIS = this;
-        LogUtil.printfThread("Selecting inputs for %s", inputs);
 
         return Flowable
             .fromIterable(inputs)

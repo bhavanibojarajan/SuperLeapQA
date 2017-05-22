@@ -1,6 +1,9 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
 import com.holmusk.SuperLeapQA.model.*;
+import com.holmusk.SuperLeapQA.model.type.SLChoiceInputType;
+import com.holmusk.SuperLeapQA.model.type.SLInputType;
+import com.holmusk.SuperLeapQA.model.type.SLNumericInputType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -14,6 +17,7 @@ import org.swiften.xtestkit.base.element.locator.general.param.ByXPath;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.mobile.android.AndroidEngine;
 import org.swiften.xtestkit.base.element.action.input.type.InputType;
+import org.swiften.xtestkit.mobile.android.AndroidView;
 
 /**
  * Created by haipham on 17/5/17.
@@ -95,6 +99,45 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
         } else {
             return RxUtil.error(NOT_AVAILABLE);
         }
+    }
+
+    /**
+     * Get a {@link ByXPath} instance that will be used to query for the
+     * numeric picker item. This instance is dependent on the
+     * {@link org.swiften.xtestkit.base.type.PlatformType} of the currently
+     * active {@link Engine}.
+     * On {@link org.swiften.xtestkit.mobile.Platform#ANDROID}, the middle
+     * {@link WebElement} of the number picker is an
+     * {@link AndroidView.ViewType#EDIT_TEXT}, while the rest are
+     * {@link AndroidView.ViewType#BUTTON}. We are interested only in the
+     * middle {@link WebElement}.
+     * @param engine {@link Engine} instance.
+     * @param input {@link SLChoiceInputType} instance.
+     * @param value {@link String} value that should be displayed by the item.
+     * @return {@link ByXPath} instance.
+     * @see Engine#newXPathBuilder()
+     * @see XPath.Builder#hasText(String)
+     * @see XPath.Builder#ofClass(String)
+     * @see XPath.Builder#ofInstance(int)
+     * @see SLChoiceInputType#androidPickerItemIndex()
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    default ByXPath e_pickerItemQuery(@NotNull Engine<?> engine,
+                                      @NotNull SLChoiceInputType input,
+                                      @NotNull String value) {
+        XPath.Builder xPathBuilder = engine.newXPathBuilder().hasText(value);
+
+        if (engine instanceof AndroidEngine) {
+            xPathBuilder
+                .ofClass(AndroidView.ViewType.EDIT_TEXT.className())
+                .ofInstance(input.androidPickerItemIndex());
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
+
+        XPath xPath = xPathBuilder.build();
+        return ByXPath.builder().withXPath(xPath).withRetryCount(1).build();
     }
 
     /**

@@ -1,13 +1,12 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
-import com.holmusk.SuperLeapQA.model.SLInputType;
+import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import org.swiften.javautilities.object.ObjectUtil;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.xtestkit.base.Engine;
 
 /**

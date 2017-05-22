@@ -1,6 +1,6 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
-import com.holmusk.SuperLeapQA.model.SLInputType;
+import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;

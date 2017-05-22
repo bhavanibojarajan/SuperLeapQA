@@ -1,6 +1,7 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
 import com.holmusk.SuperLeapQA.model.*;
+import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.action.input.type.InputType;
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
@@ -52,10 +53,12 @@ public class UISignUpTest extends UIBaseTest implements
 
     //region Validate screen correctness
     /**
-     * This test checks that the DoB screen has correct elements, by checking
-     * that all {@link org.openqa.selenium.WebElement} are present and back
-     * navigation shows the correct register screen.
+     * This test checks that {@link Screen#DOB_PICKER} has correct elements,
+     * by checking that all {@link org.openqa.selenium.WebElement} are present
+     * and back navigation shows {@link Screen#REGISTER}.
      * @param mode {@link UserMode} instance.
+     * @see Screen#REGISTER
+     * @see Screen#DOB_PICKER
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
      * @see #rx_h_DoBPickerScreen(Engine)
@@ -86,11 +89,13 @@ public class UISignUpTest extends UIBaseTest implements
     }
 
     /**
-     * This test checks that the DoB picker dialog has the correct elements,
-     * by verifying that all required {@link org.openqa.selenium.WebElement}
-     * are present. It selects a random {@link java.util.Date} with which
-     * to interact with the calendar/date picker.
+     * This test checks {@link Screen#DOB_PICKER} dialog has the correct
+     * elements, by verifying that all required
+     * {@link org.openqa.selenium.WebElement} are present. It selects a random
+     * {@link java.util.Date} with which to interact with the calendar/date
+     * picker.
      * @param mode {@link UserMode} instance.
+     * @see Screen#DOB_PICKER
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
      * @see #rx_h_checkDoBDialogElements(Engine)
@@ -117,10 +122,12 @@ public class UISignUpTest extends UIBaseTest implements
     }
 
     /**
-     * This test validates that the unacceptable age input screen has the
+     * This test validates that {@link Screen#UNACCEPTABLE_AGE} has the
      * correct {@link org.openqa.selenium.WebElement}, and clicking on the
-     * submit button without filling in require inputs should fail.
+     * submit button without filling in required inputs, and check that
+     * it should fail.
      * @param mode {@link UserMode} instance.
+     * @see Screen#UNACCEPTABLE_AGE
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
      * @see #rx_a_clickInputField(Engine, SLInputType)
@@ -148,10 +155,11 @@ public class UISignUpTest extends UIBaseTest implements
     }
 
     /**
-     * This test validates that the acceptable age inputs screen contains the
+     * This test validates that {@link Screen#ACCEPTABLE_AGE} contains the
      * correct {@link org.openqa.selenium.WebElement} by verifying their
      * visibility,
      * @param MODE {@link UserMode} instance.
+     * @see Screen#ACCEPTABLE_AGE
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
      * @see #rx_h_enterAndCheckAcceptableAgeInputs(Engine, UserMode)
@@ -178,10 +186,11 @@ public class UISignUpTest extends UIBaseTest implements
     }
 
     /**
-     * This test validates that the personal info input screen contains the
+     * This test validates that {@link Screen#PERSONAL_INFO} contains the
      * correct {@link org.openqa.selenium.WebElement} by verifying their
      * visibility and interacting with each of them.
      * @param MODE {@link UserMode} instance.
+     * @see Screen#PERSONAL_INFO
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
      * @see #rx_h_enterAndCheckPersonalInfo(Engine, UserMode)
@@ -210,12 +219,13 @@ public class UISignUpTest extends UIBaseTest implements
     //endregion
 
     /**
-     * This test validates that DoB selection works by sequentially selecting
-     * DoBs from a range of {@link java.util.Date}.
+     * This test validates that {@link Screen#DOB_PICKER} selection works by
+     * sequentially selecting DoBs from a range of {@link java.util.Date}.
      * Note that this test is not guarantor-aware, so
      * {@link UserMode#TEEN_U18} and {@link UserMode#TEEN_A18} will
      * be treated the same.
      * @param MODE {@link UserMode} instance.
+     * @see Screen#DOB_PICKER
      * @see #engine()
      * @see UserMode#offsetFromCategoryAcceptableRange(int)
      * @see #rx_h_validateDoBs(Engine, UserMode, List)
@@ -244,13 +254,14 @@ public class UISignUpTest extends UIBaseTest implements
     }
 
     /**
-     * This test validates that the unacceptable age inputs should only
+     * This test validates that {@link Screen#UNACCEPTABLE_AGE} should only
      * require either {@link TextInput#PHONE} or {@link TextInput#EMAIL},
      * and not both. It sequentially substitutes {@link TextInput} into
      * {@link #rx_a_enterInput(Engine, SLInputType, String)}. We do not use
      * {@link DataProvider} with this method because we already have a
      * {@link Factory} for the constructor.
      * @param MODE {@link UserMode} instance.
+     * @see Screen#UNACCEPTABLE_AGE
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
      * @see #rx_h_unacceptableAgeInputRequired(Engine, TextInput)
@@ -283,10 +294,13 @@ public class UISignUpTest extends UIBaseTest implements
     }
 
     /**
-     * This test validates that filling in unacceptable age inputs work
-     * correctly, by checking that after the submit button is clicked, the
-     * user should be brought to the confirm screen and the register page.
+     * This test validates that filling in {@link Screen#UNACCEPTABLE_AGE}
+     * inputs work correctly, by checking that after the submit button is
+     * clicked, the user should be brought to the confirm screen and
+     * {@link Screen#REGISTER}.
      * @param mode {@link UserMode} instance.
+     * @see Screen#UNACCEPTABLE_AGE
+     * @see Screen#REGISTER
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
      * @see #rx_h_enterAndCheckUnacceptableAgeInputs(Engine)
@@ -322,7 +336,7 @@ public class UISignUpTest extends UIBaseTest implements
      * @param MODE {@link UserMode} instance.
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
-     * @see #rx_validate12InchConvertedToAFoot(Engine, UserMode)
+     * @see #rx_h_checkInchToFootRecursive(Engine, UserMode)
      * @see #generalUserModeProvider()
      * @see #assertCorrectness(TestSubscriber)
      */
@@ -337,7 +351,7 @@ public class UISignUpTest extends UIBaseTest implements
 
         // When
         rx_navigate(MODE, Screen.SPLASH, Screen.ACCEPTABLE_AGE)
-            .flatMap(a -> THIS.rx_validate12InchConvertedToAFoot(ENGINE, MODE))
+            .flatMap(a -> THIS.rx_h_checkInchToFootRecursive(ENGINE, MODE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -347,11 +361,12 @@ public class UISignUpTest extends UIBaseTest implements
     }
 
     /**
-     * This test validates that the acceptable age inputs show the correct
-     * empty input errors, by sequentially entering/selecting inputs and
-     * clicking the confirm button. If the inputs are not completed, the
-     * user will be notified.
+     * This test validates that the {@link Screen#ACCEPTABLE_AGE} inputs show
+     * the correct empty input errors, by sequentially entering/selecting
+     * inputs and clicking the confirm button. If the inputs are not completed,
+     * the user will be notified.
      * @param MODE {@link UserMode} instance.
+     * @see Screen#ACCEPTABLE_AGE
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
      * @see #rx_h_acceptableAgeEmptyInputErrors(Engine, UserMode)
@@ -379,12 +394,13 @@ public class UISignUpTest extends UIBaseTest implements
     }
 
     /**
-     * This test validates that the personal info inputs for parents/guarantors
-     * should only require either {@link TextInput#PARENT_MOBILE} or
-     * {@link TextInput#PARENT_EMAIL}. This test is only applicable for
-     * {@link UserMode#TEEN_U18}, so we use {@link DataProvider}
-     * that provides {@link InputType}.
+     * This test validates that the {@link Screen#EXTRA_PERSONAL_INFO} for
+     * parents/guarantors should only require either
+     * {@link TextInput#PARENT_MOBILE} or {@link TextInput#PARENT_EMAIL}.
+     * This test is only applicable for {@link UserMode#TEEN_U18}, so we use
+     * {@link DataProvider} that provides {@link InputType}.
      * @param INPUTS {@link List} of {@link InputType}.
+     * @see Screen#EXTRA_PERSONAL_INFO
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
      * @see #rx_a_enterPersonalInfo(Engine, List)
@@ -421,10 +437,12 @@ public class UISignUpTest extends UIBaseTest implements
 
     /**
      * This test confirms that when the user clicks on the TOC and opens up
-     * the Web browser, the personal info inputs are saved and then restored
-     * when the user gets back to the app. This is more relevant for
+     * the Web browser, {@link Screen#PERSONAL_INFO} inputs are saved and then
+     * restored when the user gets back to the app. This is more relevant for
      * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
      * @param MODE {@link UserMode} instance.
+     * @see Screen#PERSONAL_INFO
+     * @see org.swiften.xtestkit.mobile.Platform#ANDROID
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
      * @see #rx_h_checkPersonalInfoStateSaved(Engine, UserMode)
@@ -452,11 +470,12 @@ public class UISignUpTest extends UIBaseTest implements
     }
 
     /**
-     * This test checks that {@link UserMode#TEEN_U18} will see the
-     * parent information screen, while {@link UserMode#TEEN_A18} will
+     * This test checks that {@link UserMode#TEEN_U18} will see
+     * {@link Screen#EXTRA_PERSONAL_INFO}, while {@link UserMode#TEEN_A18} will
      * not. It uses a custom {@link DataProvider} that provides only
      * {@link UserMode#TEEN_U18} and {@link UserMode#TEEN_A18}.
      * @param MODE {@link UserMode} instance.
+     * @see Screen#EXTRA_PERSONAL_INFO
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
      * @see #guarantorSpecificUserModeProvider()
@@ -482,9 +501,10 @@ public class UISignUpTest extends UIBaseTest implements
 
     /**
      * This test checks that the TOC checkbox has to be ticked before the
-     * user continues any further. The check happens in the personal info
-     * input screen.
+     * user continues any further. The check happens in
+     * {@link Screen#PERSONAL_INFO}.
      * @param MODE {@link UserMode} instance.
+     * @see Screen#PERSONAL_INFO
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
      * @see #rx_h_checkTOCCBeforeProceeding(Engine, UserMode)
