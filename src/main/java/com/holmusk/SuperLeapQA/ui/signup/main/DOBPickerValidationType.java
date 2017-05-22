@@ -2,16 +2,12 @@ package com.holmusk.SuperLeapQA.ui.signup.main;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
-import io.reactivex.schedulers.Schedulers;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by haipham on 17/5/17.
@@ -43,11 +39,11 @@ public interface DOBPickerValidationType extends SignUpActionType {
      * Get all calendar {@link WebElement} instances.
      ** @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxAllCalendarElements()
+     * @see Engine#rx_allCalendarElements()
      */
     @NotNull
     default Flowable<WebElement> rx_e_DoBElements(@NotNull Engine<?> engine) {
-        return engine.rxAllCalendarElements();
+        return engine.rx_allCalendarElements();
     }
 
     /**

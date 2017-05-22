@@ -70,7 +70,7 @@ public class UISignUpTest extends UIBaseTest implements
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
-    public void test_DoBPickerScreen_isValidScreen(@NotNull UserMode mode) {
+    public void test_DoBPicker_isValidScreen(@NotNull UserMode mode) {
         // Setup
         final UISignUpTest THIS = this;
         final Engine<?> ENGINE = engine();
