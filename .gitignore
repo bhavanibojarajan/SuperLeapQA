@@ -9,6 +9,8 @@ artifacts/
 classes/
 /out
 test-output/
+app/
+.DS_Store
 
 # Ignore Gradle GUI config
 gradle-app.setting

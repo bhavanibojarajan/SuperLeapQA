@@ -1,7 +1,8 @@
 package com.holmusk.SuperLeapQA.general;
 
 import com.holmusk.SuperLeapQA.model.*;
-import com.holmusk.SuperLeapQA.model.type.SLScreenManagerType;
+import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
+import com.holmusk.SuperLeapQA.navigation.Screen;
 import org.jetbrains.annotations.NotNull;
 import static org.mockito.Mockito.*;
 import org.swiften.javautilities.localizer.LCFormat;

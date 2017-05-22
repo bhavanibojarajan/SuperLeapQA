@@ -1,8 +1,7 @@
-package com.holmusk.SuperLeapQA.navigation;
+package com.holmusk.SuperLeapQA.navigation.type;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.ui.dashboard.DashboardTestHelperType;
-import com.holmusk.SuperLeapQA.ui.signup.main.AcceptableAgeActionType;
 import com.holmusk.SuperLeapQA.ui.signup.main.DOBPickerActionType;
 import com.holmusk.SuperLeapQA.ui.signup.main.PersonalInfoActionType;
 import io.reactivex.Flowable;
@@ -10,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 
 import java.util.List;
@@ -79,7 +79,7 @@ public interface NavigationType extends DashboardTestHelperType {
     @NotNull
     default Flowable<?> rx_n_register_DoBPicker(@NotNull Engine<?> ENGINE,
                                                 @NotNull UserMode mode) {
-        return rx_e_signUp(ENGINE, mode).flatMap(ENGINE::rx_click);
+        return rx_e_signUp(ENGINE, mode).doOnNext(LogUtil::println).flatMap(ENGINE::rx_click);
     }
 
     /**

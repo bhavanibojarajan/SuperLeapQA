@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.ui.base;
 
 import com.holmusk.SuperLeapQA.config.Config;
-import com.holmusk.SuperLeapQA.model.type.SLScreenManagerType;
+import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;

@@ -19,22 +19,17 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see UserMode#androidRegisterButtonId()
-     * @see Engine#rx_containsID(String...)
+     * @see UserMode#registerButtonText()
+     * @see Engine#rx_containsText(String...)
      * @see RxUtil#error(String)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rx_e_signUp(@NotNull Engine<?> engine,
                                              @NotNull UserMode mode) {
-        if (engine instanceof AndroidEngine) {
-            return engine
-                .rx_containsID(mode.androidRegisterButtonId())
-                .firstElement()
-                .toFlowable();
-        } else {
-            return RxUtil.error(NOT_AVAILABLE);
-        }
+        return engine
+            .rx_containsText(mode.registerButtonText())
+            .firstElement()
+            .toFlowable();
     }
 
     /**

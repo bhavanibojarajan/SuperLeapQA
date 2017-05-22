@@ -1,6 +1,7 @@
 package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
+import com.holmusk.SuperLeapQA.navigation.Screen;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.xtestkit.base.type.BaseErrorType;
@@ -280,19 +281,20 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     }
 
     /**
-     * Get the id of the register button for the current {@link UserMode} on
-     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
+     * Get the register butto text for the current {@link UserMode} for
+     * {@link Screen#REGISTER}.
      * @return {@link String} value.
+     * @see Screen#REGISTER
      */
     @NotNull
-    public String androidRegisterButtonId() {
+    public String registerButtonText() {
         switch (this) {
             case PARENT:
-                return "btnRegChild";
+                return "register_title_iAmParent";
 
             case TEEN_A18:
             case TEEN_U18:
-                return "btnRegSelf";
+                return "register_title_iAmTeen";
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
