@@ -6,6 +6,7 @@ package com.holmusk.SuperLeapQA.model.type;
 
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.element.locator.general.param.ByXPath;
+import org.swiften.xtestkit.base.element.locator.general.xpath.Attribute;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
@@ -49,6 +50,30 @@ public interface SLAndroidNumberPickerInputType extends SLNumericChoiceInputType
             .ofClass(AndroidView.ViewType.EDIT_TEXT.className())
             .ofInstance(androidNumericPickerTargetItemIndex())
             .containsText(selected)
+            .build();
+    }
+
+    /**
+     * Get the scroll view picker item {@link XPath} for {@link Platform#ANDROID}.
+     * @return {@link XPath} instance.
+     * @see Platform#ANDROID
+     * @see AndroidView.ViewType#NUMBER_PICKER
+     * @see #androidNumericPickerTargetItemIndex()
+     * @see XPath.Builder#containsID(String)
+     * @see XPath.Builder#ofInstance(int)
+     */
+    @NotNull
+    default XPath androidScrollViewPickerItemXPath() {
+        PlatformType platform = Platform.ANDROID;
+        XPath cxp = XPath.builder(platform).build();
+
+        /* We need to add 1 to the index since XPath index is 1-based */
+        int index = androidNumericPickerTargetItemIndex() + 1;
+
+        return XPath.builder(platform)
+            .setClass(AndroidView.ViewType.NUMBER_PICKER.className())
+            .setIndex(index)
+            .addChildXPath(cxp)
             .build();
     }
 }

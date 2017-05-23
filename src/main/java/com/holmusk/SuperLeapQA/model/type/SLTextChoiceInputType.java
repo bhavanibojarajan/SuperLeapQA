@@ -5,10 +5,13 @@ package com.holmusk.SuperLeapQA.model.type;
  */
 
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
+import org.swiften.xtestkit.base.element.property.type.base.AttributeType;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
+import sun.rmi.runtime.Log;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +28,7 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
      * @return {@link List} of {@link Object}
      */
     @NotNull
-    List<?> allTextChoices();
+    List<? extends SLTextChoiceInputItemType> allTextChoices();
 
     /**
      * @param platform {@link PlatformType} instance.
@@ -48,12 +51,12 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
      * @see #NOT_AVAILABLE
      */
     @Override
-    default int numericValue(@NotNull final String VALUE) {
-        List<?> values = allTextChoices();
-        final String LC_VALUE = VALUE.toLowerCase();
+    default double numericValue(@NotNull final String VALUE) {
+        List<? extends SLTextChoiceInputItemType> values = allTextChoices();
 
-        Optional<?> input = values.stream()
-            .filter(a -> a.toString().toLowerCase().equals(LC_VALUE))
+        Optional<? extends SLTextChoiceInputItemType> input = values
+            .stream()
+            .filter(a -> a.stringValue().equals(VALUE))
             .findFirst();
 
         if (input.isPresent()) {
@@ -66,12 +69,12 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
     /**
      * @param value {@link Integer} value.
      * @return {@link String} value.
-     * @see SLChoiceInputType#stringValue(int)
+     * @see SLChoiceInputType#stringValue(double)
      * @see #allTextChoices()
      */
     @NotNull
     @Override
-    default String stringValue(int value) {
+    default String stringValue(double value) {
         return allTextChoices().get((int)value).toString();
     }
 

@@ -1,6 +1,7 @@
 package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
+import com.holmusk.SuperLeapQA.model.type.SLTextChoiceInputItemType;
 import com.holmusk.SuperLeapQA.model.type.SLTextChoiceInputType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
@@ -30,7 +31,7 @@ public enum ChoiceInput implements SLTextChoiceInputType {
      */
     @NotNull
     @Override
-    public List<?> allTextChoices() {
+    public List<? extends SLTextChoiceInputItemType> allTextChoices() {
         switch (this) {
             case ETHNICITY:
                 return Arrays.asList(Ethnicity.values());
@@ -125,7 +126,8 @@ public enum ChoiceInput implements SLTextChoiceInputType {
 
         XPath cellXPath = XPath.builder(platform)
             .setClass(IOSView.ViewType.UI_TABLEVIEW_CELL.className())
-            .setIndex(index);
+            .setIndex(index)
+            .build();
 
         return XPath.builder(platform)
             .setClass(IOSView.ViewType.UI_TABLEVIEW.className())

@@ -26,7 +26,7 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
      * @param m {@link UserMode} instance.
      * @return {@link Flowable} instance.
      * @see #rx_a_clickInputField(Engine, SLInputType)
-     * @see #rx_a_selectChoiceInput(Engine, List)
+     * @see #rx_a_selectChoice(Engine, List)
      * @see #rx_v_editFieldHasValue(Engine, SLInputType, String)
      */
     @NotNull
@@ -45,28 +45,28 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
         return rx_a_clickInputField(E, Gender.MALE)
             .flatMap(a -> THIS.rx_a_clickInputField(E, Gender.FEMALE))
             .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.ETHNICITY))
-            .flatMap(a -> THIS.rx_a_selectChoiceInput(E, ChoiceInput.ETHNICITY, ETH.toString()))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, ChoiceInput.ETHNICITY, ETH.stringValue()))
             .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.COACH_PREF))
-            .flatMap(a -> THIS.rx_a_selectChoiceInput(E, ChoiceInput.COACH_PREF, CP.toString()))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, ChoiceInput.COACH_PREF, CP.stringValue()))
 
             .flatMap(a -> THIS.rx_a_clickInputField(E, Height.CM))
             .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.HEIGHT))
-            .flatMap(a -> THIS.rx_a_selectChoiceInput(E, HEIGHT_M))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT_M))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
 
             .flatMap(a -> THIS.rx_a_clickInputField(E, Height.FT))
             .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.HEIGHT))
-            .flatMap(a -> THIS.rx_a_selectChoiceInput(E, HEIGHT_I))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT_I))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
 
             .flatMap(a -> THIS.rx_a_clickInputField(E, Weight.KG))
             .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.WEIGHT))
-            .flatMap(a -> THIS.rx_a_selectChoiceInput(E, WEIGHT_M))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT_M))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
 
             .flatMap(a -> THIS.rx_a_clickInputField(E, Weight.LB))
             .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.WEIGHT))
-            .flatMap(a -> THIS.rx_a_selectChoiceInput(E, WEIGHT_I))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT_I))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(E));
     }
 
@@ -80,8 +80,8 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
      * @see #rx_a_confirmValidAgeInputs(Engine)
      * @see #rx_isShowingError(Engine, LCFormat)
      * @see #rx_a_clickInputField(Engine, SLInputType)
-     * @see #rx_a_selectChoiceInput(Engine, SLChoiceInputType, String)
-     * @see #rx_a_selectChoiceInput(Engine, List)
+     * @see #rx_a_selectChoice(Engine, SLChoiceInputType, String)
+     * @see #rx_a_selectChoice(Engine, List)
      * @see #rx_a_confirmValidAgeInputs(Engine)
      */
     @NotNull
@@ -112,37 +112,37 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
             .flatMap(a -> THIS.rx_a_clickInputField(E, Height.CM))
             .flatMap(a -> THIS.rx_a_confirmValidAgeInputs(E))
             .flatMap(a -> THIS.rx_isShowingError(E, Height.CM.emptyInputError(M)))
-            .flatMap(a -> THIS.rx_a_selectChoiceInput(E, HEIGHT_M))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT_M))
 
             /* At this stage, the height error message should be shown */
             .flatMap(a -> THIS.rx_a_clickInputField(E, Height.FT))
             .flatMap(a -> THIS.rx_a_confirmValidAgeInputs(E))
             .flatMap(a -> THIS.rx_isShowingError(E, Height.FT.emptyInputError(M)))
-            .flatMap(a -> THIS.rx_a_selectChoiceInput(E, HEIGHT_I))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT_I))
 
             /* At this stage, the weight error message should be shown */
             .flatMap(a -> THIS.rx_a_clickInputField(E, Weight.KG))
             .flatMap(a -> THIS.rx_a_confirmValidAgeInputs(E))
             .flatMap(a -> THIS.rx_isShowingError(E, Weight.KG.emptyInputError(M)))
-            .flatMap(a -> THIS.rx_a_selectChoiceInput(E, WEIGHT_M))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT_M))
 
             /* At this stage, the weight error message should be shown */
             .flatMap(a -> THIS.rx_a_clickInputField(E, Weight.LB))
             .flatMap(a -> THIS.rx_a_confirmValidAgeInputs(E))
             .flatMap(a -> THIS.rx_isShowingError(E, Weight.LB.emptyInputError(M)))
-            .flatMap(a -> THIS.rx_a_selectChoiceInput(E, WEIGHT_I))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT_I))
 
             /* At this stage, the ethnicity error message should be shown */
             .flatMap(a -> THIS.rx_a_confirmValidAgeInputs(E))
             .flatMap(a -> THIS.rx_isShowingError(E, ChoiceInput.ETHNICITY.emptyInputError(M)))
             .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.ETHNICITY))
-            .flatMap(a -> THIS.rx_a_selectChoiceInput(E, ChoiceInput.ETHNICITY, ETH.toString()))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, ChoiceInput.ETHNICITY, ETH.value()))
 
             /* At this stage, the coach pref error message should be shown */
             .flatMap(a -> THIS.rx_a_confirmValidAgeInputs(E))
             .flatMap(a -> THIS.rx_isShowingError(E, ChoiceInput.COACH_PREF.emptyInputError(M)))
             .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.COACH_PREF))
-            .flatMap(a -> THIS.rx_a_selectChoiceInput(E, ChoiceInput.COACH_PREF, CP.toString()));
+            .flatMap(a -> THIS.rx_a_selectChoice(E, ChoiceInput.COACH_PREF, CP.value()));
     }
 
     /**
@@ -153,7 +153,7 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
      * @param ft {@link Height#FT} value to be selected.
      * @return {@link Flowable} instance.
      * @see Height#stringValue(PlatformType, UnitSystem, List)
-     * @see #rx_a_selectChoiceInput(Engine, List)
+     * @see #rx_a_selectChoice(Engine, List)
      * @see #rx_a_confirmNumericChoice(Engine)
      * @see #rx_v_editFieldHasValue(Engine, SLInputType, String)
      */
@@ -173,7 +173,7 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
 
         return rx_a_clickInputField(ENGINE, Height.FT)
             .flatMap(a -> THIS.rx_a_clickInputField(ENGINE, ChoiceInput.HEIGHT))
-            .flatMap(a -> THIS.rx_a_selectChoiceInput(ENGINE, INPUTS))
+            .flatMap(a -> THIS.rx_a_selectChoice(ENGINE, INPUTS))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(ENGINE))
             .flatMap(a -> THIS.rx_v_editFieldHasValue(ENGINE, ChoiceInput.HEIGHT, STR));
     }

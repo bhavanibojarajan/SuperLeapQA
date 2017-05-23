@@ -1,6 +1,8 @@
 package com.holmusk.SuperLeapQA.model;
 
+import com.holmusk.SuperLeapQA.config.Config;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
+import com.holmusk.SuperLeapQA.model.type.SLTextChoiceInputItemType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
@@ -12,7 +14,12 @@ import org.swiften.xtestkit.mobile.Platform;
 /**
  * Created by haipham on 5/12/17.
  */
-public enum CoachPref implements AttributeType<String>, BaseErrorType, SLInputType {
+public enum CoachPref implements
+    AttributeType<String>,
+    BaseErrorType,
+    SLInputType,
+    SLTextChoiceInputItemType
+{
     MALE,
     FEMALE,
     NO_PREFERENCE;
@@ -31,8 +38,19 @@ public enum CoachPref implements AttributeType<String>, BaseErrorType, SLInputTy
                 return "user_title_coachPref_noPreference";
 
             default:
-                return "";
+                throw new RuntimeException(NOT_AVAILABLE);
         }
+    }
+
+    /**
+     * @return {@link String} value.
+     * @see SLTextChoiceInputItemType#stringValue()
+     * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
+     */
+    @NotNull
+    @Override
+    public String stringValue() {
+        return Config.TEST_KIT.localize(value());
     }
 
     /**

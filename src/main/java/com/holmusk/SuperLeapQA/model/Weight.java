@@ -251,21 +251,6 @@ public enum Weight implements BaseErrorType, SLAndroidNumberPickerInputType {
     }
 
     /**
-     * Get the scroll view picker item {@link XPath} for {@link Platform#ANDROID}.
-     * @return {@link XPath} instance.
-     * @see Platform#ANDROID
-     * @see #androidNumericPickerTargetItemIndex()
-     * @see XPath.Builder#containsID(String)
-     * @see XPath.Builder#ofInstance(int)
-     */
-    @NotNull
-    private XPath androidScrollViewPickerItemXPath() {
-        String id = "numberpicker_input";
-        int index = androidNumericPickerTargetItemIndex();
-        return XPath.builder(Platform.ANDROID).containsID(id).ofInstance(index).build();
-    }
-
-    /**
      * Get the scroll view picker item {@link XPath} for {@link Platform#IOS}.
      * @return {@link XPath} instance.
      * @see Platform#IOS
@@ -280,11 +265,11 @@ public enum Weight implements BaseErrorType, SLAndroidNumberPickerInputType {
      * the type of {@link Weight}.
      * @param value {@link Integer} value.
      * @return {@link String} value.
-     * @see SLNumericChoiceInputType#stringValue(int)
+     * @see SLNumericChoiceInputType#stringValue(double)
      */
     @NotNull
     @Override
-    public String stringValue(int value) {
+    public String stringValue(double value) {
         return String.valueOf((int)value);
     }
 

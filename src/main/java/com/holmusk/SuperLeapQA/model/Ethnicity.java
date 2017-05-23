@@ -1,6 +1,8 @@
 package com.holmusk.SuperLeapQA.model;
 
+import com.holmusk.SuperLeapQA.config.Config;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
+import com.holmusk.SuperLeapQA.model.type.SLTextChoiceInputItemType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
@@ -12,7 +14,12 @@ import org.swiften.xtestkit.mobile.Platform;
 /**
  * Created by haipham on 5/12/17.
  */
-public enum Ethnicity implements AttributeType<String>, BaseErrorType, SLInputType {
+public enum Ethnicity implements
+    AttributeType<String>,
+    BaseErrorType,
+    SLInputType,
+    SLTextChoiceInputItemType
+{
     CHINESE,
     MALAY,
     INDIAN,
@@ -52,11 +59,22 @@ public enum Ethnicity implements AttributeType<String>, BaseErrorType, SLInputTy
                 return "user_title_ethnicity_latinoHispanic";
 
             case OTHERS:
-                return "user_title_ethnicity_other";
+                return "user_title_ethnicity_others";
 
             default:
                 return "";
         }
+    }
+
+    /**
+     * @return {@link String} value.
+     * @see SLTextChoiceInputItemType#stringValue()
+     * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
+     */
+    @NotNull
+    @Override
+    public String stringValue() {
+        return Config.TEST_KIT.localize(value());
     }
 
     /**

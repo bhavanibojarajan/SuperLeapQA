@@ -58,48 +58,6 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
     }
 
     /**
-     * Get the scrollable height selector view, assuming the user is already
-     * in the height picker window.
-     * @param input {@link ChoiceInput} instance.
-     * @return {@link Flowable} instance.
-     * @see Engine#platform()
-     * @see Engine#rx_withXPath(XPath...)
-     * @see RxUtil#error(String)
-     */
-    @NotNull
-    default <P extends SLChoiceInputType> Flowable<WebElement>
-    rx_e_scrollableChoicePicker(@NotNull Engine<?> engine, @NotNull P input) {
-        PlatformType platform = engine.platform();
-
-        return engine
-            .rx_withXPath(input.choicePickerScrollViewXPath(platform))
-            .firstElement()
-            .toFlowable();
-    }
-
-    /**
-     * Get all input value items within the scrollable view as emitted by
-     * {@link #rx_e_scrollableChoicePicker(Engine, SLChoiceInputType)},
-     * assuming the user is already in the picker window.
-     * @param engine {@link Engine} instance.
-     * @param input {@link InputType} instance.
-     * @return {@link Flowable} instance.
-     * @see Engine#platform()
-     * @see Engine#rx_byXPath(ByXPath)
-     * @see RxUtil#error(String)
-     */
-    @NotNull
-    default <P extends SLChoiceInputType> Flowable<WebElement>
-    rx_e_pickerItemViews(@NotNull Engine<?> engine, @NotNull P input) {
-        PlatformType platform = engine.platform();
-
-        return engine
-            .rx_withXPath(input.choicePickerScrollViewItemXPath(platform))
-            .firstElement()
-            .toFlowable();
-    }
-
-    /**
      * Validate the screen after the DoB picker whereby the user qualifies
      * for the program.
      * @param engine {@link Engine} instance.
