@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * Created by haipham on 18/5/17.
  */
-public interface SLNumericInputType extends SLInputType, ValueRangeConverterType<Double> {
+public interface SLNumericChoiceInputType extends SLChoiceInputType, ValueRangeConverterType<Integer> {
     /**
      * Get an error message format that can be used with
      * {@link #minSelectableNumericValue(UserMode)} and
@@ -45,49 +45,30 @@ public interface SLNumericInputType extends SLInputType, ValueRangeConverterType
 
     @NotNull
     @Override
-    default Converter<Double> converter() {
-        return a -> Double.valueOf(String.format("%.2f", a));
-    }
-
-    /**
-     * Convert {@link String} value into a numeric value.
-     * @param value {@link Double} value.
-     * @return {@link Double} value.
-     */
-    default double numericValue(@NotNull String value) {
-        return Double.valueOf(value);
-    }
-
-    /**
-     * Get the numeric value's {@link String} representation.
-     * @param value {@link Double} value.
-     * @return {@link String} value.
-     */
-    @NotNull
-    default String stringValue(double value) {
-        return String.valueOf(value);
+    default Converter<Integer> converter() {
+        return a -> (int)a;
     }
 
     /**
      * Get the minimum numeric value that can be selected.
      * @param mode {@link UserMode} instance.
-     * @return {@link Double} value.
+     * @return {@link Integer} value.
      */
-    double minSelectableNumericValue(@NotNull UserMode mode);
+    int minSelectableNumericValue(@NotNull UserMode mode);
 
     /**
      * Get the maximum numeric value that can be selected.
      * @param mode {@link UserMode} instance.
-     * @return {@link Double} value.
+     * @return {@link Integer} value.
      */
-    double maxSelectableNumericValue(@NotNull UserMode mode);
+    int maxSelectableNumericValue(@NotNull UserMode mode);
 
     /**
      * Get the difference between two consecutive numeric values.
      * @param mode {@link UserMode} instance.
-     * @return {@link Double} value.
+     * @return {@link Integer} value.
      */
-    default double selectableNumericValueStep(@NotNull UserMode mode) {
+    default int selectableNumericValueStep(@NotNull UserMode mode) {
         return 1;
     }
 
@@ -104,7 +85,7 @@ public interface SLNumericInputType extends SLInputType, ValueRangeConverterType
     /**
      * Get the selectable numeric range.
      * @param mode {@link UserMode} instance.
-     * @return {@link List} of {@link Double}.
+     * @return {@link List} of {@link Integer}.
      * @see #numericRangeLimit()
      * @see #valueRange(Number, Number, Number)
      * @see #minSelectableNumericValue(UserMode)
@@ -112,8 +93,8 @@ public interface SLNumericInputType extends SLInputType, ValueRangeConverterType
      * @see #selectableNumericValueStep(UserMode)
      */
     @NotNull
-    default List<Double> selectableNumericRange(@NotNull UserMode mode) {
-        List<Double> values = valueRange(
+    default List<Integer> selectableNumericRange(@NotNull UserMode mode) {
+        List<Integer> values = valueRange(
             minSelectableNumericValue(mode),
             maxSelectableNumericValue(mode),
             selectableNumericValueStep(mode)
@@ -126,12 +107,12 @@ public interface SLNumericInputType extends SLInputType, ValueRangeConverterType
 
     /**
      * Get a random numeric value from {@link #selectableNumericRange(UserMode)}.
-     * @return {@link Double} value.
+     * @return {@link Integer} value.
      * @see #selectableNumericRange(UserMode)
      * @see CollectionTestUtil#randomElement(List)
      */
-    default double randomValue(@NotNull UserMode mode) {
-        List<Double> selectableRange = selectableNumericRange(mode);
+    default int randomValue(@NotNull UserMode mode) {
+        List<Integer> selectableRange = selectableNumericRange(mode);
         return CollectionTestUtil.randomElement(selectableRange);
     }
 }

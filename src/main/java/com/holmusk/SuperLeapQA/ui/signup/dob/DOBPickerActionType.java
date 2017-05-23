@@ -1,20 +1,16 @@
-package com.holmusk.SuperLeapQA.ui.signup.main;
+package com.holmusk.SuperLeapQA.ui.signup.dob;
 
-import com.holmusk.SuperLeapQA.model.UserMode;
+import com.holmusk.SuperLeapQA.ui.signup.main.SignUpActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.collection.CollectionTestUtil;
-import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.action.date.type.DateType;
 import org.swiften.xtestkit.base.type.DelayType;
-import org.swiften.xtestkit.mobile.android.AndroidEngine;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -37,16 +33,11 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
      */
     @NotNull
     default Flowable<?> rx_a_openDoBPicker(@NotNull Engine<?> ENGINE) {
-        if (ENGINE instanceof AndroidEngine) {
-            return rx_e_DoBEditField(ENGINE)
-                .flatMap(ENGINE::rx_click)
-                .delay(generalDelay(), TimeUnit.MILLISECONDS)
-                .flatMap(a -> ENGINE.rx_implicitlyWait(this::generalDelay))
-                .all(BooleanUtil::isTrue)
-                .toFlowable();
-        } else {
-            return Flowable.just(true);
-        }
+        return rx_e_DoBEditField(ENGINE)
+            .flatMap(ENGINE::rx_click)
+            .delay(generalDelay(), TimeUnit.MILLISECONDS)
+            .all(BooleanUtil::isTrue)
+            .toFlowable();
     }
 
     /**
@@ -58,19 +49,14 @@ public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActi
      * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      * @see Engine#rx_click(WebElement)
-     * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
     default Flowable<?> rx_a_confirmDoB(@NotNull final Engine<?> ENGINE) {
-        if (ENGINE instanceof AndroidEngine) {
-            return ENGINE
-                .rx_containsText("ok")
-                .firstElement()
-                .toFlowable()
-                .flatMap(ENGINE::rx_click);
-        } else {
-            return RxUtil.error(NOT_AVAILABLE);
-        }
+        return ENGINE
+            .rx_containsText("ok", "register_title_submit")
+            .firstElement()
+            .toFlowable()
+            .flatMap(ENGINE::rx_click);
     }
 
     /**

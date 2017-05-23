@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.ui.dashboard;
 
-import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.SuperLeapQA.ui.signup.main.*;
+import com.holmusk.SuperLeapQA.ui.signup.invalidage.InvalidAgeActionType;
+import com.holmusk.SuperLeapQA.ui.signup.personalinfo.PersonalInfoActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -13,7 +13,7 @@ import org.swiften.xtestkit.base.Engine;
  */
 public interface DashboardActionType extends
     PersonalInfoActionType,
-    UnacceptableAgeActionType,
+    InvalidAgeActionType,
     DashboardValidationType
 {
     /**

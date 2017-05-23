@@ -1,20 +1,25 @@
 package com.holmusk.SuperLeapQA.general;
 
 import com.holmusk.SuperLeapQA.model.*;
-import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
+import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
 import org.jetbrains.annotations.NotNull;
-import static org.mockito.Mockito.*;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.javautilities.localizer.Localizer;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.navigation.ScreenManagerType;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+
+import static org.mockito.Mockito.mock;
 
 /**
  * Created by haipham on 5/11/17.
@@ -76,12 +81,12 @@ public final class GeneralTest {
     @Test
     public void test_userModeAgeRange_shouldBeCorrect() {
         // Setup & When & Then
-        LogUtil.println(UserMode.PARENT.acceptableAgeRange());
-        LogUtil.println(UserMode.PARENT.acceptableAgeCategoryRangeString());
-        LogUtil.println(UserMode.TEEN_U18.acceptableAgeRange());
-        LogUtil.println(UserMode.TEEN_U18.acceptableAgeCategoryRangeString());
-        LogUtil.println(UserMode.TEEN_A18.acceptableAgeRange());
-        LogUtil.println(UserMode.TEEN_A18.acceptableAgeCategoryRangeString());
+        LogUtil.println(UserMode.PARENT.validAgeRange());
+        LogUtil.println(UserMode.PARENT.validAgeCategoryRangeString());
+        LogUtil.println(UserMode.TEEN_U18.validAgeRange());
+        LogUtil.println(UserMode.TEEN_U18.validAgeCategoryRangeString());
+        LogUtil.println(UserMode.TEEN_A18.validAgeRange());
+        LogUtil.println(UserMode.TEEN_A18.validAgeCategoryRangeString());
     }
 
     @Test
@@ -134,5 +139,11 @@ public final class GeneralTest {
 //            Screen.WELCOME,
             Screen.USE_APP_NOW)
         );
+    }
+
+    @Test
+    public void test_xPathCreation_shouldWork() {
+        // Setup && When && Then
+        LogUtil.println(ChoiceInput.COACH_PREF.inputViewXPath(Platform.IOS));
     }
 }

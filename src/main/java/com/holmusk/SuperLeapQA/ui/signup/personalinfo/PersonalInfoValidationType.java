@@ -1,7 +1,8 @@
-package com.holmusk.SuperLeapQA.ui.signup.main;
+package com.holmusk.SuperLeapQA.ui.signup.personalinfo;
 
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.model.UserMode;
+import com.holmusk.SuperLeapQA.ui.signup.main.SignUpValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;

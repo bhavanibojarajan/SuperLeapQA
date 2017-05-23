@@ -1,14 +1,13 @@
 package com.holmusk.SuperLeapQA.model;
 
-import com.holmusk.SuperLeapQA.model.type.SLChoiceInputType;
-import com.holmusk.SuperLeapQA.model.type.SLNumericInputType;
+import com.holmusk.SuperLeapQA.model.type.SLAndroidNumberPickerInputType;
+import com.holmusk.SuperLeapQA.model.type.SLNumericChoiceInputType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zipped;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
-import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidChoiceInputType;
-import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
+import org.swiften.xtestkit.mobile.Platform;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputType {
+public enum Weight implements BaseErrorType, SLAndroidNumberPickerInputType {
     KG,
     KG_DEC,
     LB,
@@ -75,31 +74,25 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * @param unit {@link UnitSystem} instance.
      * @return {@link List} of {@link Zipped}.
      * @see #instances(PlatformType, UnitSystem)
-     * @see SLNumericInputType#randomValue(UserMode)
+     * @see SLNumericChoiceInputType#randomValue(UserMode)
      */
     @NotNull
-    public static List<Zipped<Weight,Double>> random(@NotNull PlatformType platform,
+    public static List<Zipped<Weight,String>> random(@NotNull PlatformType platform,
                                                      @NotNull final UserMode MODE,
                                                      @NotNull UnitSystem unit) {
         return instances(platform, unit).stream()
-            .map(a -> new Zipped<>(a, a.randomValue(MODE)))
+            .map(a -> new Zipped<>(a, String.valueOf(a.randomValue(MODE))))
             .collect(Collectors.toList());
     }
 
     /**
      * @return {@link String} value.
-     * @see SLNumericInputType#emptyInputError(UserMode)
+     * @see SLNumericChoiceInputType#emptyInputError(UserMode)
      */
     @NotNull
     @Override
     public String emptyInputErrorFormat() {
         return "register_error_weightValueNotSet";
-    }
-
-    @NotNull
-    @Override
-    public Converter<Double> converter() {
-        return a -> a;
     }
 
     /**
@@ -109,11 +102,10 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * {@link org.openqa.selenium.WebElement} with the same id (e.g. picking
      * {@link #KG} and {@link #KG_DEC} at the same time).
      * @return {@link Integer} value.
-     * @see SLChoiceInputType#androidPickerItemIndex()
      * @see #NOT_AVAILABLE
      */
     @Override
-    public int androidPickerItemIndex() {
+    public int androidNumericPickerTargetItemIndex() {
         switch (this) {
             case KG:
             case LB:
@@ -129,14 +121,35 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
     }
 
     /**
+     * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
-     * @see AndroidInputType#androidViewXPath()
-     * @see #xPathBuilder()
+     * @see org.swiften.xtestkit.base.element.action.input.type.InputType#inputViewXPath(PlatformType)
+     * @see #androidInputViewXPath()
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    public XPath androidViewXPath() {
+    public XPath inputViewXPath(@NotNull PlatformType platform) {
+        switch ((Platform)platform) {
+            case ANDROID:
+                return androidInputViewXPath();
+
+            case IOS:
+                return iOSInputViewXPath();
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+
+    /**
+     * Get {@link XPath} for the input view for {@link Platform#ANDROID}.
+     * @return {@link XPath} instance.
+     * @see Platform#ANDROID
+     * @see XPath.Builder#containsID(String)
+     */
+    @NotNull
+    private XPath androidInputViewXPath() {
         final String ID;
 
         switch (this) {
@@ -154,58 +167,136 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
                 throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        return xPathBuilder().containsID(ID).build();
+        return XPath.builder(Platform.ANDROID).containsID(ID).build();
+    }
+
+    /**
+     * Get {@link XPath} for the input view for {@link Platform#IOS}.
+     * @return {@link XPath} instance.
+     * @see Platform#IOS
+     */
+    @NotNull
+    private XPath iOSInputViewXPath() {
+        return XPath.builder(Platform.IOS).build();
     }
 
     /**
      * @return Return {@link XPath} value.
-     * @see AndroidChoiceInputType#androidScrollViewPickerXPath()
-     * @see #xPathBuilder()
-     * @see #androidPickerItemIndex()
+     * @see org.swiften.xtestkit.base.element.action.input.type.ChoiceInputType#choicePickerScrollViewXPath(PlatformType)
+     * @see #androidScrollViewPickerXPath()
+     * @see #iOSScrollViewPickerXPath()
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    public XPath androidScrollViewPickerXPath() {
-        String cls = "NumberPicker";
-        int index = androidPickerItemIndex();
-        return xPathBuilder().atIndex(index).ofClass(cls).build();
+    public XPath choicePickerScrollViewXPath(@NotNull PlatformType platform) {
+        switch ((Platform)platform) {
+            case ANDROID:
+                return androidScrollViewPickerXPath();
+
+            case IOS:
+                return iOSScrollViewPickerXPath();
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 
     /**
-     * @return {@link XPath} value.
-     * @see AndroidChoiceInputType#androidScrollViewItemXPath()
-     * @see #xPathBuilder()
-     * @see #androidPickerItemIndex()
+     * Get the scroll view picker {@link XPath} for {@link Platform#ANDROID}.
+     * @return {@link XPath} instance.
+     * @see Platform#ANDROID
+     * @see #androidNumericPickerTargetItemIndex()
+     * @see XPath.Builder#atIndex(int)
+     * @see XPath.Builder#ofClass(String)
      */
+    @NotNull
+    private XPath androidScrollViewPickerXPath() {
+        String cls = "NumberPicker";
+        int index = androidNumericPickerTargetItemIndex();
+        return XPath.builder(Platform.ANDROID).atIndex(index).ofClass(cls).build();
+    }
+
+    /**
+     * Get the scroll view picker {@link XPath} for {@link Platform#IOS}.
+     * @return {@link XPath} instance.
+     * @see Platform#IOS
+     */
+    @NotNull
+    private XPath iOSScrollViewPickerXPath() {
+        return XPath.builder(Platform.IOS).build();
+    }
+
+    /**
+     * @param platform {@link PlatformType} instance.
+     * @return {@link XPath} value.
+     * @see org.swiften.xtestkit.base.element.action.input.type.ChoiceInputType#choicePickerScrollViewItemXPath(PlatformType)
+     * @see #androidScrollViewPickerItemXPath()
+     * @see #iOSScrollViewPickerItemXPath()
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
     @Override
-    public XPath androidScrollViewItemXPath() {
+    public XPath choicePickerScrollViewItemXPath(@NotNull PlatformType platform) {
+        switch ((Platform)platform) {
+            case ANDROID:
+                return androidScrollViewPickerItemXPath();
+
+            case IOS:
+                return iOSScrollViewPickerItemXPath();
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+
+    /**
+     * Get the scroll view picker item {@link XPath} for {@link Platform#ANDROID}.
+     * @return {@link XPath} instance.
+     * @see Platform#ANDROID
+     * @see #androidNumericPickerTargetItemIndex()
+     * @see XPath.Builder#containsID(String)
+     * @see XPath.Builder#ofInstance(int)
+     */
+    @NotNull
+    private XPath androidScrollViewPickerItemXPath() {
         String id = "numberpicker_input";
-        int index = androidPickerItemIndex();
-        return xPathBuilder().containsID(id).ofInstance(index).build();
+        int index = androidNumericPickerTargetItemIndex();
+        return XPath.builder(Platform.ANDROID).containsID(id).ofInstance(index).build();
+    }
+
+    /**
+     * Get the scroll view picker item {@link XPath} for {@link Platform#IOS}.
+     * @return {@link XPath} instance.
+     * @see Platform#IOS
+     */
+    @NotNull
+    private XPath iOSScrollViewPickerItemXPath() {
+        return XPath.builder(Platform.IOS).build();
     }
 
     /**
      * Get the appropriately formatted weight {@link String}, depending on
      * the type of {@link Weight}.
-     * @param value {@link Double} value.
+     * @param value {@link Integer} value.
      * @return {@link String} value.
-     * @see SLNumericInputType#stringValue(double)
+     * @see SLNumericChoiceInputType#stringValue(int)
      */
     @NotNull
     @Override
-    public String stringValue(double value) {
+    public String stringValue(int value) {
         return String.valueOf((int)value);
     }
 
     /**
      * @param mode {@link UserMode} instance.
-     * @return {@link Double} value.
-     * @see SLNumericInputType#minSelectableNumericValue(UserMode)
+     * @return {@link Integer} value.
+     * @see SLNumericChoiceInputType#minSelectableNumericValue(UserMode)
      * @see UserMode#isParent()
      * @see #NOT_AVAILABLE
      */
     @Override
-    public double minSelectableNumericValue(@NotNull UserMode mode) {
+    public int minSelectableNumericValue(@NotNull UserMode mode) {
         switch (this) {
             case KG_DEC:
             case LB_DEC:
@@ -226,13 +317,13 @@ public enum Weight implements BaseErrorType, SLChoiceInputType, SLNumericInputTy
      * Get the maximum selectable weight. Return a lower value to avoid
      * {@link StackOverflowError} from too much scrolling.
      * @param mode {@link UserMode} instance.
-     * @return {@link Double} value.
-     * @see SLNumericInputType#maxSelectableNumericValue(UserMode)
+     * @return {@link Integer} value.
+     * @see SLNumericChoiceInputType#maxSelectableNumericValue(UserMode)
      * @see UserMode#isParent()
      * @see #NOT_AVAILABLE
      */
     @Override
-    public double maxSelectableNumericValue(@NotNull UserMode mode) {
+    public int maxSelectableNumericValue(@NotNull UserMode mode) {
         switch (this) {
             case KG_DEC:
             case LB_DEC:

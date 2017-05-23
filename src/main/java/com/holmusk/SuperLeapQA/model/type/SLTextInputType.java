@@ -1,7 +1,6 @@
 package com.holmusk.SuperLeapQA.model.type;
 
 import org.swiften.xtestkit.base.element.action.input.type.TextInputType;
-import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidTextInputType;
 
 /**
  * Created by haipham on 18/5/17.
@@ -10,4 +9,4 @@ import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidText
 /**
  * {@link TextInputType} for Superleap.
  */
-public interface SLTextInputType extends SLInputType, AndroidTextInputType {}
+public interface SLTextInputType extends SLInputType, TextInputType {}

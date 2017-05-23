@@ -1,12 +1,10 @@
-package com.holmusk.SuperLeapQA.ui.signup.main;
+package com.holmusk.SuperLeapQA.ui.signup.dob;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.Flowable;
-import io.reactivex.schedulers.Schedulers;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
@@ -60,22 +58,22 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
 
     /**
      * Sequentially select DoBs and validate that DoBs that fall out of
-     * {@link UserMode#acceptableAgeCategoryRange()} should not bring the user
+     * {@link UserMode#validAgeCategoryRange()} should not bring the user
      * to the correct sign up screen. This action assumes the user is in the DoB
      * selection screen, but has not opened the DoB picker yet.
      * Be aware that this method is not guarantor-aware.
      * {@link UserMode#TEEN_U18} and {@link UserMode#TEEN_A18} will
      * be treated the same. This is why we use
-     * {@link UserMode#acceptableAgeCategoryRange()} instead of
-     * {@link UserMode#acceptableAgeRange()}.
+     * {@link UserMode#validAgeCategoryRange()} instead of
+     * {@link UserMode#validAgeRange()}.
      * @param ENGINE {@link Engine} instance.
      * @param MODE {@link UserMode} instance.
      * @param AGES {@link List} of {@link Integer}.
      * @return {@link Flowable} instance.
-     * @see UserMode#acceptableAgeCategoryRange()
+     * @see UserMode#validAgeCategoryRange()
      * @see #rx_a_openDoBPicker(Engine)
-     * @see #rx_v_acceptableAgeScreen(Engine)
-     * @see #rx_v_unacceptableAgeScreen(Engine, UserMode)
+     * @see #rx_v_validAgeScreen(Engine)
+     * @see #rx_v_invalidAgeScreen(Engine, UserMode)
      * @see #rx_a_clickBackButton(Engine)
      */
     @NotNull
@@ -84,7 +82,7 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
                                                    @NotNull final UserMode MODE,
                                                    @NotNull final List<Integer> AGES) {
         final DOBPickerActionType THIS = this;
-        final List<Integer> RANGE = MODE.acceptableAgeCategoryRange();
+        final List<Integer> RANGE = MODE.validAgeCategoryRange();
         final int LENGTH = AGES.size();
 
         class Repeater {
@@ -99,9 +97,9 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
                         .flatMap(a -> THIS.rx_a_confirmDoB(ENGINE))
                         .flatMap(a -> {
                             if (VALID) {
-                                return THIS.rx_v_acceptableAgeScreen(ENGINE);
+                                return THIS.rx_v_validAgeScreen(ENGINE);
                             } else {
-                                return THIS.rx_v_unacceptableAgeScreen(ENGINE, MODE);
+                                return THIS.rx_v_invalidAgeScreen(ENGINE, MODE);
                             }
                         })
                         .flatMap(a -> THIS.rx_a_clickBackButton(ENGINE))

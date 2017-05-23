@@ -59,7 +59,7 @@ public class UIBaseTest implements BaseTestType, SLScreenManagerType {
     @DataProvider
     public Iterator<Object[]> generalUserModeProvider() {
         List<Object[]> data = new LinkedList<>();
-        UserMode[] modes = new UserMode[] { UserMode.TEEN_U18};
+        UserMode[] modes = new UserMode[] { UserMode.TEEN_U18 };
 
         for (UserMode mode : modes) {
             data.add(new Object[] { mode });

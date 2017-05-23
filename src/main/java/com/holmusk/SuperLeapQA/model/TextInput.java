@@ -8,7 +8,8 @@ import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.xtestkit.base.element.action.input.type.TextInputType;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseErrorType;
-import org.swiften.xtestkit.mobile.android.element.action.input.type.AndroidInputType;
+import org.swiften.xtestkit.base.type.PlatformType;
+import org.swiften.xtestkit.mobile.Platform;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -30,16 +31,35 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
     PARENT_MOBILE;
 
     /**
-     * Get the view id for {@link org.swiften.xtestkit.mobile.Platform#ANDROID}
-     * locator.
+     * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
-     * @see AndroidInputType#androidViewXPath()
-     * @see #xPathBuilder()
+     * @see org.swiften.xtestkit.base.element.action.input.type.InputType#inputViewXPath(PlatformType)
+     * @see #androidInputViewXPath()
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    public XPath androidViewXPath() {
+    public XPath inputViewXPath(@NotNull PlatformType platform) {
+        switch ((Platform)platform) {
+            case ANDROID:
+                return androidInputViewXPath();
+
+            case IOS:
+                return iOSInputViewXPath();
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+
+    /**
+     * Get {@link XPath} for the input view for {@link Platform#ANDROID}.
+     * @return {@link XPath} instance.
+     * @see Platform#ANDROID
+     * @see XPath.Builder#containsID(String)
+     */
+    @NotNull
+    private XPath androidInputViewXPath() {
         final String ID;
 
         switch (this) {
@@ -78,7 +98,17 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
                 throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        return xPathBuilder().containsID(ID).build();
+        return XPath.builder(Platform.ANDROID).containsID(ID).build();
+    }
+
+    /**
+     * Get {@link XPath} for the input view for {@link Platform#IOS}.
+     * @return {@link XPath} instance.
+     * @see Platform#IOS
+     */
+    @NotNull
+    private XPath iOSInputViewXPath() {
+        return XPath.builder(Platform.IOS).build();
     }
 
     /**

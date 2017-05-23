@@ -28,7 +28,7 @@ public interface AppDelayType {
      * Delay for unacceptable age input confirm.
      * @return {@link Long} value.
      */
-    default long unacceptableAgeInputConfirmDelay() {
+    default long invalidAgeInputConfirmDelay() {
         return 5000;
     }
 

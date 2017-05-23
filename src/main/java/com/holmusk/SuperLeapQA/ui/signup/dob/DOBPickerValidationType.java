@@ -1,6 +1,7 @@
-package com.holmusk.SuperLeapQA.ui.signup.main;
+package com.holmusk.SuperLeapQA.ui.signup.dob;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
+import com.holmusk.SuperLeapQA.ui.signup.main.SignUpActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -23,7 +24,7 @@ public interface DOBPickerValidationType extends SignUpActionType {
      * @return {@link Flowable} instance.
      */
     @NotNull
-    Flowable<?> rx_v_acceptableAgeScreen(@NotNull Engine<?> engine);
+    Flowable<?> rx_v_validAgeScreen(@NotNull Engine<?> engine);
 
     /**
      * Validate the unacceptable age screen, after the user picks DoB. This
@@ -34,8 +35,8 @@ public interface DOBPickerValidationType extends SignUpActionType {
      * @return {@link Flowable} instance.
      */
     @NotNull
-    Flowable<?> rx_v_unacceptableAgeScreen(@NotNull Engine<?> engine,
-                                           @NotNull UserMode mode);
+    Flowable<?> rx_v_invalidAgeScreen(@NotNull Engine<?> engine,
+                                      @NotNull UserMode mode);
 
     /**
      * Get all calendar {@link WebElement} instances.
@@ -59,11 +60,7 @@ public interface DOBPickerValidationType extends SignUpActionType {
      */
     @NotNull
     default Flowable<WebElement> rx_e_DoBEditField(@NotNull Engine<?> engine) {
-        if (engine instanceof AndroidEngine) {
-            return engine.rx_editable().firstElement().toFlowable();
-        } else {
-            return RxUtil.error(NOT_AVAILABLE);
-        }
+        return engine.rx_editable().firstElement().toFlowable();
     }
 
     /**

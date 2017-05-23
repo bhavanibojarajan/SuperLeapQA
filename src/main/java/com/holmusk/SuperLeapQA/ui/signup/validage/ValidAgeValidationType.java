@@ -1,9 +1,12 @@
-package com.holmusk.SuperLeapQA.ui.signup.main;
+package com.holmusk.SuperLeapQA.ui.signup.validage;
 
-import com.holmusk.SuperLeapQA.model.*;
+import com.holmusk.SuperLeapQA.model.ChoiceInput;
+import com.holmusk.SuperLeapQA.model.Gender;
+import com.holmusk.SuperLeapQA.model.Height;
+import com.holmusk.SuperLeapQA.model.Weight;
 import com.holmusk.SuperLeapQA.model.type.SLChoiceInputType;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
-import com.holmusk.SuperLeapQA.model.type.SLNumericInputType;
+import com.holmusk.SuperLeapQA.ui.signup.dob.DOBPickerValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -13,16 +16,16 @@ import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.element.action.input.type.InputType;
 import org.swiften.xtestkit.base.element.locator.general.param.ByXPath;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
+import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.android.AndroidEngine;
-import org.swiften.xtestkit.base.element.action.input.type.InputType;
-import org.swiften.xtestkit.mobile.android.AndroidView;
 
 /**
  * Created by haipham on 17/5/17.
  */
-public interface AcceptableAgeValidationType extends DOBPickerValidationType {
+public interface ValidAgeValidationType extends DOBPickerValidationType {
     /**
      * Get the next confirm button for acceptable age input screen.
      * @param engine {@link Engine} instance.
@@ -30,7 +33,7 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
      * @see Engine#rx_containsText(String...)
      */
     @NotNull
-    default Flowable<WebElement> rx_e_acceptableAgeConfirm(@NotNull Engine<?> engine) {
+    default Flowable<WebElement> rx_e_validAgeConfirm(@NotNull Engine<?> engine) {
         return engine.rx_containsText("register_title_next").firstElement().toFlowable();
     }
 
@@ -43,7 +46,7 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<WebElement> rx_e_acceptableAgeInputTitle(@NotNull Engine<?> engine) {
+    default Flowable<WebElement> rx_e_validAgeInputTitle(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             return engine.rx_containsText(
                 "parentSignUp_title_enterChildDetails",
@@ -59,21 +62,19 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
      * in the height picker window.
      * @param input {@link ChoiceInput} instance.
      * @return {@link Flowable} instance.
+     * @see Engine#platform()
      * @see Engine#rx_withXPath(XPath...)
      * @see RxUtil#error(String)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default <P extends SLChoiceInputType> Flowable<WebElement>
     rx_e_scrollableChoicePicker(@NotNull Engine<?> engine, @NotNull P input) {
-        if (engine instanceof AndroidEngine) {
-            return engine
-                .rx_withXPath(input.androidScrollViewPickerXPath())
-                .firstElement()
-                .toFlowable();
-        } else {
-            return RxUtil.error(NOT_AVAILABLE);
-        }
+        PlatformType platform = engine.platform();
+
+        return engine
+            .rx_withXPath(input.choicePickerScrollViewXPath(platform))
+            .firstElement()
+            .toFlowable();
     }
 
     /**
@@ -83,61 +84,19 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
      * @param engine {@link Engine} instance.
      * @param input {@link InputType} instance.
      * @return {@link Flowable} instance.
+     * @see Engine#platform()
      * @see Engine#rx_byXPath(ByXPath)
-     * @see Engine#xPathBuilder()
      * @see RxUtil#error(String)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
-    default <P extends SLChoiceInputType & SLNumericInputType> Flowable<WebElement>
+    default <P extends SLChoiceInputType> Flowable<WebElement>
     rx_e_pickerItemViews(@NotNull Engine<?> engine, @NotNull P input) {
-        if (engine instanceof AndroidEngine) {
-            return engine
-                .rx_withXPath(input.androidScrollViewItemXPath())
-                .firstElement()
-                .toFlowable();
-        } else {
-            return RxUtil.error(NOT_AVAILABLE);
-        }
-    }
+        PlatformType platform = engine.platform();
 
-    /**
-     * Get a {@link ByXPath} instance that will be used to query for the
-     * numeric picker item. This instance is dependent on the
-     * {@link org.swiften.xtestkit.base.type.PlatformType} of the currently
-     * active {@link Engine}.
-     * On {@link org.swiften.xtestkit.mobile.Platform#ANDROID}, the middle
-     * {@link WebElement} of the number picker is an
-     * {@link AndroidView.ViewType#EDIT_TEXT}, while the rest are
-     * {@link AndroidView.ViewType#BUTTON}. We are interested only in the
-     * middle {@link WebElement}.
-     * @param engine {@link Engine} instance.
-     * @param input {@link SLChoiceInputType} instance.
-     * @param value {@link String} value that should be displayed by the item.
-     * @return {@link ByXPath} instance.
-     * @see Engine#xPathBuilder()
-     * @see XPath.Builder#hasText(String)
-     * @see XPath.Builder#ofClass(String)
-     * @see XPath.Builder#ofInstance(int)
-     * @see SLChoiceInputType#androidPickerItemIndex()
-     * @see #NOT_AVAILABLE
-     */
-    @NotNull
-    default ByXPath e_pickerItemQuery(@NotNull Engine<?> engine,
-                                      @NotNull SLChoiceInputType input,
-                                      @NotNull String value) {
-        XPath.Builder xPathBuilder = engine.xPathBuilder().hasText(value);
-
-        if (engine instanceof AndroidEngine) {
-            xPathBuilder
-                .ofClass(AndroidView.ViewType.EDIT_TEXT.className())
-                .ofInstance(input.androidPickerItemIndex());
-        } else {
-            throw new RuntimeException(NOT_AVAILABLE);
-        }
-
-        XPath xPath = xPathBuilder.build();
-        return ByXPath.builder().withXPath(xPath).withRetries(1).build();
+        return engine
+            .rx_withXPath(input.choicePickerScrollViewItemXPath(platform))
+            .firstElement()
+            .toFlowable();
     }
 
     /**
@@ -146,13 +105,13 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rx_e_editField(Engine, SLInputType)
-     * @see #rx_e_acceptableAgeConfirm(Engine)
-     * @see #rx_e_acceptableAgeInputTitle(Engine)
+     * @see #rx_e_validAgeConfirm(Engine)
+     * @see #rx_e_validAgeInputTitle(Engine)
      */
     @NotNull
     @Override
     @SuppressWarnings("unchecked")
-    default Flowable<?> rx_v_acceptableAgeScreen(@NotNull Engine<?> engine) {
+    default Flowable<?> rx_v_validAgeScreen(@NotNull Engine<?> engine) {
         return Flowable
             .mergeArray(
                 rx_e_editField(engine, Gender.MALE),
@@ -165,8 +124,8 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
                 rx_e_editField(engine, Weight.KG),
                 rx_e_editField(engine, ChoiceInput.ETHNICITY),
                 rx_e_editField(engine, ChoiceInput.COACH_PREF),
-                rx_e_acceptableAgeConfirm(engine),
-                rx_e_acceptableAgeInputTitle(engine)
+                rx_e_validAgeConfirm(engine),
+                rx_e_validAgeInputTitle(engine)
             )
             .all(ObjectUtil::nonNull)
             .toFlowable();
@@ -231,8 +190,8 @@ public interface AcceptableAgeValidationType extends DOBPickerValidationType {
      * @see #rx_e_errorPopup(Engine, LCFormat)
      */
     @NotNull
-    default Flowable<?> rxIsShowingError(@NotNull Engine<?> engine,
-                                         @NotNull LCFormat error) {
+    default Flowable<?> rx_isShowingError(@NotNull Engine<?> engine,
+                                          @NotNull LCFormat error) {
         return rx_e_errorPopup(engine, error);
     }
 }

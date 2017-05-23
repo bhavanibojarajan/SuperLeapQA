@@ -11,7 +11,7 @@ import java.util.Iterator;
 /**
  * Created by haipham on 5/7/17.
  */
-public final class TestRunner implements RepeatRunner.TestRunner {
+public final class Runner implements RepeatRunner.TestRunner {
     /**
      * This {@link RepeatRunner} must be static to avoid it being recreated
      * upon every test iteration.

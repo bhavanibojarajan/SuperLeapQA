@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.ui.signup.main;
+package com.holmusk.SuperLeapQA.ui.signup.personalinfo;
 
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.model.type.SLTextInputType;

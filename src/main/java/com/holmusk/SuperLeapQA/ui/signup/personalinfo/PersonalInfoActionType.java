@@ -1,7 +1,8 @@
-package com.holmusk.SuperLeapQA.ui.signup.main;
+package com.holmusk.SuperLeapQA.ui.signup.personalinfo;
 
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
+import com.holmusk.SuperLeapQA.ui.signup.validage.ValidAgeActionType;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.action.input.type.InputType;
 import com.holmusk.SuperLeapQA.model.UserMode;
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * Created by haipham on 17/5/17.
  */
-public interface PersonalInfoActionType extends PersonalInfoValidationType, AcceptableAgeActionType {
+public interface PersonalInfoActionType extends PersonalInfoValidationType, ValidAgeActionType {
     /**
      * Click the submit button to confirm personal info inputs.
      * @param ENGINE {@link Engine} instance.

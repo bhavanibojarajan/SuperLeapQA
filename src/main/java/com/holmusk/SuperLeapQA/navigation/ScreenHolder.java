@@ -116,23 +116,23 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
             case DOB_PICKER:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.UNACCEPTABLE_AGE, MODE),
-                        a -> THIS.rx_n_DoBPicker_unacceptableAge(ENGINE, MODE)
+                        ENGINE, ScreenHolder.of(Screen.INVALID_AGE, MODE),
+                        a -> THIS.rx_n_DoBPicker_invalidAge(ENGINE, MODE)
                     ),
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.ACCEPTABLE_AGE, MODE),
-                        a -> THIS.rx_n_DoBPicker_acceptableAge(ENGINE, MODE)
+                        ENGINE, ScreenHolder.of(Screen.VALID_AGE, MODE),
+                        a -> THIS.rx_n_DoBPicker_validAge(ENGINE, MODE)
                     )
                 );
 
-            case UNACCEPTABLE_AGE:
+            case INVALID_AGE:
                 return CollectionUtil.asList();
 
-            case ACCEPTABLE_AGE:
+            case VALID_AGE:
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.PERSONAL_INFO, MODE),
-                        a -> THIS.rx_n_acceptableAge_personalInfo(ENGINE, MODE)
+                        a -> THIS.rx_n_validAge_personalInfo(ENGINE, MODE)
                     )
                 );
 
@@ -227,31 +227,31 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                     )
                 );
 
-            case UNACCEPTABLE_AGE:
+            case INVALID_AGE:
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.DOB_PICKER, MODE),
-                        a -> THIS.rx_n_unacceptableAge_DOBPicker(ENGINE)
+                        a -> THIS.rx_n_invalidAge_DOBPicker(ENGINE)
                     ),
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.REGISTER, MODE),
-                        a -> THIS.rx_n_unacceptableAge_welcome(ENGINE)
+                        a -> THIS.rx_n_invalidAge_welcome(ENGINE)
                     )
                 );
 
-            case ACCEPTABLE_AGE:
+            case VALID_AGE:
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.DOB_PICKER, MODE),
-                        a -> THIS.rx_n_acceptableAge_welcome(ENGINE)
+                        a -> THIS.rx_n_validAge_welcome(ENGINE)
                     )
                 );
 
             case PERSONAL_INFO:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.ACCEPTABLE_AGE, MODE),
-                        a -> THIS.rx_n_personalInfo_acceptableAge(ENGINE)
+                        ENGINE, ScreenHolder.of(Screen.VALID_AGE, MODE),
+                        a -> THIS.rx_n_personalInfo_validAge(ENGINE)
                     )
                 );
 

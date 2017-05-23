@@ -3,7 +3,7 @@ package com.holmusk.SuperLeapQA.ui.dashboard;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.SuperLeapQA.runner.TestRunner;
+import com.holmusk.SuperLeapQA.runner.Runner;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +17,7 @@ import org.testng.annotations.Test;
  */
 public class UIMainDashboardTest extends UIBaseTest implements DashboardTestHelperType {
     @Factory(
-        dataProviderClass = TestRunner.class,
+        dataProviderClass = Runner.class,
         dataProvider = "dataProvider"
     )
     public UIMainDashboardTest(int index) {

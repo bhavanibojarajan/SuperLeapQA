@@ -1,15 +1,15 @@
 package com.holmusk.SuperLeapQA.ui.signup.main;
 
-import com.holmusk.SuperLeapQA.model.*;
+import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
-import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.element.action.input.type.InputType;
-import org.swiften.xtestkit.base.element.action.input.type.TextInputType;
 import com.holmusk.SuperLeapQA.ui.signup.mode.RegisterModeActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.element.action.input.type.InputType;
+import org.swiften.xtestkit.base.element.action.input.type.TextInputType;
 import org.swiften.xtestkit.mobile.Platform;
 
 /**

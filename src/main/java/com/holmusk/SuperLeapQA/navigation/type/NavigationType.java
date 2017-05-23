@@ -2,15 +2,15 @@ package com.holmusk.SuperLeapQA.navigation.type;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.ui.dashboard.DashboardTestHelperType;
-import com.holmusk.SuperLeapQA.ui.signup.main.DOBPickerActionType;
-import com.holmusk.SuperLeapQA.ui.signup.main.PersonalInfoActionType;
+import com.holmusk.SuperLeapQA.ui.signup.dob.DOBPickerActionType;
+import com.holmusk.SuperLeapQA.ui.signup.personalinfo.PersonalInfoActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.mobile.android.AndroidEngine;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -79,7 +79,7 @@ public interface NavigationType extends DashboardTestHelperType {
     @NotNull
     default Flowable<?> rx_n_register_DoBPicker(@NotNull Engine<?> ENGINE,
                                                 @NotNull UserMode mode) {
-        return rx_e_signUp(ENGINE, mode).doOnNext(LogUtil::println).flatMap(ENGINE::rx_click);
+        return rx_e_signUp(ENGINE, mode).flatMap(ENGINE::rx_click);
     }
 
     /**
@@ -92,30 +92,39 @@ public interface NavigationType extends DashboardTestHelperType {
      * @see #rx_a_confirmDoB(Engine) )
      */
     @NotNull
-    default Flowable<?> rx_n_DoBPicker_inputScreenForAge(@NotNull final Engine<?> ENGINE,
-                                                         final int AGE) {
+    default Flowable<?> rx_n_DoBPicker_ageInput(@NotNull final Engine<?> ENGINE,
+                                                final int AGE) {
         final DOBPickerActionType THIS = this;
 
         return rx_a_openDoBPicker(ENGINE)
-            .flatMap(a -> THIS.rx_a_selectDoBToBeOfAge(ENGINE, AGE))
+            .flatMap(a -> {
+                /* Due to a screen bug on iOS, we temporarily disable date
+                 * selection and immediately click submit button to bring the
+                 * user to the valid age input */
+                if (ENGINE instanceof AndroidEngine) {
+                    return THIS.rx_a_selectDoBToBeOfAge(ENGINE, AGE);
+                } else {
+                    return Flowable.just(true);
+                }
+            })
             .flatMap(a -> THIS.rx_a_confirmDoB(ENGINE));
     }
 
     /**
      * Navigate to the unacceptable age input screen by selecting a DoB that
      * results in an age that does not lie within
-     * {@link UserMode#maxCategoryAcceptableAge()})
+     * {@link UserMode#maxCategoryValidAge()})
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see UserMode#maxCategoryAcceptableAge()
-     * @see #rx_n_DoBPicker_inputScreenForAge(Engine, int)
+     * @see UserMode#maxCategoryValidAge()
+     * @see #rx_n_DoBPicker_ageInput(Engine, int)
      */
     @NotNull
-    default Flowable<?> rx_n_DoBPicker_unacceptableAge(@NotNull Engine<?> engine,
-                                                       @NotNull UserMode mode) {
-        int age = mode.maxCategoryAcceptableAge() + 1;
-        return rx_n_DoBPicker_inputScreenForAge(engine, age);
+    default Flowable<?> rx_n_DoBPicker_invalidAge(@NotNull Engine<?> engine,
+                                                  @NotNull UserMode mode) {
+        int age = mode.maxCategoryValidAge() + 1;
+        return rx_n_DoBPicker_ageInput(engine, age);
     }
 
     /**
@@ -126,7 +135,7 @@ public interface NavigationType extends DashboardTestHelperType {
      * @see #rx_a_clickBackButton(Engine)
      */
     @NotNull
-    default Flowable<?> rx_n_unacceptableAge_DOBPicker(@NotNull Engine<?> engine) {
+    default Flowable<?> rx_n_invalidAge_DOBPicker(@NotNull Engine<?> engine) {
         return rx_a_clickBackButton(engine);
     }
 
@@ -134,38 +143,38 @@ public interface NavigationType extends DashboardTestHelperType {
      * Navigate from the unacceptable age screen to the welcome screen.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_h_enterAndCheckUnacceptableAgeInputs(Engine)
+     * @see #rx_h_enterAndCheckInvalidAgeInputs(Engine)
      */
     @NotNull
-    default Flowable<?> rx_n_unacceptableAge_welcome(@NotNull final Engine<?> ENGINE) {
-        return rx_h_enterAndCheckUnacceptableAgeInputs(ENGINE);
+    default Flowable<?> rx_n_invalidAge_welcome(@NotNull final Engine<?> ENGINE) {
+        return rx_h_enterAndCheckInvalidAgeInputs(ENGINE);
     }
 
     /**
      * Navigate to the acceptable age input screen by selecting a DoB that
-     * results in an age that lies within {@link UserMode#acceptableAgeRange()}.
+     * results in an age that lies within {@link UserMode#validAgeRange()}.
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_n_DoBPicker_inputScreenForAge(Engine, int)
+     * @see #rx_n_DoBPicker_ageInput(Engine, int)
      */
     @NotNull
-    default Flowable<?> rx_n_DoBPicker_acceptableAge(@NotNull Engine<?> engine,
-                                                     @NotNull UserMode mode) {
-        List<Integer> range = mode.acceptableAgeRange();
+    default Flowable<?> rx_n_DoBPicker_validAge(@NotNull Engine<?> engine,
+                                                @NotNull UserMode mode) {
+        List<Integer> range = mode.validAgeRange();
         int age = CollectionTestUtil.randomElement(range);
-        return rx_n_DoBPicker_inputScreenForAge(engine, age);
+        return rx_n_DoBPicker_ageInput(engine, age);
     }
 
     /**
      * Navigate from the acceptable age screen to the welcome screen.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_h_enterAndCheckUnacceptableAgeInputs(Engine)
+     * @see #rx_h_enterAndCheckInvalidAgeInputs(Engine)
      */
     @NotNull
-    default Flowable<?> rx_n_acceptableAge_welcome(@NotNull final Engine<?> ENGINE) {
-        return rx_h_enterAndCheckUnacceptableAgeInputs(ENGINE);
+    default Flowable<?> rx_n_validAge_welcome(@NotNull final Engine<?> ENGINE) {
+        return rx_h_enterAndCheckInvalidAgeInputs(ENGINE);
     }
 
     /**
@@ -174,16 +183,16 @@ public interface NavigationType extends DashboardTestHelperType {
      * @param ENGINE {@link Engine} instance.
      * @param MODE {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_a_enterAcceptableAgeInputs(Engine, UserMode)
-     * @see #rx_a_confirmAcceptableAgeInputs(Engine)
+     * @see #rx_a_enterValidAgeInputs(Engine, UserMode)
+     * @see #rx_a_confirmValidAgeInputs(Engine)
      */
     @NotNull
-    default Flowable<?> rx_n_acceptableAge_personalInfo(@NotNull final Engine<?> ENGINE,
-                                                        @NotNull final UserMode MODE) {
+    default Flowable<?> rx_n_validAge_personalInfo(@NotNull final Engine<?> ENGINE,
+                                                   @NotNull final UserMode MODE) {
         final NavigationType THIS = this;
 
-        return rx_a_enterAcceptableAgeInputs(ENGINE, MODE)
-            .flatMap(a -> THIS.rx_a_confirmAcceptableAgeInputs(ENGINE));
+        return rx_a_enterValidAgeInputs(ENGINE, MODE)
+            .flatMap(a -> THIS.rx_a_confirmValidAgeInputs(ENGINE));
     }
 
     /**
@@ -193,7 +202,7 @@ public interface NavigationType extends DashboardTestHelperType {
      * @see #rx_a_clickBackButton(Engine)
      */
     @NotNull
-    default Flowable<?> rx_n_personalInfo_acceptableAge(@NotNull Engine<?> engine) {
+    default Flowable<?> rx_n_personalInfo_validAge(@NotNull Engine<?> engine) {
         return rx_a_clickBackButton(engine);
     }
 

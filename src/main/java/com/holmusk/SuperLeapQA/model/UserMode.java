@@ -3,7 +3,6 @@ package com.holmusk.SuperLeapQA.model;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.util.type.ValueRangeConverterType;
 
@@ -125,7 +124,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * Get the minimum acceptable age for the current {@link UserMode}.
      * @return {@link Integer} value.
      */
-    public int minAcceptableAge() {
+    public int minValidAge() {
         switch (this) {
             case PARENT:
                 return 5;
@@ -145,7 +144,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * Get the maximum acceptable age for the current {@link UserMode}.
      * @return {@link Integer} value.
      */
-    public int maxAcceptableAge() {
+    public int maxValidAge() {
         switch (this) {
             case PARENT:
                 return 6;
@@ -163,21 +162,21 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
 
     /**
      * Get the minimum acceptable age for the current {@link UserMode}'s
-     * category. This is different from {@link #minAcceptableAge()} because
+     * category. This is different from {@link #minValidAge()} because
      * {@link #TEEN_U18} and {@link #TEEN_A18} technically have
-     * the same {@link #minAcceptableAge()} and {@link #maxAcceptableAge()}
+     * the same {@link #minValidAge()} and {@link #maxValidAge()}
      * from the application's perspective.
      * @return {@link Integer} value.
-     * @see #maxAcceptableAge()
+     * @see #maxValidAge()
      */
-    public int minCategoryAcceptableAge() {
+    public int minCategoryValidAge() {
         switch (this) {
             case PARENT:
-                return minAcceptableAge();
+                return minValidAge();
 
             case TEEN_A18:
             case TEEN_U18:
-                return TEEN_U18.minAcceptableAge();
+                return TEEN_U18.minValidAge();
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -186,21 +185,21 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
 
     /**
      * Get the maximum acceptable age for the current {@link UserMode}'s
-     * category. This is different from {@link #maxAcceptableAge()} because
+     * category. This is different from {@link #maxValidAge()} because
      * {@link #TEEN_U18} and {@link #TEEN_A18} technically have
-     * the same {@link #minAcceptableAge()} and {@link #maxAcceptableAge()}
+     * the same {@link #minValidAge()} and {@link #maxValidAge()}
      * from the application's perspective.
      * @return {@link Integer} value.
-     * @see #maxAcceptableAge()
+     * @see #maxValidAge()
      */
-    public int maxCategoryAcceptableAge() {
+    public int maxCategoryValidAge() {
         switch (this) {
             case PARENT:
-                return maxAcceptableAge();
+                return maxValidAge();
 
             case TEEN_A18:
             case TEEN_U18:
-                return TEEN_A18.maxAcceptableAge();
+                return TEEN_A18.maxValidAge();
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -211,13 +210,13 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * Get the acceptable age range for the current {@link UserMode}.
      * @return {@link List} of {@link Integer}.
      * @see #valueRange(Number, Number, Number)
-     * @see #minAcceptableAge()
-     * @see #maxAcceptableAge()
+     * @see #minValidAge()
+     * @see #maxValidAge()
      */
     @NotNull
-    public List<Integer> acceptableAgeRange() {
-        int minAge = minAcceptableAge();
-        int maxAge = maxAcceptableAge();
+    public List<Integer> validAgeRange() {
+        int minAge = minValidAge();
+        int maxAge = maxValidAge();
         return valueRange(minAge, maxAge + 1, 1);
     }
 
@@ -225,13 +224,13 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * Get the acceptable age category range for the current {@link UserMode}.
      * @return {@link List} of {@link Integer}.
      * @see #valueRange(Number, Number, Number)
-     * @see #minCategoryAcceptableAge()
-     * @see #maxCategoryAcceptableAge()
+     * @see #minCategoryValidAge()
+     * @see #maxCategoryValidAge()
      */
     @NotNull
-    public List<Integer> acceptableAgeCategoryRange() {
-        int minAge = minCategoryAcceptableAge();
-        int maxAge = maxCategoryAcceptableAge();
+    public List<Integer> validAgeCategoryRange() {
+        int minAge = minCategoryValidAge();
+        int maxAge = maxCategoryValidAge();
         return valueRange(minAge, maxAge + 1, 1);
     }
 
@@ -243,41 +242,31 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * @param offset {@link Integer} value.
      * @return {@link List} of {@link Integer}.
      * @see #valueRange(Number, Number, Number)
-     * @see #minCategoryAcceptableAge()
-     * @see #maxCategoryAcceptableAge()
+     * @see #minCategoryValidAge()
+     * @see #maxCategoryValidAge()
      */
     @NotNull
-    public List<Integer> offsetFromCategoryAcceptableRange(int offset) {
-        int minAge = minCategoryAcceptableAge() - offset;
-        int maxAge = maxCategoryAcceptableAge() + offset;
+    public List<Integer> offsetFromCategoryValidRange(int offset) {
+        int minAge = minCategoryValidAge() - offset;
+        int maxAge = maxCategoryValidAge() + offset;
         return valueRange(minAge, maxAge + 1, 1);
     }
 
     /**
      * Get the {@link String} representation of the acceptable age range.
-     * Note that this uses the {@link #minCategoryAcceptableAge()} and
-     * {@link #maxCategoryAcceptableAge()} because {@link #TEEN_U18}
+     * Note that this uses the {@link #minCategoryValidAge()} and
+     * {@link #maxCategoryValidAge()} because {@link #TEEN_U18}
      * and {@link #TEEN_A18} are technically in the same category.
      * @return {@link String} value.
-     * @see #acceptableAgeRange()
-     * @see #minCategoryAcceptableAge()
-     * @see #maxCategoryAcceptableAge()
+     * @see #validAgeRange()
+     * @see #minCategoryValidAge()
+     * @see #maxCategoryValidAge()
      */
     @NotNull
-    public String acceptableAgeCategoryRangeString() {
-        int minAge = minCategoryAcceptableAge();
-        int maxAge = maxCategoryAcceptableAge();
+    public String validAgeCategoryRangeString() {
+        int minAge = minCategoryValidAge();
+        int maxAge = maxCategoryValidAge();
         return String.format("%1$d-%2$d", minAge, maxAge);
-    }
-
-    /**
-     * Produce a random acceptable age.
-     * @return {@link Integer} value.
-     * @see CollectionTestUtil#randomElement(List)
-     * @see #acceptableAgeRange()
-     */
-    public int randomAcceptableAge() {
-        return CollectionTestUtil.randomElement(acceptableAgeRange());
     }
 
     /**
