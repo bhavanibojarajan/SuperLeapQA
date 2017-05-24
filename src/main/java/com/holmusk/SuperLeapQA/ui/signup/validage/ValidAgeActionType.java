@@ -80,9 +80,7 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
             @Override
             public Flowable<WebElement> rx_scrollableViewToSwipe() {
                 XPath xPath = INPUT.choicePickerScrollViewXPath(PLATFORM);
-                return ENGINE.rx_withXPath(xPath).elementAt(INDEX)
-                    .toFlowable()
-                    .doOnNext(a -> LogUtil.println(">>>>>>>>>>>>>>>>", a, "<<<<<<<<<<<<<<<<"));
+                return ENGINE.rx_withXPath(xPath).elementAt(INDEX).toFlowable();
             }
 
             @NotNull
@@ -181,6 +179,38 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
     }
 
     /**
+     * Select the choice mode and open the choice picker. The actions are
+     * different for {@link Platform#ANDROID} and {@link Platform#IOS}.
+     * On {@link Platform#ANDROID}, the choice mode is outside the picker.
+     * Therefore, we need to select the mode first before opening the picker.
+     * On {@link Platform#IOS}, the choice mode is within the picker, so we
+     * need to open the picker first, then select the mode.
+     * @param ENGINE {@link Engine} instance.
+     * @param CHOICE {@link SLChoiceInputType} instance.
+     * @param NUMERIC {@link SLNumericChoiceInputType} instance.
+     * @return {@link Flowable} instance.
+     * @see #rx_a_clickInputField(Engine, SLInputType)
+     */
+    @NotNull
+    default Flowable<?> rx_a_selectModeOpenPicker(
+        @NotNull final Engine<?> ENGINE,
+        @NotNull final SLChoiceInputType CHOICE,
+        @NotNull final SLNumericChoiceInputType NUMERIC
+    ) {
+        final ValidAgeActionType THIS = this;
+
+        if (ENGINE instanceof AndroidEngine) {
+            return rx_a_clickInputField(ENGINE, NUMERIC)
+                .flatMap(a -> THIS.rx_a_clickInputField(ENGINE, CHOICE));
+        } else if (ENGINE instanceof IOSEngine) {
+            return rx_a_clickInputField(ENGINE, CHOICE)
+                .flatMap(a -> THIS.rx_a_clickInputField(ENGINE, NUMERIC));
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+
+    /**
      * Confirm text choice input, (e.g. for {@link ChoiceInput#ETHNICITY} or
      * {@link ChoiceInput#COACH_PREF}.
      * This is only relevant for {@link Platform#IOS} since we need to
@@ -234,17 +264,17 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
         final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
         final List<Zip<Height,String>> HEIGHT = Height.random(platform, mode, unit);
         final List<Zip<Weight,String>> WEIGHT = Weight.random(platform, mode, unit);
+        final ChoiceInput C_HEIGHT = ChoiceInput.HEIGHT;
+        final ChoiceInput C_WEIGHT = ChoiceInput.WEIGHT;
         final Height HEIGHT_MODE = HEIGHT.get(0).A;
         final Weight WEIGHT_MODE = WEIGHT.get(0).A;
 
         return rx_a_clickInputField(E, GENDER)
-            .flatMap(a -> THIS.rx_a_clickInputField(E, HEIGHT_MODE))
-            .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.HEIGHT))
+            .flatMap(a -> THIS.rx_a_selectModeOpenPicker(E, C_HEIGHT, HEIGHT_MODE))
             .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
 
-            .flatMap(a -> THIS.rx_a_clickInputField(E, WEIGHT_MODE))
-            .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.WEIGHT))
+            .flatMap(a -> THIS.rx_a_selectModeOpenPicker(E, C_WEIGHT, WEIGHT_MODE))
             .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
 

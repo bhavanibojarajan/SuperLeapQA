@@ -3,6 +3,7 @@ package com.holmusk.SuperLeapQA.ui.signup.validage;
 import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.SuperLeapQA.model.type.SLChoiceInputType;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
+import com.holmusk.SuperLeapQA.model.type.SLNumericChoiceInputType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.navigation.type.NavigationType;
 import com.holmusk.SuperLeapQA.runner.Runner;
@@ -25,9 +26,7 @@ import java.util.List;
 /**
  * Created by haipham on 23/5/17.
  */
-public final class UIValidAgeTest extends UIBaseTest implements
-    NavigationType, ValidAgeTestHelperType
-{
+public final class UIValidAgeTest extends UIBaseTest implements NavigationType, ValidAgeTestHelperType {
     @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
     public UIValidAgeTest(int index) {
         super(index);
@@ -45,6 +44,7 @@ public final class UIValidAgeTest extends UIBaseTest implements
      * @see #rx_a_clickInputField(Engine, SLInputType)
      * @see #rx_a_selectChoice(Engine, List)
      * @see #rx_v_editFieldHasValue(Engine, SLInputType, String)
+     * @see #rx_a_selectModeOpenPicker(Engine, SLChoiceInputType, SLNumericChoiceInputType)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -54,6 +54,10 @@ public final class UIValidAgeTest extends UIBaseTest implements
         final UIValidAgeTest THIS = this;
         final Engine<?> E = engine();
         PlatformType p = E.platform();
+        final ChoiceInput C_HEIGHT = ChoiceInput.HEIGHT;
+        final ChoiceInput C_WEIGHT = ChoiceInput.WEIGHT;
+        final ChoiceInput C_ETH = ChoiceInput.ETHNICITY;
+        final ChoiceInput C_COACH = ChoiceInput.COACH_PREF;
         final List<Zip<Height,String>> HEIGHT_M = Height.random(p, MODE, UnitSystem.METRIC);
         final List<Zip<Height,String>> HEIGHT_I = Height.random(p, MODE, UnitSystem.IMPERIAL);
         final List<Zip<Weight,String>> WEIGHT_M = Weight.random(p, MODE, UnitSystem.METRIC);
@@ -65,32 +69,28 @@ public final class UIValidAgeTest extends UIBaseTest implements
 
         // When
         rx_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE)
-            .flatMap(a -> THIS.rx_a_clickInputField(E, Gender.MALE))
-            .flatMap(a -> THIS.rx_a_clickInputField(E, Gender.FEMALE))
-            .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.ETHNICITY))
-            .flatMap(a -> THIS.rx_a_selectChoice(E, ChoiceInput.ETHNICITY, ETH.stringValue()))
-            .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.COACH_PREF))
-            .flatMap(a -> THIS.rx_a_selectChoice(E, ChoiceInput.COACH_PREF, CP.stringValue()))
-
-            .flatMap(a -> THIS.rx_a_clickInputField(E, Height.CM))
-            .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.HEIGHT))
+            .flatMap(a -> THIS.rx_a_selectModeOpenPicker(E, C_HEIGHT, Height.CM))
             .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT_M))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
 
-            .flatMap(a -> THIS.rx_a_clickInputField(E, Height.FT))
-            .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.HEIGHT))
+            .flatMap(a -> THIS.rx_a_selectModeOpenPicker(E, C_HEIGHT, Height.FT))
             .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT_I))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
 
-            .flatMap(a -> THIS.rx_a_clickInputField(E, Weight.KG))
-            .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.WEIGHT))
+            .flatMap(a -> THIS.rx_a_selectModeOpenPicker(E, C_WEIGHT, Weight.KG))
             .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT_M))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
 
-            .flatMap(a -> THIS.rx_a_clickInputField(E, Weight.LB))
-            .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.WEIGHT))
+            .flatMap(a -> THIS.rx_a_selectModeOpenPicker(E, C_WEIGHT, Weight.LB))
             .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT_I))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
+
+            .flatMap(a -> THIS.rx_a_clickInputField(E, Gender.MALE))
+            .flatMap(a -> THIS.rx_a_clickInputField(E, Gender.FEMALE))
+            .flatMap(a -> THIS.rx_a_clickInputField(E, C_ETH))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, C_ETH, ETH.stringValue()))
+            .flatMap(a -> THIS.rx_a_clickInputField(E, C_COACH))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, C_COACH, CP.stringValue()))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
