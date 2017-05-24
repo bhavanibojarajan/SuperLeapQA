@@ -51,7 +51,10 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
      */
     @NotNull
     default Flowable<WebElement> rx_e_invalidAgeSubmit(@NotNull Engine<?> engine) {
-        return engine.rx_containsText("register_title_submit").firstElement().toFlowable();
+        return engine
+            .rx_containsText("register_title_submit")
+            .firstElement()
+            .toFlowable();
     }
 
     /**
@@ -62,7 +65,10 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
      */
     @NotNull
     default Flowable<WebElement> rx_e_invalidAgeOk(@NotNull Engine<?> engine) {
-        return engine.rx_containsText("register_title_ok").firstElement().toFlowable();
+        return engine
+            .rx_containsText("register_title_ok")
+            .firstElement()
+            .toFlowable();
     }
 
     /**

@@ -143,11 +143,11 @@ public interface NavigationType extends DashboardTestHelperType {
      * Navigate from the unacceptable age screen to the welcome screen.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_h_enterAndCheckInvalidAgeInputs(Engine)
+     * @see #rx_a_enterAndConfirmInvalidAgeInputs(Engine)
      */
     @NotNull
     default Flowable<?> rx_n_invalidAge_welcome(@NotNull final Engine<?> ENGINE) {
-        return rx_h_enterAndCheckInvalidAgeInputs(ENGINE);
+        return rx_a_enterAndConfirmInvalidAgeInputs(ENGINE);
     }
 
     /**
@@ -170,11 +170,11 @@ public interface NavigationType extends DashboardTestHelperType {
      * Navigate from the acceptable age screen to the welcome screen.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_h_enterAndCheckInvalidAgeInputs(Engine)
+     * @see #rx_a_enterInvalidAgeInputs(Engine)
      */
     @NotNull
     default Flowable<?> rx_n_validAge_welcome(@NotNull final Engine<?> ENGINE) {
-        return rx_h_enterAndCheckInvalidAgeInputs(ENGINE);
+        return rx_a_enterInvalidAgeInputs(ENGINE);
     }
 
     /**
@@ -183,16 +183,12 @@ public interface NavigationType extends DashboardTestHelperType {
      * @param ENGINE {@link Engine} instance.
      * @param MODE {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_a_enterValidAgeInputs(Engine, UserMode)
-     * @see #rx_a_confirmValidAgeInputs(Engine)
+     * @see #rx_a_enterAndConfirmValidAgeInputs(Engine, UserMode)
      */
     @NotNull
     default Flowable<?> rx_n_validAge_personalInfo(@NotNull final Engine<?> ENGINE,
                                                    @NotNull final UserMode MODE) {
-        final NavigationType THIS = this;
-
-        return rx_a_enterValidAgeInputs(ENGINE, MODE)
-            .flatMap(a -> THIS.rx_a_confirmValidAgeInputs(ENGINE));
+        return rx_a_enterAndConfirmValidAgeInputs(ENGINE, MODE);
     }
 
     /**

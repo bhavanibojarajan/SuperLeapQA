@@ -32,26 +32,13 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
      * @param platform {@link PlatformType} instance.
      * @param selected {@link String} value of the selected choice.
      * @return {@link XPath}
-     * @see Platform#IOS
-     * @see IOSView.ViewType#UI_PICKERWHEEL
      * @see SLChoiceInputType#targetChoiceItemXPath(PlatformType, String)
      */
     @NotNull
     @Override
     default XPath targetChoiceItemXPath(@NotNull PlatformType platform,
                                         @NotNull String selected) {
-        XPath.Builder builder = XPath.builder(platform).containsText(selected);
-
-        switch ((Platform)platform) {
-            case IOS:
-                builder.setClass(IOSView.ViewType.UI_PICKERWHEEL.className());
-                break;
-
-            default:
-                break;
-        }
-
-        return builder.build();
+        return XPath.builder(platform).containsText(selected).build();
     }
 
     /**
@@ -116,7 +103,6 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
      * @return {@link XPath} value.
      * @see org.swiften.xtestkit.base.element.action.input.type.ChoiceInputType#choicePickerScrollViewItemXPath(PlatformType)
      * @see #androidScrollViewPickerItemXPath()
-     * @see #iOSScrollViewPickerItemXPath()
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -125,9 +111,6 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
         switch ((Platform)platform) {
             case ANDROID:
                 return androidScrollViewPickerItemXPath();
-
-            case IOS:
-                return iOSScrollViewPickerItemXPath();
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -172,19 +155,5 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
     @NotNull
     default XPath androidScrollViewPickerItemXPath() {
         return XPath.builder(Platform.ANDROID).containsID("text1").build();
-    }
-
-    /**
-     * Get the scroll view picker item {@link XPath} for {@link Platform#IOS}.
-     * @return {@link XPath} instance.
-     * @see Platform#IOS
-     * @see XPath.Builder#setClass(String)
-     * @see IOSView.ViewType#UI_PICKERWHEEL
-     */
-    @NotNull
-    default XPath iOSScrollViewPickerItemXPath() {
-        return XPath.builder(Platform.IOS)
-            .setClass(IOSView.ViewType.UI_PICKERWHEEL.className())
-            .build();
     }
 }

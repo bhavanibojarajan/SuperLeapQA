@@ -1,16 +1,38 @@
 package com.holmusk.SuperLeapQA.ui.signup.invalidage;
 
+import com.holmusk.SuperLeapQA.model.TextInput;
+import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
 import com.holmusk.SuperLeapQA.ui.signup.dob.DOBPickerActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.xtestkit.base.Engine;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by haipham on 17/5/17.
  */
 public interface InvalidAgeActionType extends InvalidAgeValidationType, DOBPickerActionType {
+    /**
+     * Enter random inputs for unacceptable age screen, then confirm and check
+     * that the app shows a confirmation page.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rx_a_enterRandomInput(Engine, SLTextInputType)
+     * @see #invalidAgeInputConfirmDelay()
+     * @see Engine#rx_click(WebElement)
+     */
+    @NotNull
+    @SuppressWarnings("unchecked")
+    default Flowable<?> rx_a_enterInvalidAgeInputs(@NotNull final Engine<?> ENGINE) {
+        final InvalidAgeActionType THIS = this;
+
+        return rx_a_enterRandomInput(ENGINE, TextInput.NAME)
+            .flatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, TextInput.EMAIL))
+            .flatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, TextInput.PHONE));
+    }
+
     /**
      * Confirm email subscription for future program expansion.
      * @param ENGINE {@link Engine} instance.
@@ -24,12 +46,29 @@ public interface InvalidAgeActionType extends InvalidAgeValidationType, DOBPicke
     }
 
     /**
+     * Enter and confirm invalid age inputs.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rx_a_enterInvalidAgeInputs(Engine)
+     * @see #rx_a_confirmInvalidAgeInputs(Engine)
+     * @see #invalidAgeInputConfirmDelay()
+     */
+    @NotNull
+    default Flowable<?> rx_a_enterAndConfirmInvalidAgeInputs(@NotNull final Engine<?> ENGINE) {
+        final InvalidAgeActionType THIS = this;
+
+        return rx_a_enterInvalidAgeInputs(ENGINE)
+            .flatMap(a -> THIS.rx_a_confirmInvalidAgeInputs(ENGINE))
+            .delay(invalidAgeInputConfirmDelay(), TimeUnit.MILLISECONDS);
+
+    }
+
+    /**
      * Press the ok button after unacceptable age inputs have been completed.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rx_e_invalidAgeOk(Engine)
      * @see Engine#rx_click(WebElement)
-     * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
     default Flowable<?> rx_a_completeInvalidAgeInput(@NotNull final Engine<?> ENGINE) {

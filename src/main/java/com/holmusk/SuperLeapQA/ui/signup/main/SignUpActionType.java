@@ -23,14 +23,14 @@ public interface SignUpActionType extends SignUpValidationType, RegisterModeActi
      * @param <P> Generics parameter.
      * @return {@link Flowable} instance.
      * @see #rx_e_editField(Engine, SLInputType)
-     * @see Engine#rxSendKey(WebElement, String...)
+     * @see Engine#rx_sendKeys(WebElement, String...)
      */
     @NotNull
     default <P extends SLInputType> Flowable<WebElement>
     rx_a_enterInput(@NotNull final Engine<?> ENGINE,
                     @NotNull P input,
                     @NotNull final String TEXT) {
-        return rx_e_editField(ENGINE, input).flatMap(a -> ENGINE.rxSendKey(a, TEXT));
+        return rx_e_editField(ENGINE, input).flatMap(a -> ENGINE.rx_sendKeys(a, TEXT));
     }
 
     /**

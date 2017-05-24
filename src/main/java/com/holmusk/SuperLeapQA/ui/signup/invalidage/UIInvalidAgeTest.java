@@ -110,7 +110,7 @@ public final class UIInvalidAgeTest extends UIBaseTest implements
      * @see Screen#REGISTER
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
-     * @see #rx_h_enterAndCheckInvalidAgeInputs(Engine)
+     * @see #rx_a_enterInvalidAgeInputs(Engine)
      * @see #generalUserModeProvider()
      * @see #assertCorrectness(TestSubscriber)
      */
@@ -125,7 +125,11 @@ public final class UIInvalidAgeTest extends UIBaseTest implements
 
         // When
         rx_navigate(mode, Screen.SPLASH, Screen.INVALID_AGE)
-            .flatMap(a -> THIS.rx_h_enterAndCheckInvalidAgeInputs(ENGINE))
+            .flatMap(a -> THIS.rx_a_enterAndConfirmInvalidAgeInputs(ENGINE))
+            .flatMap(a -> THIS.rx_v_invalidAgeInputConfirmed(ENGINE))
+            .flatMap(a -> THIS.rx_e_invalidAgeOk(ENGINE))
+            .flatMap(ENGINE::rx_click)
+            .flatMap(a -> THIS.rx_v_welcomeScreen(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

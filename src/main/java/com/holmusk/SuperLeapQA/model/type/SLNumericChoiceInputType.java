@@ -5,6 +5,10 @@ import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.localizer.LCFormat;
+import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
+import org.swiften.xtestkit.base.type.BaseErrorType;
+import org.swiften.xtestkit.base.type.PlatformType;
+import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.util.type.ValueRangeConverterType;
 
 import java.util.List;
@@ -13,7 +17,19 @@ import java.util.Optional;
 /**
  * Created by haipham on 18/5/17.
  */
-public interface SLNumericChoiceInputType extends SLChoiceInputType, ValueRangeConverterType<Integer> {
+public interface SLNumericChoiceInputType extends
+    BaseErrorType,
+    SLChoiceInputType,
+    SLAndroidNumericPickerInputType,
+    SLIOSNumericPickerInputType,
+    ValueRangeConverterType<Integer>
+{
+    @NotNull
+    @Override
+    default Converter<Integer> converter() {
+        return a -> (int)a;
+    }
+
     /**
      * Get an error message format that can be used with
      * {@link #minSelectableNumericValue(UserMode)} and
@@ -43,12 +59,94 @@ public interface SLNumericChoiceInputType extends SLChoiceInputType, ValueRangeC
             .build();
     }
 
-    @NotNull
+    //region Choice Picker View
+    /**
+     * Get the index of the choice picker, depending on the {@link PlatformType}
+     * being tested.
+     * @param platform {@link PlatformType} instance.
+     * @return {@link Integer} value.
+     * @see #androidScrollablePickerIndex()
+     * @see #iOSScrollablePickerIndex()
+     * @see #NOT_AVAILABLE
+     */
     @Override
-    default Converter<Integer> converter() {
-        return a -> (int)a;
+    default int scrollablePickerIndex(@NotNull PlatformType platform) {
+        switch ((Platform)platform) {
+            case ANDROID:
+                return androidScrollablePickerIndex();
+
+            case IOS:
+                return iOSScrollablePickerIndex();
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 
+    /**
+     * @return Return {@link XPath} value.
+     * @see org.swiften.xtestkit.base.element.action.input.type.ChoiceInputType#choicePickerScrollViewXPath(PlatformType)
+     * @see #androidScrollViewPickerXPath()
+     * @see #iOSScrollViewPickerXPath()
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    @Override
+    default XPath choicePickerScrollViewXPath(@NotNull PlatformType platform) {
+        switch ((Platform)platform) {
+            case ANDROID:
+                return androidScrollViewPickerXPath();
+
+            case IOS:
+                return iOSScrollViewPickerXPath();
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+
+    /**
+     * @param platform {@link PlatformType} instance.
+     * @return {@link XPath} value.
+     * @see org.swiften.xtestkit.base.element.action.input.type.ChoiceInputType#choicePickerScrollViewItemXPath(PlatformType)
+     * @see #androidScrollViewPickerItemXPath()
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    @Override
+    default XPath choicePickerScrollViewItemXPath(@NotNull PlatformType platform) {
+        switch ((Platform)platform) {
+            case ANDROID:
+                return androidScrollViewPickerItemXPath();
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+
+    /**
+     * @param platform {@link PlatformType} instance.
+     * @param selected {@link String} value of the selected choice.
+     * @return {@link XPath} instance.
+     * @see SLChoiceInputType#targetChoiceItemXPath(PlatformType, String)
+     * @see #androidTargetChoiceItemXPath(String)
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    @Override
+    default XPath targetChoiceItemXPath(@NotNull PlatformType platform,
+                                        @NotNull String selected) {
+        switch ((Platform)platform) {
+            case ANDROID:
+                return androidTargetChoiceItemXPath(selected);
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+    //endregion
+
+    //region Numeric Range
     /**
      * Get the minimum numeric value that can be selected.
      * @param mode {@link UserMode} instance.
@@ -115,4 +213,5 @@ public interface SLNumericChoiceInputType extends SLChoiceInputType, ValueRangeC
         List<Integer> selectableRange = selectableNumericRange(mode);
         return CollectionTestUtil.randomElement(selectableRange);
     }
+    //endregion
 }

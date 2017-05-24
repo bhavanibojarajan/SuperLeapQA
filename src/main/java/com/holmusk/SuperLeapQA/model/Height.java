@@ -1,11 +1,9 @@
 package com.holmusk.SuperLeapQA.model;
 
-import com.holmusk.SuperLeapQA.model.type.SLAndroidNumberPickerInputType;
 import com.holmusk.SuperLeapQA.model.type.SLNumericChoiceInputType;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.collection.Zipped;
+import org.swiften.javautilities.collection.Zip;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
-import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
 
@@ -17,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Height implements BaseErrorType, SLAndroidNumberPickerInputType {
+public enum Height implements SLNumericChoiceInputType {
     FT,
     INCH,
     CM,
@@ -78,16 +76,16 @@ public enum Height implements BaseErrorType, SLAndroidNumberPickerInputType {
      * @param platform {@link PlatformType} instance.
      * @param MODE {@link UserMode} instance.
      * @param unit {@link UnitSystem} instance.
-     * @return {@link List} of {@link Zipped}.
+     * @return {@link List} of {@link Zip}.
      * @see #instances(PlatformType, UnitSystem)
      * @see SLNumericChoiceInputType#randomValue(UserMode)
      */
     @NotNull
-    public static List<Zipped<Height,String>> random(@NotNull PlatformType platform,
-                                                     @NotNull final UserMode MODE,
-                                                     @NotNull UnitSystem unit) {
+    public static List<Zip<Height,String>> random(@NotNull PlatformType platform,
+                                                  @NotNull final UserMode MODE,
+                                                  @NotNull UnitSystem unit) {
         return instances(platform, unit).stream()
-            .map(a -> new Zipped<>(a, String.valueOf(a.randomValue(MODE))))
+            .map(a -> new Zip<>(a, String.valueOf(a.randomValue(MODE))))
             .collect(Collectors.toList());
     }
 
@@ -96,7 +94,7 @@ public enum Height implements BaseErrorType, SLAndroidNumberPickerInputType {
      * on {@link UnitSystem}.
      * @param platform {@link PlatformType} instance.
      * @param unit {@link UnitSystem} instance.
-     * @param inputs {@link List} of {@link Zipped}.
+     * @param inputs {@link List} of {@link Zip}.
      * @return {@link String} value.
      * @see #NOT_AVAILABLE
      */
@@ -104,7 +102,7 @@ public enum Height implements BaseErrorType, SLAndroidNumberPickerInputType {
     @SuppressWarnings("ConstantConditions")
     public static String stringValue(@NotNull PlatformType platform,
                                      @NotNull UnitSystem unit,
-                                     @NotNull List<Zipped<Height,String>> inputs) {
+                                     @NotNull List<Zip<Height,String>> inputs) {
         double a = Double.valueOf(inputs.get(0).B);
         double b = Double.valueOf(inputs.size() > 1 ? inputs.get(1).B : "0");
 
@@ -130,18 +128,14 @@ public enum Height implements BaseErrorType, SLAndroidNumberPickerInputType {
         return "register_error_heightValueNotSet";
     }
 
+    //region Picker Index
     /**
-     * Get the index associated with the {@link org.openqa.selenium.WebElement}
-     * with which we are selecting a value for the current {@link Height}. This
-     * is useful for when there are multiple
-     * {@link org.openqa.selenium.WebElement} with the same id (e.g. picking
-     * {@link #FT} and {@link #INCH} at the same time).
      * @return {@link Integer} value.
-     * @see SLAndroidNumberPickerInputType#androidNumericPickerTargetItemIndex()
+     * @see SLNumericChoiceInputType#androidScrollablePickerIndex()
      * @see #NOT_AVAILABLE
      */
     @Override
-    public int androidNumericPickerTargetItemIndex() {
+    public int androidScrollablePickerIndex() {
         switch (this) {
             case FT:
             case CM:
@@ -156,6 +150,29 @@ public enum Height implements BaseErrorType, SLAndroidNumberPickerInputType {
         }
     }
 
+    /**
+     * @return {@link Integer} value.
+     * @see SLNumericChoiceInputType#iOSScrollablePickerIndex()
+     * @see #NOT_AVAILABLE
+     */
+    @Override
+    public int iOSScrollablePickerIndex() {
+        switch (this) {
+            case FT:
+            case CM:
+                return 0;
+
+            case INCH:
+            case CM_DEC:
+                return 2;
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+    //endregion
+
+    //region Input View XPath
     /**
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
@@ -215,87 +232,9 @@ public enum Height implements BaseErrorType, SLAndroidNumberPickerInputType {
     private XPath iOSInputViewXPath() {
         return XPath.builder(Platform.IOS).build();
     }
+    //endregion
 
-    /**
-     * @return Return {@link XPath} value.
-     * @see org.swiften.xtestkit.base.element.action.input.type.ChoiceInputType#choicePickerScrollViewXPath(PlatformType)
-     * @see #androidScrollViewPickerXPath()
-     * @see #iOSScrollViewPickerXPath()
-     * @see #NOT_AVAILABLE
-     */
-    @NotNull
-    @Override
-    public XPath choicePickerScrollViewXPath(@NotNull PlatformType platform) {
-        switch ((Platform)platform) {
-            case ANDROID:
-                return androidScrollViewPickerXPath();
-
-            case IOS:
-                return iOSScrollViewPickerXPath();
-
-            default:
-                throw new RuntimeException(NOT_AVAILABLE);
-        }
-    }
-
-    /**
-     * Get the scroll view picker {@link XPath} for {@link Platform#ANDROID}.
-     * @return {@link XPath} instance.
-     * @see Platform#ANDROID
-     * @see #androidNumericPickerTargetItemIndex()
-     * @see XPath.Builder#atIndex(int)
-     * @see XPath.Builder#ofClass(String)
-     */
-    @NotNull
-    private XPath androidScrollViewPickerXPath() {
-        String cls = "NumberPicker";
-        int index = androidNumericPickerTargetItemIndex();
-        return XPath.builder(Platform.ANDROID).atIndex(index).ofClass(cls).build();
-    }
-
-    /**
-     * Get the scroll view picker {@link XPath} for {@link Platform#IOS}.
-     * @return {@link XPath} instance.
-     * @see Platform#IOS
-     */
-    @NotNull
-    private XPath iOSScrollViewPickerXPath() {
-        return XPath.builder(Platform.IOS).build();
-    }
-
-    /**
-     * @param platform {@link PlatformType} instance.
-     * @return {@link XPath} value.
-     * @see org.swiften.xtestkit.base.element.action.input.type.ChoiceInputType#choicePickerScrollViewItemXPath(PlatformType)
-     * @see #androidScrollViewPickerItemXPath()
-     * @see #iOSScrollViewPickerItemXPath()
-     * @see #NOT_AVAILABLE
-     */
-    @NotNull
-    @Override
-    public XPath choicePickerScrollViewItemXPath(@NotNull PlatformType platform) {
-        switch ((Platform)platform) {
-            case ANDROID:
-                return androidScrollViewPickerItemXPath();
-
-            case IOS:
-                return iOSScrollViewPickerItemXPath();
-
-            default:
-                throw new RuntimeException(NOT_AVAILABLE);
-        }
-    }
-
-    /**
-     * Get the scroll view picker item {@link XPath} for {@link Platform#IOS}.
-     * @return {@link XPath} instance.
-     * @see Platform#IOS
-     */
-    @NotNull
-    private XPath iOSScrollViewPickerItemXPath() {
-        return XPath.builder(Platform.IOS).build();
-    }
-
+    //region Choice Values
     /**
      * Get the appropriately formatted height {@link String}, depending on
      * the type of {@link Height}.
@@ -363,4 +302,5 @@ public enum Height implements BaseErrorType, SLAndroidNumberPickerInputType {
                 throw new RuntimeException(NOT_AVAILABLE);
         }
     }
+    //endregion
 }

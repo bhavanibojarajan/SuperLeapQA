@@ -4,7 +4,6 @@ import com.holmusk.SuperLeapQA.model.ChoiceInput;
 import com.holmusk.SuperLeapQA.model.Gender;
 import com.holmusk.SuperLeapQA.model.Height;
 import com.holmusk.SuperLeapQA.model.Weight;
-import com.holmusk.SuperLeapQA.model.type.SLChoiceInputType;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.ui.signup.dob.DOBPickerValidationType;
 import io.reactivex.Flowable;
@@ -17,10 +16,8 @@ import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.action.input.type.InputType;
-import org.swiften.xtestkit.base.element.locator.general.param.ByXPath;
-import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
-import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.android.AndroidEngine;
+import org.swiften.xtestkit.mobile.ios.IOSEngine;
 
 /**
  * Created by haipham on 17/5/17.
@@ -117,13 +114,42 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
      * and {@link Weight}).
      * @return {@link Flowable} instance.
      * @see Engine#rx_containsID(String...)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rx_e_numericChoiceConfirm(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
-            return engine.rx_containsID("btnDone").firstElement().toFlowable();
+            return engine
+                .rx_containsID("btnDone")
+                .firstElement()
+                .toFlowable();
+        } else if (engine instanceof IOSEngine) {
+            return engine
+                .rx_containsText("input_title_done")
+                .firstElement()
+                .toFlowable();
         } else {
-            return RxUtil.error(NOT_AVAILABLE);
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+
+    /**
+     * Get the confirm button for text choice inputs (e.g.
+     * {@link ChoiceInput#ETHNICITY} or {@link ChoiceInput#COACH_PREF}.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rx_containsText(String...)
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    default Flowable<WebElement> rx_e_textChoiceConfirm(@NotNull Engine<?> engine) {
+        if (engine instanceof IOSEngine) {
+            return engine
+                .rx_containsText("input_title_done")
+                .firstElement()
+                .toFlowable();
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 

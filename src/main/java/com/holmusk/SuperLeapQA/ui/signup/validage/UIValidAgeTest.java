@@ -1,18 +1,26 @@
 package com.holmusk.SuperLeapQA.ui.signup.validage;
 
-import com.holmusk.SuperLeapQA.model.ChoiceInput;
-import com.holmusk.SuperLeapQA.model.UserMode;
+import com.holmusk.SuperLeapQA.model.*;
+import com.holmusk.SuperLeapQA.model.type.SLChoiceInputType;
+import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.navigation.type.NavigationType;
 import com.holmusk.SuperLeapQA.runner.Runner;
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
+import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.collection.CollectionTestUtil;
+import org.swiften.javautilities.collection.Zip;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.type.PlatformType;
+import org.swiften.xtestkit.mobile.android.AndroidEngine;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+
+import java.util.List;
 
 /**
  * Created by haipham on 23/5/17.
@@ -32,9 +40,11 @@ public final class UIValidAgeTest extends UIBaseTest implements
      * @param MODE {@link UserMode} instance.
      * @see Screen#VALID_AGE
      * @see #engine()
-     * @see #rx_navigate(UserMode, Screen...)
-     * @see #rx_h_enterAndCheckValidAgeInputs(Engine, UserMode)
      * @see #generalUserModeProvider()
+     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rx_a_clickInputField(Engine, SLInputType)
+     * @see #rx_a_selectChoice(Engine, List)
+     * @see #rx_v_editFieldHasValue(Engine, SLInputType, String)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -42,12 +52,45 @@ public final class UIValidAgeTest extends UIBaseTest implements
     public void test_validAgeInputs_isValidScreen(@NotNull final UserMode MODE) {
         // Setup
         final UIValidAgeTest THIS = this;
-        final Engine<?> ENGINE = engine();
+        final Engine<?> E = engine();
+        PlatformType p = E.platform();
+        final List<Zip<Height,String>> HEIGHT_M = Height.random(p, MODE, UnitSystem.METRIC);
+        final List<Zip<Height,String>> HEIGHT_I = Height.random(p, MODE, UnitSystem.IMPERIAL);
+        final List<Zip<Weight,String>> WEIGHT_M = Weight.random(p, MODE, UnitSystem.METRIC);
+        final List<Zip<Weight,String>> WEIGHT_I = Weight.random(p, MODE, UnitSystem.IMPERIAL);
+        final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
+        final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
+
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         rx_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE)
-            .flatMap(a -> THIS.rx_h_enterAndCheckValidAgeInputs(ENGINE, MODE))
+            .flatMap(a -> THIS.rx_a_clickInputField(E, Gender.MALE))
+            .flatMap(a -> THIS.rx_a_clickInputField(E, Gender.FEMALE))
+            .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.ETHNICITY))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, ChoiceInput.ETHNICITY, ETH.stringValue()))
+            .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.COACH_PREF))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, ChoiceInput.COACH_PREF, CP.stringValue()))
+
+            .flatMap(a -> THIS.rx_a_clickInputField(E, Height.CM))
+            .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.HEIGHT))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT_M))
+            .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
+
+            .flatMap(a -> THIS.rx_a_clickInputField(E, Height.FT))
+            .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.HEIGHT))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT_I))
+            .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
+
+            .flatMap(a -> THIS.rx_a_clickInputField(E, Weight.KG))
+            .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.WEIGHT))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT_M))
+            .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
+
+            .flatMap(a -> THIS.rx_a_clickInputField(E, Weight.LB))
+            .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.WEIGHT))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT_I))
+            .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -65,7 +108,7 @@ public final class UIValidAgeTest extends UIBaseTest implements
      * @param MODE {@link UserMode} instance.
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
-     * @see #rx_h_checkInchToFootRecursive(Engine, UserMode)
+     * @see #rx_h_inchToFootRecursive(Engine, UserMode)
      * @see #generalUserModeProvider()
      * @see #assertCorrectness(TestSubscriber)
      */
@@ -80,7 +123,7 @@ public final class UIValidAgeTest extends UIBaseTest implements
 
         // When
         rx_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE)
-            .flatMap(a -> THIS.rx_h_checkInchToFootRecursive(ENGINE, MODE))
+            .flatMap(a -> THIS.rx_h_inchToFootRecursive(ENGINE, MODE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -94,26 +137,87 @@ public final class UIValidAgeTest extends UIBaseTest implements
      * the correct empty input errors, by sequentially entering/selecting
      * inputs and clicking the confirm button. If the inputs are not completed,
      * the user will be notified.
-     * @param MODE {@link UserMode} instance.
+     * @param M {@link UserMode} instance.
      * @see Screen#VALID_AGE
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
-     * @see #rx_h_validAgeEmptyInputErrors(Engine, UserMode)
+     * @see Height#randomValue(UserMode)
+     * @see Weight#randomValue(UserMode)
+     * @see #rx_a_clickInputField(Engine, SLInputType)
+     * @see #rx_a_selectChoice(Engine, SLChoiceInputType, String)
+     * @see #rx_a_confirmNumericChoice(Engine)
+     * @see #rx_a_confirmTextChoice(Engine)
      * @see #generalUserModeProvider()
      * @see #assertCorrectness(TestSubscriber)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider")
-    public void test_validAgeEmptyInputs_showsCorrectErrors(@NotNull final UserMode MODE) {
+    public void test_validAgeEmptyInputs_showsCorrectErrors(@NotNull final UserMode M) {
         // Setup
         final UIValidAgeTest THIS = this;
-        final Engine<?> ENGINE = engine();
+        final Engine<?> E = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
+        PlatformType p = E.platform();
+        final Gender GENDER = CollectionTestUtil.randomElement(Gender.values());
+        final List<Zip<Height,String>> HEIGHT_M = Height.random(p, M, UnitSystem.METRIC);
+        final List<Zip<Height,String>> HEIGHT_I = Height.random(p, M, UnitSystem.IMPERIAL);
+        final List<Zip<Weight,String>> WEIGHT_M = Weight.random(p, M, UnitSystem.METRIC);
+        final List<Zip<Weight,String>> WEIGHT_I = Weight.random(p, M, UnitSystem.IMPERIAL);
+        final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
+        final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
+
         // When
-        rx_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE)
-            .flatMap(a -> THIS.rx_h_validAgeEmptyInputErrors(ENGINE, MODE))
+        Flowable.just(E)
+            /* If we are testing on iOS, there is not need to check for empty
+             * error messages, since the confirm button is not enabled until
+             * all inputs are filled */
+            .filter(a -> a instanceof AndroidEngine)
+            .flatMap(a -> rx_navigate(M, Screen.SPLASH, Screen.VALID_AGE))
+
+            /* At this stage, the gender error message should be shown */
+            .flatMap(a -> THIS.rx_a_confirmValidAgeInputs(E))
+            .flatMap(a -> THIS.rx_isShowingError(E, GENDER.emptyInputError(M)))
+            .flatMap(a -> THIS.rx_a_clickInputField(E, GENDER))
+
+            /* At this stage, the height error message should be shown */
+            .flatMap(a -> THIS.rx_a_clickInputField(E, Height.CM))
+            .flatMap(a -> THIS.rx_a_confirmValidAgeInputs(E))
+            .flatMap(a -> THIS.rx_isShowingError(E, Height.CM.emptyInputError(M)))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT_M))
+
+            /* At this stage, the height error message should be shown */
+            .flatMap(a -> THIS.rx_a_clickInputField(E, Height.FT))
+            .flatMap(a -> THIS.rx_a_confirmValidAgeInputs(E))
+            .flatMap(a -> THIS.rx_isShowingError(E, Height.FT.emptyInputError(M)))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT_I))
+
+            /* At this stage, the weight error message should be shown */
+            .flatMap(a -> THIS.rx_a_clickInputField(E, Weight.KG))
+            .flatMap(a -> THIS.rx_a_confirmValidAgeInputs(E))
+            .flatMap(a -> THIS.rx_isShowingError(E, Weight.KG.emptyInputError(M)))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT_M))
+
+            /* At this stage, the weight error message should be shown */
+            .flatMap(a -> THIS.rx_a_clickInputField(E, Weight.LB))
+            .flatMap(a -> THIS.rx_a_confirmValidAgeInputs(E))
+            .flatMap(a -> THIS.rx_isShowingError(E, Weight.LB.emptyInputError(M)))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT_I))
+
+            /* At this stage, the ethnicity error message should be shown */
+            .flatMap(a -> THIS.rx_a_confirmValidAgeInputs(E))
+            .flatMap(a -> THIS.rx_isShowingError(E, ChoiceInput.ETHNICITY.emptyInputError(M)))
+            .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.ETHNICITY))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, ChoiceInput.ETHNICITY, ETH.value()))
+            .flatMap(a -> THIS.rx_a_confirmTextChoice(E))
+
+            /* At this stage, the coach pref error message should be shown */
+            .flatMap(a -> THIS.rx_a_confirmValidAgeInputs(E))
+            .flatMap(a -> THIS.rx_isShowingError(E, ChoiceInput.COACH_PREF.emptyInputError(M)))
+            .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.COACH_PREF))
+            .flatMap(a -> THIS.rx_a_selectChoice(E, ChoiceInput.COACH_PREF, CP.value()))
+            .flatMap(a -> THIS.rx_a_confirmTextChoice(E))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
