@@ -6,6 +6,7 @@ import org.swiften.javautilities.collection.Zip;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkit.mobile.ios.IOSView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,6 +21,7 @@ public enum Weight implements SLNumericChoiceInputType {
     LB,
     LB_DEC;
 
+    //region Convenience Getters
     /**
      * Get the {@link Weight} instances for metric unit of measurement.
      * @param platform {@link PlatformType} instance.
@@ -82,6 +84,38 @@ public enum Weight implements SLNumericChoiceInputType {
             .map(a -> new Zip<>(a, String.valueOf(a.randomValue(MODE))))
             .collect(Collectors.toList());
     }
+
+    /**
+     * Get {@link String} representation of {@link Weight} values, based
+     * on {@link UnitSystem}.
+     * @param platform {@link PlatformType} instance.
+     * @param unit {@link UnitSystem} instance.
+     * @param inputs {@link List} of {@link Zip}.
+     * @return {@link String} value.
+     * @see UnitSystem#METRIC
+     * @see UnitSystem#IMPERIAL
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    @SuppressWarnings("ConstantConditions")
+    public static String stringValue(@NotNull PlatformType platform,
+                                     @NotNull UnitSystem unit,
+                                     @NotNull List<Zip<Weight,String>> inputs) {
+        double a = Double.valueOf(inputs.get(0).B);
+        double b = Double.valueOf(inputs.size() > 1 ? inputs.get(1).B : "0");
+
+        switch (unit) {
+            case METRIC:
+                return String.format("%.0f.%.0f kg", a, b);
+
+            case IMPERIAL:
+                return String.format("%.0f.%.0f lbs", a, b);
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+    //endregion
 
     /**
      * @return {@link String} value.
@@ -192,10 +226,32 @@ public enum Weight implements SLNumericChoiceInputType {
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
      * @return {@link XPath} instance.
      * @see Platform#IOS
+     * @see IOSView.ViewType#UI_BUTTON
+     * @see XPath.Builder#setClass(String)
+     * @see XPath.Builder#containsText(XPath.ContainsText)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     private XPath iOSInputViewXPath() {
-        return XPath.builder(Platform.IOS).build();
+        String text;
+
+        switch (this) {
+            case KG:
+                text = "kg";
+                break;
+
+            case LB:
+                text = "lbs";
+                break;
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
+
+        return XPath.builder(Platform.IOS)
+            .setClass(IOSView.ViewType.UI_BUTTON.className())
+            .containsText(text)
+            .build();
     }
     //endregion
 

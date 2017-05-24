@@ -36,16 +36,17 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
         final ChoiceInput C_HEIGHT = ChoiceInput.HEIGHT;
         final Height H_FT = Height.FT;
         PlatformType platform = ENGINE.platform();
+        UnitSystem unit = UnitSystem.IMPERIAL;
 
         final List<Zip<Height,String>> INPUTS = Arrays.asList(
             new Zip<>(Height.FT, String.valueOf(FT)),
             new Zip<>(Height.INCH, String.valueOf(0))
         );
 
-        final String STR = Height.stringValue(platform, UnitSystem.IMPERIAL, INPUTS);
+        final String STR = Height.stringValue(platform, unit, INPUTS);
 
-        return rx_a_selectModeOpenPicker(ENGINE, C_HEIGHT, H_FT)
-            .flatMap(a -> THIS.rx_a_selectChoice(ENGINE, H_FT, String.valueOf(FT)))
+        return rx_a_selectUnitSystemPicker(ENGINE, C_HEIGHT, H_FT)
+            .flatMap(a -> THIS.rx_a_selectChoice(ENGINE, INPUTS))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(ENGINE))
             .flatMap(a -> THIS.rx_v_editFieldHasValue(ENGINE, C_HEIGHT, STR));
     }

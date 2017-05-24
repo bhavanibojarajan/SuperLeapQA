@@ -13,6 +13,7 @@ import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.number.NumberUtil;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.action.choice.type.ChoiceSelectorSwipeType;
 import org.swiften.xtestkit.base.element.action.input.type.ChoiceInputType;
@@ -79,6 +80,9 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
             @NotNull
             @Override
             public Flowable<WebElement> rx_scrollableViewToSwipe() {
+                /* Since there are multiple NumberPicker with identical id,
+                 * we need to get the element that corresponds to a specified
+                 * index */
                 XPath xPath = INPUT.choicePickerScrollViewXPath(PLATFORM);
                 return ENGINE.rx_withXPath(xPath).elementAt(INDEX).toFlowable();
             }
@@ -86,6 +90,8 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
             @NotNull
             @Override
             public Flowable<Double> rx_elementSwipeRatio() {
+                /* Customize the swipe ratio so that the picker is scrolled
+                 * by one item at a time, to ensure accuracy */
                 return rx_scrollViewChildCount().map(NumberUtil::inverse);
             }
 
@@ -162,7 +168,7 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
         return Flowable
             .fromIterable(inputs)
             .concatMap(a -> THIS.rx_a_selectChoice(ENGINE, a.A, a.B))
-            .all(BooleanUtil::isTrue)
+            .all(ObjectUtil::nonNull)
             .toFlowable();
     }
 
@@ -192,7 +198,7 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * @see #rx_a_clickInputField(Engine, SLInputType)
      */
     @NotNull
-    default Flowable<?> rx_a_selectModeOpenPicker(
+    default Flowable<?> rx_a_selectUnitSystemPicker(
         @NotNull final Engine<?> ENGINE,
         @NotNull final SLChoiceInputType CHOICE,
         @NotNull final SLNumericChoiceInputType NUMERIC
@@ -270,11 +276,11 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
         final Weight WEIGHT_MODE = WEIGHT.get(0).A;
 
         return rx_a_clickInputField(E, GENDER)
-            .flatMap(a -> THIS.rx_a_selectModeOpenPicker(E, C_HEIGHT, HEIGHT_MODE))
+            .flatMap(a -> THIS.rx_a_selectUnitSystemPicker(E, C_HEIGHT, HEIGHT_MODE))
             .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
 
-            .flatMap(a -> THIS.rx_a_selectModeOpenPicker(E, C_WEIGHT, WEIGHT_MODE))
+            .flatMap(a -> THIS.rx_a_selectUnitSystemPicker(E, C_WEIGHT, WEIGHT_MODE))
             .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
 

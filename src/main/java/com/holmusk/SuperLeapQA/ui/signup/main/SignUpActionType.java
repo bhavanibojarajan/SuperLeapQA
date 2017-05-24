@@ -53,14 +53,13 @@ public interface SignUpActionType extends SignUpValidationType, RegisterModeActi
      * the editable field is showing an error circle that can be shown if
      * clicked (however, this is only applicable to {@link Platform#ANDROID}.
      * @param input {@link InputType} instance.
-     * @param <P> Generics parameter.
      * @return {@link Flowable} instance.
      * @see #rx_e_editField(Engine, SLInputType)   )
      * @see Engine#rx_click(WebElement)
      */
     @NotNull
-    default <P extends SLInputType> Flowable<?>
-    rx_a_clickInputField(@NotNull final Engine<?> ENGINE, @NotNull P input) {
+    default Flowable<?> rx_a_clickInputField(@NotNull final Engine<?> ENGINE,
+                                             @NotNull SLInputType input) {
         return rx_e_editField(ENGINE, input).flatMap(ENGINE::rx_click);
     }
 }
