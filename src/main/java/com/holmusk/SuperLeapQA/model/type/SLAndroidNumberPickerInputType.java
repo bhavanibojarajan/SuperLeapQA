@@ -6,7 +6,6 @@ package com.holmusk.SuperLeapQA.model.type;
 
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.element.locator.general.param.ByXPath;
-import org.swiften.xtestkit.base.element.locator.general.xpath.Attribute;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
@@ -48,7 +47,6 @@ public interface SLAndroidNumberPickerInputType extends SLNumericChoiceInputType
                                         @NotNull String selected) {
         return XPath.builder(Platform.ANDROID)
             .ofClass(AndroidView.ViewType.EDIT_TEXT.className())
-            .ofInstance(androidNumericPickerTargetItemIndex())
             .containsText(selected)
             .build();
     }

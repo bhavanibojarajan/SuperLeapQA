@@ -39,8 +39,10 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
         final List<Zipped<Height,String>> HEIGHT_I = Height.random(p, m, UnitSystem.IMPERIAL);
         final List<Zipped<Weight,String>> WEIGHT_M = Weight.random(p, m, UnitSystem.METRIC);
         final List<Zipped<Weight,String>> WEIGHT_I = Weight.random(p, m, UnitSystem.IMPERIAL);
-        final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
-        final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
+//        final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
+//        final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
+        final Ethnicity ETH = Ethnicity.WHITE_NON_HISPANIC;
+        final CoachPref CP = CoachPref.FEMALE;
 
         return rx_a_clickInputField(E, Gender.MALE)
             .flatMap(a -> THIS.rx_a_clickInputField(E, Gender.FEMALE))
@@ -150,7 +152,7 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
      * when we are picking {@link ChoiceInput#HEIGHT}, assuming the user
      * is already in the acceptable age screen.
      * @param ENGINE {@link Engine} instance.
-     * @param ft {@link Height#FT} value to be selected.
+     * @param FT {@link Height#FT} value to be selected.
      * @return {@link Flowable} instance.
      * @see Height#stringValue(PlatformType, UnitSystem, List)
      * @see #rx_a_selectChoice(Engine, List)
@@ -158,22 +160,20 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
      * @see #rx_v_editFieldHasValue(Engine, SLInputType, String)
      */
     @NotNull
-    default Flowable<?> rx_h_checkInchToFoot(@NotNull final Engine<?> ENGINE, double ft) {
+    default Flowable<?> rx_h_checkInchToFoot(@NotNull final Engine<?> ENGINE, final int FT) {
         final ValidAgeTestHelperType THIS = this;
         PlatformType platform = ENGINE.platform();
 
-        final double INCH = 0;
-
         final List<Zipped<Height,String>> INPUTS = Arrays.asList(
-            new Zipped<>(Height.FT, String.valueOf(ft)),
-            new Zipped<>(Height.INCH, String.valueOf(INCH))
+            new Zipped<>(Height.FT, String.valueOf(FT)),
+            new Zipped<>(Height.INCH, String.valueOf(0))
         );
 
         final String STR = Height.stringValue(platform, UnitSystem.IMPERIAL, INPUTS);
 
         return rx_a_clickInputField(ENGINE, Height.FT)
             .flatMap(a -> THIS.rx_a_clickInputField(ENGINE, ChoiceInput.HEIGHT))
-            .flatMap(a -> THIS.rx_a_selectChoice(ENGINE, INPUTS))
+            .flatMap(a -> THIS.rx_a_selectChoice(ENGINE, Height.FT, String.valueOf(FT)))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(ENGINE))
             .flatMap(a -> THIS.rx_v_editFieldHasValue(ENGINE, ChoiceInput.HEIGHT, STR));
     }
@@ -187,7 +187,7 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
      * @return {@link Flowable} instance.
      * @see Height#FT
      * @see Height#selectableNumericRange(UserMode)
-     * @see #rx_h_checkInchToFoot(Engine, double)
+     * @see #rx_h_checkInchToFoot(Engine, int)
      */
     @NotNull
     default Flowable<?> rx_h_checkInchToFootRecursive(@NotNull final Engine<?> ENGINE,

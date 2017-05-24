@@ -26,7 +26,7 @@ public class UIMainDashboardTest extends UIBaseTest implements DashboardTestHelp
 
     /**
      * This test builds upon
-     * {@link com.holmusk.SuperLeapQA.ui.signup.main.UISignUpTest#test_guarantorNeeded_shouldRequireParentInfo(UserMode)},
+     * {@link com.holmusk.SuperLeapQA.ui.signup.main.UISignUpTest#test_guarantorNeeded_requiresParentInfo(UserMode)},
      * but also provides validations for {@link Screen#DASHBOARD}. It will
      * check {@link Screen#USE_APP_NOW} and {@link Screen#DASHBOARD_TUTORIAL}
      * as well.

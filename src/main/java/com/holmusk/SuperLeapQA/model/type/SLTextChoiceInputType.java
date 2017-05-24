@@ -5,13 +5,11 @@ package com.holmusk.SuperLeapQA.model.type;
  */
 
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
-import org.swiften.xtestkit.base.element.property.type.base.AttributeType;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
-import sun.rmi.runtime.Log;
+import org.swiften.xtestkit.mobile.ios.IOSView;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,13 +32,26 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
      * @param platform {@link PlatformType} instance.
      * @param selected {@link String} value of the selected choice.
      * @return {@link XPath}
+     * @see Platform#IOS
+     * @see IOSView.ViewType#UI_PICKERWHEEL
      * @see SLChoiceInputType#targetChoiceItemXPath(PlatformType, String)
      */
     @NotNull
     @Override
     default XPath targetChoiceItemXPath(@NotNull PlatformType platform,
                                         @NotNull String selected) {
-        return XPath.builder(platform).containsText(selected).build();
+        XPath.Builder builder = XPath.builder(platform).containsText(selected);
+
+        switch ((Platform)platform) {
+            case IOS:
+                builder.setClass(IOSView.ViewType.UI_PICKERWHEEL.className());
+                break;
+
+            default:
+                break;
+        }
+
+        return builder.build();
     }
 
     /**
@@ -132,17 +143,23 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
      */
     @NotNull
     default XPath androidScrollViewPickerXPath() {
-        return XPath.builder(Platform.ANDROID).containsID("select_dialog_listview").build();
+        return XPath.builder(Platform.ANDROID)
+            .containsID("select_dialog_listview")
+            .build();
     }
 
     /**
      * Get the scroll view picker {@link XPath} for {@link Platform#IOS}.
      * @return {@link XPath} instance.
      * @see Platform#IOS
+     * @see XPath.Builder#setClass(String)
+     * @see IOSView.ViewType#UI_PICKERWHEEL
      */
     @NotNull
     default XPath iOSScrollViewPickerXPath() {
-        return XPath.builder(Platform.IOS).build();
+        return XPath.builder(Platform.IOS)
+            .setClass(IOSView.ViewType.UI_PICKERWHEEL.className())
+            .build();
     }
 
     /**
@@ -161,9 +178,13 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
      * Get the scroll view picker item {@link XPath} for {@link Platform#IOS}.
      * @return {@link XPath} instance.
      * @see Platform#IOS
+     * @see XPath.Builder#setClass(String)
+     * @see IOSView.ViewType#UI_PICKERWHEEL
      */
     @NotNull
     default XPath iOSScrollViewPickerItemXPath() {
-        return XPath.builder(Platform.IOS).build();
+        return XPath.builder(Platform.IOS)
+            .setClass(IOSView.ViewType.UI_PICKERWHEEL.className())
+            .build();
     }
 }

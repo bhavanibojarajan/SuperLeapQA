@@ -12,18 +12,13 @@ import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.collection.Zipped;
 import org.swiften.javautilities.log.LogUtil;
+import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.element.action.choice.ChoiceSelector;
+import org.swiften.xtestkit.base.element.action.choice.SimpleChoiceSelector;
 import org.swiften.xtestkit.base.element.action.choice.type.ChoiceSelectorSwipeType;
 import org.swiften.xtestkit.base.element.action.input.type.ChoiceInputType;
-import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatComparisonType;
-import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatType;
-import org.swiften.xtestkit.base.element.action.swipe.type.SwipeType;
-import org.swiften.xtestkit.base.element.locator.general.param.ByXPath;
-import org.swiften.xtestkit.base.type.PlatformType;
-import org.swiften.xtestkit.mobile.android.AndroidEngine;
 
 import java.util.List;
 
@@ -32,28 +27,50 @@ import java.util.List;
  */
 public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerActionType {
     /**
-     * Select a value, assuming the user is in the value selection screen.
-     * @param engine {@link Engine} instance.
-     * @param input {@link SLNumericChoiceInputType} instance.
-     * @param selected {@link String} value.
+     * Select a value, assuming the user is in the value selection picker.
+     * @param ENGINE {@link Engine} instance.
+     * @param INPUT {@link SLNumericChoiceInputType} instance.
+     * @param SELECTED {@link String} value.
      * @return {@link Flowable} instance.
      * @see Engine#rx_click(WebElement)
-     * @see ChoiceSelector#rx_repeatSwipe()
+     * @see SimpleChoiceSelector#rx_execute()
      */
     @NotNull
     @SuppressWarnings("Convert2MethodRef")
-    default Flowable<?> rx_a_selectChoice(@NotNull Engine<?> engine,
-                                          @NotNull SLChoiceInputType input,
-                                          @NotNull String selected) {
-        LogUtil.printfThread("Selecting %s for %s", selected, input);
+    default Flowable<?> rx_a_selectChoice(@NotNull final Engine<?> ENGINE,
+                                          @NotNull final SLChoiceInputType INPUT,
+                                          @NotNull final String SELECTED) {
+        LogUtil.printfThread("Selecting %s for %s", SELECTED, INPUT);
 
-        ChoiceSelector selector = ChoiceSelector.builder()
-            .withEngine(engine)
-            .withInput(input)
-            .withSelectedChoice(selected)
-            .build();
+        ChoiceSelectorSwipeType selector = new ChoiceSelectorSwipeType() {
+            @NotNull
+            @Override
+            public Flowable<Double> rx_elementSwipeRatio() {
+                /* Set custom swipe ratio to perform swipes one item at at
+                 * time. This is done in order to ensure selection accuracy */
+                return rx_scrollViewChildCount().map(NumberUtil::inverse);
+            }
 
-        return selector.rx_repeatSwipe();
+            @NotNull
+            @Override
+            public ChoiceInputType choiceInput() {
+                return INPUT;
+            }
+
+            @NotNull
+            @Override
+            public String selectedChoice() {
+                return SELECTED;
+            }
+
+            @NotNull
+            @Override
+            public Engine<?> engine() {
+                return ENGINE;
+            }
+        };
+
+        return selector.rx_execute();
     }
 
     /**
