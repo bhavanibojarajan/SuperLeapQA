@@ -5,9 +5,9 @@ import com.holmusk.SuperLeapQA.ui.signup.main.SignUpActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.rx.RxUtil;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.mobile.android.AndroidEngine;
+import org.swiften.xtestkit.ios.IOSEngine;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -71,11 +71,22 @@ public interface DOBPickerValidationType extends SignUpActionType {
      * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
      * @see SimpleDateFormat#format(Date)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rx_v_DoBEditFieldHasDate(@NotNull Engine<?> engine,
                                                  @NotNull Date date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
+        String format;
+
+        if (engine instanceof AndroidEngine) {
+            format = "dd MMMM YYYY";
+        } else if (engine instanceof IOSEngine) {
+            format = "MMM d, YYYY";
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
+
+        SimpleDateFormat formatter = new SimpleDateFormat(format);
         String string = formatter.format(date);
         return engine.rx_containsText(string).firstElement().toFlowable();
     }

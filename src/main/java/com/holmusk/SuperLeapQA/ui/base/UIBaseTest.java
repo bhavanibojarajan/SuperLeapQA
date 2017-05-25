@@ -11,7 +11,7 @@ import org.swiften.xtestkit.kit.param.AfterClassParam;
 import org.swiften.xtestkit.kit.param.AfterParam;
 import org.swiften.xtestkit.kit.param.BeforeClassParam;
 import org.swiften.xtestkit.kit.param.BeforeParam;
-import org.swiften.xtestkit.test.type.BaseTestType;
+import org.swiften.xtestkit.test.BaseTestType;
 import org.testng.annotations.*;
 
 import java.util.Iterator;

@@ -1,11 +1,15 @@
 package com.holmusk.SuperLeapQA.model;
 
+import com.holmusk.SuperLeapQA.config.Config;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.localizer.LCFormat;
-import org.swiften.xtestkit.base.element.action.input.type.TextInputType;
+import org.swiften.javautilities.log.LogUtil;
+import org.swiften.xtestkit.ios.IOSView;
+import org.swiften.xtestkit.model.InputType;
+import org.swiften.xtestkit.model.TextInputType;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
@@ -33,7 +37,7 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
     /**
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
-     * @see org.swiften.xtestkit.base.element.action.input.type.InputType#inputViewXPath(PlatformType)
+     * @see InputType#inputViewXPath(PlatformType)
      * @see #androidInputViewXPath()
      * @see #NOT_AVAILABLE
      */
@@ -105,10 +109,47 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
      * @return {@link XPath} instance.
      * @see Platform#IOS
+     * @see org.swiften.xtestkit.kit.TestKit#localize(String)
+     * @see IOSView.ViewType#UI_TEXTFIELD
+     * @see #iOSShortDescription()
      */
     @NotNull
     private XPath iOSInputViewXPath() {
-        return XPath.builder(Platform.IOS).build();
+        String shortDescription = iOSShortDescription();
+        String localized = Config.TEST_KIT.localize(shortDescription);
+
+        return XPath.builder(Platform.IOS)
+            .setClass(IOSView.ViewType.UI_TEXTFIELD.className())
+            .containsText(localized)
+            .build();
+    }
+
+    /**
+     * Get a short description of the input field, to use with
+     * {@link #iOSInputViewXPath()}. This is done so we do not have to search
+     * for the input fields by their indexes.
+     * @return {@link String} value.
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    private String iOSShortDescription() {
+        switch (this) {
+            case NAME:
+                return "input_title_abbv_name";
+
+            case PHONE:
+            case MOBILE:
+            case PARENT_MOBILE:
+                return "input_title_abbv_mobile";
+
+            case EMAIL:
+            case PARENT_EMAIL:
+                return "input_title_abbv_email";
+
+            default:
+                LogUtil.println(this);
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 
     /**

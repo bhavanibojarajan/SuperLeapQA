@@ -5,11 +5,12 @@ package com.holmusk.SuperLeapQA.model.type;
  */
 
 import org.jetbrains.annotations.NotNull;
+import org.swiften.xtestkit.model.ChoiceInputType;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkit.mobile.ios.IOSView;
+import org.swiften.xtestkit.ios.IOSView;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,22 +24,21 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
     /**
      * Get all text choice inputs. Usually this interface is implemented by
      * a {@link Enum}, so this method should call {@link Enum} values.
-     * @return {@link List} of {@link Object}
+     * @return {@link List} of {@link Item}
      */
     @NotNull
-    List<? extends SLTextChoiceInputItemType> allTextChoices();
+    List<? extends Item> allTextChoices();
 
     /**
-     * @param platform {@link PlatformType} instance.
-     * @param selected {@link String} value of the selected choice.
-     * @return {@link XPath}
-     * @see SLChoiceInputType#targetChoiceItemXPath(PlatformType, String)
+     * @param selected The selected {@link String} choice.
+     * @return {@link XPath} instance.
+     * @see SLChoiceInputType#androidTargetChoiceItemXPath(String)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    default XPath targetChoiceItemXPath(@NotNull PlatformType platform,
-                                        @NotNull String selected) {
-        return XPath.builder(platform).containsText(selected).build();
+    default XPath androidTargetChoiceItemXPath(@NotNull String selected) {
+        return XPath.builder(Platform.ANDROID).containsText(selected).build();
     }
 
     /**
@@ -50,9 +50,9 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
      */
     @Override
     default double numericValue(@NotNull final String VALUE) {
-        List<? extends SLTextChoiceInputItemType> values = allTextChoices();
+        List<? extends Item> values = allTextChoices();
 
-        Optional<? extends SLTextChoiceInputItemType> input = values
+        Optional<? extends Item> input = values
             .stream()
             .filter(a -> a.stringValue().equals(VALUE))
             .findFirst();
@@ -78,17 +78,17 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
 
     /**
      * @return Return {@link XPath} value.
-     * @see org.swiften.xtestkit.base.element.action.input.type.ChoiceInputType#choicePickerScrollViewXPath(PlatformType)
-     * @see #androidScrollViewPickerXPath()
+     * @see ChoiceInputType#choicePickerXPath(PlatformType)
+     * @see #androidChoicePickerXPath()
      * @see #iOSScrollViewPickerXPath()
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    default XPath choicePickerScrollViewXPath(@NotNull PlatformType platform) {
+    default XPath choicePickerXPath(@NotNull PlatformType platform) {
         switch ((Platform)platform) {
             case ANDROID:
-                return androidScrollViewPickerXPath();
+                return androidChoicePickerXPath();
 
             case IOS:
                 return iOSScrollViewPickerXPath();
@@ -101,16 +101,16 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
     /**
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
-     * @see org.swiften.xtestkit.base.element.action.input.type.ChoiceInputType#choicePickerScrollViewItemXPath(PlatformType)
-     * @see #androidScrollViewPickerItemXPath()
+     * @see ChoiceInputType#choicePickerItemXPath(PlatformType)
+     * @see #androidChoicePickerItemXPath()
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    default XPath choicePickerScrollViewItemXPath(@NotNull PlatformType platform) {
+    default XPath choicePickerItemXPath(@NotNull PlatformType platform) {
         switch ((Platform)platform) {
             case ANDROID:
-                return androidScrollViewPickerItemXPath();
+                return androidChoicePickerItemXPath();
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -125,7 +125,7 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
      * @see XPath.Builder#ofClass(String)
      */
     @NotNull
-    default XPath androidScrollViewPickerXPath() {
+    default XPath androidChoicePickerXPath() {
         return XPath.builder(Platform.ANDROID)
             .containsID("select_dialog_listview")
             .build();
@@ -153,7 +153,18 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
      * @see XPath.Builder#ofInstance(int)
      */
     @NotNull
-    default XPath androidScrollViewPickerItemXPath() {
+    default XPath androidChoicePickerItemXPath() {
         return XPath.builder(Platform.ANDROID).containsID("text1").build();
+    }
+
+    interface Item {
+        /**
+         * Use this {@link String} to locale a {@link Item} instance. This
+         * can be helpful when we are calling
+         * {@link SLTextChoiceInputType#numericValue(String)}.
+         * @return {@link String} value.
+         */
+        @NotNull
+        String stringValue();
     }
 }

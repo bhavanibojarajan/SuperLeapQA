@@ -1,14 +1,14 @@
 package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
-import com.holmusk.SuperLeapQA.model.type.SLTextChoiceInputItemType;
 import com.holmusk.SuperLeapQA.model.type.SLTextChoiceInputType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
+import org.swiften.xtestkit.model.InputType;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkit.mobile.ios.IOSView;
+import org.swiften.xtestkit.ios.IOSView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +31,7 @@ public enum ChoiceInput implements SLTextChoiceInputType {
      */
     @NotNull
     @Override
-    public List<? extends SLTextChoiceInputItemType> allTextChoices() {
+    public List<? extends SLTextChoiceInputType.Item> allTextChoices() {
         switch (this) {
             case ETHNICITY:
                 return Arrays.asList(Ethnicity.values());
@@ -47,7 +47,7 @@ public enum ChoiceInput implements SLTextChoiceInputType {
     /**
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
-     * @see org.swiften.xtestkit.base.element.action.input.type.InputType#inputViewXPath(PlatformType)
+     * @see InputType#inputViewXPath(PlatformType)
      * @see #androidInputViewXPath()
      * @see #NOT_AVAILABLE
      */

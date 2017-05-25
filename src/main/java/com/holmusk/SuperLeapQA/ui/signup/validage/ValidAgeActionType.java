@@ -12,17 +12,15 @@ import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.javautilities.log.LogUtil;
-import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.element.action.choice.type.ChoiceSelectorSwipeType;
-import org.swiften.xtestkit.base.element.action.input.type.ChoiceInputType;
-import org.swiften.xtestkit.base.element.action.swipe.type.SwipeRepeatType;
-import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
+import org.swiften.xtestkit.base.element.action.choice.ChoiceMode;
+import org.swiften.xtestkit.base.element.action.choice.ChoiceParam;
+import org.swiften.xtestkit.base.element.action.choice.ChoiceType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkit.mobile.android.AndroidEngine;
-import org.swiften.xtestkit.mobile.ios.IOSEngine;
+import org.swiften.xtestkit.android.AndroidEngine;
+import org.swiften.xtestkit.ios.IOSEngine;
 
 import java.util.List;
 
@@ -32,117 +30,27 @@ import java.util.List;
 public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerActionType {
     /**
      * Select a value, assuming the user is in the value selection picker.
-     * @param ENGINE {@link Engine} instance.
-     * @param INPUT {@link SLNumericChoiceInputType} instance.
-     * @param SELECTED {@link String} value.
+     * @param engine {@link Engine} instance.
+     * @param input {@link SLNumericChoiceInputType} instance.
+     * @param selected {@link String} value.
      * @return {@link Flowable} instance.
-     * @see #rx_a_androidChoice(Engine, SLChoiceInputType, String)
-     * @see #rx_a_iOSChoice(Engine, SLChoiceInputType, String)
+     * @see ChoiceMode#GENERAL
+     * @see Engine#rx_selectChoice(ChoiceType)
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<?> rx_a_selectChoice(@NotNull final Engine<?> ENGINE,
-                                          @NotNull final SLChoiceInputType INPUT,
-                                          @NotNull final String SELECTED) {
-        LogUtil.printfThread("Selecting %s for %s", SELECTED, INPUT);
+    default Flowable<?> rx_a_selectChoice(@NotNull Engine<?> engine,
+                                          @NotNull SLChoiceInputType input,
+                                          @NotNull String selected) {
+        LogUtil.printfThread("Selecting %s for %s", selected, input);
 
-        if (ENGINE instanceof AndroidEngine) {
-            return rx_a_androidChoice(ENGINE, INPUT, SELECTED);
-        } else if (ENGINE instanceof IOSEngine) {
-            return rx_a_iOSChoice(ENGINE, INPUT, SELECTED);
-        } else {
-            throw new RuntimeException(NOT_AVAILABLE);
-        }
-    }
+        ChoiceParam param = ChoiceParam.builder()
+            .withMode(ChoiceMode.GENERAL)
+            .withInput(input)
+            .withSelectedChoice(selected)
+            .build();
 
-    /**
-     * Select a choice item for {@link Platform#ANDROID}. This is rather more
-     * complicated than
-     * {@link #rx_a_iOSChoice(Engine, SLChoiceInputType, String)}
-     * because we need to manually swipe the choice views until the item we
-     * are interested in appears.
-     * @param ENGINE {@link Engine} instance.
-     * @param INPUT {@link SLChoiceInputType} instance.
-     * @param SELECTED {@link String} value.
-     * @return {@link Flowable} instance.
-     * @see Platform#ANDROID
-     * @see NumberUtil#inverse(Number)
-     * @see SwipeRepeatType#rx_execute()
-     */
-    @NotNull
-    default Flowable<?> rx_a_androidChoice(@NotNull final Engine<?> ENGINE,
-                                           @NotNull final SLChoiceInputType INPUT,
-                                           @NotNull final String SELECTED) {
-        final Platform PLATFORM = Platform.ANDROID;
-        final int INDEX = INPUT.scrollablePickerIndex(PLATFORM);
-
-        ChoiceSelectorSwipeType selector = new ChoiceSelectorSwipeType() {
-            @NotNull
-            @Override
-            public Flowable<WebElement> rx_scrollableViewToSwipe() {
-                /* Since there are multiple NumberPicker with identical id,
-                 * we need to get the element that corresponds to a specified
-                 * index */
-                XPath xPath = INPUT.choicePickerScrollViewXPath(PLATFORM);
-                return ENGINE.rx_withXPath(xPath).elementAt(INDEX).toFlowable();
-            }
-
-            @NotNull
-            @Override
-            public Flowable<Double> rx_elementSwipeRatio() {
-                /* Customize the swipe ratio so that the picker is scrolled
-                 * by one item at a time, to ensure accuracy */
-                return rx_scrollViewChildCount().map(NumberUtil::inverse);
-            }
-
-            @NotNull
-            @Override
-            public ChoiceInputType choiceInput() {
-                return INPUT;
-            }
-
-            @NotNull
-            @Override
-            public String selectedChoice() {
-                return SELECTED;
-            }
-
-            @NotNull
-            @Override
-            public Engine<?> engine() {
-                return ENGINE;
-            }
-        };
-
-        return selector.rx_execute();
-    }
-
-    /**
-     * Select a choice item for {@link Platform#IOS}. This can simply be done
-     * by sending keys to
-     * {@link org.swiften.xtestkit.mobile.ios.IOSView.ViewType#UI_PICKERWHEEL}.
-     * @param ENGINE {@link Engine} instance.
-     * @param input {@link SLChoiceInputType} instance.
-     * @param SELECTED {@link String} value.
-     * @return {@link Flowable} instance.
-     * @see Platform#IOS
-     * @see SLChoiceInputType#choicePickerScrollViewXPath(PlatformType)
-     * @see Engine#rx_withXPath(XPath...)
-     * @see Engine#rx_sendKeys(WebElement, String...)
-     */
-    @NotNull
-    default Flowable<?> rx_a_iOSChoice(@NotNull final Engine<?> ENGINE,
-                                       @NotNull SLChoiceInputType input,
-                                       @NotNull final String SELECTED) {
-        Platform platform = Platform.IOS;
-        int index = input.scrollablePickerIndex(platform);
-        XPath xPath = input.choicePickerScrollViewXPath(platform);
-
-        return ENGINE
-            .rx_withXPath(xPath)
-            .elementAt(index)
-            .toFlowable()
-            .flatMap(a -> ENGINE.rx_sendKeys(a, SELECTED));
+        return engine.rx_selectChoice(param);
     }
 
     /**

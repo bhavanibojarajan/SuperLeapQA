@@ -2,14 +2,15 @@ package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.SuperLeapQA.config.Config;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
-import com.holmusk.SuperLeapQA.model.type.SLTextChoiceInputItemType;
+import com.holmusk.SuperLeapQA.model.type.SLTextChoiceInputType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
-import org.swiften.xtestkit.base.element.property.type.base.AttributeType;
+import org.swiften.xtestkit.base.element.property.base.AttributeType;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkit.model.InputType;
 
 /**
  * Created by haipham on 5/12/17.
@@ -18,7 +19,7 @@ public enum CoachPref implements
     AttributeType<String>,
     BaseErrorType,
     SLInputType,
-    SLTextChoiceInputItemType
+    SLTextChoiceInputType.Item
 {
     MALE,
     FEMALE,
@@ -56,7 +57,7 @@ public enum CoachPref implements
     /**
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
-     * @see org.swiften.xtestkit.base.element.action.input.type.InputType#inputViewXPath(PlatformType)
+     * @see InputType#inputViewXPath(PlatformType)
      * @see #androidInputViewXPath()
      * @see #NOT_AVAILABLE
      */

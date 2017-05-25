@@ -12,7 +12,7 @@ import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.element.action.input.type.TextInputType;
+import org.swiften.xtestkit.model.TextInputType;
 
 import java.util.HashMap;
 import java.util.List;

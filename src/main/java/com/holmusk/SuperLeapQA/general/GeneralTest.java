@@ -10,14 +10,12 @@ import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.navigation.ScreenManagerType;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import static org.mockito.Mockito.mock;
 
@@ -25,6 +23,18 @@ import static org.mockito.Mockito.mock;
  * Created by haipham on 5/11/17.
  */
 public final class GeneralTest {
+    @NotNull
+    @DataProvider
+    public Iterator<Object[]> userModeProvider() {
+        List<Object[]> data = new LinkedList<>();
+
+        for (UserMode mode : UserMode.values()) {
+            data.add(new Object[] { mode });
+        }
+
+        return data.iterator();
+    }
+
     @Test
     public void test_emptyInputErrors_shouldBeCorrect() {
         // Setup & When
@@ -68,8 +78,8 @@ public final class GeneralTest {
     public void test_birthDayCalculation_shouldBeCorrect() {
         // Setup
         Calendar calendar = Calendar.getInstance();
-        LocalDate date1 = LocalDate.of(2017, 5, 19);
-        LocalDate date2 = LocalDate.of(2001, 5, 19);
+        LocalDate date1 = LocalDate.of(2017, 5, 25);
+        LocalDate date2 = LocalDate.of(2002, 5, 24);
 
         // When
         long yearDiff = ChronoUnit.YEARS.between(date1, date2);
@@ -89,9 +99,9 @@ public final class GeneralTest {
         LogUtil.println(UserMode.TEEN_A18.validAgeCategoryRangeString());
     }
 
-    @Test
     @SuppressWarnings("unchecked")
-    public void test_navigation_shouldWorkCorrectly() {
+    @Test(dataProvider = "userModeProvider")
+    public void test_navigation_shouldWorkCorrectly(@NotNull UserMode mode) {
         // Setup
         final Engine<?> ENGINE = mock(Engine.class);
         final List<ScreenManagerType.Node> FN = new ArrayList<>();
@@ -130,21 +140,17 @@ public final class GeneralTest {
         manager.registerScreenHolders();
 
         // When & Then
-//        LogUtil.println(manager.multipleShortest(UserMode.PARENT, Screen.SPLASH, Screen.REGISTER));
 
-        LogUtil.println(manager.nodes(
-            UserMode.PARENT,
-//            Screen.SPLASH,
-            Screen.FORGOT_PASSWORD,
-//            Screen.WELCOME,
-            Screen.USE_APP_NOW)
-        );
+        /* DoB tests */
+        LogUtil.println(manager.multipleShortest(mode, Screen.SPLASH, Screen.DOB));
+        LogUtil.println(manager.multipleShortest(mode, Screen.DOB, Screen.INVALID_AGE));
+        LogUtil.println(manager.multipleShortest(mode, Screen.INVALID_AGE, Screen.DOB));
     }
 
     @Test
     public void test_xPathCreation_shouldWork() {
         // Setup && When && Then
         LogUtil.println(ChoiceInput.COACH_PREF.inputViewXPath(Platform.IOS));
-        LogUtil.println(Height.CM.choicePickerScrollViewItemXPath(Platform.ANDROID));
+        LogUtil.println(Height.CM.choicePickerItemXPath(Platform.ANDROID));
     }
 }

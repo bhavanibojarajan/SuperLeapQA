@@ -4,7 +4,7 @@ import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
 import com.holmusk.SuperLeapQA.ui.signup.validage.ValidAgeActionType;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.element.action.input.type.InputType;
+import org.swiften.xtestkit.model.InputType;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;

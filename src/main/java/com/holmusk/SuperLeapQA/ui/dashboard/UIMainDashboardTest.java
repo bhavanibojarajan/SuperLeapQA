@@ -50,7 +50,7 @@ public class UIMainDashboardTest extends UIBaseTest implements DashboardTestHelp
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_navigate(mode, Screen.SPLASH, Screen.DOB_PICKER, Screen.USE_APP_NOW)
+        rx_navigate(mode, Screen.SPLASH, Screen.DOB, Screen.USE_APP_NOW)
             .flatMap(a -> THIS.rx_v_useAppNowScreen(ENGINE))
             .flatMap(a -> THIS.rx_a_useAppNow(ENGINE))
             .flatMap(a -> THIS.rx_v_dashboardTutorialScreen(ENGINE))

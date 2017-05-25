@@ -17,7 +17,7 @@ import org.swiften.javautilities.collection.Zip;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.type.PlatformType;
-import org.swiften.xtestkit.mobile.android.AndroidEngine;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 

@@ -5,12 +5,9 @@ import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -111,30 +108,5 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
         }
 
         return new Repeater().repeat(0);
-    }
-
-    /**
-     * Check that the DoB dialog has correct elements.
-     * @param ENGINE {@link Engine} instance.
-     * @return {@link Flowable} instance.
-     * @see #rx_a_openDoBPicker(Engine)
-     * @see #rx_a_selectDoB(Engine, Date)
-     * @see #rx_a_clickBackButton(Engine)
-     * @see #rx_v_DoBEditFieldHasDate(Engine, Date)
-     */
-    @NotNull
-    default Flowable<?> rx_h_checkDoBDialogElements(@NotNull final Engine<?> ENGINE) {
-        final DOBPickerActionType THIS = this;
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH, NumberTestUtil.randomBetween(1, 28));
-        calendar.set(Calendar.MONTH, NumberTestUtil.randomBetween(0, 11));
-        calendar.set(Calendar.YEAR, NumberTestUtil.randomBetween(1970, 2000));
-        final Date DATE = calendar.getTime();
-
-        return rx_a_openDoBPicker(ENGINE)
-            .flatMap(a -> THIS.rx_a_selectDoB(ENGINE, DATE))
-            .flatMap(a -> THIS.rx_a_confirmDoB(ENGINE))
-            .flatMap(a -> THIS.rx_a_clickBackButton(ENGINE))
-            .flatMap(a -> THIS.rx_v_DoBEditFieldHasDate(ENGINE, DATE));
     }
 }

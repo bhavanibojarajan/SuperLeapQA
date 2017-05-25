@@ -3,10 +3,11 @@ package com.holmusk.SuperLeapQA.model;
 import com.holmusk.SuperLeapQA.model.type.SLNumericChoiceInputType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
+import org.swiften.xtestkit.model.InputType;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkit.mobile.ios.IOSView;
+import org.swiften.xtestkit.ios.IOSView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -175,7 +176,7 @@ public enum Weight implements SLNumericChoiceInputType {
     /**
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
-     * @see org.swiften.xtestkit.base.element.action.input.type.InputType#inputViewXPath(PlatformType)
+     * @see InputType#inputViewXPath(PlatformType)
      * @see #androidInputViewXPath()
      * @see #NOT_AVAILABLE
      */

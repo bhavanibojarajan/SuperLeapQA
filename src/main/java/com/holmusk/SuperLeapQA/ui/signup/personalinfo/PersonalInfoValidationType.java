@@ -10,7 +10,7 @@ import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.mobile.android.AndroidEngine;
+import org.swiften.xtestkit.android.AndroidEngine;
 
 /**
  * Created by haipham on 17/5/17.

@@ -9,7 +9,7 @@ public enum Screen {
     SIGN_IN,
     FORGOT_PASSWORD,
     REGISTER,
-    DOB_PICKER,
+    DOB,
     INVALID_AGE,
     VALID_AGE,
     PERSONAL_INFO,

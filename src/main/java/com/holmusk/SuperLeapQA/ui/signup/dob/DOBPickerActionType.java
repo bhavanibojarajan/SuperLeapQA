@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.element.action.date.type.DateType;
+import org.swiften.xtestkit.base.element.action.date.DateType;
 import org.swiften.xtestkit.base.type.DelayType;
 
 import java.util.Calendar;

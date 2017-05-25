@@ -9,7 +9,7 @@ import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.type.BaseErrorType;
-import org.swiften.xtestkit.mobile.ios.IOSEngine;
+import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.navigation.ScreenType;
 
 import java.util.List;
@@ -108,12 +108,12 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
             case REGISTER:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.DOB_PICKER, MODE),
+                        ENGINE, ScreenHolder.of(Screen.DOB, MODE),
                         a -> THIS.rx_n_register_DoBPicker(ENGINE, MODE)
                     )
                 );
 
-            case DOB_PICKER:
+            case DOB:
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.INVALID_AGE, MODE),
@@ -219,7 +219,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                     )
                 );
 
-            case DOB_PICKER:
+            case DOB:
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.REGISTER, MODE),
@@ -230,7 +230,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
             case INVALID_AGE:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.DOB_PICKER, MODE),
+                        ENGINE, ScreenHolder.of(Screen.DOB, MODE),
                         a -> THIS.rx_n_invalidAge_DOBPicker(ENGINE)
                     ),
                     new Direction(
@@ -242,7 +242,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
             case VALID_AGE:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.DOB_PICKER, MODE),
+                        ENGINE, ScreenHolder.of(Screen.DOB, MODE),
                         a -> THIS.rx_n_validAge_welcome(ENGINE)
                     )
                 );

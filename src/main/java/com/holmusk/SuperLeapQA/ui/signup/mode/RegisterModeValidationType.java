@@ -8,7 +8,6 @@ import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.mobile.android.AndroidEngine;
 
 /**
  * Created by haipham on 5/8/17.
@@ -37,19 +36,13 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
-     * @see RxUtil#error(String)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rx_e_backButtonTitle(@NotNull Engine<?> engine) {
-        if (engine instanceof AndroidEngine) {
-            return engine
-                .rx_containsText("register_title_whichOneBestDescribes")
-                .firstElement()
-                .toFlowable();
-        } else {
-            return RxUtil.error(NOT_AVAILABLE);
-        }
+        return engine
+            .rx_containsText("register_title_whichOneBestDescribes")
+            .firstElement()
+            .toFlowable();
     }
 
     /**

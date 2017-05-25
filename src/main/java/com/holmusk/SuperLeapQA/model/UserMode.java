@@ -4,7 +4,7 @@ import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.type.BaseErrorType;
-import org.swiften.xtestkit.util.type.ValueRangeConverterType;
+import org.swiften.xtestkit.util.ValueRangeConverterType;
 
 import java.util.Arrays;
 import java.util.Collections;

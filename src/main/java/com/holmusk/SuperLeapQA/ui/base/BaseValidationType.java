@@ -8,9 +8,10 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.rx.RxUtil;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.type.BaseErrorType;
-import org.swiften.xtestkit.mobile.android.AndroidEngine;
+import org.swiften.xtestkit.ios.IOSEngine;
 
 /**
  * Interfaces that extend this should declare methods that assist with app
@@ -23,13 +24,16 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @return {@link Flowable} instance.
      * @see Engine#platform()
      * @see Engine#rx_containsID(String...)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxBackButton(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             return engine.rx_containsID("btnBack").firstElement().toFlowable();
+        } else if (engine instanceof IOSEngine) {
+            return engine.rx_containsID("ob back").firstElement().toFlowable();
         } else {
-            return RxUtil.error();
+            throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 

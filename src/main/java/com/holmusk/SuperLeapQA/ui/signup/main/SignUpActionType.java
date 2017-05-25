@@ -8,8 +8,8 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.element.action.input.type.InputType;
-import org.swiften.xtestkit.base.element.action.input.type.TextInputType;
+import org.swiften.xtestkit.model.InputType;
+import org.swiften.xtestkit.model.TextInputType;
 import org.swiften.xtestkit.mobile.Platform;
 
 /**
