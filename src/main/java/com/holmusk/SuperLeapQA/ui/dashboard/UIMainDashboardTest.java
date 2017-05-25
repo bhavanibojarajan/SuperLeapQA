@@ -4,6 +4,7 @@ import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.runner.Runner;
+import com.holmusk.SuperLeapQA.ui.signup.invalidage.InvalidAgeTestHelperType;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +16,7 @@ import org.testng.annotations.Test;
 /**
  * Created by haipham on 5/16/17.
  */
-public class UIMainDashboardTest extends UIBaseTest implements DashboardTestHelperType {
+public class UIMainDashboardTest extends UIBaseTest implements DashboardActionType, InvalidAgeTestHelperType {
     @Factory(
         dataProviderClass = Runner.class,
         dataProvider = "dataProvider"

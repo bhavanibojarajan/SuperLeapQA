@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.ui.signup.dob;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.SuperLeapQA.ui.signup.main.SignUpActionType;
+import com.holmusk.SuperLeapQA.ui.welcome.WelcomeValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -15,7 +15,7 @@ import java.util.Date;
 /**
  * Created by haipham on 17/5/17.
  */
-public interface DOBPickerValidationType extends SignUpActionType {
+public interface DOBPickerValidationType extends WelcomeValidationType {
     /**
      * Validate the acceptable age screen, after the user picks DoB. This
      * method is used to check that the screen that follows matches the

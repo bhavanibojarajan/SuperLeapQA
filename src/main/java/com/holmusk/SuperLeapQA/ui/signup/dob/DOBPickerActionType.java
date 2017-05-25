@@ -1,6 +1,7 @@
 package com.holmusk.SuperLeapQA.ui.signup.dob;
 
-import com.holmusk.SuperLeapQA.ui.signup.main.SignUpActionType;
+import com.holmusk.SuperLeapQA.ui.base.BaseActionType;
+import com.holmusk.SuperLeapQA.ui.signup.mode.RegisterModeActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -16,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by haipham on 17/5/17.
  */
-public interface DOBPickerActionType extends DOBPickerValidationType, SignUpActionType {
+public interface DOBPickerActionType extends DOBPickerValidationType, RegisterModeActionType {
     /**
      * Open the DoB dialog in the sign up screen. This can be used both
      * for parent sign up and teen sign up.

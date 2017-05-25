@@ -117,13 +117,25 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
      * @see org.swiften.xtestkit.kit.TestKit#localize(String)
      * @see IOSView.ViewType#UI_TEXTFIELD
      * @see IOSView.ViewType#UI_SECURE_TEXTFIELD
+     * @see XPath.Builder#setClass(String)
+     * @see XPath.Builder#containsText(XPath.ContainsText)
      * @see #iOSShortDescription()
      */
     @NotNull
     private XPath iOSInputViewXPath() {
-        String shortDescription = iOSShortDescription();
-        String localized = Config.TEST_KIT.localize(shortDescription);
-        return XPath.builder(Platform.IOS).containsText(localized).build();
+        Platform platform = Platform.IOS;
+
+        switch (this) {
+            case PASSWORD:
+                return XPath.builder(platform)
+                    .setClass(IOSView.ViewType.UI_SECURE_TEXTFIELD.className())
+                    .build();
+
+            default:
+                String shortDescription = iOSShortDescription();
+                String localized = Config.TEST_KIT.localize(shortDescription);
+                return XPath.builder(platform).containsText(localized).build();
+        }
     }
 
     /**
@@ -191,7 +203,7 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
                 return StringTestUtil.randomDigitString(8);
 
             case POSTAL_CODE:
-                return StringTestUtil.randomDigitString(6);
+                return "139951"; // Blk 71 Ayer Rajah Crescent
 
             case EMAIL:
             case PARENT_EMAIL:

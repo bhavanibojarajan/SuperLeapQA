@@ -2,7 +2,7 @@ package com.holmusk.SuperLeapQA.ui.signup.personalinfo;
 
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.SuperLeapQA.ui.signup.main.SignUpValidationType;
+import com.holmusk.SuperLeapQA.ui.signup.validage.ValidAgeValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -17,14 +17,14 @@ import org.swiften.xtestkit.ios.IOSEngine;
 /**
  * Created by haipham on 17/5/17.
  */
-public interface PersonalInfoValidationType extends SignUpValidationType {
+public interface PersonalInfoValidationType extends ValidAgeValidationType {
     /**
      * Get the submit button for the personal info screen. Depending on the
      * current {@link UserMode}, the confirm button text may change.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rx_containsID(String...)
-     * @see RxUtil#error(String)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -37,7 +37,7 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
                 "register_title_next"
             ).firstElement().toFlowable();
         } else {
-            return RxUtil.error(NOT_AVAILABLE);
+            throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 
@@ -46,7 +46,6 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rx_containsID(String...)
-     * @see RxUtil#error(String)
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -54,7 +53,7 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
         if (engine instanceof AndroidEngine) {
             return engine.rx_containsID("ctv_toc").firstElement().toFlowable();
         } else {
-            return RxUtil.error(NOT_AVAILABLE);
+            throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 

@@ -39,7 +39,6 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rx_containsText(String...)
-     * @see RxUtil#error(String)
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -50,7 +49,7 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
                 "teenSignUp_title_enterDetails"
             ).firstElement().toFlowable();
         } else {
-            return RxUtil.error(NOT_AVAILABLE);
+            throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 

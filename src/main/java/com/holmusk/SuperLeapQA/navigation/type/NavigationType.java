@@ -1,8 +1,9 @@
 package com.holmusk.SuperLeapQA.navigation.type;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.SuperLeapQA.ui.dashboard.DashboardTestHelperType;
+import com.holmusk.SuperLeapQA.ui.dashboard.DashboardActionType;
 import com.holmusk.SuperLeapQA.ui.signup.dob.DOBPickerActionType;
+import com.holmusk.SuperLeapQA.ui.signup.invalidage.InvalidAgeTestHelperType;
 import com.holmusk.SuperLeapQA.ui.signup.personalinfo.PersonalInfoActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by haipham on 5/21/17.
  */
-public interface NavigationType extends DashboardTestHelperType {
+public interface NavigationType extends DashboardActionType, InvalidAgeTestHelperType {
     /**
      * Wait for splash screen to finish and navigate to welcome screen.
      * @return {@link Flowable} instance.
@@ -98,16 +99,7 @@ public interface NavigationType extends DashboardTestHelperType {
         final DOBPickerActionType THIS = this;
 
         return rx_a_openDoBPicker(ENGINE)
-            .flatMap(a -> {
-                /* Due to a screen bug on iOS, we temporarily disable date
-                 * selection and immediately click submit button to bring the
-                 * user to the valid age input */
-                if (ENGINE instanceof AndroidEngine) {
-                    return THIS.rx_a_selectDoBToBeOfAge(ENGINE, AGE);
-                } else {
-                    return Flowable.just(true);
-                }
-            })
+            .flatMap(a -> THIS.rx_a_selectDoBToBeOfAge(ENGINE, AGE))
             .flatMap(a -> THIS.rx_a_confirmDoB(ENGINE));
     }
 

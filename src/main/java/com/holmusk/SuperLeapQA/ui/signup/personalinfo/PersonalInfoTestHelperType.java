@@ -7,7 +7,9 @@ import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
 import org.jetbrains.annotations.NotNull;
+import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.model.TextInputType;
@@ -23,73 +25,25 @@ import java.util.stream.Collectors;
  */
 public interface PersonalInfoTestHelperType extends PersonalInfoActionType {
     /**
-     * Validate that the TOC checkbox has the be checked before the user can
-     * proceed to the next screen.
-     * @param MODE {@link UserMode} instance.
+     * Toggle and check that the password mask works. This is only applicable
+     * to {@link org.swiften.xtestkit.mobile.Platform#ANDROID} since on
+     * {@link org.swiften.xtestkit.mobile.Platform#IOS} there is no way to
+     * reveal the password.
+     * @param ENGINE {@link Engine} instance.
+     * @param element {@link WebElement} instance.
      * @return {@link Flowable} instance.
-     * @see UserMode#personalInfo(PlatformType)
-     * @see #rx_a_enterPersonalInfo(Engine, List)
-     * @see Engine#rx_hideKeyboard()
-     * @see #rx_a_confirmPersonalInfo(Engine)
-     * @see #rx_v_personalInfoScreen(Engine, UserMode)
+     * @see Engine#rx_togglePasswordMask(WebElement)
+     * @see Engine#isShowingPassword(WebElement)
      */
     @NotNull
-    default Flowable<?> rx_h_checkTOCCBeforeProceeding(@NotNull final Engine<?> ENGINE,
-                                                       @NotNull final UserMode MODE) {
-        final PersonalInfoActionType THIS = this;
-        final PlatformType PLATFORM = ENGINE.platform();
-
-        return rx_a_enterPersonalInfo(ENGINE, MODE.personalInfo(PLATFORM))
-            .flatMap(a -> ENGINE.rx_hideKeyboard())
-            .flatMap(a -> THIS.rx_a_confirmPersonalInfo(ENGINE))
-            .flatMap(a -> THIS.rx_v_personalInfoScreen(ENGINE, MODE));
-    }
-
-    /**
-     * Enter personal info inputs, navigate forward/backward a few times,
-     * open the TOC website then back, and finally validate that all inputs
-     * are saved and restored. This assumes the use is already in the
-     * personal info page.
-     * @param mode {@link UserMode} instance.
-     * @return {@link Flowable} instance.
-     * @see UserMode#personalInfo(PlatformType)
-     * @see #rx_a_enterInput(Engine, SLInputType, String)
-     * @see ObjectUtil#nonNull(Object)
-     * @see #rx_a_OpenTOC(Engine)
-     * @see #rx_v_editFieldHasValue(Engine, SLInputType, String)
-     */
-    @NotNull
-    default Flowable<?> rx_h_checkPersonalInfoStateSaved(@NotNull final Engine<?> ENGINE,
-                                                         @NotNull UserMode mode) {
-        final PlatformType PLATFORM = ENGINE.platform();
-        final PersonalInfoActionType THIS = this;
-        final Map<String,String> INPUTS = new HashMap<>();
-        List<SLInputType> info = mode.personalInfo(PLATFORM);
-
-        final List<SLTextInputType> TEXT_INFO = info.stream()
-            .filter(TextInputType.class::isInstance)
-            .map(SLTextInputType.class::cast)
-            .collect(Collectors.toList());
-
-        TEXT_INFO.forEach(a -> INPUTS.put(a.toString(), a.randomInput()));
-
-        return Flowable
-            .fromIterable(TEXT_INFO)
-            .concatMap(a -> THIS.rx_a_enterInput(ENGINE, a, INPUTS.get(a.toString())))
-            .flatMap(ENGINE::rx_toggleNextInput)
-            .all(ObjectUtil::nonNull)
-            .toFlowable()
-            .flatMap(a -> ENGINE.rx_hideKeyboard())
-
-            /* We need to unmask the password field so that later its text
-             * can be verified. Otherwise, the text returned will be empty */
-            .flatMap(a -> THIS.rx_e_editField(ENGINE, TextInput.PASSWORD))
-            .flatMap(ENGINE::rx_togglePasswordMask)
-
-            .flatMap(a -> THIS.rx_a_OpenTOC(ENGINE))
-            .delay(webViewDelay(), TimeUnit.MILLISECONDS, Schedulers.trampoline())
-            .flatMap(a -> ENGINE.rx_navigateBackOnce())
-            .flatMapIterable(a -> TEXT_INFO)
-            .concatMap(a -> THIS.rx_v_editFieldHasValue(ENGINE, a, INPUTS.get(a.toString())));
+    default Flowable<?> rx_h_checkPasswordMask(@NotNull final Engine<?> ENGINE,
+                                               @NotNull WebElement element) {
+        if (element instanceof AndroidEngine) {
+            return ENGINE
+                .rx_togglePasswordMask(element)
+                .filter(ENGINE::isShowingPassword);
+        } else {
+            return Flowable.just(true);
+        }
     }
 }
