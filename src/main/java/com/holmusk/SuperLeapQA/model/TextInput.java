@@ -7,6 +7,9 @@ import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.javautilities.log.LogUtil;
+import org.swiften.javautilities.string.StringTestUtil;
+import org.swiften.javautilities.string.StringUtil;
+import org.swiften.xtestkit.base.element.locator.general.xpath.Attribute;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.model.InputType;
 import org.swiften.xtestkit.model.TextInputType;
@@ -30,6 +33,8 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
     MOBILE,
     PASSWORD,
     HOME,
+    POSTAL_CODE,
+    UNIT_NUMBER,
     PARENT_NAME,
     PARENT_EMAIL,
     PARENT_MOBILE;
@@ -111,17 +116,14 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
      * @see Platform#IOS
      * @see org.swiften.xtestkit.kit.TestKit#localize(String)
      * @see IOSView.ViewType#UI_TEXTFIELD
+     * @see IOSView.ViewType#UI_SECURE_TEXTFIELD
      * @see #iOSShortDescription()
      */
     @NotNull
     private XPath iOSInputViewXPath() {
         String shortDescription = iOSShortDescription();
         String localized = Config.TEST_KIT.localize(shortDescription);
-
-        return XPath.builder(Platform.IOS)
-            .setClass(IOSView.ViewType.UI_TEXTFIELD.className())
-            .containsText(localized)
-            .build();
+        return XPath.builder(Platform.IOS).containsText(localized).build();
     }
 
     /**
@@ -135,6 +137,8 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
     private String iOSShortDescription() {
         switch (this) {
             case NAME:
+            case PARENT_NAME:
+            case CHILD_NAME:
                 return "input_title_abbv_name";
 
             case PHONE:
@@ -142,9 +146,21 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
             case PARENT_MOBILE:
                 return "input_title_abbv_mobile";
 
+            case HOME:
+                return "input_title_abbv_home";
+
             case EMAIL:
             case PARENT_EMAIL:
                 return "input_title_abbv_email";
+
+            case PASSWORD:
+                return "input_title_abbv_password";
+
+            case POSTAL_CODE:
+                return "input_title_abbv_postal";
+
+            case UNIT_NUMBER:
+                return "input_title_abbv_unit";
 
             default:
                 LogUtil.println(this);
@@ -166,45 +182,20 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
             case PARENT_NAME:
             case PASSWORD:
             case HOME:
-                String baseName = String.join("", IntStream.range(0, 10)
-                    .boxed()
-                    .map(a -> IntStream.range(97, 123))
-                    .map(IntStream::boxed)
-                    .map(a -> a.map(b -> (char)(int)b))
-                    .map(Stream::toArray)
-                    .map(Arrays::asList)
-                    .map(CollectionTestUtil::randomElement)
-                    .map(String::valueOf)
-                    .toArray(String[]::new));
-
-                return "testQA-" + baseName;
+            case UNIT_NUMBER:
+                return "testQA-" + StringTestUtil.randomString(10);
 
             case PHONE:
             case MOBILE:
             case PARENT_MOBILE:
-                return String.join("", IntStream.range(0, 8)
-                    .boxed()
-                    .map(a -> IntStream.range(0, 10))
-                    .map(IntStream::boxed)
-                    .map(Stream::toArray)
-                    .map(Arrays::asList)
-                    .map(CollectionTestUtil::randomElement)
-                    .map(String::valueOf)
-                    .toArray(String[]::new));
+                return StringTestUtil.randomDigitString(8);
+
+            case POSTAL_CODE:
+                return StringTestUtil.randomDigitString(6);
 
             case EMAIL:
             case PARENT_EMAIL:
-                String baseEmail = String.join("", IntStream.range(0, 10)
-                    .boxed()
-                    .map(a -> IntStream.range(97, 123))
-                    .map(IntStream::boxed)
-                    .map(a -> a.map(b -> (char)(int)b))
-                    .map(Stream::toArray)
-                    .map(CollectionTestUtil::randomElement)
-                    .map(String::valueOf)
-                    .toArray(String[]::new));
-
-                return "testQA-" + baseEmail + "@gmail.com";
+                return "testQA-" + StringTestUtil.randomString(10) + "@gmail.com";
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);

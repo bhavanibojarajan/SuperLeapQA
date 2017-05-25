@@ -165,6 +165,8 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * @see Weight#randomValue(UserMode)
      * @see #rx_a_clickInputField(Engine, SLInputType)
      * @see #rx_a_selectChoice(Engine, SLChoiceInputType, String)
+     * @see #rx_a_confirmNumericChoice(Engine)
+     * @see #rx_a_confirmTextChoice(Engine)
      */
     @NotNull
     @SuppressWarnings({"unchecked", "ConstantConditions"})
@@ -194,8 +196,10 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
 
             .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.ETHNICITY))
             .flatMap(a -> THIS.rx_a_selectChoice(E, ChoiceInput.ETHNICITY, ETH.stringValue()))
+            .flatMap(a -> THIS.rx_a_confirmTextChoice(E))
             .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.COACH_PREF))
-            .flatMap(a -> THIS.rx_a_selectChoice(E, ChoiceInput.COACH_PREF, CP.stringValue()));
+            .flatMap(a -> THIS.rx_a_selectChoice(E, ChoiceInput.COACH_PREF, CP.stringValue()))
+            .flatMap(a -> THIS.rx_a_confirmTextChoice(E));
     }
 
     /**

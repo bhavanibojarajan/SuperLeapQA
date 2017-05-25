@@ -7,11 +7,9 @@ import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
-import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.model.TextInputType;
 
 import java.util.HashMap;
@@ -25,46 +23,11 @@ import java.util.stream.Collectors;
  */
 public interface PersonalInfoTestHelperType extends PersonalInfoActionType {
     /**
-     * Enter random inputs and validate that the input views can be properly
-     * interacted with.
-     * @param ENGINE {@link Engine} instance.
-     * @param mode {@link UserMode} instance.
-     * @return {@link Flowable} instance.
-     * @see #rx_a_enterRandomInput(Engine, SLTextInputType)
-     * @see #rx_e_editField(Engine, SLInputType)
-     * @see Engine#rx_toggleNextOrDoneInput(WebElement)
-     * @see Engine#rx_togglePasswordMask(WebElement)
-     * @see Engine#isShowingPassword(WebElement)
-     * @see RxUtil#error()
-     */
-    @NotNull
-    @SuppressWarnings("unchecked")
-    default Flowable<?> rx_h_enterAndCheckPersonalInfo(@NotNull final Engine<?> ENGINE,
-                                                       @NotNull UserMode mode) {
-        final PersonalInfoActionType THIS = this;
-        return Flowable.fromIterable(mode.personalInformation())
-            .ofType(SLTextInputType.class)
-            .concatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, a))
-            .flatMap(ENGINE::rx_toggleNextOrDoneInput)
-            .all(ObjectUtil::nonNull)
-            .toFlowable()
-
-            .flatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, TextInput.PASSWORD))
-            .flatMap(a -> THIS.rx_e_editField(ENGINE, TextInput.PASSWORD))
-            .flatMap(a -> ENGINE.rx_toggleNextOrDoneInput(a).flatMap(b ->
-                ENGINE.rx_togglePasswordMask(a)
-            ))
-            .filter(ENGINE::isShowingPassword)
-            .switchIfEmpty(RxUtil.error())
-            .map(BooleanUtil::toTrue);
-    }
-
-    /**
      * Validate that the TOC checkbox has the be checked before the user can
      * proceed to the next screen.
      * @param MODE {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see UserMode#personalInformation()
+     * @see UserMode#personalInfo(PlatformType)
      * @see #rx_a_enterPersonalInfo(Engine, List)
      * @see Engine#rx_hideKeyboard()
      * @see #rx_a_confirmPersonalInfo(Engine)
@@ -74,8 +37,9 @@ public interface PersonalInfoTestHelperType extends PersonalInfoActionType {
     default Flowable<?> rx_h_checkTOCCBeforeProceeding(@NotNull final Engine<?> ENGINE,
                                                        @NotNull final UserMode MODE) {
         final PersonalInfoActionType THIS = this;
+        final PlatformType PLATFORM = ENGINE.platform();
 
-        return rx_a_enterPersonalInfo(ENGINE, MODE.personalInformation())
+        return rx_a_enterPersonalInfo(ENGINE, MODE.personalInfo(PLATFORM))
             .flatMap(a -> ENGINE.rx_hideKeyboard())
             .flatMap(a -> THIS.rx_a_confirmPersonalInfo(ENGINE))
             .flatMap(a -> THIS.rx_v_personalInfoScreen(ENGINE, MODE));
@@ -88,7 +52,7 @@ public interface PersonalInfoTestHelperType extends PersonalInfoActionType {
      * personal info page.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see UserMode#personalInformation()
+     * @see UserMode#personalInfo(PlatformType)
      * @see #rx_a_enterInput(Engine, SLInputType, String)
      * @see ObjectUtil#nonNull(Object)
      * @see #rx_a_OpenTOC(Engine)
@@ -97,9 +61,10 @@ public interface PersonalInfoTestHelperType extends PersonalInfoActionType {
     @NotNull
     default Flowable<?> rx_h_checkPersonalInfoStateSaved(@NotNull final Engine<?> ENGINE,
                                                          @NotNull UserMode mode) {
+        final PlatformType PLATFORM = ENGINE.platform();
         final PersonalInfoActionType THIS = this;
         final Map<String,String> INPUTS = new HashMap<>();
-        List<SLInputType> info = mode.personalInformation();
+        List<SLInputType> info = mode.personalInfo(PLATFORM);
 
         final List<SLTextInputType> TEXT_INFO = info.stream()
             .filter(TextInputType.class::isInstance)

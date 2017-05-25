@@ -3,6 +3,7 @@ package com.holmusk.SuperLeapQA.ui.signup.personalinfo;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
+import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.navigation.type.NavigationType;
 import com.holmusk.SuperLeapQA.runner.Runner;
@@ -10,8 +11,13 @@ import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
+import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
+import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.model.InputType;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -54,10 +60,15 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      * visibility and interacting with each of them.
      * @param MODE {@link UserMode} instance.
      * @see Screen#PERSONAL_INFO
+     * @see Engine#rx_toggleNextOrDoneInput(WebElement)
+     * @see Engine#rx_togglePasswordMask(WebElement)
+     * @see Engine#isShowingPassword(WebElement)
+     * @see UserMode#personalInfo(PlatformType)
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
-     * @see #rx_h_enterAndCheckPersonalInfo(Engine, UserMode)
      * @see #generalUserModeProvider()
+     * @see #rx_a_enterRandomInput(Engine, SLTextInputType)
+     * @see #rx_e_editField(Engine, SLInputType)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -66,12 +77,26 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
         // Setup
         final UIPersonalInfoTest THIS = this;
         final Engine<?> ENGINE = engine();
+        final PlatformType PLATFORM = ENGINE.platform();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         rx_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
             .flatMap(a -> THIS.rx_v_personalInfoScreen(ENGINE, MODE))
-            .flatMap(a -> THIS.rx_h_enterAndCheckPersonalInfo(ENGINE, MODE))
+            .concatMapIterable(a -> MODE.personalInfo(PLATFORM))
+            .ofType(SLTextInputType.class)
+            .concatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, a))
+            .concatMap(ENGINE::rx_toggleNextOrDoneInput)
+            .all(ObjectUtil::nonNull)
+            .toFlowable()
+            .flatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, TextInput.PASSWORD))
+            .flatMap(a -> THIS.rx_e_editField(ENGINE, TextInput.PASSWORD))
+            .flatMap(a -> ENGINE.rx_toggleNextOrDoneInput(a).flatMap(b ->
+                ENGINE.rx_togglePasswordMask(a)
+            ))
+            .filter(ENGINE::isShowingPassword)
+            .switchIfEmpty(RxUtil.error())
+            .map(BooleanUtil::toTrue)
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -181,6 +206,36 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
             .flatMap(a -> THIS.rx_e_progressBar(ENGINE))
             .subscribe(subscriber);
 
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * This test checks that {@link UserMode#TEEN_U18} will see
+     * {@link Screen#EXTRA_PERSONAL_INFO}, while {@link UserMode#TEEN_A18} will
+     * not. It uses a custom {@link DataProvider} that provides only
+     * {@link UserMode#TEEN_U18} and {@link UserMode#TEEN_A18}.
+     * @param MODE {@link UserMode} instance.
+     * @see Screen#EXTRA_PERSONAL_INFO
+     * @see #engine()
+     * @see #rx_navigate(UserMode, Screen...)
+     * @see #guarantorSpecificUserModeProvider()
+     * @see #assertCorrectness(TestSubscriber)
+     */
+    @SuppressWarnings("unchecked")
+    @GuarantorAware(value = true)
+    @Test(dataProvider = "guarantorSpecificUserModeProvider")
+    public void test_guarantorNeeded_requiresParentInfo(@NotNull final UserMode MODE) {
+        // Setup
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        /* During the tests, if the current user requires a guarantor (i.e
+         * below 18 years-old), we expect the parent information screen to
+         * be present */
+        rx_navigate(MODE, Screen.SPLASH, Screen.USE_APP_NOW).subscribe(subscriber);
         subscriber.awaitTerminalEvent();
 
         // Then

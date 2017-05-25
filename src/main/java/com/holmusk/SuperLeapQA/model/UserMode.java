@@ -4,6 +4,8 @@ import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.type.BaseErrorType;
+import org.swiften.xtestkit.base.type.PlatformType;
+import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.util.ValueRangeConverterType;
 
 import java.util.Arrays;
@@ -52,10 +54,36 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
 
     /**
      * Get the personal information inputs for this {@link UserMode}.
+     * @param platform {@link PlatformType} instance.
      * @return {@link List} of {@link SLInputType}.
+     * @see Platform#ANDROID
+     * @see Platform#IOS
+     * @see #androidPersonalInfo()
+     * @see #iOSPersonalInfo()
+     * @see #NOT_AVAILABLE
      */
     @NotNull
-    public List<SLInputType> personalInformation() {
+    public List<SLInputType> personalInfo(@NotNull PlatformType platform) {
+        switch ((Platform)platform) {
+            case ANDROID:
+                return androidPersonalInfo();
+
+            case IOS:
+                return iOSPersonalInfo();
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+
+    /**
+     * Get personal info {@link SLInputType} for
+     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
+     * @return {@link List} of {@link SLInputType}.
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    private List<SLInputType> androidPersonalInfo() {
         switch (this) {
             case PARENT:
                 return Arrays.asList(
@@ -64,7 +92,8 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
                     TextInput.MOBILE,
                     TextInput.EMAIL,
                     TextInput.PASSWORD,
-                    TextInput.HOME
+                    TextInput.POSTAL_CODE,
+                    TextInput.UNIT_NUMBER
                 );
 
             case TEEN_U18:
@@ -74,7 +103,44 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
                     TextInput.MOBILE,
                     TextInput.EMAIL,
                     TextInput.PASSWORD,
-                    TextInput.HOME
+                    TextInput.HOME,
+                    TextInput.POSTAL_CODE,
+                    TextInput.UNIT_NUMBER
+                );
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+
+    /**
+     * Get personal info {@link SLInputType} for
+     * {@link org.swiften.xtestkit.mobile.Platform#IOS}.
+     * @return {@link List} of {@link SLInputType}.
+     * @see #NOT_AVAILABLE
+     */
+    private List<SLInputType> iOSPersonalInfo() {
+        switch (this) {
+            case PARENT:
+                return Arrays.asList(
+                    TextInput.NAME,
+                    TextInput.CHILD_NAME,
+                    TextInput.MOBILE,
+                    TextInput.EMAIL,
+                    TextInput.PASSWORD,
+                    TextInput.POSTAL_CODE,
+                    TextInput.UNIT_NUMBER
+                );
+
+            case TEEN_U18:
+            case TEEN_A18:
+                return Arrays.asList(
+                    TextInput.NAME,
+                    TextInput.MOBILE,
+                    TextInput.EMAIL,
+                    TextInput.PASSWORD,
+                    TextInput.POSTAL_CODE,
+                    TextInput.UNIT_NUMBER
                 );
 
             default:
@@ -85,12 +151,13 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     /**
      * Get additional personal inputs, esp. for {@link UserMode#TEEN_U18} since
      * users will need to enter parent's information as well.
+     * @param platform {@link PlatformType} instance.
      * @return {@link List} of {@link SLInputType}.
      * @see Arrays#asList(Object[])
      * @see Collections#emptyList()
      */
     @NotNull
-    public List<SLInputType> extraPersonalInformation() {
+    public List<SLInputType> extraInfo(@NotNull PlatformType platform) {
         switch (this) {
             case TEEN_U18:
             case TEEN_A18:

@@ -5,6 +5,7 @@ import com.holmusk.SuperLeapQA.ui.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.model.InputType;

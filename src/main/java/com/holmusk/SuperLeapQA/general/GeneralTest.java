@@ -145,6 +145,9 @@ public final class GeneralTest {
         LogUtil.println(manager.multipleShortest(mode, Screen.SPLASH, Screen.DOB));
         LogUtil.println(manager.multipleShortest(mode, Screen.DOB, Screen.INVALID_AGE));
         LogUtil.println(manager.multipleShortest(mode, Screen.INVALID_AGE, Screen.DOB));
+
+        /* Personal info tests */
+        LogUtil.println(manager.multipleShortest(mode, Screen.SPLASH, Screen.PERSONAL_INFO));
     }
 
     @Test

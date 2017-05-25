@@ -11,6 +11,8 @@ import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.android.AndroidEngine;
+import org.swiften.xtestkit.base.type.PlatformType;
+import org.swiften.xtestkit.ios.IOSEngine;
 
 /**
  * Created by haipham on 17/5/17.
@@ -29,6 +31,11 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
     default Flowable<WebElement> rx_e_personalInfoSubmit(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             return engine.rx_containsID("btnNext").firstElement().toFlowable();
+        } else if (engine instanceof IOSEngine) {
+            return engine.rx_containsText(
+                "register_title_submit",
+                "register_title_next"
+            ).firstElement().toFlowable();
         } else {
             return RxUtil.error(NOT_AVAILABLE);
         }
@@ -70,7 +77,7 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
      * {@link WebElement}.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see UserMode#personalInformation()
+     * @see UserMode#personalInfo(PlatformType)
      * @see #rx_e_editField(Engine, SLInputType)
      * @see #rx_e_personalInfoSubmit(Engine)
      * @see ObjectUtil#nonNull(Object)
@@ -80,8 +87,9 @@ public interface PersonalInfoValidationType extends SignUpValidationType {
     default Flowable<?> rx_v_personalInfoScreen(@NotNull final Engine<?> ENGINE,
                                                 @NotNull UserMode mode) {
         final PersonalInfoValidationType THIS = this;
+        final PlatformType PLATFORM = ENGINE.platform();
 
-        return Flowable.fromIterable(mode.personalInformation())
+        return Flowable.fromIterable(mode.personalInfo(PLATFORM))
             .flatMap(a -> THIS.rx_e_editField(ENGINE, a))
             .concatWith(THIS.rx_e_personalInfoSubmit(ENGINE))
             .all(ObjectUtil::nonNull)

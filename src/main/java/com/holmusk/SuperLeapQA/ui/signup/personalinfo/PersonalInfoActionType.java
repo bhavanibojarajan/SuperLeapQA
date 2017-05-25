@@ -4,6 +4,7 @@ import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
 import com.holmusk.SuperLeapQA.ui.signup.validage.ValidAgeActionType;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.model.InputType;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
@@ -76,7 +77,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * Enter random personal info inputs in order to access the next screen.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see UserMode#personalInformation()
+     * @see UserMode#personalInfo(PlatformType)
      * @see #rx_a_enterPersonalInfo(Engine, List)
      * @see Engine#rx_hideKeyboard()
      * @see #rx_a_toggleTOC(Engine, boolean)
@@ -85,8 +86,9 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
     default Flowable<?> rx_a_enterPersonalInfo(@NotNull final Engine<?> ENGINE,
                                                @NotNull UserMode mode) {
         final PersonalInfoActionType THIS = this;
+        PlatformType platform = ENGINE.platform();
 
-        return rx_a_enterPersonalInfo(ENGINE, mode.personalInformation())
+        return rx_a_enterPersonalInfo(ENGINE, mode.personalInfo(platform))
             .flatMap(a -> ENGINE.rx_hideKeyboard())
             .flatMap(a -> THIS.rx_a_toggleTOC(ENGINE, true));
     }
@@ -98,14 +100,15 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
      * @see #rx_a_enterPersonalInfo(Engine, List)
-     * @see UserMode#extraPersonalInformation()
+     * @see UserMode#extraInfo(PlatformType)
      * @see UserMode#requiresGuarantor()
      */
     @NotNull
     default Flowable<?> rx_a_enterExtraPersonalInfo(@NotNull Engine<?> engine,
                                                     @NotNull UserMode mode) {
         if (mode.requiresGuarantor()) {
-            return rx_a_enterPersonalInfo(engine, mode.extraPersonalInformation());
+            PlatformType platform = engine.platform();
+            return rx_a_enterPersonalInfo(engine, mode.extraInfo(platform));
         } else {
             return Flowable.just(true);
         }
