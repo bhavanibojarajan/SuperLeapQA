@@ -21,11 +21,11 @@ public interface DashboardActionType extends
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxUseAppNowButton(Engine)
-     * @see Engine#rx_click(WebElement)
+     * @see Engine#rxa_click(WebElement)
      * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
-    default Flowable<?> rx_a_useAppNow(@NotNull final Engine<?> ENGINE) {
-        return rxUseAppNowButton(ENGINE).flatMap(ENGINE::rx_click);
+    default Flowable<?> rxa_useAppNow(@NotNull final Engine<?> ENGINE) {
+        return rxUseAppNowButton(ENGINE).flatMap(ENGINE::rxa_click);
     }
 }

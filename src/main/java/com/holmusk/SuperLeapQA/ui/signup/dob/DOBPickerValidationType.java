@@ -69,7 +69,7 @@ public interface DOBPickerValidationType extends WelcomeValidationType {
      * pre-DoB picker screen.
      * @param date {@link Date} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rx_containsText(String...)
+     * @see Engine#rxe_containsText(String...)
      * @see SimpleDateFormat#format(Date)
      * @see #NOT_AVAILABLE
      */
@@ -88,6 +88,6 @@ public interface DOBPickerValidationType extends WelcomeValidationType {
 
         SimpleDateFormat formatter = new SimpleDateFormat(format);
         String string = formatter.format(date);
-        return engine.rx_containsText(string).firstElement().toFlowable();
+        return engine.rxe_containsText(string).firstElement().toFlowable();
     }
 }

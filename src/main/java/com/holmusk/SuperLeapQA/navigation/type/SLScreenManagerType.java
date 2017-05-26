@@ -70,8 +70,8 @@ public interface SLScreenManagerType extends ScreenManagerType {
      * @see #rx_navigate(Object, ScreenType...)
      */
     @NotNull
-    default Flowable<?> rx_navigate(@NotNull UserMode mode,
-                                    @NotNull Screen...screens) {
+    default Flowable<?> rxa_navigate(@NotNull UserMode mode,
+                                     @NotNull Screen...screens) {
         return rx_navigate(true, holders(mode, screens));
     }
 }

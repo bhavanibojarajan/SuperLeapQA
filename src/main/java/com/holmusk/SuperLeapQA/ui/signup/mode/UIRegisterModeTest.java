@@ -30,9 +30,9 @@ public final class UIRegisterModeTest extends UIBaseTest implements RegisterMode
      * @see Screen#REGISTER
      * @see Screen#WELCOME
      * @see #engine()
-     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rxa_navigate(UserMode, Screen...)
      * @see #rx_v_registerScreen(Engine)
-     * @see #rx_a_clickBackButton(Engine)
+     * @see #rxa_clickBackButton(Engine)
      * @see #rx_v_welcomeScreen(Engine)
      */
     @SuppressWarnings("unchecked")
@@ -45,11 +45,11 @@ public final class UIRegisterModeTest extends UIBaseTest implements RegisterMode
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_navigate(UserMode.PARENT, Screen.SPLASH, Screen.REGISTER)
+        rxa_navigate(UserMode.PARENT, Screen.SPLASH, Screen.REGISTER)
             .flatMap(a -> THIS.rx_v_registerScreen(ENGINE))
 
             /* Make sure the back button works */
-            .flatMap(a -> THIS.rx_a_clickBackButton(ENGINE))
+            .flatMap(a -> THIS.rxa_clickBackButton(ENGINE))
             .flatMap(a -> THIS.rx_v_welcomeScreen(ENGINE))
             .subscribe(subscriber);
 

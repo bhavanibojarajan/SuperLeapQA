@@ -22,7 +22,7 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
      * @param MODE {@link UserMode} instance.
      * @return {@link Flowable} instance.
      * @see DOBPickerValidationType#rx_v_validAgeScreen(Engine)
-     * @see Engine#rx_containsText(String...)
+     * @see Engine#rxe_containsText(String...)
      * @see #rxe_editField(Engine, SLInputType)
      */
     @NotNull
@@ -32,9 +32,9 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
                                               @NotNull final UserMode MODE) {
         return Flowable
             .mergeArray(
-                ENGINE.rx_containsText("register_title_weAreOnlyAccepting"),
-                ENGINE.rx_containsText(MODE.validAgeCategoryRangeString()),
-                ENGINE.rx_containsText("+65"),
+                ENGINE.rxe_containsText("register_title_weAreOnlyAccepting"),
+                ENGINE.rxe_containsText(MODE.validAgeCategoryRangeString()),
+                ENGINE.rxe_containsText("+65"),
                 rxe_editField(ENGINE, TextInput.NAME),
                 rxe_editField(ENGINE, TextInput.PHONE),
                 rxe_editField(ENGINE, TextInput.EMAIL)
@@ -47,12 +47,12 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
      * Get the confirm button for the unacceptable age inputs.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rx_containsText(String...)
+     * @see Engine#rxe_containsText(String...)
      */
     @NotNull
     default Flowable<WebElement> rx_e_invalidAgeSubmit(@NotNull Engine<?> engine) {
         return engine
-            .rx_containsText("register_title_submit")
+            .rxe_containsText("register_title_submit")
             .firstElement()
             .toFlowable();
     }
@@ -61,12 +61,12 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
      * Get the continue button after the unacceptable age input is confirmed.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rx_containsText(String...)
+     * @see Engine#rxe_containsText(String...)
      */
     @NotNull
     default Flowable<WebElement> rx_e_invalidAgeOk(@NotNull Engine<?> engine) {
         return engine
-            .rx_containsText("register_title_ok")
+            .rxe_containsText("register_title_ok")
             .firstElement()
             .toFlowable();
     }
@@ -76,7 +76,7 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
      * submitted.
      * @return {@link Flowable} instance.
      * @see #rx_e_invalidAgeOk(Engine)
-     * @see Engine#rx_containsText(String...)
+     * @see Engine#rxe_containsText(String...)
      * @see ObjectUtil#nonNull(Object)
      */
     @NotNull
@@ -85,8 +85,8 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
         return Flowable
             .mergeArray(
                 rx_e_invalidAgeOk(ENGINE),
-                ENGINE.rx_containsText("register_title_thanksForInterest"),
-                ENGINE.rx_containsText("register_title_notifyOnLaunch")
+                ENGINE.rxe_containsText("register_title_thanksForInterest"),
+                ENGINE.rxe_containsText("register_title_notifyOnLaunch")
             )
             .all(ObjectUtil::nonNull)
             .toFlowable();

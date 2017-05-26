@@ -85,11 +85,11 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rx_e_numericChoiceConfirm(Engine)
-     * @see Engine#rx_click(WebElement)
+     * @see Engine#rxa_click(WebElement)
      */
     @NotNull
     default Flowable<?> rx_a_confirmNumericChoice(@NotNull final Engine<?> ENGINE) {
-        return rx_e_numericChoiceConfirm(ENGINE).flatMap(ENGINE::rx_click);
+        return rx_e_numericChoiceConfirm(ENGINE).flatMap(ENGINE::rxa_click);
     }
 
     /**
@@ -133,12 +133,12 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rx_e_textChoiceConfirm(Engine)
-     * @see Engine#rx_click(WebElement)
+     * @see Engine#rxa_click(WebElement)
      */
     @NotNull
     default Flowable<?> rx_a_confirmTextChoice(@NotNull final Engine<?> ENGINE) {
         if (ENGINE instanceof IOSEngine) {
-            return rx_e_textChoiceConfirm(ENGINE).flatMap(ENGINE::rx_click);
+            return rx_e_textChoiceConfirm(ENGINE).flatMap(ENGINE::rxa_click);
         } else {
             return Flowable.just(true);
         }
@@ -149,11 +149,11 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * the user is already in the acceptable age input screen.
      * @return {@link Flowable} instance.
      * @see #rx_e_validAgeConfirm(Engine)
-     * @see Engine#rx_click(WebElement)
+     * @see Engine#rxa_click(WebElement)
      */
     @NotNull
     default Flowable<?> rx_a_confirmValidAgeInputs(@NotNull final Engine<?> ENGINE) {
-        return rx_e_validAgeConfirm(ENGINE).flatMap(ENGINE::rx_click);
+        return rx_e_validAgeConfirm(ENGINE).flatMap(ENGINE::rxa_click);
     }
 
     /**
@@ -211,8 +211,8 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * @see #rx_a_confirmValidAgeInputs(Engine)
      */
     @NotNull
-    default Flowable<?> rx_a_enterAndConfirmValidAgeInputs(@NotNull final Engine<?> ENGINE,
-                                                           @NotNull UserMode mode) {
+    default Flowable<?> rxa_enterAndConfirmValidAgeInputs(@NotNull final Engine<?> ENGINE,
+                                                          @NotNull UserMode mode) {
         final ValidAgeActionType THIS = this;
 
         return rx_a_enterValidAgeInputs(ENGINE, mode).flatMap(a ->

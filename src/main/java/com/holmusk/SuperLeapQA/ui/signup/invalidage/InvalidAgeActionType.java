@@ -19,18 +19,18 @@ public interface InvalidAgeActionType extends InvalidAgeValidationType, DOBPicke
      * that the app shows a confirmation page.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_a_enterRandomInput(Engine, SLTextInputType)
+     * @see #rxa_enterRandomInput(Engine, SLTextInputType)
      * @see #invalidAgeInputConfirmDelay()
-     * @see Engine#rx_click(WebElement)
+     * @see Engine#rxa_click(WebElement)
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<?> rx_a_enterInvalidAgeInputs(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_enterInvalidAgeInputs(@NotNull final Engine<?> ENGINE) {
         final InvalidAgeActionType THIS = this;
 
-        return rx_a_enterRandomInput(ENGINE, TextInput.NAME)
-            .flatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, TextInput.EMAIL))
-            .flatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, TextInput.PHONE));
+        return rxa_enterRandomInput(ENGINE, TextInput.NAME)
+            .flatMap(a -> THIS.rxa_enterRandomInput(ENGINE, TextInput.EMAIL))
+            .flatMap(a -> THIS.rxa_enterRandomInput(ENGINE, TextInput.PHONE));
     }
 
     /**
@@ -38,26 +38,26 @@ public interface InvalidAgeActionType extends InvalidAgeValidationType, DOBPicke
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rx_e_invalidAgeSubmit(Engine)
-     * @see Engine#rx_click(WebElement)
+     * @see Engine#rxa_click(WebElement)
      */
     @NotNull
     default Flowable<?> rx_a_confirmInvalidAgeInputs(@NotNull final Engine<?> ENGINE) {
-        return rx_e_invalidAgeSubmit(ENGINE).flatMap(ENGINE::rx_click);
+        return rx_e_invalidAgeSubmit(ENGINE).flatMap(ENGINE::rxa_click);
     }
 
     /**
      * Enter and confirm invalid age inputs.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_a_enterInvalidAgeInputs(Engine)
+     * @see #rxa_enterInvalidAgeInputs(Engine)
      * @see #rx_a_confirmInvalidAgeInputs(Engine)
      * @see #invalidAgeInputConfirmDelay()
      */
     @NotNull
-    default Flowable<?> rx_a_enterAndConfirmInvalidAgeInputs(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_enterAndConfirmInvalidAgeInputs(@NotNull final Engine<?> ENGINE) {
         final InvalidAgeActionType THIS = this;
 
-        return rx_a_enterInvalidAgeInputs(ENGINE)
+        return rxa_enterInvalidAgeInputs(ENGINE)
             .flatMap(a -> THIS.rx_a_confirmInvalidAgeInputs(ENGINE))
             .delay(invalidAgeInputConfirmDelay(), TimeUnit.MILLISECONDS);
 
@@ -68,10 +68,10 @@ public interface InvalidAgeActionType extends InvalidAgeValidationType, DOBPicke
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rx_e_invalidAgeOk(Engine)
-     * @see Engine#rx_click(WebElement)
+     * @see Engine#rxa_click(WebElement)
      */
     @NotNull
     default Flowable<?> rx_a_completeInvalidAgeInput(@NotNull final Engine<?> ENGINE) {
-        return rx_e_invalidAgeOk(ENGINE).flatMap(ENGINE::rx_click);
+        return rx_e_invalidAgeOk(ENGINE).flatMap(ENGINE::rxa_click);
     }
 }

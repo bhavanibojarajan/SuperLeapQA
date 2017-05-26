@@ -19,22 +19,22 @@ public interface WelcomeValidationType extends BaseValidationType {
      * Get the register button on the welcome screen.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rx_containsText(String...)
+     * @see Engine#rxe_containsText(String...)
      */
     @NotNull
     default Flowable<WebElement> rx_e_welcomeRegister(@NotNull Engine<?> engine) {
-        return engine.rx_containsText("welcome_title_register").firstElement().toFlowable();
+        return engine.rxe_containsText("welcome_title_register").firstElement().toFlowable();
     }
 
     /**
      * Get the sign in button on the welcome screen.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rx_containsText(String...)
+     * @see Engine#rxe_containsText(String...)
      */
     @NotNull
     default Flowable<WebElement> rx_e_welcomeSignIn(@NotNull Engine<?> engine) {
-        return engine.rx_containsText("welcome_title_signIn").firstElement().toFlowable();
+        return engine.rxe_containsText("welcome_title_signIn").firstElement().toFlowable();
     }
 
     /**
@@ -58,7 +58,7 @@ public interface WelcomeValidationType extends BaseValidationType {
      * Validate the swipeable splash screens.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rx_containsText(String...)
+     * @see Engine#rxe_containsText(String...)
      * @see Engine#rx_swipeGenericLR(DurationType)
      * @see Engine#rxSwipeGenericRL(DurationType)
      */
@@ -90,7 +90,7 @@ public interface WelcomeValidationType extends BaseValidationType {
                     String[] messages = MESSAGES[INDEX];
 
                     return Flowable.fromArray(messages)
-                        .flatMap(ENGINE::rx_containsText)
+                        .flatMap(ENGINE::rxe_containsText)
                         .all(ObjectUtil::nonNull)
                         .toFlowable()
 

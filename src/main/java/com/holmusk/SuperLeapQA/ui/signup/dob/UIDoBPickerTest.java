@@ -37,9 +37,9 @@ public final class UIDoBPickerTest extends UIBaseTest implements
      * @see Screen#REGISTER
      * @see Screen#DOB
      * @see #engine()
-     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rxa_navigate(UserMode, Screen...)
      * @see #rx_h_DoBPickerScreen(Engine)
-     * @see #rx_a_clickBackButton(Engine)
+     * @see #rxa_clickBackButton(Engine)
      * @see #rx_v_registerScreen(Engine)
      * @see #generalUserModeProvider()
      */
@@ -53,9 +53,9 @@ public final class UIDoBPickerTest extends UIBaseTest implements
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_navigate(mode, Screen.SPLASH, Screen.DOB)
+        rxa_navigate(mode, Screen.SPLASH, Screen.DOB)
             .flatMap(a -> THIS.rx_h_DoBPickerScreen(ENGINE))
-            .flatMap(a -> THIS.rx_a_clickBackButton(ENGINE))
+            .flatMap(a -> THIS.rxa_clickBackButton(ENGINE))
             .flatMap(a -> THIS.rx_v_registerScreen(ENGINE))
             .subscribe(subscriber);
 
@@ -76,10 +76,10 @@ public final class UIDoBPickerTest extends UIBaseTest implements
      * @see Screen#INVALID_AGE
      * @see #engine()
      * @see #generalUserModeProvider()
-     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rxa_navigate(UserMode, Screen...)
      * @see #rx_a_openDoBPicker(Engine)
      * @see #rx_a_selectDoB(Engine, Date)
-     * @see #rx_a_clickBackButton(Engine)
+     * @see #rxa_clickBackButton(Engine)
      * @see #rx_v_DoBEditFieldHasDate(Engine, Date)
      */
     @SuppressWarnings("unchecked")
@@ -97,11 +97,11 @@ public final class UIDoBPickerTest extends UIBaseTest implements
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_navigate(MODE, Screen.SPLASH, Screen.DOB)
+        rxa_navigate(MODE, Screen.SPLASH, Screen.DOB)
             .flatMap(a -> THIS.rx_a_openDoBPicker(ENGINE))
             .flatMap(a -> THIS.rx_a_selectDoB(ENGINE, DATE))
-            .flatMap(a -> THIS.rx_navigate(MODE, Screen.DOB, Screen.INVALID_AGE))
-            .flatMap(a -> THIS.rx_navigate(MODE, Screen.INVALID_AGE, Screen.DOB))
+            .flatMap(a -> THIS.rxa_navigate(MODE, Screen.DOB, Screen.INVALID_AGE))
+            .flatMap(a -> THIS.rxa_navigate(MODE, Screen.INVALID_AGE, Screen.DOB))
             .flatMap(a -> THIS.rx_v_DoBEditFieldHasDate(ENGINE, DATE))
             .subscribe(subscriber);
 
@@ -136,7 +136,7 @@ public final class UIDoBPickerTest extends UIBaseTest implements
         final List<Integer> AGES = MODE.offsetFromCategoryValidRange(2);
 
         // When
-        rx_navigate(MODE, Screen.SPLASH, Screen.DOB)
+        rxa_navigate(MODE, Screen.SPLASH, Screen.DOB)
             .flatMap(a -> THIS.rx_h_validateDoBsRecursive(ENGINE, MODE, AGES))
             .subscribe(subscriber);
 

@@ -25,13 +25,13 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * Click the submit button to confirm personal info inputs.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_e_personalInfoSubmit(Engine)
-     * @see Engine#rx_click(WebElement)
+     * @see #rxe_personalInfoSubmit(Engine)
+     * @see Engine#rxa_click(WebElement)
      * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
     default Flowable<?> rxa_confirmPersonalInfo(@NotNull final Engine<?> ENGINE) {
-        return rx_e_personalInfoSubmit(ENGINE).flatMap(ENGINE::rx_click);
+        return rxe_personalInfoSubmit(ENGINE).flatMap(ENGINE::rxa_click);
     }
 
     /**
@@ -39,14 +39,14 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @param ENGINE {@link Engine} instance.
      * @param ACCEPTED {@link Boolean} value.
      * @return {@link Flowable} instance.
-     * @see #rx_e_TOCCheckBox(Engine)
+     * @see #rxe_TCCheckBox(Engine)
      * @see Engine#toggleCheckBox(WebElement, boolean)
      * @see Engine#click(WebElement)
      */
     @NotNull
     default Flowable<?> rx_a_toggleTOC(@NotNull final Engine<?> ENGINE,
                                        final boolean ACCEPTED) {
-        return rx_e_TOCCheckBox(ENGINE).flatMap(a -> ENGINE.toggleCheckBox(a, ACCEPTED));
+        return rxe_TCCheckBox(ENGINE).flatMap(a -> ENGINE.toggleCheckBox(a, ACCEPTED));
     }
 
     /**
@@ -56,8 +56,8 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @param ENGINE {@link Engine} instance.
      * @param inputs {@link List} of {@link InputType}.
      * @return {@link Flowable} instance.
-     * @see Engine#rx_navigateBackOnce()
-     * @see #rx_a_enterRandomInput(Engine, SLTextInputType)
+     * @see Engine#rxa_navigateBackOnce()
+     * @see #rxa_enterRandomInput(Engine, SLTextInputType)
      * @see #rx_a_toggleTOC(Engine, boolean)
      * @see #rxa_makeNextInputVisible(Engine, WebElement)
      */
@@ -69,7 +69,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
         return Flowable
             .fromIterable(inputs)
             .ofType(SLTextInputType.class)
-            .concatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, a))
+            .concatMap(a -> THIS.rxa_enterRandomInput(ENGINE, a))
             .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
             .all(ObjectUtil::nonNull)
             .toFlowable();
@@ -81,7 +81,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @return {@link Flowable} instance.
      * @see UserMode#personalInfo(PlatformType)
      * @see #rxa_enterPersonalInfo(Engine, List)
-     * @see Engine#rx_hideKeyboard()
+     * @see Engine#rxa_hideKeyboard()
      * @see #rx_a_toggleTOC(Engine, boolean)
      */
     @NotNull
@@ -91,7 +91,6 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
         PlatformType platform = ENGINE.platform();
 
         return rxa_enterPersonalInfo(ENGINE, mode.personalInfo(platform))
-            .flatMap(a -> ENGINE.rx_hideKeyboard())
             .flatMap(a -> THIS.rx_a_toggleTOC(ENGINE, true));
     }
 
@@ -122,8 +121,8 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see #rxa_confirmPersonalInfo(Engine)
      * @see UserMode#requiresGuarantor()
+     * @see #rxa_confirmPersonalInfo(Engine)
      */
     @NotNull
     default Flowable<?> rxa_confirmExtraPersonalInfo(@NotNull Engine<?> engine,
@@ -139,12 +138,12 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * Watch until the personal info screen is no longer visible.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_e_personalInfoSubmit(Engine)
+     * @see #rxe_personalInfoSubmit(Engine)
      * @see Engine#rx_watchUntilHidden(WebElement)
      */
     @NotNull
-    default Flowable<?> rx_a_watchPersonalInfoScreen(@NotNull final Engine<?> ENGINE) {
-        return rx_e_personalInfoSubmit(ENGINE)
+    default Flowable<?> rxa_watchPersonalInfoScreen(@NotNull final Engine<?> ENGINE) {
+        return rxe_personalInfoSubmit(ENGINE)
             .flatMap(ENGINE::rx_watchUntilHidden)
             .onErrorReturnItem(true);
     }
@@ -162,7 +161,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      */
     @NotNull
     default Flowable<?> rxa_openTOC(@NotNull final Engine<?> ENGINE) {
-        return rx_e_TOCAcceptanceLabel(ENGINE)
+        return rxe_TCAcceptanceLabel(ENGINE)
             .map(a -> {
                 Point point = a.getLocation();
                 Dimension size = a.getSize();

@@ -28,7 +28,7 @@ public class UIWelcomeTest extends UIBaseTest implements WelcomeActionType {
      * {@link org.openqa.selenium.WebElement} are visible.
      * @see Screen#WELCOME
      * @see #engine()
-     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rxa_navigate(UserMode, Screen...)
      * @see #rx_v_welcomeScreen(Engine)
      */
     @SuppressWarnings("unchecked")
@@ -41,7 +41,7 @@ public class UIWelcomeTest extends UIBaseTest implements WelcomeActionType {
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_navigate(UserMode.PARENT, Screen.SPLASH, Screen.WELCOME)
+        rxa_navigate(UserMode.PARENT, Screen.SPLASH, Screen.WELCOME)
             .flatMap(a -> THIS.rx_v_welcomeScreen(ENGINE))
             .subscribe(subscriber);
 

@@ -27,24 +27,24 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
      * Get the next confirm button for acceptable age input screen.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rx_containsText(String...)
+     * @see Engine#rxe_containsText(String...)
      */
     @NotNull
     default Flowable<WebElement> rx_e_validAgeConfirm(@NotNull Engine<?> engine) {
-        return engine.rx_containsText("register_title_next").firstElement().toFlowable();
+        return engine.rxe_containsText("register_title_next").firstElement().toFlowable();
     }
 
     /**
      * Get the back button's title label.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rx_containsText(String...)
+     * @see Engine#rxe_containsText(String...)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rx_e_validAgeInputTitle(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
-            return engine.rx_containsText(
+            return engine.rxe_containsText(
                 "parentSignUp_title_enterChildDetails",
                 "teenSignUp_title_enterDetails"
             ).firstElement().toFlowable();
@@ -112,19 +112,19 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
      * Get the confirm button for numeric choice inputs (e.g. {@link Height}
      * and {@link Weight}).
      * @return {@link Flowable} instance.
-     * @see Engine#rx_containsID(String...)
+     * @see Engine#rxe_containsID(String...)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rx_e_numericChoiceConfirm(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             return engine
-                .rx_containsID("btnDone")
+                .rxe_containsID("btnDone")
                 .firstElement()
                 .toFlowable();
         } else if (engine instanceof IOSEngine) {
             return engine
-                .rx_containsText("input_title_done")
+                .rxe_containsText("input_title_done")
                 .firstElement()
                 .toFlowable();
         } else {
@@ -137,14 +137,14 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
      * {@link ChoiceInput#ETHNICITY} or {@link ChoiceInput#COACH_PREF}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rx_containsText(String...)
+     * @see Engine#rxe_containsText(String...)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rx_e_textChoiceConfirm(@NotNull Engine<?> engine) {
         if (engine instanceof IOSEngine) {
             return engine
-                .rx_containsText("input_title_done")
+                .rxe_containsText("input_title_done")
                 .firstElement()
                 .toFlowable();
         } else {
@@ -157,12 +157,12 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
      * only works in specific cases however, so use with care.
      * @param error {@link LCFormat} value.
      * @return {@link Flowable} instance.
-     * @see Engine#rx_containsText(String...)
+     * @see Engine#rxe_containsText(String...)
      */
     @NotNull
     default Flowable<WebElement> rx_e_errorPopup(@NotNull Engine<?> engine,
                                                  @NotNull LCFormat error) {
-        return engine.rx_containsText(error).firstElement().toFlowable();
+        return engine.rxe_containsText(error).firstElement().toFlowable();
     }
 
     /**

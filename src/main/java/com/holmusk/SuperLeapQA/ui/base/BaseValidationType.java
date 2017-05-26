@@ -15,8 +15,6 @@ import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.ios.IOSEngine;
-import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.model.InputType;
 
 /**
@@ -29,15 +27,15 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#platform()
-     * @see Engine#rx_containsID(String...)
+     * @see Engine#rxe_containsID(String...)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxBackButton(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
-            return engine.rx_containsID("btnBack").firstElement().toFlowable();
+            return engine.rxe_containsID("btnBack").firstElement().toFlowable();
         } else if (engine instanceof IOSEngine) {
-            return engine.rx_containsID("ob back").firstElement().toFlowable();
+            return engine.rxe_containsID("ob back").firstElement().toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -47,12 +45,18 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * Get the common probress bar.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rx_containsID(String...)
+     * @see Engine#rxe_containsID(String...)
+     * @see Engine#rxe_containsText(String...)
      */
     @NotNull
     default Flowable<WebElement> rxe_progressBar(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
-            return engine.rx_containsID("pb_general").firstElement().toFlowable();
+            return engine.rxe_containsID("pb_general").firstElement().toFlowable();
+        } else if (engine instanceof IOSEngine) {
+            return engine
+                .rxe_containsText("Loading..", "Indeterminate Progress")
+                .firstElement()
+                .toFlowable();
         } else {
             return RxUtil.error();
         }
@@ -65,7 +69,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @param input {@link InputType} instance.
      * @return {@link Flowable} instance.
      * @see Engine#platform()
-     * @see Engine#rx_withXPath(XPath...)
+     * @see Engine#rxe_withXPath(XPath...)
      * @see SLInputType#inputViewXPath(PlatformType)
      */
     @NotNull
@@ -74,7 +78,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
         PlatformType platform = engine.platform();
 
         return engine
-            .rx_withXPath(input.inputViewXPath(platform))
+            .rxe_withXPath(input.inputViewXPath(platform))
             .firstElement()
             .toFlowable();
     }

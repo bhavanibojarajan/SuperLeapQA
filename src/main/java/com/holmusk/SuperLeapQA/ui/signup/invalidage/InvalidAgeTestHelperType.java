@@ -18,9 +18,9 @@ public interface InvalidAgeTestHelperType extends InvalidAgeActionType {
      * @param INPUT {@link TextInput} instance. Should be either
      * {@link TextInput#EMAIL} or {@link TextInput#PHONE}.
      * @return {@link Flowable} instance.
-     * @see #rx_a_enterRandomInput(Engine, SLTextInputType)
+     * @see #rxa_enterRandomInput(Engine, SLTextInputType)
      * @see #rx_a_confirmInvalidAgeInputs(Engine)
-     * @see #rx_a_watchProgressBarUntilHidden(Engine)
+     * @see #rxa_watchProgressBarUntilHidden(Engine)
      * @see #rx_a_completeInvalidAgeInput(Engine)
      */
     @NotNull
@@ -28,11 +28,11 @@ public interface InvalidAgeTestHelperType extends InvalidAgeActionType {
                                                      @NotNull final TextInput INPUT) {
         final InvalidAgeActionType THIS = this;
 
-        return rx_a_enterRandomInput(ENGINE, TextInput.NAME)
-            .flatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, INPUT))
-            .flatMap(a -> ENGINE.rx_hideKeyboard())
+        return rxa_enterRandomInput(ENGINE, TextInput.NAME)
+            .flatMap(a -> THIS.rxa_enterRandomInput(ENGINE, INPUT))
+            .flatMap(a -> ENGINE.rxa_hideKeyboard())
             .flatMap(a -> THIS.rx_a_confirmInvalidAgeInputs(ENGINE))
-            .flatMap(a -> THIS.rx_a_watchProgressBarUntilHidden(ENGINE))
+            .flatMap(a -> THIS.rxa_watchProgressBarUntilHidden(ENGINE))
             .flatMap(a -> THIS.rx_v_invalidAgeInputConfirmed(ENGINE))
             .flatMap(a -> THIS.rx_a_completeInvalidAgeInput(ENGINE));
     }

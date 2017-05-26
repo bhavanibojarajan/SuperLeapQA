@@ -78,7 +78,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.WELCOME, MODE),
-                        a -> THIS.rx_n_splash_welcome()
+                        a -> THIS.rxn_splash_welcome()
                     )
                 );
 
@@ -109,7 +109,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.DOB, MODE),
-                        a -> THIS.rx_n_register_DoBPicker(ENGINE, MODE)
+                        a -> THIS.rxn_register_DoBPicker(ENGINE, MODE)
                     )
                 );
 
@@ -117,11 +117,11 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.INVALID_AGE, MODE),
-                        a -> THIS.rx_n_DoBPicker_invalidAge(ENGINE, MODE)
+                        a -> THIS.rxn_DoBPicker_invalidAge(ENGINE, MODE)
                     ),
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.VALID_AGE, MODE),
-                        a -> THIS.rx_n_DoBPicker_validAge(ENGINE, MODE)
+                        a -> THIS.rxn_DoBPicker_validAge(ENGINE, MODE)
                     )
                 );
 
@@ -132,7 +132,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.PERSONAL_INFO, MODE),
-                        a -> THIS.rx_n_validAge_personalInfo(ENGINE, MODE)
+                        a -> THIS.rxn_validAge_personalInfo(ENGINE, MODE)
                     )
                 );
 
@@ -140,7 +140,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.EXTRA_PERSONAL_INFO, MODE),
-                        a -> THIS.rx_n_personalInfo_extraInfo(ENGINE, MODE)
+                        a -> THIS.rxn_personalInfo_extraInfo(ENGINE, MODE)
                     )
                 );
 
@@ -148,7 +148,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.USE_APP_NOW, MODE),
-                        a -> THIS.rx_n_extraInfo_useApp(ENGINE, MODE)
+                        a -> THIS.rxn_extraInfo_useApp(ENGINE, MODE)
                     )
                 );
 
@@ -156,7 +156,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.DASHBOARD_TUTORIAL, MODE),
-                        a -> THIS.rx_n_useApp_tutorial(ENGINE)
+                        a -> THIS.rxn_useApp_tutorial(ENGINE)
                     )
                 );
 
@@ -164,7 +164,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.DASHBOARD, MODE),
-                        a -> THIS.rx_n_tutorial_dashboard(ENGINE)
+                        a -> THIS.rxn_tutorial_dashboard(ENGINE)
                     )
                 );
 
@@ -199,7 +199,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.WELCOME, MODE),
-                        a -> THIS.rx_n_signIn_welcome(ENGINE)
+                        a -> THIS.rxn_signIn_welcome(ENGINE)
                     )
                 );
 
@@ -215,7 +215,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.WELCOME, MODE),
-                        a -> THIS.rx_n_register_welcome(ENGINE)
+                        a -> THIS.rxn_register_welcome(ENGINE)
                     )
                 );
 
@@ -231,11 +231,11 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.DOB, MODE),
-                        a -> THIS.rx_n_invalidAge_DOBPicker(ENGINE)
+                        a -> THIS.rxn_invalidAge_DOBPicker(ENGINE)
                     ),
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.REGISTER, MODE),
-                        a -> THIS.rx_n_invalidAge_welcome(ENGINE)
+                        a -> THIS.rxn_invalidAge_welcome(ENGINE)
                     )
                 );
 
@@ -243,7 +243,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.DOB, MODE),
-                        a -> THIS.rx_n_validAge_welcome(ENGINE)
+                        a -> THIS.rxn_validAge_welcome(ENGINE)
                     )
                 );
 
@@ -251,7 +251,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.VALID_AGE, MODE),
-                        a -> THIS.rx_n_personalInfo_validAge(ENGINE)
+                        a -> THIS.rxn_personalInfo_validAge(ENGINE)
                     )
                 );
 
@@ -259,7 +259,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.PERSONAL_INFO, MODE),
-                        a -> THIS.rx_n_extraInfo_personalInfo(ENGINE, MODE)
+                        a -> THIS.rxn_extraInfo_personalInfo(ENGINE, MODE)
                     )
                 );
 

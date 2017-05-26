@@ -37,7 +37,7 @@ public class UIMainDashboardTest extends UIBaseTest implements DashboardActionTy
      * @see Screen#DASHBOARD
      * @see #engine()
      * @see #rx_v_useAppNowScreen(Engine)
-     * @see #rx_a_useAppNow(Engine)
+     * @see #rxa_useAppNow(Engine)
      * @see #rx_v_dashboardTutorialScreen(Engine)
      * @see #guarantorSpecificUserModeProvider()
      */
@@ -51,11 +51,11 @@ public class UIMainDashboardTest extends UIBaseTest implements DashboardActionTy
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_navigate(mode, Screen.SPLASH, Screen.DOB, Screen.USE_APP_NOW)
+        rxa_navigate(mode, Screen.SPLASH, Screen.DOB, Screen.USE_APP_NOW)
             .flatMap(a -> THIS.rx_v_useAppNowScreen(ENGINE))
-            .flatMap(a -> THIS.rx_a_useAppNow(ENGINE))
+            .flatMap(a -> THIS.rxa_useAppNow(ENGINE))
             .flatMap(a -> THIS.rx_v_dashboardTutorialScreen(ENGINE))
-            .flatMap(a -> THIS.rx_navigate(mode, Screen.DASHBOARD_TUTORIAL, Screen.DASHBOARD))
+            .flatMap(a -> THIS.rxa_navigate(mode, Screen.DASHBOARD_TUTORIAL, Screen.DASHBOARD))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

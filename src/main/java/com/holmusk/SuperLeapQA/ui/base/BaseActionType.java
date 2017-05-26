@@ -35,14 +35,14 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * @see #generalDelay()
      * @see #rxBackButton(Engine)
      * @see BooleanUtil#toTrue(Object)
-     * @see Engine#rx_click(WebElement)
+     * @see Engine#rxa_click(WebElement)
      */
     @NotNull
-    default Flowable<Boolean> rx_a_clickBackButton(@NotNull final Engine<?> ENGINE) {
+    default Flowable<Boolean> rxa_clickBackButton(@NotNull final Engine<?> ENGINE) {
         long delay = generalDelay();
 
         return rxBackButton(ENGINE)
-            .flatMap(ENGINE::rx_click).map(BooleanUtil::toTrue)
+            .flatMap(ENGINE::rxa_click).map(BooleanUtil::toTrue)
             .delay(delay, TimeUnit.MILLISECONDS);
     }
 
@@ -54,7 +54,7 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * @see Engine#rx_watchUntilHidden(WebElement)
      */
     @NotNull
-    default Flowable<Boolean> rx_a_watchProgressBarUntilHidden(@NotNull final Engine<?> ENGINE) {
+    default Flowable<Boolean> rxa_watchProgressBarUntilHidden(@NotNull final Engine<?> ENGINE) {
         return rxe_progressBar(ENGINE)
             .flatMap(ENGINE::rx_watchUntilHidden)
             .onErrorReturnItem(true);
@@ -86,8 +86,8 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * @see TextInputType#randomInput()
      */
     @NotNull
-    default Flowable<WebElement> rx_a_enterRandomInput(@NotNull Engine<?> engine,
-                                                       @NotNull SLTextInputType input) {
+    default Flowable<WebElement> rxa_enterRandomInput(@NotNull Engine<?> engine,
+                                                      @NotNull SLTextInputType input) {
         return rxa_enterInput(engine, input, input.randomInput());
     }
 
@@ -98,12 +98,12 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * @param input {@link InputType} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_editField(Engine, SLInputType)   )
-     * @see Engine#rx_click(WebElement)
+     * @see Engine#rxa_click(WebElement)
      */
     @NotNull
     default Flowable<?> rx_a_clickInputField(@NotNull final Engine<?> ENGINE,
                                              @NotNull SLInputType input) {
-        return rxe_editField(ENGINE, input).flatMap(ENGINE::rx_click);
+        return rxe_editField(ENGINE, input).flatMap(ENGINE::rxa_click);
     }
 
     /**
@@ -111,14 +111,14 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#localizer()
-     * @see Engine#rx_withXPath(XPath...)
-     * @see Engine#rx_click(WebElement)
+     * @see Engine#rxe_withXPath(XPath...)
+     * @see Engine#rxa_click(WebElement)
      * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
      * @see XPath.Builder#setClass(String)
      * @see XPath.Builder#containsText(String)
      */
     @NotNull
-    default Flowable<?> rx_a_confirmTextInput(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_confirmTextInput(@NotNull final Engine<?> ENGINE) {
         if (ENGINE instanceof IOSEngine) {
             String done = "input_title_done";
             String localized = ENGINE.localizer().localize(done);
@@ -128,7 +128,7 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
                 .containsText(localized)
                 .build();
 
-            return ENGINE.rx_withXPath(xPath).flatMap(ENGINE::rx_click);
+            return ENGINE.rxe_withXPath(xPath).flatMap(ENGINE::rxa_click);
         } else {
             return Flowable.just(true);
         }
@@ -140,10 +140,10 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * @param E {@link Engine} instance.
      * @param element {@link WebElement} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rx_hideKeyboard()
+     * @see Engine#rxa_hideKeyboard()
      * @see Engine#rx_isLastInput(WebElement)
      * @see Engine#rx_toggleNextOrFinishInput(WebElement)
-     * @see #rx_a_confirmTextInput(Engine)
+     * @see #rxa_confirmTextInput(Engine)
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -152,24 +152,28 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
         if (E instanceof AndroidEngine) {
             /* Since sending key events is rather flaky, we can instead hide
              * the keyboard to expose the next input field */
-            return E.rx_hideKeyboard();
+            return E.rxa_hideKeyboard();
         } else if (E instanceof IOSEngine) {
-            /* In this case, each input will have up/down keyboard accessories
-             * that we can use to navigate to the previous/next input fields */
-            final BaseActionType THIS = this;
-
-            return E.rx_isLastInput(element)
-                .flatMap(a -> {
-                    if (a) {
-                        return THIS.rx_a_confirmTextInput(E);
-                    } else {
-                        String id = "ob downArrow";
-                        return E.rx_containsID(id).flatMap(E::rx_click);
-                    }
-                });
+            return rxa_confirmTextInput(E);
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
+    }
+
+    /**
+     * Toggle the next input for an input-based {@link WebElement}.
+     * @param E {@link Engine} instance.
+     * @param element {@link WebElement} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxe_containsID(String...)
+     * @see Engine#rxa_click(WebElement)
+     */
+    @NotNull
+    default Flowable<?> rxa_toggleNextInput(@NotNull final Engine<?> E,
+                                            @NotNull WebElement element) {
+        /* In this case, each input will have up/down keyboard accessories
+         * that we can use to navigate to the previous/next input fields */
+        return E.rxe_containsID("ob downArrow").flatMap(E::rxa_click);
     }
 
     /**
@@ -179,15 +183,15 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * @param ENGINE {@link Engine} instance.
      * @param element {@link WebElement} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rx_containsID(String...)
-     * @see Engine#rx_click(WebElement)
+     * @see Engine#rxe_containsID(String...)
+     * @see Engine#rxa_click(WebElement)
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<?> rx_a_togglePreviousInput(@NotNull final Engine<?> ENGINE,
-                                                 @NotNull WebElement element) {
+    default Flowable<?> rxa_togglePreviousInput(@NotNull final Engine<?> ENGINE,
+                                                @NotNull WebElement element) {
         if (ENGINE instanceof IOSEngine) {
-            return ENGINE.rx_containsID("ob upArrow").flatMap(ENGINE::rx_click);
+            return ENGINE.rxe_containsID("ob upArrow").flatMap(ENGINE::rxa_click);
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

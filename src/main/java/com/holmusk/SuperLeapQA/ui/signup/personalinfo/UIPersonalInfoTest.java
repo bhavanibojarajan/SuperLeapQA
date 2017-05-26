@@ -42,19 +42,21 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
         super(index);
     }
 
+    /**
+     * This {@link DataProvider} is used to check for either/or input
+     * requirement when the user is entering guarantor information.
+     * @return {@link Iterator} instance.
+     */
     @DataProvider
     public Iterator<Object[]> parentPersonalInfoProvider() {
-        List<Object[]> data = new LinkedList<>();
-
-        data.add(new Object[] {
-            Arrays.asList(TextInput.PARENT_NAME, TextInput.PARENT_EMAIL)
-        });
-
-        data.add(new Object[] {
-            Arrays.asList(TextInput.PARENT_NAME, TextInput.PARENT_MOBILE)
-        });
-
-        return data.iterator();
+        return Arrays.asList(
+            new Object[] {
+                Arrays.asList(TextInput.PARENT_NAME, TextInput.PARENT_EMAIL)
+            },
+            new Object[] {
+                Arrays.asList(TextInput.PARENT_NAME, TextInput.PARENT_MOBILE)
+            }
+        ).iterator();
     }
 
     /**
@@ -64,14 +66,14 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      * @param MODE {@link UserMode} instance.
      * @see Screen#PERSONAL_INFO
      * @see Engine#rx_toggleNextOrFinishInput(WebElement)
-     * @see Engine#rx_togglePasswordMask(WebElement)
+     * @see Engine#rxa_togglePasswordMask(WebElement)
      * @see Engine#isShowingPassword(WebElement)
      * @see ObjectUtil#nonNull(Object)
      * @see UserMode#personalInfo(PlatformType)
      * @see #engine()
-     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rxa_navigate(UserMode, Screen...)
      * @see #generalUserModeProvider()
-     * @see #rx_a_enterRandomInput(Engine, SLTextInputType)
+     * @see #rxa_enterRandomInput(Engine, SLTextInputType)
      * @see #rxe_editField(Engine, SLInputType)
      * @see #rxa_makeNextInputVisible(Engine, WebElement)
      */
@@ -86,11 +88,11 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
+        rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
             .flatMap(a -> THIS.rxv_personalInfoScreen(ENGINE, MODE))
             .concatMapIterable(a -> MODE.personalInfo(PLATFORM))
             .ofType(SLTextInputType.class)
-            .concatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, a))
+            .concatMap(a -> THIS.rxa_enterRandomInput(ENGINE, a))
             .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
             .all(ObjectUtil::nonNull)
             .toFlowable()
@@ -108,12 +110,12 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      * {@link org.swiften.xtestkit.mobile.Platform#ANDROID} since on
      * {@link org.swiften.xtestkit.mobile.Platform#IOS} there is no way to
      * reveal the password content.
-     * @see Engine#rx_togglePasswordMask(WebElement)
+     * @see Engine#rxa_togglePasswordMask(WebElement)
      * @see Engine#isShowingPassword(WebElement)
      * @see RxUtil#error()
-     * @see #rx_navigate(UserMode, Screen...)
-     * @see #rx_a_enterRandomInput(Engine, SLTextInputType)
-     * @see #rx_a_confirmTextInput(Engine)
+     * @see #rxa_navigate(UserMode, Screen...)
+     * @see #rxa_enterRandomInput(Engine, SLTextInputType)
+     * @see #rxa_confirmTextInput(Engine)
      */
     @Test
     @SuppressWarnings("unchecked")
@@ -127,10 +129,10 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
         // When
         Flowable.just(ENGINE)
             .filter(a -> a instanceof AndroidEngine)
-            .flatMap(a -> THIS.rx_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO))
-            .flatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, TextInput.PASSWORD))
-            .flatMap(a -> THIS.rx_a_confirmTextInput(ENGINE)
-                .flatMap(b -> ENGINE.rx_togglePasswordMask(a))
+            .flatMap(a -> THIS.rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO))
+            .flatMap(a -> THIS.rxa_enterRandomInput(ENGINE, TextInput.PASSWORD))
+            .flatMap(a -> THIS.rxa_confirmTextInput(ENGINE)
+                .flatMap(b -> ENGINE.rxa_togglePasswordMask(a))
                 .filter(ENGINE::isShowingPassword)
                 .switchIfEmpty(RxUtil.error())
             )
@@ -154,7 +156,7 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      * @see UserMode#personalInfo(PlatformType)
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
-     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_enterInput(Engine, SLInputType, String)
      * @see #rxa_openTOC(Engine)
      * @see #rxa_makeNextInputVisible(Engine, WebElement)
@@ -183,7 +185,7 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
         // When
         Flowable.just(ENGINE)
             .filter(a -> a instanceof AndroidEngine)
-            .flatMap(a -> THIS.rx_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO))
+            .flatMap(a -> THIS.rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO))
             .concatMapIterable(a -> TEXT_INFO)
             .concatMap(a -> THIS.rxa_enterInput(ENGINE, a, INPUTS.get(a.toString())))
             .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
@@ -197,12 +199,12 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
             /* We need to unmask the password field so that later its text
              * can be verified. Otherwise, the text returned will be empty */
             .flatMap(a -> THIS.rxe_editField(ENGINE, TextInput.PASSWORD))
-            .flatMap(ENGINE::rx_togglePasswordMask)
+            .flatMap(ENGINE::rxa_togglePasswordMask)
             .delay(generalDelay(), TimeUnit.MILLISECONDS)
 
             .flatMap(a -> THIS.rxa_openTOC(ENGINE))
             .delay(webViewDelay(), TimeUnit.MILLISECONDS)
-            .flatMap(a -> ENGINE.rx_navigateBackOnce())
+            .flatMap(a -> ENGINE.rxa_navigateBackOnce())
             .flatMapIterable(a -> TEXT_INFO)
             .flatMap(a -> THIS.rxv_hasValue(ENGINE, a, INPUTS.get(a.toString())))
             .subscribe(subscriber);
@@ -218,11 +220,11 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      * user continues any further. The check happens in
      * {@link Screen#PERSONAL_INFO}.
      * @param MODE {@link UserMode} instance.
+     * @see Engine#rxa_hideKeyboard()
      * @see Screen#PERSONAL_INFO
      * @see UserMode#personalInfo(PlatformType)
-     * @see Engine#rx_hideKeyboard()
      * @see #engine()
-     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_enterPersonalInfo(Engine, List)
      * @see #rxa_confirmPersonalInfo(Engine)
      * @see #rxv_personalInfoScreen(Engine, UserMode)
@@ -231,7 +233,7 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider")
-    public void test_requireTOCAccepted_toProceedFurther(@NotNull final UserMode MODE) {
+    public void test_requireTOCAccepted_toProceed(@NotNull final UserMode MODE) {
         // Setup
         final UIPersonalInfoTest THIS = this;
         final Engine<?> ENGINE = engine();
@@ -240,7 +242,7 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
+        rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
             .flatMap(a -> THIS.rxa_enterPersonalInfo(ENGINE, INFO))
             .flatMap(a -> THIS.rxa_confirmPersonalInfo(ENGINE))
             .delay(2000, TimeUnit.MILLISECONDS)
@@ -262,7 +264,7 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      * @param INPUTS {@link List} of {@link InputType}.
      * @see Screen#EXTRA_PERSONAL_INFO
      * @see #engine()
-     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_enterPersonalInfo(Engine, List)
      * @see #rxa_confirmExtraPersonalInfo(Engine, UserMode)
      * @see #rxe_progressBar(Engine)
@@ -280,7 +282,7 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_navigate(MODE, Screen.SPLASH, Screen.EXTRA_PERSONAL_INFO)
+        rxa_navigate(MODE, Screen.SPLASH, Screen.EXTRA_PERSONAL_INFO)
             .flatMap(a -> THIS.rxa_enterPersonalInfo(ENGINE, INPUTS))
             .flatMap(a -> THIS.rxa_confirmExtraPersonalInfo(ENGINE, MODE))
 
@@ -303,7 +305,7 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      * @param MODE {@link UserMode} instance.
      * @see Screen#EXTRA_PERSONAL_INFO
      * @see #engine()
-     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rxa_navigate(UserMode, Screen...)
      * @see #guarantorSpecificUserModeProvider()
      * @see #assertCorrectness(TestSubscriber)
      */
@@ -318,7 +320,7 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
         /* During the tests, if the current user requires a guarantor (i.e
          * below 18 years-old), we expect the parent information screen to
          * be present */
-        rx_navigate(MODE, Screen.SPLASH, Screen.USE_APP_NOW).subscribe(subscriber);
+        rxa_navigate(MODE, Screen.SPLASH, Screen.USE_APP_NOW).subscribe(subscriber);
         subscriber.awaitTerminalEvent();
 
         // Then

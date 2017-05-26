@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
      * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
-    default Flowable<?> rx_n_splash_welcome() {
+    default Flowable<?> rxn_splash_welcome() {
         long delay = splashDelay();
         TimeUnit unit = TimeUnit.MILLISECONDS;
         return Flowable.timer(delay, unit);
@@ -38,11 +37,11 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
      * user is already in the sign in screen.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_a_clickBackButton(Engine)
+     * @see #rxa_clickBackButton(Engine)
      */
     @NotNull
-    default Flowable<?> rx_n_signIn_welcome(@NotNull final Engine<?> ENGINE) {
-        return rx_a_clickBackButton(ENGINE);
+    default Flowable<?> rxn_signIn_welcome(@NotNull final Engine<?> ENGINE) {
+        return rxa_clickBackButton(ENGINE);
     }
 
     /**
@@ -51,11 +50,11 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rx_e_welcomeRegister(Engine)
-     * @see Engine#rx_click(WebElement)
+     * @see Engine#rxa_click(WebElement)
      */
     @NotNull
     default Flowable<?> rx_n_welcome_register(@NotNull final Engine<?> ENGINE) {
-        return rx_e_welcomeRegister(ENGINE).flatMap(ENGINE::rx_click);
+        return rx_e_welcomeRegister(ENGINE).flatMap(ENGINE::rxa_click);
     }
 
     /**
@@ -63,24 +62,24 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
      * user is already in the register screen.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_a_clickBackButton(Engine)
+     * @see #rxa_clickBackButton(Engine)
      */
     @NotNull
-    default Flowable<?> rx_n_register_welcome(@NotNull final Engine<?> ENGINE) {
-        return rx_a_clickBackButton(ENGINE);
+    default Flowable<?> rxn_register_welcome(@NotNull final Engine<?> ENGINE) {
+        return rxa_clickBackButton(ENGINE);
     }
 
     /**
      * Navigate to the parent sign up screen from register screen, assuming
      * the user is already on the register screen.
      * @return {@link Flowable} instance.
-     * @see #rx_e_signUp(Engine, UserMode)
-     * @see Engine#rx_click(WebElement)
+     * @see #rxe_signUp(Engine, UserMode)
+     * @see Engine#rxa_click(WebElement)
      */
     @NotNull
-    default Flowable<?> rx_n_register_DoBPicker(@NotNull Engine<?> ENGINE,
-                                                @NotNull UserMode mode) {
-        return rx_e_signUp(ENGINE, mode).flatMap(ENGINE::rx_click);
+    default Flowable<?> rxn_register_DoBPicker(@NotNull Engine<?> ENGINE,
+                                               @NotNull UserMode mode) {
+        return rxe_signUp(ENGINE, mode).flatMap(ENGINE::rxa_click);
     }
 
     /**
@@ -89,17 +88,17 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
      * @param AGE {@link Integer} value.
      * @return {@link Flowable} instance.
      * @see #rx_a_openDoBPicker(Engine)
-     * @see #rx_a_selectDoBToBeOfAge(Engine, int)
-     * @see #rx_a_confirmDoB(Engine) )
+     * @see #rxa_selectDoBToBeOfAge(Engine, int)
+     * @see #rxa_confirmDoB(Engine) )
      */
     @NotNull
-    default Flowable<?> rx_n_DoBPicker_ageInput(@NotNull final Engine<?> ENGINE,
-                                                final int AGE) {
+    default Flowable<?> rxn_DoBPicker_ageInput(@NotNull final Engine<?> ENGINE,
+                                               final int AGE) {
         final DOBPickerActionType THIS = this;
 
         return rx_a_openDoBPicker(ENGINE)
-            .flatMap(a -> THIS.rx_a_selectDoBToBeOfAge(ENGINE, AGE))
-            .flatMap(a -> THIS.rx_a_confirmDoB(ENGINE));
+            .flatMap(a -> THIS.rxa_selectDoBToBeOfAge(ENGINE, AGE))
+            .flatMap(a -> THIS.rxa_confirmDoB(ENGINE));
     }
 
     /**
@@ -110,13 +109,13 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
      * @see UserMode#maxCategoryValidAge()
-     * @see #rx_n_DoBPicker_ageInput(Engine, int)
+     * @see #rxn_DoBPicker_ageInput(Engine, int)
      */
     @NotNull
-    default Flowable<?> rx_n_DoBPicker_invalidAge(@NotNull Engine<?> engine,
-                                                  @NotNull UserMode mode) {
+    default Flowable<?> rxn_DoBPicker_invalidAge(@NotNull Engine<?> engine,
+                                                 @NotNull UserMode mode) {
         int age = mode.maxCategoryValidAge() + 1;
-        return rx_n_DoBPicker_ageInput(engine, age);
+        return rxn_DoBPicker_ageInput(engine, age);
     }
 
     /**
@@ -124,23 +123,22 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
      * screen.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_a_clickBackButton(Engine)
+     * @see #rxa_clickBackButton(Engine)
      */
     @NotNull
-    default Flowable<?> rx_n_invalidAge_DOBPicker(@NotNull Engine<?> engine) {
-        LogUtil.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", engine);
-        return rx_a_clickBackButton(engine);
+    default Flowable<?> rxn_invalidAge_DOBPicker(@NotNull Engine<?> engine) {
+        return rxa_clickBackButton(engine);
     }
 
     /**
      * Navigate from the unacceptable age screen to the welcome screen.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_a_enterAndConfirmInvalidAgeInputs(Engine)
+     * @see #rxa_enterAndConfirmInvalidAgeInputs(Engine)
      */
     @NotNull
-    default Flowable<?> rx_n_invalidAge_welcome(@NotNull final Engine<?> ENGINE) {
-        return rx_a_enterAndConfirmInvalidAgeInputs(ENGINE);
+    default Flowable<?> rxn_invalidAge_welcome(@NotNull final Engine<?> ENGINE) {
+        return rxa_enterAndConfirmInvalidAgeInputs(ENGINE);
     }
 
     /**
@@ -149,25 +147,25 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_n_DoBPicker_ageInput(Engine, int)
+     * @see #rxn_DoBPicker_ageInput(Engine, int)
      */
     @NotNull
-    default Flowable<?> rx_n_DoBPicker_validAge(@NotNull Engine<?> engine,
-                                                @NotNull UserMode mode) {
+    default Flowable<?> rxn_DoBPicker_validAge(@NotNull Engine<?> engine,
+                                               @NotNull UserMode mode) {
         List<Integer> range = mode.validAgeRange();
         int age = CollectionTestUtil.randomElement(range);
-        return rx_n_DoBPicker_ageInput(engine, age);
+        return rxn_DoBPicker_ageInput(engine, age);
     }
 
     /**
      * Navigate from the acceptable age screen to the welcome screen.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_a_enterInvalidAgeInputs(Engine)
+     * @see #rxa_enterInvalidAgeInputs(Engine)
      */
     @NotNull
-    default Flowable<?> rx_n_validAge_welcome(@NotNull final Engine<?> ENGINE) {
-        return rx_a_enterInvalidAgeInputs(ENGINE);
+    default Flowable<?> rxn_validAge_welcome(@NotNull final Engine<?> ENGINE) {
+        return rxa_enterInvalidAgeInputs(ENGINE);
     }
 
     /**
@@ -176,23 +174,23 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
      * @param ENGINE {@link Engine} instance.
      * @param MODE {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_a_enterAndConfirmValidAgeInputs(Engine, UserMode)
+     * @see #rxa_enterAndConfirmValidAgeInputs(Engine, UserMode)
      */
     @NotNull
-    default Flowable<?> rx_n_validAge_personalInfo(@NotNull final Engine<?> ENGINE,
-                                                   @NotNull final UserMode MODE) {
-        return rx_a_enterAndConfirmValidAgeInputs(ENGINE, MODE);
+    default Flowable<?> rxn_validAge_personalInfo(@NotNull final Engine<?> ENGINE,
+                                                  @NotNull final UserMode MODE) {
+        return rxa_enterAndConfirmValidAgeInputs(ENGINE, MODE);
     }
 
     /**
      * Navigate from the personal info screen to the acceptable age screen.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_a_clickBackButton(Engine)
+     * @see #rxa_clickBackButton(Engine)
      */
     @NotNull
-    default Flowable<?> rx_n_personalInfo_validAge(@NotNull Engine<?> engine) {
-        return rx_a_clickBackButton(engine);
+    default Flowable<?> rxn_personalInfo_validAge(@NotNull Engine<?> engine) {
+        return rxa_clickBackButton(engine);
     }
 
     /**
@@ -207,8 +205,8 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
      * @see #rxa_confirmPersonalInfo(Engine)
      */
     @NotNull
-    default Flowable<?> rx_n_personalInfo_extraInfo(@NotNull final Engine<?> ENGINE,
-                                                    @NotNull UserMode mode) {
+    default Flowable<?> rxn_personalInfo_extraInfo(@NotNull final Engine<?> ENGINE,
+                                                   @NotNull UserMode mode) {
         final NavigationType THIS = this;
 
         return rxa_enterPersonalInfo(ENGINE, mode).flatMap(a ->
@@ -223,13 +221,13 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
      * @see UserMode#requiresGuarantor()
-     * @see #rx_a_clickBackButton(Engine)
+     * @see #rxa_clickBackButton(Engine)
      */
     @NotNull
-    default Flowable<?> rx_n_extraInfo_personalInfo(@NotNull Engine<?> engine,
-                                                    @NotNull UserMode mode) {
+    default Flowable<?> rxn_extraInfo_personalInfo(@NotNull Engine<?> engine,
+                                                   @NotNull UserMode mode) {
         if (mode.requiresGuarantor()) {
-            return rx_a_clickBackButton(engine);
+            return rxa_clickBackButton(engine);
         } else {
             return Flowable.just(true);
         }
@@ -245,13 +243,13 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
      * @return {@link Flowable} instance.
      * @see #rx_a_enterExtraPersonalInfo(Engine, UserMode)
      * @see #rxa_confirmExtraPersonalInfo(Engine, UserMode)
-     * @see #rx_a_watchProgressBarUntilHidden(Engine)
-     * @see #rx_a_watchPersonalInfoScreen(Engine)
+     * @see #rxa_watchProgressBarUntilHidden(Engine)
+     * @see #rxa_watchPersonalInfoScreen(Engine)
      * @see BooleanUtil#isTrue(boolean)
      */
     @NotNull
-    default Flowable<?> rx_n_extraInfo_useApp(@NotNull final Engine<?> ENGINE,
-                                              @NotNull final UserMode MODE) {
+    default Flowable<?> rxn_extraInfo_useApp(@NotNull final Engine<?> ENGINE,
+                                             @NotNull final UserMode MODE) {
         final PersonalInfoActionType THIS = this;
 
         return rx_a_enterExtraPersonalInfo(ENGINE, MODE)
@@ -259,14 +257,19 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
 
             /* First progress bar appears immediately after the submit button
              * is clicked */
-            .flatMap(a -> THIS.rx_a_watchProgressBarUntilHidden(ENGINE))
+            .flatMap(a -> THIS.rxa_watchProgressBarUntilHidden(ENGINE))
 
             /* There is a short delay between the first and the second
              * progress bar */
-            .flatMap(a -> THIS.rx_a_watchPersonalInfoScreen(ENGINE))
+            .flatMap(a -> THIS.rxa_watchPersonalInfoScreen(ENGINE))
 
             /* The second progress bar appears */
-            .flatMap(a -> THIS.rx_a_watchProgressBarUntilHidden(ENGINE));
+            .flatMap(a -> THIS.rxa_watchProgressBarUntilHidden(ENGINE))
+
+            /* On iOS, the app may ask the user for permission to send push
+             * notifications. The default flow is to accept - we can test
+             * reject flow elsewhere */
+            .flatMap(a -> ENGINE.rxa_acceptAlert());
     }
 
     /**
@@ -274,11 +277,11 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
      * assuming the user is already in the Use App Now screen.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_a_useAppNow(Engine)
+     * @see #rxa_useAppNow(Engine)
      */
     @NotNull
-    default Flowable<?> rx_n_useApp_tutorial(@NotNull Engine<?> engine) {
-        return rx_a_useAppNow(engine);
+    default Flowable<?> rxn_useApp_tutorial(@NotNull Engine<?> engine) {
+        return rxa_useAppNow(engine);
     }
 
     /**
@@ -286,10 +289,10 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
      * user is in the tutorial screen (i.e. using for the first time).
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rx_navigateBackOnce()
+     * @see Engine#rxa_navigateBackOnce()
      */
     @NotNull
-    default Flowable<?> rx_n_tutorial_dashboard(@NotNull Engine<?> engine) {
-        return engine.rx_navigateBackOnce();
+    default Flowable<?> rxn_tutorial_dashboard(@NotNull Engine<?> engine) {
+        return engine.rxa_navigateBackOnce();
     }
 }

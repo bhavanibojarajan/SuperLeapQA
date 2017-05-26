@@ -19,9 +19,9 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
      * Validate the DoB picker screen.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rx_containsText(String...)
-     * @see Engine#rx_click(WebElement)
-     * @see Engine#rx_navigateBackOnce()
+     * @see Engine#rxe_containsText(String...)
+     * @see Engine#rxa_click(WebElement)
+     * @see Engine#rxa_navigateBackOnce()
      * @see #rx_a_openDoBPicker(Engine)
      * @see #rx_e_DoBElements(Engine)
      * @see #generalDelay()
@@ -34,8 +34,8 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
 
         return Flowable
             .mergeArray(
-                ENGINE.rx_containsText("register_title_dateOfBirth"),
-                ENGINE.rx_containsText(
+                ENGINE.rxe_containsText("register_title_dateOfBirth"),
+                ENGINE.rxe_containsText(
                     "parentSignUp_title_whatIsYourChild",
                     "teenSignUp_title_whatIsYour"
                 )
@@ -49,7 +49,7 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
             .delay(THIS.generalDelay(), TimeUnit.MILLISECONDS)
 
             /* Dismiss the dialog by navigating back once */
-            .flatMap(a -> ENGINE.rx_navigateBackOnce())
+            .flatMap(a -> ENGINE.rxa_navigateBackOnce())
             .delay(THIS.generalDelay(), TimeUnit.MILLISECONDS);
     }
 
@@ -71,7 +71,7 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
      * @see #rx_a_openDoBPicker(Engine)
      * @see #rx_v_validAgeScreen(Engine)
      * @see #rx_v_invalidAgeScreen(Engine, UserMode)
-     * @see #rx_a_clickBackButton(Engine)
+     * @see #rxa_clickBackButton(Engine)
      */
     @NotNull
     @GuarantorAware(value = false)
@@ -90,8 +90,8 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
                     final boolean VALID = RANGE.contains(AGE);
 
                     return THIS.rx_a_openDoBPicker(ENGINE)
-                        .flatMap(a -> THIS.rx_a_selectDoBToBeOfAge(ENGINE, AGE))
-                        .flatMap(a -> THIS.rx_a_confirmDoB(ENGINE))
+                        .flatMap(a -> THIS.rxa_selectDoBToBeOfAge(ENGINE, AGE))
+                        .flatMap(a -> THIS.rxa_confirmDoB(ENGINE))
                         .flatMap(a -> {
                             if (VALID) {
                                 return THIS.rx_v_validAgeScreen(ENGINE);
@@ -99,7 +99,7 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
                                 return THIS.rx_v_invalidAgeScreen(ENGINE, MODE);
                             }
                         })
-                        .flatMap(a -> THIS.rx_a_clickBackButton(ENGINE))
+                        .flatMap(a -> THIS.rxa_clickBackButton(ENGINE))
                         .flatMap(a -> new Repeater().repeat(INDEX + 1));
                 } else {
                     return Flowable.just(true);

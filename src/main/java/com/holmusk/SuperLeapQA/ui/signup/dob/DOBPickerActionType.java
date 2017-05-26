@@ -1,6 +1,5 @@
 package com.holmusk.SuperLeapQA.ui.signup.dob;
 
-import com.holmusk.SuperLeapQA.ui.base.BaseActionType;
 import com.holmusk.SuperLeapQA.ui.signup.mode.RegisterModeActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
@@ -29,13 +28,13 @@ public interface DOBPickerActionType extends DOBPickerValidationType, RegisterMo
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rx_e_DoBEditField(Engine)
-     * @see Engine#rx_click(WebElement)
-     * @see Engine#rx_implicitlyWait(DelayType)
+     * @see Engine#rxa_click(WebElement)
+     * @see Engine#rxa_implicitlyWait(DelayType)
      */
     @NotNull
     default Flowable<?> rx_a_openDoBPicker(@NotNull Engine<?> ENGINE) {
         return rx_e_DoBEditField(ENGINE)
-            .flatMap(ENGINE::rx_click)
+            .flatMap(ENGINE::rxa_click)
             .delay(generalDelay(), TimeUnit.MILLISECONDS)
             .all(BooleanUtil::isTrue)
             .toFlowable();
@@ -48,16 +47,16 @@ public interface DOBPickerActionType extends DOBPickerValidationType, RegisterMo
      * stored in the DoB text field, we need to navigate back once.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rx_containsText(String...)
-     * @see Engine#rx_click(WebElement)
+     * @see Engine#rxe_containsText(String...)
+     * @see Engine#rxa_click(WebElement)
      */
     @NotNull
-    default Flowable<?> rx_a_confirmDoB(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_confirmDoB(@NotNull final Engine<?> ENGINE) {
         return ENGINE
-            .rx_containsText("ok", "register_title_submit")
+            .rxe_containsText("ok", "register_title_submit")
             .firstElement()
             .toFlowable()
-            .flatMap(ENGINE::rx_click);
+            .flatMap(ENGINE::rxa_click);
     }
 
     /**
@@ -82,7 +81,7 @@ public interface DOBPickerActionType extends DOBPickerValidationType, RegisterMo
      * @see #rx_a_selectDoB(Engine, Date)
      */
     @NotNull
-    default Flowable<?> rx_a_selectDoBToBeOfAge(@NotNull Engine<?> engine, int age) {
+    default Flowable<?> rxa_selectDoBToBeOfAge(@NotNull Engine<?> engine, int age) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, -age);
         return rx_a_selectDoB(engine, calendar.getTime());

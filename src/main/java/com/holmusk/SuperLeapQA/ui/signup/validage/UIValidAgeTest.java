@@ -40,7 +40,7 @@ public final class UIValidAgeTest extends UIBaseTest implements NavigationType, 
      * @see Screen#VALID_AGE
      * @see #engine()
      * @see #generalUserModeProvider()
-     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rxa_navigate(UserMode, Screen...)
      * @see #rx_a_clickInputField(Engine, SLInputType)
      * @see #rx_a_selectChoice(Engine, List)
      * @see #rxv_hasValue(Engine, SLInputType, String)
@@ -74,7 +74,7 @@ public final class UIValidAgeTest extends UIBaseTest implements NavigationType, 
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE)
+        rxa_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE)
             .flatMap(a -> THIS.rx_a_selectUnitSystemPicker(E, C_HEIGHT, Height.CM))
             .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT_M))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
@@ -117,7 +117,7 @@ public final class UIValidAgeTest extends UIBaseTest implements NavigationType, 
      * {@link com.holmusk.SuperLeapQA.model.Height#FT}.
      * @param MODE {@link UserMode} instance.
      * @see #engine()
-     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rxa_navigate(UserMode, Screen...)
      * @see #rx_h_inchToFootRecursive(Engine, UserMode)
      * @see #generalUserModeProvider()
      * @see #assertCorrectness(TestSubscriber)
@@ -132,7 +132,7 @@ public final class UIValidAgeTest extends UIBaseTest implements NavigationType, 
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE)
+        rxa_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE)
             .flatMap(a -> THIS.rx_h_inchToFootRecursive(ENGINE, MODE))
             .subscribe(subscriber);
 
@@ -150,7 +150,7 @@ public final class UIValidAgeTest extends UIBaseTest implements NavigationType, 
      * @param M {@link UserMode} instance.
      * @see Screen#VALID_AGE
      * @see #engine()
-     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rxa_navigate(UserMode, Screen...)
      * @see Height#randomValue(UserMode)
      * @see Weight#randomValue(UserMode)
      * @see #rx_a_clickInputField(Engine, SLInputType)
@@ -184,7 +184,7 @@ public final class UIValidAgeTest extends UIBaseTest implements NavigationType, 
              * error messages, since the confirm button is not enabled until
              * all inputs are filled */
             .filter(a -> a instanceof AndroidEngine)
-            .flatMap(a -> rx_navigate(M, Screen.SPLASH, Screen.VALID_AGE))
+            .flatMap(a -> rxa_navigate(M, Screen.SPLASH, Screen.VALID_AGE))
 
             /* At this stage, the gender error message should be shown */
             .flatMap(a -> THIS.rx_a_confirmValidAgeInputs(E))
