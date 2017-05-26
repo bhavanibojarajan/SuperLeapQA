@@ -92,8 +92,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
                     TextInput.MOBILE,
                     TextInput.EMAIL,
                     TextInput.PASSWORD,
-                    TextInput.POSTAL_CODE,
-                    TextInput.UNIT_NUMBER
+                    TextInput.HOME
                 );
 
             case TEEN_U18:
@@ -103,9 +102,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
                     TextInput.MOBILE,
                     TextInput.EMAIL,
                     TextInput.PASSWORD,
-                    TextInput.HOME,
-                    TextInput.POSTAL_CODE,
-                    TextInput.UNIT_NUMBER
+                    TextInput.HOME
                 );
 
             default:

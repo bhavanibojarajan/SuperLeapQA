@@ -30,7 +30,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
-    default Flowable<?> rx_a_confirmPersonalInfo(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_confirmPersonalInfo(@NotNull final Engine<?> ENGINE) {
         return rx_e_personalInfoSubmit(ENGINE).flatMap(ENGINE::rx_click);
     }
 
@@ -51,24 +51,26 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
 
     /**
      * Enter random personal info inputs in order to access the next screen.
-     * This method can be used for {@link UserMode#personalInformation()}
-     * and {@link UserMode#extraPersonalInformation()}.
+     * This method can be used for {@link UserMode#personalInfo(PlatformType)}
+     * and {@link UserMode#extraInfo(PlatformType)}.
      * @param ENGINE {@link Engine} instance.
      * @param inputs {@link List} of {@link InputType}.
      * @return {@link Flowable} instance.
-     * @see #rx_a_enterRandomInput(Engine, SLTextInputType)
      * @see Engine#rx_navigateBackOnce()
+     * @see #rx_a_enterRandomInput(Engine, SLTextInputType)
      * @see #rx_a_toggleTOC(Engine, boolean)
+     * @see #rxa_makeNextInputVisible(Engine, WebElement)
      */
     @NotNull
-    default Flowable<?> rx_a_enterPersonalInfo(@NotNull final Engine<?> ENGINE,
-                                               @NotNull List<SLInputType> inputs) {
+    default Flowable<?> rxa_enterPersonalInfo(@NotNull final Engine<?> ENGINE,
+                                              @NotNull List<SLInputType> inputs) {
         final PersonalInfoActionType THIS = this;
+
         return Flowable
             .fromIterable(inputs)
             .ofType(SLTextInputType.class)
             .concatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, a))
-            .flatMap(ENGINE::rx_toggleNextInput)
+            .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
             .all(ObjectUtil::nonNull)
             .toFlowable();
     }
@@ -78,17 +80,17 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
      * @see UserMode#personalInfo(PlatformType)
-     * @see #rx_a_enterPersonalInfo(Engine, List)
+     * @see #rxa_enterPersonalInfo(Engine, List)
      * @see Engine#rx_hideKeyboard()
      * @see #rx_a_toggleTOC(Engine, boolean)
      */
     @NotNull
-    default Flowable<?> rx_a_enterPersonalInfo(@NotNull final Engine<?> ENGINE,
-                                               @NotNull UserMode mode) {
+    default Flowable<?> rxa_enterPersonalInfo(@NotNull final Engine<?> ENGINE,
+                                              @NotNull UserMode mode) {
         final PersonalInfoActionType THIS = this;
         PlatformType platform = ENGINE.platform();
 
-        return rx_a_enterPersonalInfo(ENGINE, mode.personalInfo(platform))
+        return rxa_enterPersonalInfo(ENGINE, mode.personalInfo(platform))
             .flatMap(a -> ENGINE.rx_hideKeyboard())
             .flatMap(a -> THIS.rx_a_toggleTOC(ENGINE, true));
     }
@@ -99,7 +101,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_a_enterPersonalInfo(Engine, List)
+     * @see #rxa_enterPersonalInfo(Engine, List)
      * @see UserMode#extraInfo(PlatformType)
      * @see UserMode#requiresGuarantor()
      */
@@ -108,7 +110,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
                                                     @NotNull UserMode mode) {
         if (mode.requiresGuarantor()) {
             PlatformType platform = engine.platform();
-            return rx_a_enterPersonalInfo(engine, mode.extraInfo(platform));
+            return rxa_enterPersonalInfo(engine, mode.extraInfo(platform));
         } else {
             return Flowable.just(true);
         }
@@ -120,14 +122,14 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_a_confirmPersonalInfo(Engine)
+     * @see #rxa_confirmPersonalInfo(Engine)
      * @see UserMode#requiresGuarantor()
      */
     @NotNull
-    default Flowable<?> rx_a_confirmExtraPersonalInfo(@NotNull Engine<?> engine,
-                                                      @NotNull UserMode mode) {
+    default Flowable<?> rxa_confirmExtraPersonalInfo(@NotNull Engine<?> engine,
+                                                     @NotNull UserMode mode) {
         if (mode.requiresGuarantor()) {
-            return rx_a_confirmPersonalInfo(engine);
+            return rxa_confirmPersonalInfo(engine);
         } else {
             return Flowable.just(true);
         }
@@ -159,7 +161,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @return {@link Flowable} instance.
      */
     @NotNull
-    default Flowable<?> rx_a_OpenTOC(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_openTOC(@NotNull final Engine<?> ENGINE) {
         return rx_e_TOCAcceptanceLabel(ENGINE)
             .map(a -> {
                 Point point = a.getLocation();

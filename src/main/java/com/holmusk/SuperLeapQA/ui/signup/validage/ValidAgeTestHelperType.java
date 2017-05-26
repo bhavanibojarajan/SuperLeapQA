@@ -28,7 +28,7 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
      * @see Height#stringValue(PlatformType, UnitSystem, List)
      * @see #rx_a_selectChoice(Engine, List)
      * @see #rx_a_confirmNumericChoice(Engine)
-     * @see #rx_v_editFieldHasValue(Engine, SLInputType, String)
+     * @see #rxv_hasValue(Engine, SLInputType, String)
      */
     @NotNull
     default Flowable<?> rx_h_inchToFoot(@NotNull final Engine<?> ENGINE, final int FT) {
@@ -48,7 +48,7 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
         return rx_a_selectUnitSystemPicker(ENGINE, C_HEIGHT, H_FT)
             .flatMap(a -> THIS.rx_a_selectChoice(ENGINE, INPUTS))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(ENGINE))
-            .flatMap(a -> THIS.rx_v_editFieldHasValue(ENGINE, C_HEIGHT, STR));
+            .flatMap(a -> THIS.rxv_hasValue(ENGINE, C_HEIGHT, STR));
     }
 
     /**

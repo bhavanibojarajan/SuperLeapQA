@@ -58,7 +58,7 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
      * for the program.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_e_editField(Engine, SLInputType)
+     * @see #rxe_editField(Engine, SLInputType)
      * @see #rx_e_validAgeConfirm(Engine)
      * @see #rx_e_validAgeInputTitle(Engine)
      */
@@ -68,16 +68,16 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
     default Flowable<?> rx_v_validAgeScreen(@NotNull Engine<?> engine) {
         return Flowable
             .mergeArray(
-                rx_e_editField(engine, Gender.MALE),
-                rx_e_editField(engine, Gender.FEMALE),
-                rx_e_editField(engine, ChoiceInput.HEIGHT),
-                rx_e_editField(engine, Height.FT),
-                rx_e_editField(engine, Height.CM),
-                rx_e_editField(engine, ChoiceInput.WEIGHT),
-                rx_e_editField(engine, Weight.LB),
-                rx_e_editField(engine, Weight.KG),
-                rx_e_editField(engine, ChoiceInput.ETHNICITY),
-                rx_e_editField(engine, ChoiceInput.COACH_PREF),
+                rxe_editField(engine, Gender.MALE),
+                rxe_editField(engine, Gender.FEMALE),
+                rxe_editField(engine, ChoiceInput.HEIGHT),
+                rxe_editField(engine, Height.FT),
+                rxe_editField(engine, Height.CM),
+                rxe_editField(engine, ChoiceInput.WEIGHT),
+                rxe_editField(engine, Weight.LB),
+                rxe_editField(engine, Weight.KG),
+                rxe_editField(engine, ChoiceInput.ETHNICITY),
+                rxe_editField(engine, ChoiceInput.COACH_PREF),
                 rx_e_validAgeConfirm(engine),
                 rx_e_validAgeInputTitle(engine)
             )
@@ -91,16 +91,16 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
      * @param VALUE {@link String} value.
      * @param <P> Generics parameter.
      * @return {@link Flowable} instance.
-     * @see #rx_e_editField(Engine, SLInputType)
+     * @see #rxe_editField(Engine, SLInputType)
      * @see Engine#getText(WebElement)
      * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
     default <P extends SLInputType> Flowable<?>
-    rx_v_editFieldHasValue(@NotNull final Engine<?> ENGINE,
-                           @NotNull final P INPUT,
-                           @NotNull final String VALUE) {
-        return rx_e_editField(ENGINE, INPUT)
+    rxv_hasValue(@NotNull final Engine<?> ENGINE,
+                 @NotNull final P INPUT,
+                 @NotNull final String VALUE) {
+        return rxe_editField(ENGINE, INPUT)
             .map(ENGINE::getText)
             .doOnNext(a -> LogUtil.printfThread("Current value for %s: %s", INPUT, a))
             .filter(a -> a.equals(VALUE))

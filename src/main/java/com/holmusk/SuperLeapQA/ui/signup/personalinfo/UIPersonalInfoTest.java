@@ -9,13 +9,16 @@ import com.holmusk.SuperLeapQA.navigation.type.NavigationType;
 import com.holmusk.SuperLeapQA.runner.Runner;
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.javautilities.rx.RxUtil;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.model.InputType;
@@ -32,7 +35,7 @@ import java.util.stream.Collectors;
  * Created by haipham on 23/5/17.
  */
 public final class UIPersonalInfoTest extends UIBaseTest implements
-    NavigationType, PersonalInfoTestHelperType
+    NavigationType, PersonalInfoActionType
 {
     @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
     public UIPersonalInfoTest(int index) {
@@ -60,7 +63,7 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      * visibility and interacting with each of them.
      * @param MODE {@link UserMode} instance.
      * @see Screen#PERSONAL_INFO
-     * @see Engine#rx_toggleNextOrDoneInput(WebElement)
+     * @see Engine#rx_toggleNextOrFinishInput(WebElement)
      * @see Engine#rx_togglePasswordMask(WebElement)
      * @see Engine#isShowingPassword(WebElement)
      * @see ObjectUtil#nonNull(Object)
@@ -69,8 +72,8 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      * @see #rx_navigate(UserMode, Screen...)
      * @see #generalUserModeProvider()
      * @see #rx_a_enterRandomInput(Engine, SLTextInputType)
-     * @see #rx_e_editField(Engine, SLInputType)
-     * @see #rx_a_toggleNextInputOrDone(Engine, WebElement)
+     * @see #rxe_editField(Engine, SLInputType)
+     * @see #rxa_makeNextInputVisible(Engine, WebElement)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -84,24 +87,53 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
 
         // When
         rx_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
-            .flatMap(a -> THIS.rx_v_personalInfoScreen(ENGINE, MODE))
-            .observeOn(Schedulers.trampoline())
+            .flatMap(a -> THIS.rxv_personalInfoScreen(ENGINE, MODE))
             .concatMapIterable(a -> MODE.personalInfo(PLATFORM))
             .ofType(SLTextInputType.class)
-            .flatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, a))
-            .flatMap(a -> THIS.rx_a_toggleNextInputOrDone(ENGINE, a))
+            .concatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, a))
+            .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
             .all(ObjectUtil::nonNull)
             .toFlowable()
-            .flatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, TextInput.PASSWORD))
+            .subscribe(subscriber);
 
-            /* Toggle the password mask and check that the password is hidden
-             * (if applicable) */
-            .flatMap(a -> THIS
-                .rx_a_toggleNextInputOrDone(ENGINE, a)
-                .flatMap(b -> THIS.rx_h_checkPasswordMask(ENGINE, a))
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * This test validates that the password mask, when clicks, reveals the
+     * password. It is only applicable to
+     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID} since on
+     * {@link org.swiften.xtestkit.mobile.Platform#IOS} there is no way to
+     * reveal the password content.
+     * @see Engine#rx_togglePasswordMask(WebElement)
+     * @see Engine#isShowingPassword(WebElement)
+     * @see RxUtil#error()
+     * @see #rx_navigate(UserMode, Screen...)
+     * @see #rx_a_enterRandomInput(Engine, SLTextInputType)
+     * @see #rx_a_confirmTextInput(Engine)
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void test_togglePasswordMask_shouldWork() {
+        // Setup
+        final UIPersonalInfoTest THIS = this;
+        final Engine<?> ENGINE = engine();
+        final UserMode MODE = UserMode.PARENT;
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        Flowable.just(ENGINE)
+            .filter(a -> a instanceof AndroidEngine)
+            .flatMap(a -> THIS.rx_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO))
+            .flatMap(a -> THIS.rx_a_enterRandomInput(ENGINE, TextInput.PASSWORD))
+            .flatMap(a -> THIS.rx_a_confirmTextInput(ENGINE)
+                .flatMap(b -> ENGINE.rx_togglePasswordMask(a))
+                .filter(ENGINE::isShowingPassword)
                 .switchIfEmpty(RxUtil.error())
             )
-            .flatMap(a -> THIS.rx_a_confirmTextInput(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -115,27 +147,28 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      * the Web browser, {@link Screen#PERSONAL_INFO} inputs are saved and then
      * restored when the user gets back to the app. This is more relevant for
      * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
-     * @param MODE {@link UserMode} instance.
+     * @see org.swiften.xtestkit.mobile.Platform#ANDROID
+     * @see BooleanUtil#isTrue(boolean)
      * @see ObjectUtil#nonNull(Object)
      * @see Screen#PERSONAL_INFO
      * @see UserMode#personalInfo(PlatformType)
-     * @see org.swiften.xtestkit.mobile.Platform#ANDROID
+     * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
-     * @see #rx_a_enterInput(Engine, SLInputType, String)
-     * @see #rx_a_OpenTOC(Engine)
-     * @see #rx_v_editFieldHasValue(Engine, SLInputType, String)
-     * @see #generalUserModeProvider()
-     * @see #assertCorrectness(TestSubscriber)
+     * @see #rxa_enterInput(Engine, SLInputType, String)
+     * @see #rxa_openTOC(Engine)
+     * @see #rxa_makeNextInputVisible(Engine, WebElement)
+     * @see #rxv_hasValue(Engine, SLInputType, String)
      */
+    @Test
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
-    @Test(dataProvider = "generalUserModeProvider")
-    public void test_leavePersonalInfo_shouldSaveState(@NotNull final UserMode MODE) {
+    public void test_leavePersonalInfo_shouldSaveState() {
         // Setup
         final UIPersonalInfoTest THIS = this;
         final Engine<?> ENGINE = engine();
         final PlatformType PLATFORM = ENGINE.platform();
+        final UserMode MODE = UserMode.PARENT;
         final Map<String,String> INPUTS = new HashMap<>();
         List<SLInputType> info = MODE.personalInfo(PLATFORM);
 
@@ -148,24 +181,30 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
+        Flowable.just(ENGINE)
+            .filter(a -> a instanceof AndroidEngine)
+            .flatMap(a -> THIS.rx_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO))
             .concatMapIterable(a -> TEXT_INFO)
-            .concatMap(a -> THIS.rx_a_enterInput(ENGINE, a, INPUTS.get(a.toString())))
-            .flatMap(ENGINE::rx_toggleNextInput)
-            .all(ObjectUtil::nonNull)
+            .concatMap(a -> THIS.rxa_enterInput(ENGINE, a, INPUTS.get(a.toString())))
+            .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
+
+            /* We use toList here because we want to intercept the empty
+             * event as well */
+            .toList()
+            .filter(CollectionUtil::isNotEmpty)
             .toFlowable()
-            .flatMap(a -> ENGINE.rx_hideKeyboard())
 
             /* We need to unmask the password field so that later its text
              * can be verified. Otherwise, the text returned will be empty */
-            .flatMap(a -> THIS.rx_e_editField(ENGINE, TextInput.PASSWORD))
+            .flatMap(a -> THIS.rxe_editField(ENGINE, TextInput.PASSWORD))
             .flatMap(ENGINE::rx_togglePasswordMask)
+            .delay(generalDelay(), TimeUnit.MILLISECONDS)
 
-            .flatMap(a -> THIS.rx_a_OpenTOC(ENGINE))
-            .delay(webViewDelay(), TimeUnit.MILLISECONDS, Schedulers.trampoline())
+            .flatMap(a -> THIS.rxa_openTOC(ENGINE))
+            .delay(webViewDelay(), TimeUnit.MILLISECONDS)
             .flatMap(a -> ENGINE.rx_navigateBackOnce())
             .flatMapIterable(a -> TEXT_INFO)
-            .concatMap(a -> THIS.rx_v_editFieldHasValue(ENGINE, a, INPUTS.get(a.toString())))
+            .flatMap(a -> THIS.rxv_hasValue(ENGINE, a, INPUTS.get(a.toString())))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -184,9 +223,9 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      * @see Engine#rx_hideKeyboard()
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
-     * @see #rx_a_enterPersonalInfo(Engine, List)
-     * @see #rx_a_confirmPersonalInfo(Engine)
-     * @see #rx_v_personalInfoScreen(Engine, UserMode)
+     * @see #rxa_enterPersonalInfo(Engine, List)
+     * @see #rxa_confirmPersonalInfo(Engine)
+     * @see #rxv_personalInfoScreen(Engine, UserMode)
      * @see #assertCorrectness(TestSubscriber)
      */
     @SuppressWarnings("unchecked")
@@ -201,12 +240,11 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rx_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE)
-            .flatMap(a -> THIS.rx_a_enterPersonalInfo(ENGINE, INFO))
-            .flatMap(a -> ENGINE.rx_hideKeyboard())
-            .flatMap(a -> THIS.rx_a_confirmPersonalInfo(ENGINE))
+        rx_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
+            .flatMap(a -> THIS.rxa_enterPersonalInfo(ENGINE, INFO))
+            .flatMap(a -> THIS.rxa_confirmPersonalInfo(ENGINE))
             .delay(2000, TimeUnit.MILLISECONDS)
-            .flatMap(a -> THIS.rx_v_personalInfoScreen(ENGINE, MODE))
+            .flatMap(a -> THIS.rxv_personalInfoScreen(ENGINE, MODE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -225,16 +263,16 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      * @see Screen#EXTRA_PERSONAL_INFO
      * @see #engine()
      * @see #rx_navigate(UserMode, Screen...)
-     * @see #rx_a_enterPersonalInfo(Engine, List)
-     * @see #rx_a_confirmExtraPersonalInfo(Engine, UserMode)
-     * @see #rx_e_progressBar(Engine)
+     * @see #rxa_enterPersonalInfo(Engine, List)
+     * @see #rxa_confirmExtraPersonalInfo(Engine, UserMode)
+     * @see #rxe_progressBar(Engine)
      * @see #parentPersonalInfoProvider()
      * @see #assertCorrectness(TestSubscriber)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
     @Test(dataProvider = "parentPersonalInfoProvider")
-    public void test_parentInfoScreen_requiresPhoneOrEmail(@NotNull final List<SLInputType> INPUTS) {
+    public void test_parentInfo_requiresPhoneOrEmail(@NotNull final List<SLInputType> INPUTS) {
         // Setup
         final UIPersonalInfoTest THIS = this;
         final Engine<?> ENGINE = engine();
@@ -243,12 +281,12 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
 
         // When
         rx_navigate(MODE, Screen.SPLASH, Screen.EXTRA_PERSONAL_INFO)
-            .flatMap(a -> THIS.rx_a_enterPersonalInfo(ENGINE, INPUTS))
-            .flatMap(a -> THIS.rx_a_confirmExtraPersonalInfo(ENGINE, MODE))
+            .flatMap(a -> THIS.rxa_enterPersonalInfo(ENGINE, INPUTS))
+            .flatMap(a -> THIS.rxa_confirmExtraPersonalInfo(ENGINE, MODE))
 
             /* If all inputs are valid, the progress bar should be visible
              * to indicate data being processed */
-            .flatMap(a -> THIS.rx_e_progressBar(ENGINE))
+            .flatMap(a -> THIS.rxe_progressBar(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

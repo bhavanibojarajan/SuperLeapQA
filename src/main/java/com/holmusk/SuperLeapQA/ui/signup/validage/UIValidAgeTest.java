@@ -43,7 +43,7 @@ public final class UIValidAgeTest extends UIBaseTest implements NavigationType, 
      * @see #rx_navigate(UserMode, Screen...)
      * @see #rx_a_clickInputField(Engine, SLInputType)
      * @see #rx_a_selectChoice(Engine, List)
-     * @see #rx_v_editFieldHasValue(Engine, SLInputType, String)
+     * @see #rxv_hasValue(Engine, SLInputType, String)
      * @see #rx_a_selectUnitSystemPicker(Engine, SLChoiceInputType, SLNumericChoiceInputType)
      */
     @SuppressWarnings("unchecked")
@@ -78,22 +78,22 @@ public final class UIValidAgeTest extends UIBaseTest implements NavigationType, 
             .flatMap(a -> THIS.rx_a_selectUnitSystemPicker(E, C_HEIGHT, Height.CM))
             .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT_M))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
-            .flatMap(a -> THIS.rx_v_editFieldHasValue(E, C_HEIGHT, HEIGHT_M_STR))
+            .flatMap(a -> THIS.rxv_hasValue(E, C_HEIGHT, HEIGHT_M_STR))
 
             .flatMap(a -> THIS.rx_a_selectUnitSystemPicker(E, C_HEIGHT, Height.FT))
             .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT_I))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
-            .flatMap(a -> THIS.rx_v_editFieldHasValue(E, C_HEIGHT, HEIGHT_I_STR))
+            .flatMap(a -> THIS.rxv_hasValue(E, C_HEIGHT, HEIGHT_I_STR))
 
             .flatMap(a -> THIS.rx_a_selectUnitSystemPicker(E, C_WEIGHT, Weight.KG))
             .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT_M))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
-            .flatMap(a -> THIS.rx_v_editFieldHasValue(E, C_WEIGHT, WEIGHT_M_STR))
+            .flatMap(a -> THIS.rxv_hasValue(E, C_WEIGHT, WEIGHT_M_STR))
 
             .flatMap(a -> THIS.rx_a_selectUnitSystemPicker(E, C_WEIGHT, Weight.LB))
             .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT_I))
             .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
-            .flatMap(a -> THIS.rx_v_editFieldHasValue(E, C_WEIGHT, WEIGHT_I_STR))
+            .flatMap(a -> THIS.rxv_hasValue(E, C_WEIGHT, WEIGHT_I_STR))
 
             .flatMap(a -> THIS.rx_a_clickInputField(E, Gender.MALE))
             .flatMap(a -> THIS.rx_a_clickInputField(E, Gender.FEMALE))

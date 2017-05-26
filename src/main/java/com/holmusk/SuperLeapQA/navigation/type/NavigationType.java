@@ -12,7 +12,6 @@ import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.android.AndroidEngine;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -204,16 +203,16 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
      * @param ENGINE {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_a_enterPersonalInfo(Engine, List)
-     * @see #rx_a_confirmPersonalInfo(Engine)
+     * @see #rxa_enterPersonalInfo(Engine, List)
+     * @see #rxa_confirmPersonalInfo(Engine)
      */
     @NotNull
     default Flowable<?> rx_n_personalInfo_extraInfo(@NotNull final Engine<?> ENGINE,
                                                     @NotNull UserMode mode) {
         final NavigationType THIS = this;
 
-        return rx_a_enterPersonalInfo(ENGINE, mode).flatMap(a ->
-            THIS.rx_a_confirmPersonalInfo(ENGINE)
+        return rxa_enterPersonalInfo(ENGINE, mode).flatMap(a ->
+            THIS.rxa_confirmPersonalInfo(ENGINE)
         );
     }
 
@@ -245,7 +244,7 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
      * @param MODE {@link UserMode} instance.
      * @return {@link Flowable} instance.
      * @see #rx_a_enterExtraPersonalInfo(Engine, UserMode)
-     * @see #rx_a_confirmExtraPersonalInfo(Engine, UserMode)
+     * @see #rxa_confirmExtraPersonalInfo(Engine, UserMode)
      * @see #rx_a_watchProgressBarUntilHidden(Engine)
      * @see #rx_a_watchPersonalInfoScreen(Engine)
      * @see BooleanUtil#isTrue(boolean)
@@ -256,7 +255,7 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
         final PersonalInfoActionType THIS = this;
 
         return rx_a_enterExtraPersonalInfo(ENGINE, MODE)
-            .flatMap(a -> THIS.rx_a_confirmExtraPersonalInfo(ENGINE, MODE))
+            .flatMap(a -> THIS.rxa_confirmExtraPersonalInfo(ENGINE, MODE))
 
             /* First progress bar appears immediately after the submit button
              * is clicked */

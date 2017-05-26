@@ -64,7 +64,7 @@ public final class UIInvalidAgeTest extends UIBaseTest implements
      * This test validates that {@link Screen#INVALID_AGE} should only
      * require either {@link TextInput#PHONE} or {@link TextInput#EMAIL},
      * and not both. It sequentially substitutes {@link TextInput} into
-     * {@link #rx_a_enterInput(Engine, SLInputType, String)}. We do not use
+     * {@link #rxa_enterInput(Engine, SLInputType, String)}. We do not use
      * {@link DataProvider} with this method because we already have a
      * {@link Factory} for the constructor.
      * @param MODE {@link UserMode} instance.

@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
-import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.type.PlatformType;
@@ -77,19 +76,19 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
      * @see UserMode#personalInfo(PlatformType)
-     * @see #rx_e_editField(Engine, SLInputType)
+     * @see #rxe_editField(Engine, SLInputType)
      * @see #rx_e_personalInfoSubmit(Engine)
      * @see ObjectUtil#nonNull(Object)
      * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
-    default Flowable<?> rx_v_personalInfoScreen(@NotNull final Engine<?> ENGINE,
-                                                @NotNull UserMode mode) {
+    default Flowable<?> rxv_personalInfoScreen(@NotNull final Engine<?> ENGINE,
+                                               @NotNull UserMode mode) {
         final PersonalInfoValidationType THIS = this;
         final PlatformType PLATFORM = ENGINE.platform();
 
         return Flowable.fromIterable(mode.personalInfo(PLATFORM))
-            .flatMap(a -> THIS.rx_e_editField(ENGINE, a))
+            .flatMap(a -> THIS.rxe_editField(ENGINE, a))
             .concatWith(THIS.rx_e_personalInfoSubmit(ENGINE))
             .all(ObjectUtil::nonNull)
             .toFlowable();

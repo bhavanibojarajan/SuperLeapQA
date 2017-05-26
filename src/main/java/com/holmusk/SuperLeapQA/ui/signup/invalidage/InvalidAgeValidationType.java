@@ -23,7 +23,7 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
      * @return {@link Flowable} instance.
      * @see DOBPickerValidationType#rx_v_validAgeScreen(Engine)
      * @see Engine#rx_containsText(String...)
-     * @see #rx_e_editField(Engine, SLInputType)
+     * @see #rxe_editField(Engine, SLInputType)
      */
     @NotNull
     @Override
@@ -35,9 +35,9 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
                 ENGINE.rx_containsText("register_title_weAreOnlyAccepting"),
                 ENGINE.rx_containsText(MODE.validAgeCategoryRangeString()),
                 ENGINE.rx_containsText("+65"),
-                rx_e_editField(ENGINE, TextInput.NAME),
-                rx_e_editField(ENGINE, TextInput.PHONE),
-                rx_e_editField(ENGINE, TextInput.EMAIL)
+                rxe_editField(ENGINE, TextInput.NAME),
+                rxe_editField(ENGINE, TextInput.PHONE),
+                rxe_editField(ENGINE, TextInput.EMAIL)
             )
             .all(ObjectUtil::nonNull)
             .toFlowable();

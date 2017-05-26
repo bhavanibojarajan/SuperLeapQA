@@ -11,7 +11,6 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.locator.general.type.BaseLocatorErrorType;
@@ -51,12 +50,12 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * Watch the progress bar until it's no longer visible.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_e_progressBar(Engine)
+     * @see #rxe_progressBar(Engine)
      * @see Engine#rx_watchUntilHidden(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rx_a_watchProgressBarUntilHidden(@NotNull final Engine<?> ENGINE) {
-        return rx_e_progressBar(ENGINE)
+        return rxe_progressBar(ENGINE)
             .flatMap(ENGINE::rx_watchUntilHidden)
             .onErrorReturnItem(true);
     }
@@ -67,15 +66,15 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * @param TEXT {@link String} value.
      * @param <P> Generics parameter.
      * @return {@link Flowable} instance.
-     * @see #rx_e_editField(Engine, SLInputType)
-     * @see Engine#rx_sendKeys(WebElement, String...)
+     * @see #rxe_editField(Engine, SLInputType)
+     * @see Engine#rx_type(WebElement, String...)
      */
     @NotNull
     default <P extends SLInputType> Flowable<WebElement>
-    rx_a_enterInput(@NotNull final Engine<?> ENGINE,
-                    @NotNull P input,
-                    @NotNull final String TEXT) {
-        return rx_e_editField(ENGINE, input).flatMap(a -> ENGINE.rx_sendKeys(a, TEXT));
+    rxa_enterInput(@NotNull final Engine<?> ENGINE,
+                   @NotNull P input,
+                   @NotNull final String TEXT) {
+        return rxe_editField(ENGINE, input).flatMap(a -> ENGINE.rx_type(a, TEXT));
     }
 
     /**
@@ -83,13 +82,13 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * @param engine {@link Engine} instance.
      * @param input {@link TextInputType} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_a_enterInput(Engine, SLInputType, String)
+     * @see #rxa_enterInput(Engine, SLInputType, String)
      * @see TextInputType#randomInput()
      */
     @NotNull
     default Flowable<WebElement> rx_a_enterRandomInput(@NotNull Engine<?> engine,
                                                        @NotNull SLTextInputType input) {
-        return rx_a_enterInput(engine, input, input.randomInput());
+        return rxa_enterInput(engine, input, input.randomInput());
     }
 
     /**
@@ -98,13 +97,13 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * clicked (however, this is only applicable to {@link Platform#ANDROID}.
      * @param input {@link InputType} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_e_editField(Engine, SLInputType)   )
+     * @see #rxe_editField(Engine, SLInputType)   )
      * @see Engine#rx_click(WebElement)
      */
     @NotNull
     default Flowable<?> rx_a_clickInputField(@NotNull final Engine<?> ENGINE,
                                              @NotNull SLInputType input) {
-        return rx_e_editField(ENGINE, input).flatMap(ENGINE::rx_click);
+        return rxe_editField(ENGINE, input).flatMap(ENGINE::rx_click);
     }
 
     /**
@@ -136,31 +135,36 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
     }
 
     /**
-     * Toggle next input for an input-based {@link WebElement}.
-     * @param ENGINE {@link Engine} instance.
+     * Make the next input field visible on the screen, by toggling next input
+     * or dismissing the keyboard.
+     * @param E {@link Engine} instance.
      * @param element {@link WebElement} instance.
      * @return {@link Flowable} instance.
+     * @see Engine#rx_hideKeyboard()
      * @see Engine#rx_isLastInput(WebElement)
-     * @see Engine#rx_toggleNextOrDoneInput(WebElement)
+     * @see Engine#rx_toggleNextOrFinishInput(WebElement)
      * @see #rx_a_confirmTextInput(Engine)
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<?> rx_a_toggleNextInputOrDone(@NotNull final Engine<?> ENGINE,
-                                                   @NotNull WebElement element) {
-        if (ENGINE instanceof AndroidEngine) {
-            return ENGINE.rx_toggleNextOrDoneInput(element);
-        } else if (ENGINE instanceof IOSEngine) {
+    default Flowable<?> rxa_makeNextInputVisible(@NotNull final Engine<?> E,
+                                                 @NotNull WebElement element) {
+        if (E instanceof AndroidEngine) {
+            /* Since sending key events is rather flaky, we can instead hide
+             * the keyboard to expose the next input field */
+            return E.rx_hideKeyboard();
+        } else if (E instanceof IOSEngine) {
+            /* In this case, each input will have up/down keyboard accessories
+             * that we can use to navigate to the previous/next input fields */
             final BaseActionType THIS = this;
 
-            return ENGINE
-                .rx_isLastInput(element)
+            return E.rx_isLastInput(element)
                 .flatMap(a -> {
                     if (a) {
-                        return THIS.rx_a_confirmTextInput(ENGINE);
+                        return THIS.rx_a_confirmTextInput(E);
                     } else {
                         String id = "ob downArrow";
-                        return ENGINE.rx_containsID(id).flatMap(ENGINE::rx_click);
+                        return E.rx_containsID(id).flatMap(E::rx_click);
                     }
                 });
         } else {

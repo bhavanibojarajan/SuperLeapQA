@@ -4,23 +4,16 @@ import com.holmusk.SuperLeapQA.config.Config;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.string.StringTestUtil;
-import org.swiften.javautilities.string.StringUtil;
-import org.swiften.xtestkit.base.element.locator.general.xpath.Attribute;
-import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkit.model.InputType;
-import org.swiften.xtestkit.model.TextInputType;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
+import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
-
-import java.util.Arrays;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import org.swiften.xtestkit.model.InputType;
+import org.swiften.xtestkit.model.TextInputType;
 
 /**
  * Created by haipham on 5/10/17.
@@ -104,6 +97,7 @@ public enum TextInput implements BaseErrorType, SLTextInputType {
                 break;
 
             default:
+                LogUtil.println(this);
                 throw new RuntimeException(NOT_AVAILABLE);
         }
 
