@@ -101,8 +101,8 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * @see Engine#rxa_click(WebElement)
      */
     @NotNull
-    default Flowable<?> rx_a_clickInputField(@NotNull final Engine<?> ENGINE,
-                                             @NotNull SLInputType input) {
+    default Flowable<?> rxa_clickInputField(@NotNull final Engine<?> ENGINE,
+                                            @NotNull SLInputType input) {
         return rxe_editField(ENGINE, input).flatMap(ENGINE::rxa_click);
     }
 

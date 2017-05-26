@@ -65,7 +65,7 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
     @NotNull
     @Override
     @SuppressWarnings("unchecked")
-    default Flowable<?> rx_v_validAgeScreen(@NotNull Engine<?> engine) {
+    default Flowable<?> rxv_validAgeScreen(@NotNull Engine<?> engine) {
         return Flowable
             .mergeArray(
                 rxe_editField(engine, Gender.MALE),

@@ -3,7 +3,6 @@ package com.holmusk.SuperLeapQA.navigation.type;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.ui.dashboard.DashboardActionType;
 import com.holmusk.SuperLeapQA.ui.signup.dob.DOBPickerActionType;
-import com.holmusk.SuperLeapQA.ui.signup.invalidage.InvalidAgeTestHelperType;
 import com.holmusk.SuperLeapQA.ui.signup.personalinfo.PersonalInfoActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by haipham on 5/21/17.
  */
-public interface NavigationType extends DashboardActionType, InvalidAgeTestHelperType {
+public interface NavigationType extends DashboardActionType {
     /**
      * Wait for splash screen to finish and navigate to welcome screen.
      * @return {@link Flowable} instance.
@@ -87,7 +86,7 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
      * @param ENGINE {@link Engine} instance.
      * @param AGE {@link Integer} value.
      * @return {@link Flowable} instance.
-     * @see #rx_a_openDoBPicker(Engine)
+     * @see #rxa_openDoBPicker(Engine)
      * @see #rxa_selectDoBToBeOfAge(Engine, int)
      * @see #rxa_confirmDoB(Engine) )
      */
@@ -96,7 +95,7 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
                                                final int AGE) {
         final DOBPickerActionType THIS = this;
 
-        return rx_a_openDoBPicker(ENGINE)
+        return rxa_openDoBPicker(ENGINE)
             .flatMap(a -> THIS.rxa_selectDoBToBeOfAge(ENGINE, AGE))
             .flatMap(a -> THIS.rxa_confirmDoB(ENGINE));
     }
@@ -241,7 +240,7 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
      * @param ENGINE {@link Engine} instance.
      * @param MODE {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_a_enterExtraPersonalInfo(Engine, UserMode)
+     * @see #rxa_enterExtraPersonalInfo(Engine, UserMode)
      * @see #rxa_confirmExtraPersonalInfo(Engine, UserMode)
      * @see #rxa_watchProgressBarUntilHidden(Engine)
      * @see #rxa_watchPersonalInfoScreen(Engine)
@@ -252,7 +251,7 @@ public interface NavigationType extends DashboardActionType, InvalidAgeTestHelpe
                                              @NotNull final UserMode MODE) {
         final PersonalInfoActionType THIS = this;
 
-        return rx_a_enterExtraPersonalInfo(ENGINE, MODE)
+        return rxa_enterExtraPersonalInfo(ENGINE, MODE)
             .flatMap(a -> THIS.rxa_confirmExtraPersonalInfo(ENGINE, MODE))
 
             /* First progress bar appears immediately after the submit button

@@ -105,8 +105,8 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @see UserMode#requiresGuarantor()
      */
     @NotNull
-    default Flowable<?> rx_a_enterExtraPersonalInfo(@NotNull Engine<?> engine,
-                                                    @NotNull UserMode mode) {
+    default Flowable<?> rxa_enterExtraPersonalInfo(@NotNull Engine<?> engine,
+                                                   @NotNull UserMode mode) {
         if (mode.requiresGuarantor()) {
             PlatformType platform = engine.platform();
             return rxa_enterPersonalInfo(engine, mode.extraInfo(platform));

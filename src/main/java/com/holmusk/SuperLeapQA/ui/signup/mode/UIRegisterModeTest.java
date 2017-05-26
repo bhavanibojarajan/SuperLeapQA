@@ -31,9 +31,9 @@ public final class UIRegisterModeTest extends UIBaseTest implements RegisterMode
      * @see Screen#WELCOME
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rx_v_registerScreen(Engine)
+     * @see #rxv_registerScreen(Engine)
      * @see #rxa_clickBackButton(Engine)
-     * @see #rx_v_welcomeScreen(Engine)
+     * @see #rxv_welcomeScreen(Engine)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -46,11 +46,11 @@ public final class UIRegisterModeTest extends UIBaseTest implements RegisterMode
 
         // When
         rxa_navigate(UserMode.PARENT, Screen.SPLASH, Screen.REGISTER)
-            .flatMap(a -> THIS.rx_v_registerScreen(ENGINE))
+            .flatMap(a -> THIS.rxv_registerScreen(ENGINE))
 
             /* Make sure the back button works */
             .flatMap(a -> THIS.rxa_clickBackButton(ENGINE))
-            .flatMap(a -> THIS.rx_v_welcomeScreen(ENGINE))
+            .flatMap(a -> THIS.rxv_welcomeScreen(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

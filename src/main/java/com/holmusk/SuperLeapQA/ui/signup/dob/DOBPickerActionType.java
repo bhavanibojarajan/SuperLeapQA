@@ -4,7 +4,6 @@ import com.holmusk.SuperLeapQA.ui.signup.mode.RegisterModeActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.action.date.DateType;
 import org.swiften.xtestkit.base.type.DelayType;
@@ -27,17 +26,15 @@ public interface DOBPickerActionType extends DOBPickerValidationType, RegisterMo
      * immediately upon entering the screen.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_e_DoBEditField(Engine)
+     * @see #rxe_DoBEditField(Engine)
      * @see Engine#rxa_click(WebElement)
      * @see Engine#rxa_implicitlyWait(DelayType)
      */
     @NotNull
-    default Flowable<?> rx_a_openDoBPicker(@NotNull Engine<?> ENGINE) {
-        return rx_e_DoBEditField(ENGINE)
+    default Flowable<?> rxa_openDoBPicker(@NotNull Engine<?> ENGINE) {
+        return rxe_DoBEditField(ENGINE)
             .flatMap(ENGINE::rxa_click)
-            .delay(generalDelay(), TimeUnit.MILLISECONDS)
-            .all(BooleanUtil::isTrue)
-            .toFlowable();
+            .delay(generalDelay(), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -68,8 +65,8 @@ public interface DOBPickerActionType extends DOBPickerValidationType, RegisterMo
      * @see Engine#rx_selectDate(DateType)
      */
     @NotNull
-    default Flowable<?> rx_a_selectDoB(@NotNull Engine<?> engine,
-                                       @NotNull final Date DATE) {
+    default Flowable<?> rxa_selectDoB(@NotNull Engine<?> engine,
+                                      @NotNull final Date DATE) {
         return engine.rx_selectDate(() -> DATE);
     }
 
@@ -78,12 +75,12 @@ public interface DOBPickerActionType extends DOBPickerValidationType, RegisterMo
      * @param engine {@link Engine} instance.
      * @param age {@link Integer} value.
      * @return {@link Flowable} instance.
-     * @see #rx_a_selectDoB(Engine, Date)
+     * @see #rxa_selectDoB(Engine, Date)
      */
     @NotNull
     default Flowable<?> rxa_selectDoBToBeOfAge(@NotNull Engine<?> engine, int age) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, -age);
-        return rx_a_selectDoB(engine, calendar.getTime());
+        return rxa_selectDoB(engine, calendar.getTime());
     }
 }

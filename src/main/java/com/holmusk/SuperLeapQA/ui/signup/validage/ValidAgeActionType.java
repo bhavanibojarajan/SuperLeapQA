@@ -35,7 +35,7 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * @param selected {@link String} value.
      * @return {@link Flowable} instance.
      * @see ChoiceMode#GENERAL
-     * @see Engine#rx_selectChoice(ChoiceType)
+     * @see Engine#rxa_selectChoice(ChoiceType)
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -50,7 +50,7 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
             .withSelectedChoice(selected)
             .build();
 
-        return engine.rx_selectChoice(param);
+        return engine.rxa_selectChoice(param);
     }
 
     /**
@@ -88,7 +88,7 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * @see Engine#rxa_click(WebElement)
      */
     @NotNull
-    default Flowable<?> rx_a_confirmNumericChoice(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_confirmNumericChoice(@NotNull final Engine<?> ENGINE) {
         return rx_e_numericChoiceConfirm(ENGINE).flatMap(ENGINE::rxa_click);
     }
 
@@ -103,7 +103,7 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * @param CHOICE {@link SLChoiceInputType} instance.
      * @param NUMERIC {@link SLNumericChoiceInputType} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_a_clickInputField(Engine, SLInputType)
+     * @see #rxa_clickInputField(Engine, SLInputType)
      */
     @NotNull
     default Flowable<?> rx_a_selectUnitSystemPicker(
@@ -114,11 +114,11 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
         final ValidAgeActionType THIS = this;
 
         if (ENGINE instanceof AndroidEngine) {
-            return rx_a_clickInputField(ENGINE, NUMERIC)
-                .flatMap(a -> THIS.rx_a_clickInputField(ENGINE, CHOICE));
+            return rxa_clickInputField(ENGINE, NUMERIC)
+                .flatMap(a -> THIS.rxa_clickInputField(ENGINE, CHOICE));
         } else if (ENGINE instanceof IOSEngine) {
-            return rx_a_clickInputField(ENGINE, CHOICE)
-                .flatMap(a -> THIS.rx_a_clickInputField(ENGINE, NUMERIC));
+            return rxa_clickInputField(ENGINE, CHOICE)
+                .flatMap(a -> THIS.rxa_clickInputField(ENGINE, NUMERIC));
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -136,7 +136,7 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * @see Engine#rxa_click(WebElement)
      */
     @NotNull
-    default Flowable<?> rx_a_confirmTextChoice(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_confirmTextChoice(@NotNull final Engine<?> ENGINE) {
         if (ENGINE instanceof IOSEngine) {
             return rx_e_textChoiceConfirm(ENGINE).flatMap(ENGINE::rxa_click);
         } else {
@@ -152,7 +152,7 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * @see Engine#rxa_click(WebElement)
      */
     @NotNull
-    default Flowable<?> rx_a_confirmValidAgeInputs(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_confirmValidAgeInputs(@NotNull final Engine<?> ENGINE) {
         return rx_e_validAgeConfirm(ENGINE).flatMap(ENGINE::rxa_click);
     }
 
@@ -163,15 +163,15 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * @return {@link Flowable} instance.
      * @see Height#randomValue(UserMode)
      * @see Weight#randomValue(UserMode)
-     * @see #rx_a_clickInputField(Engine, SLInputType)
+     * @see #rxa_clickInputField(Engine, SLInputType)
      * @see #rx_a_selectChoice(Engine, SLChoiceInputType, String)
-     * @see #rx_a_confirmNumericChoice(Engine)
-     * @see #rx_a_confirmTextChoice(Engine)
+     * @see #rxa_confirmNumericChoice(Engine)
+     * @see #rxa_confirmTextChoice(Engine)
      */
     @NotNull
     @SuppressWarnings({"unchecked", "ConstantConditions"})
-    default Flowable<?> rx_a_enterValidAgeInputs(@NotNull final Engine<?> E,
-                                                 @NotNull UserMode mode) {
+    default Flowable<?> rxa_enterValidAgeInputs(@NotNull final Engine<?> E,
+                                                @NotNull UserMode mode) {
         final ValidAgeActionType THIS = this;
         PlatformType platform = E.platform();
         UnitSystem unit = CollectionTestUtil.randomElement(UnitSystem.values());
@@ -185,21 +185,21 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
         final Height HEIGHT_MODE = HEIGHT.get(0).A;
         final Weight WEIGHT_MODE = WEIGHT.get(0).A;
 
-        return rx_a_clickInputField(E, GENDER)
+        return rxa_clickInputField(E, GENDER)
             .flatMap(a -> THIS.rx_a_selectUnitSystemPicker(E, C_HEIGHT, HEIGHT_MODE))
             .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT))
-            .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
+            .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
 
             .flatMap(a -> THIS.rx_a_selectUnitSystemPicker(E, C_WEIGHT, WEIGHT_MODE))
             .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT))
-            .flatMap(a -> THIS.rx_a_confirmNumericChoice(E))
+            .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
 
-            .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.ETHNICITY))
+            .flatMap(a -> THIS.rxa_clickInputField(E, ChoiceInput.ETHNICITY))
             .flatMap(a -> THIS.rx_a_selectChoice(E, ChoiceInput.ETHNICITY, ETH.stringValue()))
-            .flatMap(a -> THIS.rx_a_confirmTextChoice(E))
-            .flatMap(a -> THIS.rx_a_clickInputField(E, ChoiceInput.COACH_PREF))
+            .flatMap(a -> THIS.rxa_confirmTextChoice(E))
+            .flatMap(a -> THIS.rxa_clickInputField(E, ChoiceInput.COACH_PREF))
             .flatMap(a -> THIS.rx_a_selectChoice(E, ChoiceInput.COACH_PREF, CP.stringValue()))
-            .flatMap(a -> THIS.rx_a_confirmTextChoice(E));
+            .flatMap(a -> THIS.rxa_confirmTextChoice(E));
     }
 
     /**
@@ -207,16 +207,16 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * @param ENGINE {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_a_enterValidAgeInputs(Engine, UserMode)
-     * @see #rx_a_confirmValidAgeInputs(Engine)
+     * @see #rxa_enterValidAgeInputs(Engine, UserMode)
+     * @see #rxa_confirmValidAgeInputs(Engine)
      */
     @NotNull
     default Flowable<?> rxa_enterAndConfirmValidAgeInputs(@NotNull final Engine<?> ENGINE,
                                                           @NotNull UserMode mode) {
         final ValidAgeActionType THIS = this;
 
-        return rx_a_enterValidAgeInputs(ENGINE, mode).flatMap(a ->
-            THIS.rx_a_confirmValidAgeInputs(ENGINE)
+        return rxa_enterValidAgeInputs(ENGINE, mode).flatMap(a ->
+            THIS.rxa_confirmValidAgeInputs(ENGINE)
         );
     }
 }

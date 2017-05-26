@@ -56,7 +56,7 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<?> rx_v_registerScreen(@NotNull Engine<?> engine) {
+    default Flowable<?> rxv_registerScreen(@NotNull Engine<?> engine) {
         return Flowable
             .mergeArray(
                 engine.rxe_containsText("register_title_iAmParent"),

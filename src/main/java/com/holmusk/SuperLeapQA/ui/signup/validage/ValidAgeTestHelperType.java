@@ -27,7 +27,7 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
      * @return {@link Flowable} instance.
      * @see Height#stringValue(PlatformType, UnitSystem, List)
      * @see #rx_a_selectChoice(Engine, List)
-     * @see #rx_a_confirmNumericChoice(Engine)
+     * @see #rxa_confirmNumericChoice(Engine)
      * @see #rxv_hasValue(Engine, SLInputType, String)
      */
     @NotNull
@@ -47,7 +47,7 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
 
         return rx_a_selectUnitSystemPicker(ENGINE, C_HEIGHT, H_FT)
             .flatMap(a -> THIS.rx_a_selectChoice(ENGINE, INPUTS))
-            .flatMap(a -> THIS.rx_a_confirmNumericChoice(ENGINE))
+            .flatMap(a -> THIS.rxa_confirmNumericChoice(ENGINE))
             .flatMap(a -> THIS.rxv_hasValue(ENGINE, C_HEIGHT, STR));
     }
 

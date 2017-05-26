@@ -47,7 +47,7 @@ public interface WelcomeValidationType extends BaseValidationType {
      * @see BooleanUtil#toTrue(Object)
      */
     @SuppressWarnings("unchecked")
-    default Flowable<?> rx_v_welcomeScreen(@NotNull Engine<?> engine) {
+    default Flowable<?> rxv_welcomeScreen(@NotNull Engine<?> engine) {
         return Flowable
             .concat(rx_e_welcomeSignIn(engine), rx_e_welcomeRegister(engine))
             .all(ObjectUtil::nonNull)

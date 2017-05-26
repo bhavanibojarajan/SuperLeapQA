@@ -24,7 +24,7 @@ public interface DOBPickerValidationType extends WelcomeValidationType {
      * @return {@link Flowable} instance.
      */
     @NotNull
-    Flowable<?> rx_v_validAgeScreen(@NotNull Engine<?> engine);
+    Flowable<?> rxv_validAgeScreen(@NotNull Engine<?> engine);
 
     /**
      * Validate the unacceptable age screen, after the user picks DoB. This
@@ -35,8 +35,8 @@ public interface DOBPickerValidationType extends WelcomeValidationType {
      * @return {@link Flowable} instance.
      */
     @NotNull
-    Flowable<?> rx_v_invalidAgeScreen(@NotNull Engine<?> engine,
-                                      @NotNull UserMode mode);
+    Flowable<?> rxv_invalidAgeScreen(@NotNull Engine<?> engine,
+                                     @NotNull UserMode mode);
 
     /**
      * Get all calendar {@link WebElement} instances.
@@ -45,7 +45,7 @@ public interface DOBPickerValidationType extends WelcomeValidationType {
      * @see Engine#rx_allCalendarElements()
      */
     @NotNull
-    default Flowable<WebElement> rx_e_DoBElements(@NotNull Engine<?> engine) {
+    default Flowable<WebElement> rxe_DoBElements(@NotNull Engine<?> engine) {
         return engine.rx_allCalendarElements();
     }
 
@@ -59,7 +59,7 @@ public interface DOBPickerValidationType extends WelcomeValidationType {
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<WebElement> rx_e_DoBEditField(@NotNull Engine<?> engine) {
+    default Flowable<WebElement> rxe_DoBEditField(@NotNull Engine<?> engine) {
         return engine.rx_editable().firstElement().toFlowable();
     }
 
@@ -74,8 +74,8 @@ public interface DOBPickerValidationType extends WelcomeValidationType {
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<?> rx_v_DoBEditFieldHasDate(@NotNull Engine<?> engine,
-                                                 @NotNull Date date) {
+    default Flowable<?> rxv_DoBEditFieldHasDate(@NotNull Engine<?> engine,
+                                                @NotNull Date date) {
         String format;
 
         if (engine instanceof AndroidEngine) {

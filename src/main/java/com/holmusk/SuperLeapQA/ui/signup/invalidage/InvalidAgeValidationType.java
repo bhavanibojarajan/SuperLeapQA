@@ -21,15 +21,15 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
      * @param ENGINE {@link Engine} instance.
      * @param MODE {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see DOBPickerValidationType#rx_v_validAgeScreen(Engine)
+     * @see DOBPickerValidationType#rxv_validAgeScreen(Engine)
      * @see Engine#rxe_containsText(String...)
      * @see #rxe_editField(Engine, SLInputType)
      */
     @NotNull
     @Override
     @SuppressWarnings("unchecked")
-    default Flowable<?> rx_v_invalidAgeScreen(@NotNull final Engine<?> ENGINE,
-                                              @NotNull final UserMode MODE) {
+    default Flowable<?> rxv_invalidAgeScreen(@NotNull final Engine<?> ENGINE,
+                                             @NotNull final UserMode MODE) {
         return Flowable
             .mergeArray(
                 ENGINE.rxe_containsText("register_title_weAreOnlyAccepting"),
@@ -50,7 +50,7 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
      * @see Engine#rxe_containsText(String...)
      */
     @NotNull
-    default Flowable<WebElement> rx_e_invalidAgeSubmit(@NotNull Engine<?> engine) {
+    default Flowable<WebElement> rxe_invalidAgeSubmit(@NotNull Engine<?> engine) {
         return engine
             .rxe_containsText("register_title_submit")
             .firstElement()
@@ -64,7 +64,7 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
      * @see Engine#rxe_containsText(String...)
      */
     @NotNull
-    default Flowable<WebElement> rx_e_invalidAgeOk(@NotNull Engine<?> engine) {
+    default Flowable<WebElement> rxe_invalidAgeOk(@NotNull Engine<?> engine) {
         return engine
             .rxe_containsText("register_title_ok")
             .firstElement()
@@ -75,16 +75,16 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
      * Validate the confirmation screen after unacceptable age input is
      * submitted.
      * @return {@link Flowable} instance.
-     * @see #rx_e_invalidAgeOk(Engine)
+     * @see #rxe_invalidAgeOk(Engine)
      * @see Engine#rxe_containsText(String...)
      * @see ObjectUtil#nonNull(Object)
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<?> rx_v_invalidAgeInputConfirmed(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxv_invalidAgeInputConfirmed(@NotNull final Engine<?> ENGINE) {
         return Flowable
             .mergeArray(
-                rx_e_invalidAgeOk(ENGINE),
+                rxe_invalidAgeOk(ENGINE),
                 ENGINE.rxe_containsText("register_title_thanksForInterest"),
                 ENGINE.rxe_containsText("register_title_notifyOnLaunch")
             )

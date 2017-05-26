@@ -4,7 +4,6 @@ import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.runner.Runner;
-import com.holmusk.SuperLeapQA.ui.signup.invalidage.InvalidAgeTestHelperType;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +15,7 @@ import org.testng.annotations.Test;
 /**
  * Created by haipham on 5/16/17.
  */
-public class UIMainDashboardTest extends UIBaseTest implements DashboardActionType, InvalidAgeTestHelperType {
+public class UIMainDashboardTest extends UIBaseTest implements DashboardActionType {
     @Factory(
         dataProviderClass = Runner.class,
         dataProvider = "dataProvider"
@@ -36,9 +35,9 @@ public class UIMainDashboardTest extends UIBaseTest implements DashboardActionTy
      * @see Screen#DASHBOARD_TUTORIAL
      * @see Screen#DASHBOARD
      * @see #engine()
-     * @see #rx_v_useAppNowScreen(Engine)
+     * @see #rxv_useAppNowScreen(Engine)
      * @see #rxa_useAppNow(Engine)
-     * @see #rx_v_dashboardTutorialScreen(Engine)
+     * @see #rxv_dashboardTutorialScreen(Engine)
      * @see #guarantorSpecificUserModeProvider()
      */
     @SuppressWarnings("unchecked")
@@ -52,9 +51,9 @@ public class UIMainDashboardTest extends UIBaseTest implements DashboardActionTy
 
         // When
         rxa_navigate(mode, Screen.SPLASH, Screen.DOB, Screen.USE_APP_NOW)
-            .flatMap(a -> THIS.rx_v_useAppNowScreen(ENGINE))
+            .flatMap(a -> THIS.rxv_useAppNowScreen(ENGINE))
             .flatMap(a -> THIS.rxa_useAppNow(ENGINE))
-            .flatMap(a -> THIS.rx_v_dashboardTutorialScreen(ENGINE))
+            .flatMap(a -> THIS.rxv_dashboardTutorialScreen(ENGINE))
             .flatMap(a -> THIS.rxa_navigate(mode, Screen.DASHBOARD_TUTORIAL, Screen.DASHBOARD))
             .subscribe(subscriber);
 

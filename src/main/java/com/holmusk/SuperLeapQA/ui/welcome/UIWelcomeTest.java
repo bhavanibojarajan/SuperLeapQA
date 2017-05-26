@@ -29,7 +29,7 @@ public class UIWelcomeTest extends UIBaseTest implements WelcomeActionType {
      * @see Screen#WELCOME
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rx_v_welcomeScreen(Engine)
+     * @see #rxv_welcomeScreen(Engine)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -42,7 +42,7 @@ public class UIWelcomeTest extends UIBaseTest implements WelcomeActionType {
 
         // When
         rxa_navigate(UserMode.PARENT, Screen.SPLASH, Screen.WELCOME)
-            .flatMap(a -> THIS.rx_v_welcomeScreen(ENGINE))
+            .flatMap(a -> THIS.rxv_welcomeScreen(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

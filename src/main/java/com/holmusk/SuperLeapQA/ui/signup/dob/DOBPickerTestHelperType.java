@@ -22,14 +22,14 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
      * @see Engine#rxe_containsText(String...)
      * @see Engine#rxa_click(WebElement)
      * @see Engine#rxa_navigateBackOnce()
-     * @see #rx_a_openDoBPicker(Engine)
-     * @see #rx_e_DoBElements(Engine)
+     * @see #rxa_openDoBPicker(Engine)
+     * @see #rxe_DoBElements(Engine)
      * @see #generalDelay()
      * @see ObjectUtil#nonNull(Object)
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<?> rx_h_DoBPickerScreen(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxh_DoBPickerScreen(@NotNull final Engine<?> ENGINE) {
         final DOBPickerTestHelperType THIS = this;
 
         return Flowable
@@ -44,8 +44,8 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
             .toFlowable()
 
             /* Open the DoB dialog and verify that all elements are there */
-            .flatMap(a -> THIS.rx_a_openDoBPicker(ENGINE))
-            .flatMap(a -> THIS.rx_e_DoBElements(ENGINE).all(ObjectUtil::nonNull).toFlowable())
+            .flatMap(a -> THIS.rxa_openDoBPicker(ENGINE))
+            .flatMap(a -> THIS.rxe_DoBElements(ENGINE).all(ObjectUtil::nonNull).toFlowable())
             .delay(THIS.generalDelay(), TimeUnit.MILLISECONDS)
 
             /* Dismiss the dialog by navigating back once */
@@ -68,16 +68,16 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
      * @param AGES {@link List} of {@link Integer}.
      * @return {@link Flowable} instance.
      * @see UserMode#validAgeCategoryRange()
-     * @see #rx_a_openDoBPicker(Engine)
-     * @see #rx_v_validAgeScreen(Engine)
-     * @see #rx_v_invalidAgeScreen(Engine, UserMode)
+     * @see #rxa_openDoBPicker(Engine)
+     * @see #rxv_validAgeScreen(Engine)
+     * @see #rxv_invalidAgeScreen(Engine, UserMode)
      * @see #rxa_clickBackButton(Engine)
      */
     @NotNull
     @GuarantorAware(value = false)
-    default Flowable<?> rx_h_validateDoBsRecursive(@NotNull final Engine<?> ENGINE,
-                                                   @NotNull final UserMode MODE,
-                                                   @NotNull final List<Integer> AGES) {
+    default Flowable<?> rxh_validateDoBsRecursive(@NotNull final Engine<?> ENGINE,
+                                                  @NotNull final UserMode MODE,
+                                                  @NotNull final List<Integer> AGES) {
         final DOBPickerActionType THIS = this;
         final List<Integer> RANGE = MODE.validAgeCategoryRange();
         final int LENGTH = AGES.size();
@@ -89,14 +89,14 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
                     final int AGE = AGES.get(INDEX);
                     final boolean VALID = RANGE.contains(AGE);
 
-                    return THIS.rx_a_openDoBPicker(ENGINE)
+                    return THIS.rxa_openDoBPicker(ENGINE)
                         .flatMap(a -> THIS.rxa_selectDoBToBeOfAge(ENGINE, AGE))
                         .flatMap(a -> THIS.rxa_confirmDoB(ENGINE))
                         .flatMap(a -> {
                             if (VALID) {
-                                return THIS.rx_v_validAgeScreen(ENGINE);
+                                return THIS.rxv_validAgeScreen(ENGINE);
                             } else {
-                                return THIS.rx_v_invalidAgeScreen(ENGINE, MODE);
+                                return THIS.rxv_invalidAgeScreen(ENGINE, MODE);
                             }
                         })
                         .flatMap(a -> THIS.rxa_clickBackButton(ENGINE))

@@ -3,6 +3,7 @@ package com.holmusk.SuperLeapQA.ui.signup.invalidage;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
+import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.navigation.type.NavigationType;
 import com.holmusk.SuperLeapQA.runner.Runner;
@@ -10,21 +11,41 @@ import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
+import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+import java.util.Iterator;
+
 /**
  * Created by haipham on 23/5/17.
  */
-public final class UIInvalidAgeTest extends UIBaseTest implements
-    NavigationType, InvalidAgeTestHelperType
-{
+public final class UIInvalidAgeTest extends UIBaseTest implements NavigationType {
     @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
     public UIInvalidAgeTest(int index) {
         super(index);
+    }
+
+    /**
+     * Provide data parameters for
+     * {@link #test_invalidAgeInput_requiresPhoneOrEmail(UserMode, TextInput)}.
+     * @return {@link Iterator} instance.
+     * @see #test_invalidAgeInput_requiresPhoneOrEmail(UserMode, TextInput)
+     */
+    @NotNull
+    @DataProvider
+    public Iterator<Object[]> userModeInputProvider() {
+        return Arrays.asList(
+            new Object[] { UserMode.PARENT, TextInput.PHONE },
+            new Object[] { UserMode.PARENT, TextInput.EMAIL }
+//            new Object[] { UserMode.TEEN_U18, TextInput.PHONE },
+//            new Object[] { UserMode.TEEN_U18, TextInput.EMAIL }
+        ).iterator();
     }
 
     /**
@@ -36,7 +57,7 @@ public final class UIInvalidAgeTest extends UIBaseTest implements
      * @see Screen#INVALID_AGE
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rx_a_clickInputField(Engine, SLInputType)
+     * @see #rxa_clickInputField(Engine, SLInputType)
      * @see #generalUserModeProvider()
      */
     @SuppressWarnings("unchecked")
@@ -50,8 +71,8 @@ public final class UIInvalidAgeTest extends UIBaseTest implements
 
         // When
         rxa_navigate(mode, Screen.SPLASH, Screen.INVALID_AGE)
-            .flatMap(a -> THIS.rx_a_confirmInvalidAgeInputs(ENGINE))
-            .flatMap(a -> THIS.rx_a_clickInputField(ENGINE, TextInput.NAME))
+            .flatMap(a -> THIS.rxa_confirmInvalidAgeInputs(ENGINE))
+            .flatMap(a -> THIS.rxa_clickInputField(ENGINE, TextInput.NAME))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -68,30 +89,40 @@ public final class UIInvalidAgeTest extends UIBaseTest implements
      * {@link DataProvider} with this method because we already have a
      * {@link Factory} for the constructor.
      * @param MODE {@link UserMode} instance.
+     * @param INPUT {@link TextInput} instance.
      * @see Screen#INVALID_AGE
-     * @see #engine()
-     * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rx_h_invalidAgeInputRequired(Engine, TextInput)
-     * @see #generalUserModeProvider()
+     * @see ObjectUtil#nonNull(Object)
      * @see #assertCorrectness(TestSubscriber)
+     * @see #engine()
+     * @see #generalUserModeProvider()
+     * @see #rxa_completeInvalidAgeInput(Engine)
+     * @see #rxa_enterRandomInput(Engine, SLTextInputType)
+     * @see #rxa_makeNextInputVisible(Engine, WebElement)
+     * @see #rxa_navigate(UserMode, Screen...)
+     * @see #rxa_confirmInvalidAgeInputs(Engine)
+     * @see #rxa_watchProgressBarUntilHidden(Engine)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
-    @Test(dataProvider = "generalUserModeProvider")
-    public void test_invalidAgeInput_requiresPhoneOrEmail(@NotNull final UserMode MODE) {
+    @Test(dataProvider = "userModeInputProvider")
+    public void test_invalidAgeInput_requiresPhoneOrEmail(@NotNull final UserMode MODE,
+                                                          @NotNull final TextInput INPUT) {
         // Setup
         final UIInvalidAgeTest THIS = this;
         final Engine<?> ENGINE = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        /* Check that if phone is entered, we don't need email */
         rxa_navigate(MODE, Screen.SPLASH, Screen.INVALID_AGE)
-            .flatMap(a -> THIS.rx_h_invalidAgeInputRequired(ENGINE, TextInput.PHONE))
-
-            /* Check that if email is entered, we don't need phone */
-            .flatMap(a -> THIS.rxa_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE))
-            .flatMap(a -> THIS.rx_h_invalidAgeInputRequired(ENGINE, TextInput.EMAIL))
+            .flatMapIterable(a -> Arrays.asList(TextInput.NAME, INPUT))
+            .concatMap(a -> THIS.rxa_enterRandomInput(ENGINE, a))
+            .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
+            .all(ObjectUtil::nonNull)
+            .toFlowable()
+            .flatMap(a -> THIS.rxa_confirmInvalidAgeInputs(ENGINE))
+            .flatMap(a -> THIS.rxa_watchProgressBarUntilHidden(ENGINE))
+            .flatMap(a -> THIS.rxv_invalidAgeInputConfirmed(ENGINE))
+            .flatMap(a -> THIS.rxa_completeInvalidAgeInput(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -126,10 +157,10 @@ public final class UIInvalidAgeTest extends UIBaseTest implements
         // When
         rxa_navigate(mode, Screen.SPLASH, Screen.INVALID_AGE)
             .flatMap(a -> THIS.rxa_enterAndConfirmInvalidAgeInputs(ENGINE))
-            .flatMap(a -> THIS.rx_v_invalidAgeInputConfirmed(ENGINE))
-            .flatMap(a -> THIS.rx_e_invalidAgeOk(ENGINE))
+            .flatMap(a -> THIS.rxv_invalidAgeInputConfirmed(ENGINE))
+            .flatMap(a -> THIS.rxe_invalidAgeOk(ENGINE))
             .flatMap(ENGINE::rxa_click)
-            .flatMap(a -> THIS.rx_v_welcomeScreen(ENGINE))
+            .flatMap(a -> THIS.rxv_welcomeScreen(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

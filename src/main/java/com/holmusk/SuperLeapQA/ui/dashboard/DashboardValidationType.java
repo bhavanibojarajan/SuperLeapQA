@@ -18,7 +18,7 @@ public interface DashboardValidationType extends BaseValidationType {
      * @see Engine#rxe_containsText(String...)
      */
     @NotNull
-    default Flowable<WebElement> rxUseAppNowButton(@NotNull Engine<?> engine) {
+    default Flowable<WebElement> rxe_useAppNowButton(@NotNull Engine<?> engine) {
         return engine
             .rxe_containsText("dashboard_title_useAppNow")
             .firstElement()
@@ -30,19 +30,19 @@ public interface DashboardValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsText(String...)
-     * @see #rxUseAppNowButton(Engine)
+     * @see #rxe_useAppNowButton(Engine)
      * @see ObjectUtil#nonNull(Object)
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<?> rx_v_useAppNowScreen(@NotNull Engine<?> engine) {
+    default Flowable<?> rxv_useAppNowScreen(@NotNull Engine<?> engine) {
         final DashboardValidationType THIS = this;
 
         return Flowable
             .mergeArray(
                 engine.rxe_containsText("dashboard_title_accountReadyToUse"),
                 engine.rxe_containsText("dashboard_title_rememberCheckEmail"),
-                THIS.rxUseAppNowButton(engine)
+                THIS.rxe_useAppNowButton(engine)
             )
             .all(ObjectUtil::nonNull)
             .toFlowable();
@@ -55,7 +55,7 @@ public interface DashboardValidationType extends BaseValidationType {
      * @see Engine#rxe_containsText(String...)
      */
     @NotNull
-    default Flowable<?> rx_v_dashboardTutorialScreen(@NotNull Engine<?> engine) {
+    default Flowable<?> rxv_dashboardTutorialScreen(@NotNull Engine<?> engine) {
         return engine.rxe_containsText("dashboard_title_tapHereToMakeFirstEntry");
     }
 }
