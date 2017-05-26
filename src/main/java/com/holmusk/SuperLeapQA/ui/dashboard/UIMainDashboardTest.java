@@ -16,10 +16,7 @@ import org.testng.annotations.Test;
  * Created by haipham on 5/16/17.
  */
 public class UIMainDashboardTest extends UIBaseTest implements DashboardActionType {
-    @Factory(
-        dataProviderClass = Runner.class,
-        dataProvider = "dataProvider"
-    )
+    @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
     public UIMainDashboardTest(int index) {
         super(index);
     }

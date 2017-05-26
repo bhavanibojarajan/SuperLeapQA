@@ -172,7 +172,7 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
         final PlatformType PLATFORM = ENGINE.platform();
         final UserMode MODE = UserMode.PARENT;
         final Map<String,String> INPUTS = new HashMap<>();
-        List<SLInputType> info = MODE.personalInfo(PLATFORM);
+        List<SLTextInputType> info = MODE.personalInfo(PLATFORM);
 
         final List<SLTextInputType> TEXT_INFO = info.stream()
             .filter(TextInputType.class::isInstance)
@@ -223,12 +223,12 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      * @see Engine#rxa_hideKeyboard()
      * @see Screen#PERSONAL_INFO
      * @see UserMode#personalInfo(PlatformType)
-     * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rxa_enterPersonalInfo(Engine, List)
+     * @see #rxa_enterRandomInputs(Engine, List)
      * @see #rxa_confirmPersonalInfo(Engine)
      * @see #rxv_personalInfoScreen(Engine, UserMode)
      * @see #assertCorrectness(TestSubscriber)
+     * @see #engine()
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -238,12 +238,12 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
         final UIPersonalInfoTest THIS = this;
         final Engine<?> ENGINE = engine();
         final PlatformType PLATFORM = ENGINE.platform();
-        final List<SLInputType> INFO = MODE.personalInfo(PLATFORM);
+        final List<SLTextInputType> INFO = MODE.personalInfo(PLATFORM);
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
-            .flatMap(a -> THIS.rxa_enterPersonalInfo(ENGINE, INFO))
+            .flatMap(a -> THIS.rxa_enterRandomInputs(ENGINE, INFO))
             .flatMap(a -> THIS.rxa_confirmPersonalInfo(ENGINE))
             .delay(2000, TimeUnit.MILLISECONDS)
             .flatMap(a -> THIS.rxv_personalInfoScreen(ENGINE, MODE))
@@ -256,17 +256,17 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
     }
 
     /**
-     * This test validates that the {@link Screen#EXTRA_PERSONAL_INFO} for
+     * This test validates that the {@link Screen#GUARANTOR_INFO} for
      * parents/guarantors should only require either
      * {@link TextInput#PARENT_MOBILE} or {@link TextInput#PARENT_EMAIL}.
      * This test is only applicable for {@link UserMode#TEEN_U18}, so we use
      * {@link DataProvider} that provides {@link InputType}.
      * @param INPUTS {@link List} of {@link InputType}.
-     * @see Screen#EXTRA_PERSONAL_INFO
+     * @see Screen#GUARANTOR_INFO
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rxa_enterPersonalInfo(Engine, List)
-     * @see #rxa_confirmExtraPersonalInfo(Engine, UserMode)
+     * @see #rxa_enterRandomInputs(Engine, List)
+     * @see #rxa_confirmGuarantorInfo(Engine, UserMode)
      * @see #rxe_progressBar(Engine)
      * @see #parentPersonalInfoProvider()
      * @see #assertCorrectness(TestSubscriber)
@@ -274,7 +274,7 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
     @Test(dataProvider = "parentPersonalInfoProvider")
-    public void test_parentInfo_requiresPhoneOrEmail(@NotNull final List<SLInputType> INPUTS) {
+    public void test_parentInfo_requiresPhoneOrEmail(@NotNull final List<SLTextInputType> INPUTS) {
         // Setup
         final UIPersonalInfoTest THIS = this;
         final Engine<?> ENGINE = engine();
@@ -282,9 +282,9 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(MODE, Screen.SPLASH, Screen.EXTRA_PERSONAL_INFO)
-            .flatMap(a -> THIS.rxa_enterPersonalInfo(ENGINE, INPUTS))
-            .flatMap(a -> THIS.rxa_confirmExtraPersonalInfo(ENGINE, MODE))
+        rxa_navigate(MODE, Screen.SPLASH, Screen.GUARANTOR_INFO)
+            .flatMap(a -> THIS.rxa_enterRandomInputs(ENGINE, INPUTS))
+            .flatMap(a -> THIS.rxa_confirmGuarantorInfo(ENGINE, MODE))
 
             /* If all inputs are valid, the progress bar should be visible
              * to indicate data being processed */
@@ -299,11 +299,11 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
 
     /**
      * This test checks that {@link UserMode#TEEN_U18} will see
-     * {@link Screen#EXTRA_PERSONAL_INFO}, while {@link UserMode#TEEN_A18} will
+     * {@link Screen#GUARANTOR_INFO}, while {@link UserMode#TEEN_A18} will
      * not. It uses a custom {@link DataProvider} that provides only
      * {@link UserMode#TEEN_U18} and {@link UserMode#TEEN_A18}.
      * @param MODE {@link UserMode} instance.
-     * @see Screen#EXTRA_PERSONAL_INFO
+     * @see Screen#GUARANTOR_INFO
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #guarantorSpecificUserModeProvider()

@@ -20,30 +20,17 @@ public interface InvalidAgeActionType extends InvalidAgeValidationType, DOBPicke
     /**
      * Enter random inputs for unacceptable age screen, then confirm and check
      * that the app shows a confirmation page.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
-     * @see #invalidAgeInputConfirmDelay()
-     * @see #rxa_enterRandomInput(Engine, SLTextInputType)
-     * @see #rxa_makeNextInputVisible(Engine, WebElement)
+     * @see #rxa_enterRandomInputs(Engine, List)
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<?> rxa_enterInvalidAgeInputs(@NotNull final Engine<?> ENGINE) {
-        final InvalidAgeActionType THIS = this;
-
-        List<SLTextInputType> inputs = Arrays.asList(
+    default Flowable<?> rxa_enterInvalidAgeInputs(@NotNull Engine<?> engine) {
+        return rxa_enterRandomInputs(engine,
             TextInput.NAME,
             TextInput.EMAIL,
-            TextInput.PHONE
-        );
-
-        return Flowable
-            .fromIterable(inputs)
-            .concatMap(a -> THIS.rxa_enterRandomInput(ENGINE, a))
-            .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
-            .all(ObjectUtil::nonNull)
-            .toFlowable();
+            TextInput.PHONE);
     }
 
     /**

@@ -22,7 +22,7 @@ public interface WelcomeValidationType extends BaseValidationType {
      * @see Engine#rxe_containsText(String...)
      */
     @NotNull
-    default Flowable<WebElement> rx_e_welcomeRegister(@NotNull Engine<?> engine) {
+    default Flowable<WebElement> rxe_welcomeRegister(@NotNull Engine<?> engine) {
         return engine.rxe_containsText("welcome_title_register").firstElement().toFlowable();
     }
 
@@ -33,7 +33,7 @@ public interface WelcomeValidationType extends BaseValidationType {
      * @see Engine#rxe_containsText(String...)
      */
     @NotNull
-    default Flowable<WebElement> rx_e_welcomeSignIn(@NotNull Engine<?> engine) {
+    default Flowable<WebElement> rxe_signIn(@NotNull Engine<?> engine) {
         return engine.rxe_containsText("welcome_title_signIn").firstElement().toFlowable();
     }
 
@@ -41,15 +41,15 @@ public interface WelcomeValidationType extends BaseValidationType {
      * Validate that all views are present in splash screen.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_e_welcomeSignIn(Engine)
-     * @see #rx_e_welcomeRegister(Engine)
+     * @see #rxe_signIn(Engine)
+     * @see #rxe_welcomeRegister(Engine)
      * @see ObjectUtil#nonNull(Object)
      * @see BooleanUtil#toTrue(Object)
      */
     @SuppressWarnings("unchecked")
     default Flowable<?> rxv_welcomeScreen(@NotNull Engine<?> engine) {
         return Flowable
-            .concat(rx_e_welcomeSignIn(engine), rx_e_welcomeRegister(engine))
+            .concat(rxe_signIn(engine), rxe_welcomeRegister(engine))
             .all(ObjectUtil::nonNull)
             .toFlowable();
     }

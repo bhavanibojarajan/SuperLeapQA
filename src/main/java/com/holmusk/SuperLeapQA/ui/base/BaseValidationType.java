@@ -31,7 +31,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<WebElement> rxBackButton(@NotNull Engine<?> engine) {
+    default Flowable<WebElement> rxe_backButton(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             return engine.rxe_containsID("btnBack").firstElement().toFlowable();
         } else if (engine instanceof IOSEngine) {

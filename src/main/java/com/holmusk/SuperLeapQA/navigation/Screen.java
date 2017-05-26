@@ -6,14 +6,14 @@ package com.holmusk.SuperLeapQA.navigation;
 public enum Screen {
     SPLASH,
     WELCOME,
-    SIGN_IN,
+    LOGIN,
     FORGOT_PASSWORD,
     REGISTER,
     DOB,
     INVALID_AGE,
     VALID_AGE,
     PERSONAL_INFO,
-    EXTRA_PERSONAL_INFO,
+    GUARANTOR_INFO,
     USE_APP_NOW,
     DASHBOARD_TUTORIAL,
     DASHBOARD;

@@ -67,11 +67,11 @@ public interface SLScreenManagerType extends ScreenManagerType {
      * @param screens Varargs of {@link Screen}.
      * @return {@link Flowable} instance.
      * @see #holders(UserMode, Screen...)
-     * @see #rx_navigate(Object, ScreenType...)
+     * @see #rxa_navigate(Object, ScreenType...)
      */
     @NotNull
     default Flowable<?> rxa_navigate(@NotNull UserMode mode,
                                      @NotNull Screen...screens) {
-        return rx_navigate(true, holders(mode, screens));
+        return rxa_navigate(true, holders(mode, screens));
     }
 }

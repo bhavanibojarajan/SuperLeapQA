@@ -2,8 +2,13 @@ package com.holmusk.SuperLeapQA.navigation.type;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.ui.dashboard.DashboardActionType;
+import com.holmusk.SuperLeapQA.ui.login.LoginActionType;
 import com.holmusk.SuperLeapQA.ui.signup.dob.DOBPickerActionType;
+import com.holmusk.SuperLeapQA.ui.signup.invalidage.InvalidAgeActionType;
+import com.holmusk.SuperLeapQA.ui.signup.mode.RegisterModeActionType;
 import com.holmusk.SuperLeapQA.ui.signup.personalinfo.PersonalInfoActionType;
+import com.holmusk.SuperLeapQA.ui.signup.validage.ValidAgeActionType;
+import com.holmusk.SuperLeapQA.ui.welcome.WelcomeActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -17,9 +22,18 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by haipham on 5/21/17.
  */
-public interface NavigationType extends DashboardActionType {
+public interface NavigationType extends
+    WelcomeActionType,
+    LoginActionType,
+    RegisterModeActionType,
+    DOBPickerActionType,
+    InvalidAgeActionType,
+    ValidAgeActionType,
+    DashboardActionType
+{
     /**
-     * Wait for splash screen to finish and navigate to welcome screen.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#SPLASH}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#WELCOME}
      * @return {@link Flowable} instance.
      * @see #splashDelay()
      * @see BooleanUtil#toTrue(Object)
@@ -32,33 +46,72 @@ public interface NavigationType extends DashboardActionType {
     }
 
     /**
-     * Navigate from the sign in screen to the welcome screen, assuming the
-     * user is already in the sign in screen.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#WELCOME}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOGIN}
      * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_click(WebElement)
+     * @see #rxe_signIn(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxn_welcome_login(@NotNull final Engine<?> ENGINE) {
+        return rxe_signIn(ENGINE).flatMap(ENGINE::rxa_click);
+    }
+
+    /**
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOGIN}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#WELCOME}
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxa_clickBackButton(Engine)
      */
     @NotNull
-    default Flowable<?> rxn_signIn_welcome(@NotNull final Engine<?> ENGINE) {
-        return rxa_clickBackButton(ENGINE);
+    default Flowable<?> rxn_login_welcome(@NotNull Engine<?> engine) {
+        return rxa_clickBackButton(engine);
     }
 
     /**
-     * Navigate from welcome to register screen, assuming the user is already
-     * in the welcome screen.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOGIN}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#FORGOT_PASSWORD}
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_e_welcomeRegister(Engine)
+     * @see Engine#rxa_click(WebElement)
+     * @see #rxe_forgotPassword(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxn_login_forgotPassword(@NotNull final Engine<?> ENGINE) {
+        return rxe_forgotPassword(ENGINE).flatMap(ENGINE::rxa_click);
+    }
+
+    /**
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOGIN}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#REGISTER}
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_click(WebElement)
+     * @see #rxe_loginRegister(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxn_login_register(@NotNull final Engine<?> ENGINE) {
+        return rxe_loginRegister(ENGINE).flatMap(ENGINE::rxa_click);
+    }
+
+    /**
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#WELCOME}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#REGISTER}
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rxe_welcomeRegister(Engine)
      * @see Engine#rxa_click(WebElement)
      */
     @NotNull
-    default Flowable<?> rx_n_welcome_register(@NotNull final Engine<?> ENGINE) {
-        return rx_e_welcomeRegister(ENGINE).flatMap(ENGINE::rxa_click);
+    default Flowable<?> rxn_welcome_register(@NotNull final Engine<?> ENGINE) {
+        return rxe_welcomeRegister(ENGINE).flatMap(ENGINE::rxa_click);
     }
 
     /**
-     * Navigate from the register screen to the welcome screen, assuming the
-     * user is already in the register screen.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#REGISTER}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#WELCOME}
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxa_clickBackButton(Engine)
@@ -69,8 +122,8 @@ public interface NavigationType extends DashboardActionType {
     }
 
     /**
-     * Navigate to the parent sign up screen from register screen, assuming
-     * the user is already on the register screen.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#REGISTER}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DOB}
      * @return {@link Flowable} instance.
      * @see #rxe_signUp(Engine, UserMode)
      * @see Engine#rxa_click(WebElement)
@@ -82,7 +135,9 @@ public interface NavigationType extends DashboardActionType {
     }
 
     /**
-     * Navigate to the appropriate screen, based on an age value.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DOB}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#INVALID_AGE}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#VALID_AGE}
      * @param ENGINE {@link Engine} instance.
      * @param AGE {@link Integer} value.
      * @return {@link Flowable} instance.
@@ -101,8 +156,8 @@ public interface NavigationType extends DashboardActionType {
     }
 
     /**
-     * Navigate to the unacceptable age input screen by selecting a DoB that
-     * results in an age that does not lie within
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DOB}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#INVALID_AGE}
      * {@link UserMode#maxCategoryValidAge()})
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
@@ -118,8 +173,8 @@ public interface NavigationType extends DashboardActionType {
     }
 
     /**
-     * Navigate from the unacceptable age input screen to the DoB picker
-     * screen.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#INVALID_AGE}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DOB}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxa_clickBackButton(Engine)
@@ -130,7 +185,8 @@ public interface NavigationType extends DashboardActionType {
     }
 
     /**
-     * Navigate from the unacceptable age screen to the welcome screen.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#INVALID_AGE}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#WELCOME}
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxa_enterAndConfirmInvalidAgeInputs(Engine)
@@ -141,11 +197,12 @@ public interface NavigationType extends DashboardActionType {
     }
 
     /**
-     * Navigate to the acceptable age input screen by selecting a DoB that
-     * results in an age that lies within {@link UserMode#validAgeRange()}.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DOB}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#VALID_AGE}
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
+     * @see UserMode#validAgeRange()
      * @see #rxn_DoBPicker_ageInput(Engine, int)
      */
     @NotNull
@@ -157,19 +214,20 @@ public interface NavigationType extends DashboardActionType {
     }
 
     /**
-     * Navigate from the acceptable age screen to the welcome screen.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#VALID_AGE}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DOB}
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rxa_enterInvalidAgeInputs(Engine)
+     * @see #rxa_clickBackButton(Engine)
      */
     @NotNull
-    default Flowable<?> rxn_validAge_welcome(@NotNull final Engine<?> ENGINE) {
-        return rxa_enterInvalidAgeInputs(ENGINE);
+    default Flowable<?> rxn_validAge_DoB(@NotNull final Engine<?> ENGINE) {
+        return rxa_clickBackButton(ENGINE);
     }
 
     /**
-     * Navigate from the acceptable age input to the personal info input
-     * screen.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#VALID_AGE}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#PERSONAL_INFO}
      * @param ENGINE {@link Engine} instance.
      * @param MODE {@link UserMode} instance.
      * @return {@link Flowable} instance.
@@ -182,7 +240,8 @@ public interface NavigationType extends DashboardActionType {
     }
 
     /**
-     * Navigate from the personal info screen to the acceptable age screen.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#PERSONAL_INFO}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#VALID_AGE}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxa_clickBackButton(Engine)
@@ -197,6 +256,8 @@ public interface NavigationType extends DashboardActionType {
      * screen. Only applicable to {@link UserMode#requiresGuarantor()}.
      * If {@link UserMode#requiresGuarantor()} is {@link Boolean#FALSE},
      * this method will go directly to the dashboard.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#PERSONAL_INFO}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#GUARANTOR_INFO}
      * @param ENGINE {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
@@ -204,18 +265,19 @@ public interface NavigationType extends DashboardActionType {
      * @see #rxa_confirmPersonalInfo(Engine)
      */
     @NotNull
-    default Flowable<?> rxn_personalInfo_extraInfo(@NotNull final Engine<?> ENGINE,
-                                                   @NotNull UserMode mode) {
+    default Flowable<?> rxn_personalInfo_guarantorInfo(@NotNull final Engine<?> ENGINE,
+                                                       @NotNull UserMode mode) {
         final NavigationType THIS = this;
 
-        return rxa_enterPersonalInfo(ENGINE, mode).flatMap(a ->
-            THIS.rxa_confirmPersonalInfo(ENGINE)
-        );
+        return rxa_enterPersonalInfo(ENGINE, mode)
+            .flatMap(a -> THIS.rxa_confirmPersonalInfo(ENGINE));
     }
 
     /**
      * Navigate from extra personal info screen to the personal info screen.
      * Only applicable if {@link UserMode#requiresGuarantor()} is true.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#PERSONAL_INFO}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#GUARANTOR_INFO}
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
@@ -223,8 +285,8 @@ public interface NavigationType extends DashboardActionType {
      * @see #rxa_clickBackButton(Engine)
      */
     @NotNull
-    default Flowable<?> rxn_extraInfo_personalInfo(@NotNull Engine<?> engine,
-                                                   @NotNull UserMode mode) {
+    default Flowable<?> rxn_guarantorInfo_personalInfo(@NotNull Engine<?> engine,
+                                                       @NotNull UserMode mode) {
         if (mode.requiresGuarantor()) {
             return rxa_clickBackButton(engine);
         } else {
@@ -237,22 +299,24 @@ public interface NavigationType extends DashboardActionType {
      * that the extra info screen only exists for {@link UserMode#TEEN_U18}.
      * For other {@link UserMode} instances, this screen should be the
      * personal info screen.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#GUARANTOR_INFO}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#USE_APP_NOW}
      * @param ENGINE {@link Engine} instance.
      * @param MODE {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see #rxa_enterExtraPersonalInfo(Engine, UserMode)
-     * @see #rxa_confirmExtraPersonalInfo(Engine, UserMode)
+     * @see #rxa_enterGuarantorInfo(Engine, UserMode)
+     * @see #rxa_confirmGuarantorInfo(Engine, UserMode)
      * @see #rxa_watchProgressBarUntilHidden(Engine)
      * @see #rxa_watchPersonalInfoScreen(Engine)
      * @see BooleanUtil#isTrue(boolean)
      */
     @NotNull
-    default Flowable<?> rxn_extraInfo_useApp(@NotNull final Engine<?> ENGINE,
-                                             @NotNull final UserMode MODE) {
+    default Flowable<?> rxn_guarantorInfo_useApp(@NotNull final Engine<?> ENGINE,
+                                                 @NotNull final UserMode MODE) {
         final PersonalInfoActionType THIS = this;
 
-        return rxa_enterExtraPersonalInfo(ENGINE, MODE)
-            .flatMap(a -> THIS.rxa_confirmExtraPersonalInfo(ENGINE, MODE))
+        return rxa_enterGuarantorInfo(ENGINE, MODE)
+            .flatMap(a -> THIS.rxa_confirmGuarantorInfo(ENGINE, MODE))
 
             /* First progress bar appears immediately after the submit button
              * is clicked */
@@ -272,8 +336,8 @@ public interface NavigationType extends DashboardActionType {
     }
 
     /**
-     * Navigate from the Use App Now screen to the Dashboard tutorial screen,
-     * assuming the user is already in the Use App Now screen.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#USE_APP_NOW}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD_TUTORIAL}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxa_useAppNow(Engine)
@@ -284,8 +348,8 @@ public interface NavigationType extends DashboardActionType {
     }
 
     /**
-     * Navigate from the dashboard tutorial to the dashboard, assuming the
-     * user is in the tutorial screen (i.e. using for the first time).
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD_TUTORIAL}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_navigateBackOnce()

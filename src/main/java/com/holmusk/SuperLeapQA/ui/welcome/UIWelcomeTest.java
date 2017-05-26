@@ -15,10 +15,7 @@ import org.testng.annotations.Test;
  * Created by haipham on 5/7/17.
  */
 public class UIWelcomeTest extends UIBaseTest implements WelcomeActionType {
-    @Factory(
-        dataProviderClass = Runner.class,
-        dataProvider = "dataProvider"
-    )
+    @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
     public UIWelcomeTest(int index) {
         super(index);
     }

@@ -1,6 +1,7 @@
 package com.holmusk.SuperLeapQA.config;
 
 import org.jetbrains.annotations.NotNull;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.TestMode;
 import org.swiften.xtestkit.ios.IOSEngine;
@@ -39,15 +40,6 @@ public final class Config {
 //            .withTestMode(TestMode.SIMULATED)
 //            .build());
 //
-        ENGINES.add(IOSEngine.builder()
-            .withDeviceUID("771F28EC-C5FC-45B8-8C2A-AF346B219936")
-            .withApp(IOS_APP_PATH)
-            .withAppPackage(IOS_APP_PACKAGE)
-            .withDeviceName("iPhone 7 Plus")
-            .withPlatformVersion("10.3")
-            .withTestMode(TestMode.SIMULATED)
-            .build());
-
 //        ENGINES.add(AndroidEngine.builder()
 //            .withAppActivity(ANDROID_APP_ACTIVITY)
 //            .withDeviceUID("4d00167552895059")
@@ -58,13 +50,13 @@ public final class Config {
 //            .withTestMode(TestMode.ACTUAL)
 //            .build());
 //
-//        ENGINES.add(AndroidEngine.builder()
-//            .withAppActivity(ANDROID_APP_ACTIVITY)
-//            .withAppPackage(ANDROID_APP_PACKAGE)
-//            .withDeviceName("Nexus_4_API_22")
-//            .withPlatformVersion("5.1")
-//            .withTestMode(TestMode.SIMULATED)
-//            .build());
+        ENGINES.add(AndroidEngine.builder()
+            .withAppActivity(ANDROID_APP_ACTIVITY)
+            .withAppPackage(ANDROID_APP_PACKAGE)
+            .withDeviceName("Nexus_4_API_22")
+            .withPlatformVersion("5.1")
+            .withTestMode(TestMode.SIMULATED)
+            .build());
 //
 //        ENGINES.add(AndroidEngine.builder()
 //            .withAppActivity(ANDROID_APP_ACTIVITY)
@@ -73,6 +65,16 @@ public final class Config {
 //            .withPlatformVersion("5.1")
 //            .withTestMode(TestMode.SIMULATED)
 //            .build());
+
+//        ENGINES.add(IOSEngine.builder()
+//            .withDeviceUID("771F28EC-C5FC-45B8-8C2A-AF346B219936")
+//            .withApp(IOS_APP_PATH)
+//            .withAppPackage(IOS_APP_PACKAGE)
+//            .withDeviceName("iPhone 7 Plus")
+//            .withPlatformVersion("10.3")
+//            .withTestMode(TestMode.SIMULATED)
+//            .build());
+
 
         TEST_KIT = TestKit.builder()
             .withEngines(ENGINES)

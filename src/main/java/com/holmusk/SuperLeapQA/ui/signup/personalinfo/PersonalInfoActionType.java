@@ -1,11 +1,9 @@
 package com.holmusk.SuperLeapQA.ui.signup.personalinfo;
 
-import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
 import com.holmusk.SuperLeapQA.ui.signup.validage.ValidAgeActionType;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.type.PlatformType;
-import org.swiften.xtestkit.model.InputType;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +11,6 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.object.ObjectUtil;
 
 import java.util.List;
 
@@ -44,45 +41,19 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @see Engine#click(WebElement)
      */
     @NotNull
-    default Flowable<?> rx_a_toggleTOC(@NotNull final Engine<?> ENGINE,
-                                       final boolean ACCEPTED) {
+    default Flowable<?> rxa_toggleTC(@NotNull final Engine<?> ENGINE,
+                                     final boolean ACCEPTED) {
         return rxe_TCCheckBox(ENGINE).flatMap(a -> ENGINE.toggleCheckBox(a, ACCEPTED));
-    }
-
-    /**
-     * Enter random personal info inputs in order to access the next screen.
-     * This method can be used for {@link UserMode#personalInfo(PlatformType)}
-     * and {@link UserMode#extraInfo(PlatformType)}.
-     * @param ENGINE {@link Engine} instance.
-     * @param inputs {@link List} of {@link InputType}.
-     * @return {@link Flowable} instance.
-     * @see Engine#rxa_navigateBackOnce()
-     * @see #rxa_enterRandomInput(Engine, SLTextInputType)
-     * @see #rx_a_toggleTOC(Engine, boolean)
-     * @see #rxa_makeNextInputVisible(Engine, WebElement)
-     */
-    @NotNull
-    default Flowable<?> rxa_enterPersonalInfo(@NotNull final Engine<?> ENGINE,
-                                              @NotNull List<SLInputType> inputs) {
-        final PersonalInfoActionType THIS = this;
-
-        return Flowable
-            .fromIterable(inputs)
-            .ofType(SLTextInputType.class)
-            .concatMap(a -> THIS.rxa_enterRandomInput(ENGINE, a))
-            .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
-            .all(ObjectUtil::nonNull)
-            .toFlowable();
     }
 
     /**
      * Enter random personal info inputs in order to access the next screen.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see UserMode#personalInfo(PlatformType)
-     * @see #rxa_enterPersonalInfo(Engine, List)
      * @see Engine#rxa_hideKeyboard()
-     * @see #rx_a_toggleTOC(Engine, boolean)
+     * @see UserMode#personalInfo(PlatformType)
+     * @see #rxa_enterRandomInputs(Engine, List)
+     * @see #rxa_toggleTC(Engine, boolean)
      */
     @NotNull
     default Flowable<?> rxa_enterPersonalInfo(@NotNull final Engine<?> ENGINE,
@@ -90,8 +61,8 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
         final PersonalInfoActionType THIS = this;
         PlatformType platform = ENGINE.platform();
 
-        return rxa_enterPersonalInfo(ENGINE, mode.personalInfo(platform))
-            .flatMap(a -> THIS.rx_a_toggleTOC(ENGINE, true));
+        return rxa_enterRandomInputs(ENGINE, mode.personalInfo(platform))
+            .flatMap(a -> THIS.rxa_toggleTC(ENGINE, true));
     }
 
     /**
@@ -100,16 +71,16 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see #rxa_enterPersonalInfo(Engine, List)
-     * @see UserMode#extraInfo(PlatformType)
+     * @see UserMode#guarantorInfo(PlatformType)
      * @see UserMode#requiresGuarantor()
+     * @see #rxa_enterRandomInput(Engine, SLTextInputType)
      */
     @NotNull
-    default Flowable<?> rxa_enterExtraPersonalInfo(@NotNull Engine<?> engine,
-                                                   @NotNull UserMode mode) {
+    default Flowable<?> rxa_enterGuarantorInfo(@NotNull Engine<?> engine,
+                                               @NotNull UserMode mode) {
         if (mode.requiresGuarantor()) {
             PlatformType platform = engine.platform();
-            return rxa_enterPersonalInfo(engine, mode.extraInfo(platform));
+            return rxa_enterRandomInputs(engine, mode.guarantorInfo(platform));
         } else {
             return Flowable.just(true);
         }
@@ -125,8 +96,8 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @see #rxa_confirmPersonalInfo(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_confirmExtraPersonalInfo(@NotNull Engine<?> engine,
-                                                     @NotNull UserMode mode) {
+    default Flowable<?> rxa_confirmGuarantorInfo(@NotNull Engine<?> engine,
+                                                 @NotNull UserMode mode) {
         if (mode.requiresGuarantor()) {
             return rxa_confirmPersonalInfo(engine);
         } else {

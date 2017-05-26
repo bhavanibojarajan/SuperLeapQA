@@ -85,20 +85,24 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
             case WELCOME:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.SIGN_IN, MODE),
-                        a -> Flowable.empty()
+                        ENGINE, ScreenHolder.of(Screen.LOGIN, MODE),
+                        a -> THIS.rxn_welcome_login(ENGINE)
                     ),
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.REGISTER, MODE),
-                        a -> THIS.rx_n_welcome_register(ENGINE)
+                        a -> THIS.rxn_welcome_register(ENGINE)
                     )
                 );
 
-            case SIGN_IN:
+            case LOGIN:
                 return CollectionUtil.asList(
                     new Direction(
+                        ENGINE, ScreenHolder.of(Screen.FORGOT_PASSWORD, MODE),
+                        a -> THIS.rxn_login_forgotPassword(ENGINE)
+                    ),
+                    new Direction(
                         ENGINE, ScreenHolder.of(Screen.REGISTER, MODE),
-                        a -> Flowable.empty()
+                        a -> THIS.rxn_login_register(ENGINE)
                     )
                 );
 
@@ -139,16 +143,16 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
             case PERSONAL_INFO:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.EXTRA_PERSONAL_INFO, MODE),
-                        a -> THIS.rxn_personalInfo_extraInfo(ENGINE, MODE)
+                        ENGINE, ScreenHolder.of(Screen.GUARANTOR_INFO, MODE),
+                        a -> THIS.rxn_personalInfo_guarantorInfo(ENGINE, MODE)
                     )
                 );
 
-            case EXTRA_PERSONAL_INFO:
+            case GUARANTOR_INFO:
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.USE_APP_NOW, MODE),
-                        a -> THIS.rxn_extraInfo_useApp(ENGINE, MODE)
+                        a -> THIS.rxn_guarantorInfo_useApp(ENGINE, MODE)
                     )
                 );
 
@@ -195,18 +199,18 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
             case WELCOME:
                 return CollectionUtil.asList();
 
-            case SIGN_IN:
+            case LOGIN:
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.WELCOME, MODE),
-                        a -> THIS.rxn_signIn_welcome(ENGINE)
+                        a -> THIS.rxn_login_welcome(ENGINE)
                     )
                 );
 
             case FORGOT_PASSWORD:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.SIGN_IN, MODE),
+                        ENGINE, ScreenHolder.of(Screen.LOGIN, MODE),
                         a -> Flowable.empty()
                     )
                 );
@@ -243,7 +247,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.DOB, MODE),
-                        a -> THIS.rxn_validAge_welcome(ENGINE)
+                        a -> THIS.rxn_validAge_DoB(ENGINE)
                     )
                 );
 
@@ -255,11 +259,11 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                     )
                 );
 
-            case EXTRA_PERSONAL_INFO:
+            case GUARANTOR_INFO:
                 return CollectionUtil.asList(
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.PERSONAL_INFO, MODE),
-                        a -> THIS.rxn_extraInfo_personalInfo(ENGINE, MODE)
+                        a -> THIS.rxn_guarantorInfo_personalInfo(ENGINE, MODE)
                     )
                 );
 

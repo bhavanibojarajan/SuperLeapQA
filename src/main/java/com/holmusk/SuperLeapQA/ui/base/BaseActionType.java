@@ -11,6 +11,7 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.locator.general.type.BaseLocatorErrorType;
@@ -21,6 +22,8 @@ import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.model.InputType;
 import org.swiften.xtestkit.model.TextInputType;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -33,7 +36,7 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * @return {@link Flowable} instance.
      * @param ENGINE {@link Engine} instance.
      * @see #generalDelay()
-     * @see #rxBackButton(Engine)
+     * @see #rxe_backButton(Engine)
      * @see BooleanUtil#toTrue(Object)
      * @see Engine#rxa_click(WebElement)
      */
@@ -41,7 +44,7 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
     default Flowable<Boolean> rxa_clickBackButton(@NotNull final Engine<?> ENGINE) {
         long delay = generalDelay();
 
-        return rxBackButton(ENGINE)
+        return rxe_backButton(ENGINE)
             .flatMap(ENGINE::rxa_click).map(BooleanUtil::toTrue)
             .delay(delay, TimeUnit.MILLISECONDS);
     }
@@ -64,16 +67,14 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * Enter an input for {@link TextInput}.
      * @param input {@link TextInputType} instance.
      * @param TEXT {@link String} value.
-     * @param <P> Generics parameter.
      * @return {@link Flowable} instance.
      * @see #rxe_editField(Engine, SLInputType)
      * @see Engine#rx_type(WebElement, String...)
      */
     @NotNull
-    default <P extends SLInputType> Flowable<WebElement>
-    rxa_enterInput(@NotNull final Engine<?> ENGINE,
-                   @NotNull P input,
-                   @NotNull final String TEXT) {
+    default Flowable<WebElement> rxa_enterInput(@NotNull final Engine<?> ENGINE,
+                                                @NotNull SLInputType input,
+                                                @NotNull final String TEXT) {
         return rxe_editField(ENGINE, input).flatMap(a -> ENGINE.rx_type(a, TEXT));
     }
 
@@ -89,6 +90,40 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
     default Flowable<WebElement> rxa_enterRandomInput(@NotNull Engine<?> engine,
                                                       @NotNull SLTextInputType input) {
         return rxa_enterInput(engine, input, input.randomInput());
+    }
+
+    /**
+     * Enter random inputs for a {@link List} of {@link SLTextInputType}.
+     * @param ENGINE {@link Engine} instance.
+     * @param inputs {@link List} of {@link SLTextInputType}.
+     * @return {@link Flowable} instance.
+     * @see ObjectUtil#nonNull(Object)
+     * @see #rxa_enterRandomInput(Engine, SLTextInputType)
+     */
+    @NotNull
+    default Flowable<?> rxa_enterRandomInputs(@NotNull final Engine<?> ENGINE,
+                                              @NotNull List<SLTextInputType> inputs) {
+        final BaseActionType THIS = this;
+
+        return Flowable
+            .fromIterable(inputs)
+            .concatMap(a -> THIS.rxa_enterRandomInput(ENGINE, a))
+            .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
+    }
+
+    /**
+     * Same as above, but uses a varargs of {@link SLTextInputType}.
+     * @param engine {@link Engine} instance.
+     * @param inputs Varargs of {@link SLTextInputType}.
+     * @return {@link Flowable} instance.
+     * @see #rxa_enterRandomInputs(Engine, List)
+     */
+    @NotNull
+    default Flowable<?> rxa_enterRandomInputs(@NotNull Engine<?> engine,
+                                              @NotNull SLTextInputType...inputs) {
+        return rxa_enterRandomInputs(engine, Arrays.asList(inputs));
     }
 
     /**
