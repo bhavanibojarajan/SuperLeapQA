@@ -1,17 +1,13 @@
 package com.holmusk.SuperLeapQA.ui.forgotpassword;
 
 import com.holmusk.SuperLeapQA.model.TextInput;
-import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
+import com.holmusk.SuperLeapQA.model.type.SLTextType;
 import com.holmusk.SuperLeapQA.ui.base.BaseActionType;
 import com.holmusk.SuperLeapQA.ui.login.LoginActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.xtestkit.base.Engine;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by haipham on 5/26/17.
@@ -26,11 +22,11 @@ public interface ForgotPasswordActionType extends
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see TextInput#EMAIL
-     * @see #rxa_enterRandomInputs(Engine, SLTextInputType...)
+     * @see #rxa_randomInputs(Engine, SLTextType...)
      */
     @NotNull
     default Flowable<?> rxa_enterPassRecoveryInputs(@NotNull Engine<?> engine) {
-        return rxa_enterRandomInputs(engine, TextInput.EMAIL);
+        return rxa_randomInputs(engine, TextInput.EMAIL);
     }
 
     /**

@@ -2,14 +2,10 @@ package com.holmusk.SuperLeapQA.ui.forgotpassword;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.Screen;
-import com.holmusk.SuperLeapQA.runner.Runner;
-import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
+import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
 import io.reactivex.subscribers.TestSubscriber;
-import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
-import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
 import java.util.concurrent.TimeUnit;
@@ -17,12 +13,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by haipham on 5/26/17.
  */
-public final class UIForgotPasswordTest extends UIBaseTest implements ForgotPasswordActionType {
-    @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
-    public UIForgotPasswordTest(int index) {
-        super(index);
-    }
-
+public interface UIForgotPasswordTestType extends UIBaseTestType, ForgotPasswordActionType {
     /**
      * Verify that {@link Screen#FORGOT_PASSWORD} has valid
      * {@link org.openqa.selenium.WebElement} by checking their visibility
@@ -33,11 +24,11 @@ public final class UIForgotPasswordTest extends UIBaseTest implements ForgotPass
      * @see #rxv_forgotPassword(Engine)
      * @see #engine()
      */
-    @Test
     @SuppressWarnings("unchecked")
-    public void test_forgotPassword_isValidScreen() {
+    @Test(groups = "ValidateScreen")
+    default void test_forgotPassword_isValidScreen() {
         // Setup
-        final UIForgotPasswordTest THIS = this;
+        final UIForgotPasswordTestType THIS = this;
         final Engine<?> ENGINE = engine();
         UserMode mode = UserMode.PARENT;
         TestSubscriber subscriber = CustomTestSubscriber.create();
@@ -69,9 +60,9 @@ public final class UIForgotPasswordTest extends UIBaseTest implements ForgotPass
      */
     @Test
     @SuppressWarnings("unchecked")
-    public void test_forgotPasswordInput_shouldWork() {
+    default void test_forgotPasswordInput_shouldWork() {
         // Setup
-        final UIForgotPasswordTest THIS = this;
+        final UIForgotPasswordTestType THIS = this;
         final Engine<?> ENGINE = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
         UserMode mode = UserMode.PARENT;

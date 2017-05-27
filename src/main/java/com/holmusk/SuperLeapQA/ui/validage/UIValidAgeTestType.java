@@ -1,13 +1,11 @@
-package com.holmusk.SuperLeapQA.ui.signup.validage;
+package com.holmusk.SuperLeapQA.ui.validage;
 
 import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.SuperLeapQA.model.type.SLChoiceInputType;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.model.type.SLNumericChoiceInputType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
-import com.holmusk.SuperLeapQA.navigation.type.NavigationType;
-import com.holmusk.SuperLeapQA.runner.Runner;
-import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
+import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
@@ -18,7 +16,6 @@ import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.android.AndroidEngine;
-import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -26,12 +23,7 @@ import java.util.List;
 /**
  * Created by haipham on 23/5/17.
  */
-public final class UIValidAgeTest extends UIBaseTest implements NavigationType, ValidAgeTestHelperType {
-    @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
-    public UIValidAgeTest(int index) {
-        super(index);
-    }
-
+public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperType {
     /**
      * This test validates that {@link Screen#VALID_AGE} contains the
      * correct {@link org.openqa.selenium.WebElement} by verifying their
@@ -48,10 +40,14 @@ public final class UIValidAgeTest extends UIBaseTest implements NavigationType, 
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
-    @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
-    public void test_validAgeInputs_isValidScreen(@NotNull final UserMode MODE) {
+    @Test(
+        dataProviderClass = UIBaseTestType.class,
+        dataProvider = "generalUserModeProvider",
+        groups = "ValidateScreen"
+    )
+    default void test_validAgeInputs_isValidScreen(@NotNull final UserMode MODE) {
         // Setup
-        final UIValidAgeTest THIS = this;
+        final UIValidAgeTestType THIS = this;
         final Engine<?> E = engine();
         PlatformType p = E.platform();
         UnitSystem metric = UnitSystem.METRIC;
@@ -125,9 +121,9 @@ public final class UIValidAgeTest extends UIBaseTest implements NavigationType, 
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
     @Test(dataProvider = "generalUserModeProvider")
-    public void test_12Inch_shouldBeConvertedTo1Foot(@NotNull final UserMode MODE) {
+    default void test_12Inch_shouldBeConvertedTo1Foot(@NotNull final UserMode MODE) {
         // Setup
-        final UIValidAgeTest THIS = this;
+        final UIValidAgeTestType THIS = this;
         final Engine<?> ENGINE = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
@@ -162,10 +158,13 @@ public final class UIValidAgeTest extends UIBaseTest implements NavigationType, 
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
-    @Test(dataProvider = "generalUserModeProvider")
-    public void test_validAgeEmptyInputs_showsCorrectErrors(@NotNull final UserMode M) {
+    @Test(
+        dataProviderClass = UIBaseTestType.class,
+        dataProvider = "generalUserModeProvider"
+    )
+    default void test_validAgeEmptyInputs_showsCorrectErrors(@NotNull final UserMode M) {
         // Setup
-        final UIValidAgeTest THIS = this;
+        final UIValidAgeTestType THIS = this;
         final Engine<?> E = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 

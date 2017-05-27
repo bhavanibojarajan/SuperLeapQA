@@ -1,17 +1,14 @@
-package com.holmusk.SuperLeapQA.ui.signup.dob;
+package com.holmusk.SuperLeapQA.ui.dob;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.Screen;
-import com.holmusk.SuperLeapQA.navigation.type.NavigationType;
-import com.holmusk.SuperLeapQA.runner.Runner;
-import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
+import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
-import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
 import java.util.Calendar;
@@ -21,14 +18,7 @@ import java.util.List;
 /**
  * Created by haipham on 23/5/17.
  */
-public final class UIDoBPickerTest extends UIBaseTest implements
-    NavigationType, DOBPickerTestHelperType
-{
-    @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
-    public UIDoBPickerTest(int index) {
-        super(index);
-    }
-
+public interface UIDoBPickerTestType extends UIBaseTestType, DOBPickerTestHelperType {
     /**
      * This test checks that {@link Screen#DOB} has correct elements,
      * by checking that all {@link org.openqa.selenium.WebElement} are present
@@ -45,10 +35,14 @@ public final class UIDoBPickerTest extends UIBaseTest implements
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
-    @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
-    public void test_DoBPicker_isValidScreen(@NotNull UserMode mode) {
+    @Test(
+        dataProviderClass = UIBaseTestType.class,
+        dataProvider = "generalUserModeProvider",
+        groups = "ValidateScreen"
+    )
+    default void test_DoBPicker_isValidScreen(@NotNull UserMode mode) {
         // Setup
-        final UIDoBPickerTest THIS = this;
+        final UIDoBPickerTestType THIS = this;
         final Engine<?> ENGINE = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
@@ -84,10 +78,14 @@ public final class UIDoBPickerTest extends UIBaseTest implements
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
-    @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
-    public void test_DoBPickerDialog_isValidScreen(@NotNull final UserMode MODE) {
+    @Test(
+        dataProviderClass = UIBaseTestType.class,
+        dataProvider = "generalUserModeProvider",
+        groups = "ValidateScreen"
+    )
+    default void test_DoBPickerDialog_isValidScreen(@NotNull final UserMode MODE) {
         // Setup
-        final UIDoBPickerTest THIS = this;
+        final UIDoBPickerTestType THIS = this;
         final Engine<?> ENGINE = engine();
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, NumberTestUtil.randomBetween(1, 28));
@@ -127,10 +125,13 @@ public final class UIDoBPickerTest extends UIBaseTest implements
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
-    @Test(dataProvider = "generalUserModeProvider")
-    public void test_DoBSelection_shouldWork(@NotNull final UserMode MODE) {
+    @Test(
+        dataProviderClass = UIBaseTestType.class,
+        dataProvider = "generalUserModeProvider"
+    )
+    default void test_DoBSelection_shouldWork(@NotNull final UserMode MODE) {
         // Setup
-        final UIDoBPickerTest THIS = this;
+        final UIDoBPickerTestType THIS = this;
         final Engine<?> ENGINE = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
         final List<Integer> AGES = MODE.offsetFromCategoryValidRange(2);

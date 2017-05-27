@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
-import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
+import com.holmusk.SuperLeapQA.model.type.SLTextType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.type.BaseErrorType;
@@ -64,7 +64,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    public List<SLTextInputType> personalInfo(@NotNull PlatformType platform) {
+    public List<SLTextType> personalInfo(@NotNull PlatformType platform) {
         switch ((Platform)platform) {
             case ANDROID:
                 return androidPersonalInfo();
@@ -84,7 +84,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    private List<SLTextInputType> androidPersonalInfo() {
+    private List<SLTextType> androidPersonalInfo() {
         switch (this) {
             case PARENT:
                 return Arrays.asList(
@@ -117,7 +117,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * @return {@link List} of {@link SLInputType}.
      * @see #NOT_AVAILABLE
      */
-    private List<SLTextInputType> iOSPersonalInfo() {
+    private List<SLTextType> iOSPersonalInfo() {
         switch (this) {
             case PARENT:
                 return Arrays.asList(
@@ -155,7 +155,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * @see Collections#emptyList()
      */
     @NotNull
-    public List<SLTextInputType> guarantorInfo(@NotNull PlatformType platform) {
+    public List<SLTextType> guarantorInfo(@NotNull PlatformType platform) {
         switch (this) {
             case TEEN_U18:
             case TEEN_A18:

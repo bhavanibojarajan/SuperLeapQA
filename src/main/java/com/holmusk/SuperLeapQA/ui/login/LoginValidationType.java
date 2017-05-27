@@ -7,8 +7,14 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.localizer.LCFormat;
+import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
+import org.swiften.xtestkit.ios.IOSEngine;
+import org.swiften.xtestkit.ios.IOSView;
+import org.swiften.xtestkit.mobile.Platform;
 
 /**
  * Created by haipham on 5/26/17.
@@ -46,14 +52,36 @@ public interface LoginValidationType extends BaseValidationType {
      * Get the register button {@link WebElement}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see Engine#localizer()
+     * @see IOSView.ViewType#UI_LINK
+     * @see LocalizerType#localize(String)
+     * @see Platform#IOS
+     * @see XPath.Builder#setClass(String)
+     * @see XPath.Builder#containsText(String)
      * @see Engine#rxe_containsText(LCFormat...)
+     * @see Engine#rxe_withXPath(XPath...)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_loginRegister(@NotNull Engine<?> engine) {
-        return engine
-            .rxe_containsText("login_title_register")
-            .firstElement()
-            .toFlowable();
+        if (engine instanceof AndroidEngine) {
+            return engine
+                .rxe_containsText("login_title_register")
+                .firstElement()
+                .toFlowable();
+        } else if (engine instanceof IOSEngine) {
+            LocalizerType localizer = engine.localizer();
+            String localized = localizer.localize("login_title_register");
+
+            XPath xPath = XPath.builder(Platform.IOS)
+                .setClass(IOSView.ViewType.UI_LINK.className())
+                .containsText(localized)
+                .build();
+
+            return engine.rxe_withXPath(xPath).firstElement().toFlowable();
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 
     /**

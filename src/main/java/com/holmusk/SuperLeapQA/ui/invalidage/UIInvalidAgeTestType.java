@@ -1,13 +1,11 @@
-package com.holmusk.SuperLeapQA.ui.signup.invalidage;
+package com.holmusk.SuperLeapQA.ui.invalidage;
 
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
-import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
+import com.holmusk.SuperLeapQA.model.type.SLTextType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
-import com.holmusk.SuperLeapQA.navigation.type.NavigationType;
-import com.holmusk.SuperLeapQA.runner.Runner;
-import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
+import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
@@ -25,21 +23,16 @@ import java.util.Iterator;
 /**
  * Created by haipham on 23/5/17.
  */
-public final class UIInvalidAgeTest extends UIBaseTest implements NavigationType {
-    @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
-    public UIInvalidAgeTest(int index) {
-        super(index);
-    }
-
+public interface UIInvalidAgeTestType extends UIBaseTestType {
     /**
      * Provide data parameters for
-     * {@link #test_invalidAgeInput_requiresPhoneOrEmail(UserMode, TextInput)}.
+     * {@link #test_invalidAgeInput_phoneOrEmail(UserMode, TextInput)}.
      * @return {@link Iterator} instance.
-     * @see #test_invalidAgeInput_requiresPhoneOrEmail(UserMode, TextInput)
+     * @see #test_invalidAgeInput_phoneOrEmail(UserMode, TextInput)
      */
     @NotNull
     @DataProvider
-    public Iterator<Object[]> userModeInputProvider() {
+    static Iterator<Object[]> userModeInputProvider() {
         return Arrays.asList(
             new Object[] { UserMode.PARENT, TextInput.PHONE },
             new Object[] { UserMode.PARENT, TextInput.EMAIL }
@@ -62,10 +55,14 @@ public final class UIInvalidAgeTest extends UIBaseTest implements NavigationType
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
-    @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
-    public void test_invalidAgeInputs_isValidScreen(@NotNull UserMode mode) {
+    @Test(
+        dataProviderClass = UIBaseTestType.class,
+        dataProvider = "generalUserModeProvider",
+        groups = "ValidateScreen"
+    )
+    default void test_invalidAgeInputs_isValidScreen(@NotNull UserMode mode) {
         // Setup
-        final UIInvalidAgeTest THIS = this;
+        final UIInvalidAgeTestType THIS = this;
         final Engine<?> ENGINE = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
@@ -85,7 +82,7 @@ public final class UIInvalidAgeTest extends UIBaseTest implements NavigationType
      * This test validates that {@link Screen#INVALID_AGE} should only
      * require either {@link TextInput#PHONE} or {@link TextInput#EMAIL},
      * and not both. It sequentially substitutes {@link TextInput} into
-     * {@link #rxa_enterInput(Engine, SLInputType, String)}. We do not use
+     * {@link #rxa_input(Engine, SLInputType, String)}. We do not use
      * {@link DataProvider} with this method because we already have a
      * {@link Factory} for the constructor.
      * @param MODE {@link UserMode} instance.
@@ -96,7 +93,7 @@ public final class UIInvalidAgeTest extends UIBaseTest implements NavigationType
      * @see #engine()
      * @see #generalUserModeProvider()
      * @see #rxa_completeInvalidAgeInput(Engine)
-     * @see #rxa_enterRandomInput(Engine, SLTextInputType)
+     * @see #rxa_randomInput(Engine, SLTextType)
      * @see #rxa_makeNextInputVisible(Engine, WebElement)
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_confirmInvalidAgeInputs(Engine)
@@ -104,18 +101,21 @@ public final class UIInvalidAgeTest extends UIBaseTest implements NavigationType
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
-    @Test(dataProvider = "userModeInputProvider")
-    public void test_invalidAgeInput_requiresPhoneOrEmail(@NotNull final UserMode MODE,
-                                                          @NotNull final TextInput INPUT) {
+    @Test(
+        dataProviderClass = UIInvalidAgeTestType.class,
+        dataProvider = "userModeInputProvider"
+    )
+    default void test_invalidAgeInput_phoneOrEmail(@NotNull final UserMode MODE,
+                                                   @NotNull final TextInput INPUT) {
         // Setup
-        final UIInvalidAgeTest THIS = this;
+        final UIInvalidAgeTestType THIS = this;
         final Engine<?> ENGINE = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         rxa_navigate(MODE, Screen.SPLASH, Screen.INVALID_AGE)
             .flatMapIterable(a -> Arrays.asList(TextInput.NAME, INPUT))
-            .concatMap(a -> THIS.rxa_enterRandomInput(ENGINE, a))
+            .concatMap(a -> THIS.rxa_randomInput(ENGINE, a))
             .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
             .all(ObjectUtil::nonNull)
             .toFlowable()
@@ -147,10 +147,13 @@ public final class UIInvalidAgeTest extends UIBaseTest implements NavigationType
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
-    @Test(dataProvider = "generalUserModeProvider")
-    public void test_invalidAgeInput_shouldWork(@NotNull UserMode mode) {
+    @Test(
+        dataProviderClass = UIBaseTestType.class,
+        dataProvider = "generalUserModeProvider"
+    )
+    default void test_invalidAgeInput_shouldWork(@NotNull UserMode mode) {
         // Setup
-        final UIInvalidAgeTest THIS = this;
+        final UIInvalidAgeTestType THIS = this;
         final Engine<?> ENGINE = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 

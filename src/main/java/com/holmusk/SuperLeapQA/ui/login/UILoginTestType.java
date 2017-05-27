@@ -1,29 +1,25 @@
 package com.holmusk.SuperLeapQA.ui.login;
 
+import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.UserMode;
+import com.holmusk.SuperLeapQA.model.type.SLTextType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
-import com.holmusk.SuperLeapQA.runner.Runner;
-import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
-import com.holmusk.SuperLeapQA.ui.signup.mode.RegisterModeActionType;
+import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
+import com.holmusk.SuperLeapQA.ui.mode.RegisterModeActionType;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
-import org.apache.regexp.RE;
+import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.collection.Zip;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
-import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+
+import java.util.List;
 
 /**
  * Created by haipham on 5/26/17.
  */
-public final class UILoginTest extends UIBaseTest implements
-    LoginActionType, RegisterModeActionType
-{
-    @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
-    public UILoginTest(int index) {
-        super(index);
-    }
-
+public interface UILoginTestType extends UIBaseTestType, LoginActionType, RegisterModeActionType {
     /**
      * Check that {@link Screen#LOGIN} has valid
      * {@link org.openqa.selenium.WebElement}, by checking their visibility
@@ -34,12 +30,12 @@ public final class UILoginTest extends UIBaseTest implements
      * @see #rxv_loginScreen(Engine)
      * @see #assertCorrectness(TestSubscriber)
      */
-    @Test
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
-    public void test_loginPage_isValidScreen() {
+    @Test(groups = "ValidateScreen")
+    default void test_loginPage_isValidScreen() {
         // Setup
-        final UILoginTest THIS = this;
+        final UILoginTestType THIS = this;
         final Engine<?> ENGINE = engine();
         UserMode mode = UserMode.PARENT;
         TestSubscriber subscriber = CustomTestSubscriber.create();
@@ -56,19 +52,51 @@ public final class UILoginTest extends UIBaseTest implements
     }
 
     /**
+     * Login with predefined credentials and verify that it works correctly.
+     * @see Screen#SPLASH
+     * @see Screen#LOGIN
+     * @see #rxa_login(Engine, List)
+     * @see #assertCorrectness(TestSubscriber)
+     * @see #engine()
+     * @see #loginCredentials()
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
+    default void test_loginInputs_shouldWork() {
+        // Setup
+        final UILoginTestType THIS = this;
+        final Engine<?> ENGINE = engine();
+        final List<Zip<SLTextType,String>> INPUTS = loginCredentials();
+        UserMode mode = UserMode.PARENT;
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN)
+            .flatMap(a -> THIS.rxa_login(ENGINE, INPUTS))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
      * Verify that the register page can be accessed from the login page.
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#REGISTER
      * @see #rxa_navigate(UserMode, Screen...)
+     * @see #rxv_registerScreen(Engine)
      * @see #assertCorrectness(TestSubscriber)
      */
     @Test
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
-    public void test_loginToRegister_shouldWork() {
+    default void test_loginToRegister_shouldWork() {
         // Setup
-        final UILoginTest THIS = this;
+        final UILoginTestType THIS = this;
         final Engine<?> ENGINE = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
         UserMode mode = UserMode.PARENT;

@@ -1,11 +1,11 @@
-package com.holmusk.SuperLeapQA.ui.signup.validage;
+package com.holmusk.SuperLeapQA.ui.validage;
 
 import com.holmusk.SuperLeapQA.model.ChoiceInput;
 import com.holmusk.SuperLeapQA.model.Gender;
 import com.holmusk.SuperLeapQA.model.Height;
 import com.holmusk.SuperLeapQA.model.Weight;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
-import com.holmusk.SuperLeapQA.ui.signup.dob.DOBPickerValidationType;
+import com.holmusk.SuperLeapQA.ui.dob.DOBPickerValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;

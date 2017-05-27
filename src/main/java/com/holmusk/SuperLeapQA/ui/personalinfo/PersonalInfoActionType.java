@@ -1,7 +1,7 @@
-package com.holmusk.SuperLeapQA.ui.signup.personalinfo;
+package com.holmusk.SuperLeapQA.ui.personalinfo;
 
-import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
-import com.holmusk.SuperLeapQA.ui.signup.validage.ValidAgeActionType;
+import com.holmusk.SuperLeapQA.model.type.SLTextType;
+import com.holmusk.SuperLeapQA.ui.validage.ValidAgeActionType;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.type.PlatformType;
 import com.holmusk.SuperLeapQA.model.UserMode;
@@ -52,7 +52,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @return {@link Flowable} instance.
      * @see Engine#rxa_hideKeyboard()
      * @see UserMode#personalInfo(PlatformType)
-     * @see #rxa_enterRandomInputs(Engine, List)
+     * @see #rxa_randomInputs(Engine, List)
      * @see #rxa_toggleTC(Engine, boolean)
      */
     @NotNull
@@ -61,7 +61,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
         final PersonalInfoActionType THIS = this;
         PlatformType platform = ENGINE.platform();
 
-        return rxa_enterRandomInputs(ENGINE, mode.personalInfo(platform))
+        return rxa_randomInputs(ENGINE, mode.personalInfo(platform))
             .flatMap(a -> THIS.rxa_toggleTC(ENGINE, true));
     }
 
@@ -73,14 +73,14 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @return {@link Flowable} instance.
      * @see UserMode#guarantorInfo(PlatformType)
      * @see UserMode#requiresGuarantor()
-     * @see #rxa_enterRandomInput(Engine, SLTextInputType)
+     * @see #rxa_randomInput(Engine, SLTextType)
      */
     @NotNull
     default Flowable<?> rxa_enterGuarantorInfo(@NotNull Engine<?> engine,
                                                @NotNull UserMode mode) {
         if (mode.requiresGuarantor()) {
             PlatformType platform = engine.platform();
-            return rxa_enterRandomInputs(engine, mode.guarantorInfo(platform));
+            return rxa_randomInputs(engine, mode.guarantorInfo(platform));
         } else {
             return Flowable.just(true);
         }

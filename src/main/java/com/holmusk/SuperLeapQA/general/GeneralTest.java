@@ -3,6 +3,7 @@ package com.holmusk.SuperLeapQA.general;
 import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
+import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.javautilities.localizer.Localizer;

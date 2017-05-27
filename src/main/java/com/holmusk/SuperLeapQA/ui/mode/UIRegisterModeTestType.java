@@ -1,25 +1,18 @@
-package com.holmusk.SuperLeapQA.ui.signup.mode;
+package com.holmusk.SuperLeapQA.ui.mode;
 
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
-import com.holmusk.SuperLeapQA.runner.Runner;
+import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
-import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
 /**
  * Created by haipham on 5/7/17.
  */
-public final class UIRegisterModeTest extends UIBaseTest implements RegisterModeActionType {
-    @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
-    public UIRegisterModeTest(int index) {
-        super(index);
-    }
-
+public interface UIRegisterModeTestType extends UIBaseTestType, RegisterModeActionType {
     /**
      * This test validates that {@link Screen#REGISTER} contains the correct
      * {@link org.openqa.selenium.WebElement} by checking their visibility,
@@ -35,9 +28,9 @@ public final class UIRegisterModeTest extends UIBaseTest implements RegisterMode
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
     @Test(groups = "ValidateScreen")
-    public void test_registerScreen_isValidScreen() {
+    default void test_registerScreen_isValidScreen() {
         // Setup
-        final UIRegisterModeTest THIS = this;
+        final UIRegisterModeTestType THIS = this;
         final Engine<?> ENGINE = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 

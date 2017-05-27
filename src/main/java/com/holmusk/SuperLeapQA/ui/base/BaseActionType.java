@@ -6,11 +6,12 @@ package com.holmusk.SuperLeapQA.ui.base;
 
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
-import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
+import com.holmusk.SuperLeapQA.model.type.SLTextType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.collection.Zip;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
@@ -72,10 +73,33 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * @see Engine#rx_type(WebElement, String...)
      */
     @NotNull
-    default Flowable<WebElement> rxa_enterInput(@NotNull final Engine<?> ENGINE,
-                                                @NotNull SLInputType input,
-                                                @NotNull final String TEXT) {
+    default Flowable<WebElement> rxa_input(@NotNull final Engine<?> ENGINE,
+                                           @NotNull SLInputType input,
+                                           @NotNull final String TEXT) {
         return rxe_editField(ENGINE, input).flatMap(a -> ENGINE.rx_type(a, TEXT));
+    }
+
+    /**
+     * Enter inputs for a {@link List} of {@link SLTextType}.
+     * @param ENGINE {@link Engine} instance.
+     * @param inputs {@link List} of {@link SLTextType}.
+     * @return {@link Flowable} instance.
+     * @see ObjectUtil#nonNull(Object)
+     * @see #rxa_input(Engine, SLInputType, String)
+     * @see #rxa_makeNextInputVisible(Engine, WebElement)
+     */
+    @NotNull
+    @SuppressWarnings("ConstantConditions")
+    default Flowable<?> rxa_inputs(@NotNull final Engine<?> ENGINE,
+                                   @NotNull List<Zip<SLTextType,String>> inputs) {
+        final BaseActionType THIS = this;
+
+        return Flowable
+            .fromIterable(inputs)
+            .concatMap(a -> THIS.rxa_input(ENGINE, a.A, a.B))
+            .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
     }
 
     /**
@@ -83,47 +107,48 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * @param engine {@link Engine} instance.
      * @param input {@link TextInputType} instance.
      * @return {@link Flowable} instance.
-     * @see #rxa_enterInput(Engine, SLInputType, String)
+     * @see #rxa_input(Engine, SLInputType, String)
      * @see TextInputType#randomInput()
      */
     @NotNull
-    default Flowable<WebElement> rxa_enterRandomInput(@NotNull Engine<?> engine,
-                                                      @NotNull SLTextInputType input) {
-        return rxa_enterInput(engine, input, input.randomInput());
+    default Flowable<WebElement> rxa_randomInput(@NotNull Engine<?> engine,
+                                                 @NotNull SLTextType input) {
+        return rxa_input(engine, input, input.randomInput());
     }
 
     /**
-     * Enter random inputs for a {@link List} of {@link SLTextInputType}.
+     * Enter random inputs for a {@link List} of {@link SLTextType}.
      * @param ENGINE {@link Engine} instance.
-     * @param inputs {@link List} of {@link SLTextInputType}.
+     * @param inputs {@link List} of {@link SLTextType}.
      * @return {@link Flowable} instance.
      * @see ObjectUtil#nonNull(Object)
-     * @see #rxa_enterRandomInput(Engine, SLTextInputType)
+     * @see #rxa_randomInput(Engine, SLTextType)
+     * @see #rxa_makeNextInputVisible(Engine, WebElement)
      */
     @NotNull
-    default Flowable<?> rxa_enterRandomInputs(@NotNull final Engine<?> ENGINE,
-                                              @NotNull List<SLTextInputType> inputs) {
+    default Flowable<?> rxa_randomInputs(@NotNull final Engine<?> ENGINE,
+                                         @NotNull List<SLTextType> inputs) {
         final BaseActionType THIS = this;
 
         return Flowable
             .fromIterable(inputs)
-            .concatMap(a -> THIS.rxa_enterRandomInput(ENGINE, a))
+            .concatMap(a -> THIS.rxa_randomInput(ENGINE, a))
             .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
             .all(ObjectUtil::nonNull)
             .toFlowable();
     }
 
     /**
-     * Same as above, but uses a varargs of {@link SLTextInputType}.
+     * Same as above, but uses a varargs of {@link SLTextType}.
      * @param engine {@link Engine} instance.
-     * @param inputs Varargs of {@link SLTextInputType}.
+     * @param inputs Varargs of {@link SLTextType}.
      * @return {@link Flowable} instance.
-     * @see #rxa_enterRandomInputs(Engine, List)
+     * @see #rxa_randomInputs(Engine, List)
      */
     @NotNull
-    default Flowable<?> rxa_enterRandomInputs(@NotNull Engine<?> engine,
-                                              @NotNull SLTextInputType...inputs) {
-        return rxa_enterRandomInputs(engine, Arrays.asList(inputs));
+    default Flowable<?> rxa_randomInputs(@NotNull Engine<?> engine,
+                                         @NotNull SLTextType...inputs) {
+        return rxa_randomInputs(engine, Arrays.asList(inputs));
     }
 
     /**

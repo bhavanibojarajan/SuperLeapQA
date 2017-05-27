@@ -1,7 +1,7 @@
-package com.holmusk.SuperLeapQA.ui.signup.invalidage;
+package com.holmusk.SuperLeapQA.ui.invalidage;
 
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
-import com.holmusk.SuperLeapQA.ui.signup.dob.DOBPickerValidationType;
+import com.holmusk.SuperLeapQA.ui.dob.DOBPickerValidationType;
 import org.swiften.javautilities.object.ObjectUtil;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.UserMode;

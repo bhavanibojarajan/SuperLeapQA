@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.ui.dashboard;
 
-import com.holmusk.SuperLeapQA.ui.signup.invalidage.InvalidAgeActionType;
-import com.holmusk.SuperLeapQA.ui.signup.personalinfo.PersonalInfoActionType;
+import com.holmusk.SuperLeapQA.ui.invalidage.InvalidAgeActionType;
+import com.holmusk.SuperLeapQA.ui.personalinfo.PersonalInfoActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;

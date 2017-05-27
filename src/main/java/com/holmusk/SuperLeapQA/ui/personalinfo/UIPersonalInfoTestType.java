@@ -1,13 +1,11 @@
-package com.holmusk.SuperLeapQA.ui.signup.personalinfo;
+package com.holmusk.SuperLeapQA.ui.personalinfo;
 
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
-import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
+import com.holmusk.SuperLeapQA.model.type.SLTextType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
-import com.holmusk.SuperLeapQA.navigation.type.NavigationType;
-import com.holmusk.SuperLeapQA.runner.Runner;
-import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
+import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
@@ -24,7 +22,6 @@ import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.model.InputType;
 import org.swiften.xtestkit.model.TextInputType;
 import org.testng.annotations.DataProvider;
-import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
 import java.util.*;
@@ -34,21 +31,15 @@ import java.util.stream.Collectors;
 /**
  * Created by haipham on 23/5/17.
  */
-public final class UIPersonalInfoTest extends UIBaseTest implements
-    NavigationType, PersonalInfoActionType
-{
-    @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
-    public UIPersonalInfoTest(int index) {
-        super(index);
-    }
-
+public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActionType {
     /**
      * This {@link DataProvider} is used to check for either/or input
      * requirement when the user is entering guarantor information.
      * @return {@link Iterator} instance.
      */
+    @NotNull
     @DataProvider
-    public Iterator<Object[]> parentPersonalInfoProvider() {
+    static Iterator<Object[]> parentPersonalInfoProvider() {
         return Arrays.asList(
             new Object[] {
                 Arrays.asList(TextInput.PARENT_NAME, TextInput.PARENT_EMAIL)
@@ -73,16 +64,20 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #generalUserModeProvider()
-     * @see #rxa_enterRandomInput(Engine, SLTextInputType)
+     * @see #rxa_randomInput(Engine, SLTextType)
      * @see #rxe_editField(Engine, SLInputType)
      * @see #rxa_makeNextInputVisible(Engine, WebElement)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
-    @Test(dataProvider = "generalUserModeProvider", groups = "ValidateScreen")
-    public void test_personalInfoScreen_isValidScreen(@NotNull final UserMode MODE) {
+    @Test(
+        dataProviderClass = UIBaseTestType.class,
+        dataProvider = "generalUserModeProvider",
+        groups = "ValidateScreen"
+    )
+    default void test_personalInfoScreen_isValidScreen(@NotNull final UserMode MODE) {
         // Setup
-        final UIPersonalInfoTest THIS = this;
+        final UIPersonalInfoTestType THIS = this;
         final Engine<?> ENGINE = engine();
         final PlatformType PLATFORM = ENGINE.platform();
         TestSubscriber subscriber = CustomTestSubscriber.create();
@@ -91,8 +86,8 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
         rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
             .flatMap(a -> THIS.rxv_personalInfoScreen(ENGINE, MODE))
             .concatMapIterable(a -> MODE.personalInfo(PLATFORM))
-            .ofType(SLTextInputType.class)
-            .concatMap(a -> THIS.rxa_enterRandomInput(ENGINE, a))
+            .ofType(SLTextType.class)
+            .concatMap(a -> THIS.rxa_randomInput(ENGINE, a))
             .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
             .all(ObjectUtil::nonNull)
             .toFlowable()
@@ -114,14 +109,14 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      * @see Engine#isShowingPassword(WebElement)
      * @see RxUtil#error()
      * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rxa_enterRandomInput(Engine, SLTextInputType)
+     * @see #rxa_randomInput(Engine, SLTextType)
      * @see #rxa_confirmTextInput(Engine)
      */
     @Test
     @SuppressWarnings("unchecked")
-    public void test_togglePasswordMask_shouldWork() {
+    default void test_togglePasswordMask_shouldWork() {
         // Setup
-        final UIPersonalInfoTest THIS = this;
+        final UIPersonalInfoTestType THIS = this;
         final Engine<?> ENGINE = engine();
         final UserMode MODE = UserMode.PARENT;
         TestSubscriber subscriber = CustomTestSubscriber.create();
@@ -130,7 +125,7 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
         Flowable.just(ENGINE)
             .filter(a -> a instanceof AndroidEngine)
             .flatMap(a -> THIS.rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO))
-            .flatMap(a -> THIS.rxa_enterRandomInput(ENGINE, TextInput.PASSWORD))
+            .flatMap(a -> THIS.rxa_randomInput(ENGINE, TextInput.PASSWORD))
             .flatMap(a -> THIS.rxa_confirmTextInput(ENGINE)
                 .flatMap(b -> ENGINE.rxa_togglePasswordMask(a))
                 .filter(ENGINE::isShowingPassword)
@@ -157,7 +152,7 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rxa_enterInput(Engine, SLInputType, String)
+     * @see #rxa_input(Engine, SLInputType, String)
      * @see #rxa_openTOC(Engine)
      * @see #rxa_makeNextInputVisible(Engine, WebElement)
      * @see #rxv_hasValue(Engine, SLInputType, String)
@@ -165,18 +160,18 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
     @Test
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
-    public void test_leavePersonalInfo_shouldSaveState() {
+    default void test_leavePersonalInfo_shouldSaveState() {
         // Setup
-        final UIPersonalInfoTest THIS = this;
+        final UIPersonalInfoTestType THIS = this;
         final Engine<?> ENGINE = engine();
         final PlatformType PLATFORM = ENGINE.platform();
         final UserMode MODE = UserMode.PARENT;
         final Map<String,String> INPUTS = new HashMap<>();
-        List<SLTextInputType> info = MODE.personalInfo(PLATFORM);
+        List<SLTextType> info = MODE.personalInfo(PLATFORM);
 
-        final List<SLTextInputType> TEXT_INFO = info.stream()
+        final List<SLTextType> TEXT_INFO = info.stream()
             .filter(TextInputType.class::isInstance)
-            .map(SLTextInputType.class::cast)
+            .map(SLTextType.class::cast)
             .collect(Collectors.toList());
 
         TEXT_INFO.forEach(a -> INPUTS.put(a.toString(), a.randomInput()));
@@ -187,7 +182,7 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
             .filter(a -> a instanceof AndroidEngine)
             .flatMap(a -> THIS.rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO))
             .concatMapIterable(a -> TEXT_INFO)
-            .concatMap(a -> THIS.rxa_enterInput(ENGINE, a, INPUTS.get(a.toString())))
+            .concatMap(a -> THIS.rxa_input(ENGINE, a, INPUTS.get(a.toString())))
             .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
 
             /* We use toList here because we want to intercept the empty
@@ -224,7 +219,7 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      * @see Screen#PERSONAL_INFO
      * @see UserMode#personalInfo(PlatformType)
      * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rxa_enterRandomInputs(Engine, List)
+     * @see #rxa_randomInputs(Engine, List)
      * @see #rxa_confirmPersonalInfo(Engine)
      * @see #rxv_personalInfoScreen(Engine, UserMode)
      * @see #assertCorrectness(TestSubscriber)
@@ -232,18 +227,21 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
-    @Test(dataProvider = "generalUserModeProvider")
-    public void test_requireTOCAccepted_toProceed(@NotNull final UserMode MODE) {
+    @Test(
+        dataProviderClass = UIBaseTestType.class,
+        dataProvider = "generalUserModeProvider"
+    )
+    default void test_requireTOCAccepted_toProceed(@NotNull final UserMode MODE) {
         // Setup
-        final UIPersonalInfoTest THIS = this;
+        final UIPersonalInfoTestType THIS = this;
         final Engine<?> ENGINE = engine();
         final PlatformType PLATFORM = ENGINE.platform();
-        final List<SLTextInputType> INFO = MODE.personalInfo(PLATFORM);
+        final List<SLTextType> INFO = MODE.personalInfo(PLATFORM);
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
-            .flatMap(a -> THIS.rxa_enterRandomInputs(ENGINE, INFO))
+            .flatMap(a -> THIS.rxa_randomInputs(ENGINE, INFO))
             .flatMap(a -> THIS.rxa_confirmPersonalInfo(ENGINE))
             .delay(2000, TimeUnit.MILLISECONDS)
             .flatMap(a -> THIS.rxv_personalInfoScreen(ENGINE, MODE))
@@ -265,7 +263,7 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      * @see Screen#GUARANTOR_INFO
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rxa_enterRandomInputs(Engine, List)
+     * @see #rxa_randomInputs(Engine, List)
      * @see #rxa_confirmGuarantorInfo(Engine, UserMode)
      * @see #rxe_progressBar(Engine)
      * @see #parentPersonalInfoProvider()
@@ -274,16 +272,16 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
     @Test(dataProvider = "parentPersonalInfoProvider")
-    public void test_parentInfo_requiresPhoneOrEmail(@NotNull final List<SLTextInputType> INPUTS) {
+    default void test_parentInfo_phoneOrEmail(@NotNull final List<SLTextType> INPUTS) {
         // Setup
-        final UIPersonalInfoTest THIS = this;
+        final UIPersonalInfoTestType THIS = this;
         final Engine<?> ENGINE = engine();
         final UserMode MODE = UserMode.TEEN_U18;
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         rxa_navigate(MODE, Screen.SPLASH, Screen.GUARANTOR_INFO)
-            .flatMap(a -> THIS.rxa_enterRandomInputs(ENGINE, INPUTS))
+            .flatMap(a -> THIS.rxa_randomInputs(ENGINE, INPUTS))
             .flatMap(a -> THIS.rxa_confirmGuarantorInfo(ENGINE, MODE))
 
             /* If all inputs are valid, the progress bar should be visible
@@ -311,8 +309,11 @@ public final class UIPersonalInfoTest extends UIBaseTest implements
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = true)
-    @Test(dataProvider = "guarantorSpecificUserModeProvider")
-    public void test_guarantorNeeded_requiresParentInfo(@NotNull final UserMode MODE) {
+    @Test(
+        dataProviderClass = UIBaseTestType.class,
+        dataProvider = "guarantorSpecificUserModeProvider"
+    )
+    default void test_guarantorNeeded_requiresParentInfo(@NotNull final UserMode MODE) {
         // Setup
         TestSubscriber subscriber = CustomTestSubscriber.create();
 

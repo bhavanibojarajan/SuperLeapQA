@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.ui.signup.validage;
+package com.holmusk.SuperLeapQA.ui.validage;
 
 import com.holmusk.SuperLeapQA.model.ChoiceInput;
 import com.holmusk.SuperLeapQA.model.Height;

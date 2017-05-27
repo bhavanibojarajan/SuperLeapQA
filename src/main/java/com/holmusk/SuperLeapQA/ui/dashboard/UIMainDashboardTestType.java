@@ -1,29 +1,23 @@
 package com.holmusk.SuperLeapQA.ui.dashboard;
 
 import com.holmusk.SuperLeapQA.navigation.Screen;
-import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.SuperLeapQA.runner.Runner;
+import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
+import com.holmusk.SuperLeapQA.ui.personalinfo.UIPersonalInfoTestType;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
-import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
 /**
  * Created by haipham on 5/16/17.
  */
-public class UIMainDashboardTest extends UIBaseTest implements DashboardActionType {
-    @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
-    public UIMainDashboardTest(int index) {
-        super(index);
-    }
-
+public interface UIMainDashboardTestType extends UIBaseTestType, DashboardActionType {
     /**
      * This test builds upon
-     * {@link com.holmusk.SuperLeapQA.ui.signup.personalinfo.UIPersonalInfoTest#test_guarantorNeeded_requiresParentInfo(UserMode)},
+     * {@link UIPersonalInfoTestType#test_guarantorNeeded_requiresParentInfo(UserMode)},
      * but also provides validations for {@link Screen#DASHBOARD}. It will
      * check {@link Screen#USE_APP_NOW} and {@link Screen#DASHBOARD_TUTORIAL}
      * as well.
@@ -39,10 +33,13 @@ public class UIMainDashboardTest extends UIBaseTest implements DashboardActionTy
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = true)
-    @Test(dataProvider = "guarantorSpecificUserModeProvider")
-    public void test_signUpNewAccount_shouldSucceed(@NotNull UserMode mode) {
+    @Test(
+        dataProviderClass = UIBaseTestType.class,
+        dataProvider = "guarantorSpecificUserModeProvider"
+    )
+    default void test_signUpNewAccount_shouldSucceed(@NotNull UserMode mode) {
         // Setup
-        final UIMainDashboardTest THIS = this;
+        final UIMainDashboardTestType THIS = this;
         final Engine<?> ENGINE = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 

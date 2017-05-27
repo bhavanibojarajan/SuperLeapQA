@@ -2,24 +2,17 @@ package com.holmusk.SuperLeapQA.ui.welcome;
 
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
-import com.holmusk.SuperLeapQA.runner.Runner;
+import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
-import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
 /**
  * Created by haipham on 5/7/17.
  */
-public class UIWelcomeTest extends UIBaseTest implements WelcomeActionType {
-    @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
-    public UIWelcomeTest(int index) {
-        super(index);
-    }
-
+public interface UIWelcomeTestType extends UIBaseTestType, WelcomeActionType {
     /**
      * This test validates {@link Screen#WELCOME} by checking that all
      * {@link org.openqa.selenium.WebElement} are visible.
@@ -31,9 +24,9 @@ public class UIWelcomeTest extends UIBaseTest implements WelcomeActionType {
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
     @Test(groups = "ValidateScreen")
-    public void test_welcomeScreen_containsCorrectElements() {
+    default void test_welcomeScreen_containsCorrectElements() {
         // Setup
-        final UIWelcomeTest THIS = this;
+        final UIWelcomeTestType THIS = this;
         final Engine<?> ENGINE = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 

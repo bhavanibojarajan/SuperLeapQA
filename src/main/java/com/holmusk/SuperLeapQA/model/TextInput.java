@@ -2,7 +2,7 @@ package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.SuperLeapQA.config.Config;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
-import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
+import com.holmusk.SuperLeapQA.model.type.SLTextType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.javautilities.log.LogUtil;
@@ -18,7 +18,7 @@ import org.swiften.xtestkit.model.TextInputType;
 /**
  * Created by haipham on 5/10/17.
  */
-public enum TextInput implements BaseErrorType, SLTextInputType {
+public enum TextInput implements BaseErrorType, SLTextType {
     NAME,
     EMAIL,
     PHONE,

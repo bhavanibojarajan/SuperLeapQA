@@ -1,15 +1,12 @@
-package com.holmusk.SuperLeapQA.ui.signup.invalidage;
+package com.holmusk.SuperLeapQA.ui.invalidage;
 
 import com.holmusk.SuperLeapQA.model.TextInput;
-import com.holmusk.SuperLeapQA.model.type.SLTextInputType;
-import com.holmusk.SuperLeapQA.ui.signup.dob.DOBPickerActionType;
+import com.holmusk.SuperLeapQA.ui.dob.DOBPickerActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -22,12 +19,12 @@ public interface InvalidAgeActionType extends InvalidAgeValidationType, DOBPicke
      * that the app shows a confirmation page.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rxa_enterRandomInputs(Engine, List)
+     * @see #rxa_randomInputs(Engine, List)
      */
     @NotNull
     @SuppressWarnings("unchecked")
     default Flowable<?> rxa_enterInvalidAgeInputs(@NotNull Engine<?> engine) {
-        return rxa_enterRandomInputs(engine,
+        return rxa_randomInputs(engine,
             TextInput.NAME,
             TextInput.EMAIL,
             TextInput.PHONE);

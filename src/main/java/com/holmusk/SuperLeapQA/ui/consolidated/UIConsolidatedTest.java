@@ -1,9 +1,16 @@
-package com.holmusk.SuperLeapQA.ui.base;
+package com.holmusk.SuperLeapQA.ui.consolidated;
 
 import com.holmusk.SuperLeapQA.config.Config;
-import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
-import com.holmusk.SuperLeapQA.model.UserMode;
-import io.reactivex.subscribers.TestSubscriber;
+import com.holmusk.SuperLeapQA.runner.Runner;
+import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
+import com.holmusk.SuperLeapQA.ui.dashboard.UIMainDashboardTestType;
+import com.holmusk.SuperLeapQA.ui.dob.UIDoBPickerTestType;
+import com.holmusk.SuperLeapQA.ui.invalidage.UIInvalidAgeTestType;
+import com.holmusk.SuperLeapQA.ui.login.UILoginTestType;
+import com.holmusk.SuperLeapQA.ui.mode.UIRegisterModeTestType;
+import com.holmusk.SuperLeapQA.ui.personalinfo.UIPersonalInfoTestType;
+import com.holmusk.SuperLeapQA.ui.validage.UIValidAgeTestType;
+import com.holmusk.SuperLeapQA.ui.welcome.UIWelcomeTestType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.kit.*;
@@ -11,87 +18,38 @@ import org.swiften.xtestkit.kit.param.AfterClassParam;
 import org.swiften.xtestkit.kit.param.AfterParam;
 import org.swiften.xtestkit.kit.param.BeforeClassParam;
 import org.swiften.xtestkit.kit.param.BeforeParam;
-import org.swiften.xtestkit.test.BaseTestType;
 import org.testng.annotations.*;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by haipham on 4/4/17.
  */
-public class UIBaseTest implements BaseTestType, SLScreenManagerType {
-    @NotNull
-    @DataProvider(parallel = true)
-    public static Iterator<Object[]> dataProvider() {
-        List<Object[]> data = new LinkedList<>();
-
-        for (int i = 0, count = Config.runCount(); i < count; i++) {
-            data.add(new Object[] { i });
-        }
-
-        return data.iterator();
-    }
-
+public final class UIConsolidatedTest implements
+    UIBaseTestType,
+    UIWelcomeTestType,
+    UILoginTestType,
+    UIRegisterModeTestType,
+    UIDoBPickerTestType,
+    UIInvalidAgeTestType,
+    UIValidAgeTestType,
+    UIPersonalInfoTestType,
+    UIMainDashboardTestType
+{
     @NotNull private final TestKit TEST_KIT;
     @NotNull private final List<Node> FORWARD_NODES;
     @NotNull private final List<Node> BACKWARD_NODES;
 
     private final int INDEX;
 
-    public UIBaseTest(int index) {
+    @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
+    public UIConsolidatedTest(int index) {
         LogUtil.printfThread("Init new test with index %d", index);
         FORWARD_NODES = new LinkedList<>();
         BACKWARD_NODES = new LinkedList<>();
         INDEX = index;
         TEST_KIT = Config.TEST_KIT;
-    }
-
-    /**
-     * This {@link DataProvider} provides {@link UserMode} instances that
-     * do not care whether a guarantor is required.
-     * @return {@link Iterator} instance.
-     * @see UserMode#PARENT
-     * @see UserMode#TEEN_U18
-     */
-    @NotNull
-    @DataProvider
-    public Iterator<Object[]> generalUserModeProvider() {
-        List<Object[]> data = new LinkedList<>();
-        UserMode[] modes = new UserMode[] { UserMode.TEEN_U18 };
-
-        for (UserMode mode : modes) {
-            data.add(new Object[] { mode });
-        }
-
-        return data.iterator();
-    }
-
-    /**
-     * This {@link DataProvider} provides {@link UserMode} for tests that
-     * specifically request for guarantor information. For example, personal
-     * information input tests will require {@link UserMode#requiresGuarantor()}
-     * to decide whether the parent info screen is required.
-     * @return {@link Iterator} instance.
-     * @see UserMode#TEEN_U18
-     * @see UserMode#TEEN_A18
-     */
-    @NotNull
-    @DataProvider
-    public Iterator<Object[]> guarantorSpecificUserModeProvider() {
-        List<Object[]> data = new LinkedList<>();
-
-        UserMode[] modes = new UserMode[] {
-            UserMode.TEEN_U18,
-            UserMode.TEEN_A18
-        };
-
-        for (UserMode mode : modes) {
-            data.add(new Object[] { mode });
-        }
-
-        return data.iterator();
     }
 
     //region BaseTestType
@@ -186,16 +144,5 @@ public class UIBaseTest implements BaseTestType, SLScreenManagerType {
     @NotNull
     private AfterParam afterParam() {
         return AfterParam.builder().withIndex(INDEX).build();
-    }
-
-    /**
-     * Common method to check correctness of completed operations.
-     * @param subscriber The {@link TestSubscriber} instance that received
-     *                   all notifications.
-     */
-    protected void assertCorrectness(@NotNull TestSubscriber subscriber) {
-        subscriber.assertSubscribed();
-        subscriber.assertNoErrors();
-        subscriber.assertComplete();
     }
 }

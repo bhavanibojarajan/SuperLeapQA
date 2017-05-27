@@ -9,4 +9,4 @@ import org.swiften.xtestkit.model.TextInputType;
 /**
  * {@link TextInputType} for Superleap.
  */
-public interface SLTextInputType extends SLInputType, TextInputType {}
+public interface SLTextType extends SLInputType, TextInputType {}

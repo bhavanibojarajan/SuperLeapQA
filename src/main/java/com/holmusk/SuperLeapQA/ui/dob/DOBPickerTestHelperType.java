@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.ui.signup.dob;
+package com.holmusk.SuperLeapQA.ui.dob;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
