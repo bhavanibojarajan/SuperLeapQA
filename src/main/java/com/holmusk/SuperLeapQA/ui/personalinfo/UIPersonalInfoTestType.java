@@ -113,6 +113,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * @see #rxa_confirmTextInput(Engine)
      */
     @Test
+    @GuarantorAware(value = false)
     @SuppressWarnings("unchecked")
     default void test_togglePasswordMask_shouldWork() {
         // Setup
@@ -158,8 +159,8 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * @see #rxv_hasValue(Engine, SLInputType, String)
      */
     @Test
-    @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
+    @SuppressWarnings("unchecked")
     default void test_leavePersonalInfo_shouldSaveState() {
         // Setup
         final UIPersonalInfoTestType THIS = this;
@@ -271,7 +272,10 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
-    @Test(dataProvider = "parentPersonalInfoProvider")
+    @Test(
+        dataProviderClass = UIPersonalInfoTestType.class,
+        dataProvider = "parentPersonalInfoProvider"
+    )
     default void test_parentInfo_phoneOrEmail(@NotNull final List<SLTextType> INPUTS) {
         // Setup
         final UIPersonalInfoTestType THIS = this;

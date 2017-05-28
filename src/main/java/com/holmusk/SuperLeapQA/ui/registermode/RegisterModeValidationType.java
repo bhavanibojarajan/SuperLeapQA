@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.ui.mode;
+package com.holmusk.SuperLeapQA.ui.registermode;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.ui.welcome.WelcomeValidationType;

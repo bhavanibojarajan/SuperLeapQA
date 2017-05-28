@@ -5,7 +5,7 @@ import com.holmusk.SuperLeapQA.ui.dashboard.DashboardActionType;
 import com.holmusk.SuperLeapQA.ui.login.LoginActionType;
 import com.holmusk.SuperLeapQA.ui.dob.DOBPickerActionType;
 import com.holmusk.SuperLeapQA.ui.invalidage.InvalidAgeActionType;
-import com.holmusk.SuperLeapQA.ui.mode.RegisterModeActionType;
+import com.holmusk.SuperLeapQA.ui.registermode.RegisterModeActionType;
 import com.holmusk.SuperLeapQA.ui.personalinfo.PersonalInfoActionType;
 import com.holmusk.SuperLeapQA.ui.validage.ValidAgeActionType;
 import com.holmusk.SuperLeapQA.ui.welcome.WelcomeActionType;

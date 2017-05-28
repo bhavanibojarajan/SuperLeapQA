@@ -1,6 +1,6 @@
 package com.holmusk.SuperLeapQA.ui.dob;
 
-import com.holmusk.SuperLeapQA.ui.mode.RegisterModeActionType;
+import com.holmusk.SuperLeapQA.ui.registermode.RegisterModeActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;

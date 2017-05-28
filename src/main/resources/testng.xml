@@ -1,16 +1,18 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="Superleap"
-       parallel="false"
-       thread-count="5"
-       data-provider-thread-count="5">
+       parallel="instances"
+       thread-count="2"
+       data-provider-thread-count="2">
 
     <test name="All UI Tests">
         <classes>
-            <class name="com.holmusk.SuperLeapQA.ui.consolidated.UIConsolidatedTest">
-                <methods>
-                    <include name="test_loginInputs_shouldWork"/>
-                </methods>
-            </class>
+            <class name="com.holmusk.SuperLeapQA.ui.welcome.UIWelcomeTest"/>
+            <class name="com.holmusk.SuperLeapQA.ui.registermode.UIRegisterModeTest"/>
+            <class name="com.holmusk.SuperLeapQA.ui.dob.UIDoBPickerTest"/>
+            <class name="com.holmusk.SuperLeapQA.ui.invalidage.UIInvalidAgeTest"/>
+            <class name="com.holmusk.SuperLeapQA.ui.validage.UIValidAgeTest"/>
+            <class name="com.holmusk.SuperLeapQA.ui.personalinfo.UIPersonalInfoTest"/>
+            <class name="com.holmusk.SuperLeapQA.ui.dashboard.UIDashboardTest"/>
         </classes>
     </test>
 

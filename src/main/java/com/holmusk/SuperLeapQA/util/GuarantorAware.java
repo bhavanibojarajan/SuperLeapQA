@@ -10,13 +10,12 @@ import java.lang.annotation.Target;
  */
 
 /**
- * Mark {@link ElementType#METHOD} as {@link GuarantorAware} to
- * distinguish between
- * {@link com.holmusk.SuperLeapQA.model.UserMode#TEEN_U18} and
+ * Mark {@link ElementType#METHOD} as {@link GuarantorAware} to distinguish
+ * between {@link com.holmusk.SuperLeapQA.model.UserMode#TEEN_U18} and
  * {@link com.holmusk.SuperLeapQA.model.UserMode#TEEN_A18}.
  */
-@Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
+@Retention(RetentionPolicy.SOURCE)
 public @interface GuarantorAware {
     public boolean value();
 }

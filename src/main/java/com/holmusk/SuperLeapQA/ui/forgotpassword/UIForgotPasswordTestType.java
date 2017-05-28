@@ -3,6 +3,7 @@ package com.holmusk.SuperLeapQA.ui.forgotpassword;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
+import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
@@ -26,6 +27,7 @@ public interface UIForgotPasswordTestType extends UIBaseTestType, ForgotPassword
      */
     @SuppressWarnings("unchecked")
     @Test(groups = "ValidateScreen")
+    @GuarantorAware(value = false)
     default void test_forgotPassword_isValidScreen() {
         // Setup
         final UIForgotPasswordTestType THIS = this;
@@ -60,6 +62,7 @@ public interface UIForgotPasswordTestType extends UIBaseTestType, ForgotPassword
      */
     @Test
     @SuppressWarnings("unchecked")
+    @GuarantorAware(value = false)
     default void test_forgotPasswordInput_shouldWork() {
         // Setup
         final UIForgotPasswordTestType THIS = this;

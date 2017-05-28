@@ -1,14 +1,12 @@
 package com.holmusk.SuperLeapQA.ui.login;
 
-import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.type.SLTextType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
-import com.holmusk.SuperLeapQA.ui.mode.RegisterModeActionType;
+import com.holmusk.SuperLeapQA.ui.registermode.RegisterModeActionType;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
-import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
@@ -61,8 +59,8 @@ public interface UILoginTestType extends UIBaseTestType, LoginActionType, Regist
      * @see #loginCredentials()
      */
     @Test
-    @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
+    @SuppressWarnings("unchecked")
     default void test_loginInputs_shouldWork() {
         // Setup
         final UILoginTestType THIS = this;
@@ -92,8 +90,8 @@ public interface UILoginTestType extends UIBaseTestType, LoginActionType, Regist
      * @see #assertCorrectness(TestSubscriber)
      */
     @Test
-    @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
+    @SuppressWarnings("unchecked")
     default void test_loginToRegister_shouldWork() {
         // Setup
         final UILoginTestType THIS = this;

@@ -120,7 +120,10 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
-    @Test(dataProvider = "generalUserModeProvider")
+    @Test(
+        dataProviderClass = UIBaseTestType.class,
+        dataProvider = "generalUserModeProvider"
+    )
     default void test_12Inch_shouldBeConvertedTo1Foot(@NotNull final UserMode MODE) {
         // Setup
         final UIValidAgeTestType THIS = this;

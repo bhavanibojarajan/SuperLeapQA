@@ -14,7 +14,7 @@ import org.testng.annotations.Test;
 /**
  * Created by haipham on 5/16/17.
  */
-public interface UIMainDashboardTestType extends UIBaseTestType, DashboardActionType {
+public interface UIDashboardTestType extends UIBaseTestType, DashboardActionType {
     /**
      * This test builds upon
      * {@link UIPersonalInfoTestType#test_guarantorNeeded_requiresParentInfo(UserMode)},
@@ -39,7 +39,7 @@ public interface UIMainDashboardTestType extends UIBaseTestType, DashboardAction
     )
     default void test_signUpNewAccount_shouldSucceed(@NotNull UserMode mode) {
         // Setup
-        final UIMainDashboardTestType THIS = this;
+        final UIDashboardTestType THIS = this;
         final Engine<?> ENGINE = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 

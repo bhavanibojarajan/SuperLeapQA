@@ -1,32 +1,22 @@
 package com.holmusk.SuperLeapQA.ui.consolidated;
 
-import com.holmusk.SuperLeapQA.config.Config;
 import com.holmusk.SuperLeapQA.runner.Runner;
+import com.holmusk.SuperLeapQA.ui.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
-import com.holmusk.SuperLeapQA.ui.dashboard.UIMainDashboardTestType;
+import com.holmusk.SuperLeapQA.ui.dashboard.UIDashboardTestType;
 import com.holmusk.SuperLeapQA.ui.dob.UIDoBPickerTestType;
 import com.holmusk.SuperLeapQA.ui.invalidage.UIInvalidAgeTestType;
 import com.holmusk.SuperLeapQA.ui.login.UILoginTestType;
-import com.holmusk.SuperLeapQA.ui.mode.UIRegisterModeTestType;
+import com.holmusk.SuperLeapQA.ui.registermode.UIRegisterModeTestType;
 import com.holmusk.SuperLeapQA.ui.personalinfo.UIPersonalInfoTestType;
 import com.holmusk.SuperLeapQA.ui.validage.UIValidAgeTestType;
 import com.holmusk.SuperLeapQA.ui.welcome.UIWelcomeTestType;
-import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.log.LogUtil;
-import org.swiften.xtestkit.kit.*;
-import org.swiften.xtestkit.kit.param.AfterClassParam;
-import org.swiften.xtestkit.kit.param.AfterParam;
-import org.swiften.xtestkit.kit.param.BeforeClassParam;
-import org.swiften.xtestkit.kit.param.BeforeParam;
 import org.testng.annotations.*;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by haipham on 4/4/17.
  */
-public final class UIConsolidatedTest implements
+public final class UIConsolidatedTest extends UIBaseTest implements
     UIBaseTestType,
     UIWelcomeTestType,
     UILoginTestType,
@@ -35,114 +25,10 @@ public final class UIConsolidatedTest implements
     UIInvalidAgeTestType,
     UIValidAgeTestType,
     UIPersonalInfoTestType,
-    UIMainDashboardTestType
+    UIDashboardTestType
 {
-    @NotNull private final TestKit TEST_KIT;
-    @NotNull private final List<Node> FORWARD_NODES;
-    @NotNull private final List<Node> BACKWARD_NODES;
-
-    private final int INDEX;
-
     @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
     public UIConsolidatedTest(int index) {
-        LogUtil.printfThread("Init new test with index %d", index);
-        FORWARD_NODES = new LinkedList<>();
-        BACKWARD_NODES = new LinkedList<>();
-        INDEX = index;
-        TEST_KIT = Config.TEST_KIT;
-    }
-
-    //region BaseTestType
-    @NotNull
-    @Override
-    public TestKit testKit() {
-        return TEST_KIT;
-    }
-
-    @Override
-    public int currentIndex() {
-        return INDEX;
-    }
-    //endregion
-
-    //region SLScreenManagerType
-    @NotNull
-    @Override
-    public List<Node> registeredForwardNodes() {
-        return FORWARD_NODES;
-    }
-
-    @NotNull
-    @Override
-    public List<Node> registeredBackwardNodes() {
-        return BACKWARD_NODES;
-    }
-
-    @Override
-    public void addForwardNodes(@NotNull List<Node> nodes) {
-        FORWARD_NODES.addAll(nodes);
-    }
-
-    @Override
-    public void addBackwardNodes(@NotNull List<Node> nodes) {
-        BACKWARD_NODES.addAll(nodes);
-    }
-    //endregion
-
-    protected long currentThread() {
-        return Thread.currentThread().getId();
-    }
-
-    @BeforeSuite
-    public void beforeSuite() {
-        TEST_KIT.beforeSuite();
-    }
-
-    @AfterSuite
-    public void afterSuite() {
-        TEST_KIT.afterSuite();
-    }
-
-    @BeforeClass
-    public void beforeClass() {
-        /* Calling beforeClass() here ensures that each Engine will
-         * only start the test environment once */
-        TEST_KIT.beforeClass(beforeClassParam());
-    }
-
-    @AfterClass
-    public void afterClass() {
-        TEST_KIT.afterClass(afterClassParam());
-    }
-
-    @BeforeMethod
-    public void beforeMethod() {
-        registerScreenHolders();
-        TEST_KIT.before(beforeParam());
-    }
-
-    @AfterMethod
-    public void afterMethod() {
-        TEST_KIT.after(afterParam());
-    }
-
-    @NotNull
-    private BeforeClassParam beforeClassParam() {
-        return BeforeClassParam.builder().withIndex(INDEX).build();
-    }
-
-    @NotNull
-    private AfterClassParam afterClassParam() {
-        return AfterClassParam.builder().withIndex(INDEX).build();
-    }
-
-    @NotNull
-    private BeforeParam beforeParam() {
-        return BeforeParam.builder().withIndex(INDEX).build();
-    }
-
-    @NotNull
-    private AfterParam afterParam() {
-        return AfterParam.builder().withIndex(INDEX).build();
+        super(index);
     }
 }
