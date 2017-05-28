@@ -1,8 +1,8 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="Superleap"
        parallel="instances"
-       thread-count="2"
-       data-provider-thread-count="2">
+       thread-count="5"
+       data-provider-thread-count="5">
 
     <test name="All UI Tests">
         <classes>
