@@ -36,7 +36,8 @@ public interface UIDashboardTestType extends UIBaseTestType, DashboardActionType
     @GuarantorAware(value = true)
     @Test(
         dataProviderClass = UIBaseTestType.class,
-        dataProvider = "guarantorSpecificUserModeProvider"
+        dataProvider = "guarantorSpecificUserModeProvider",
+        groups = "ValidateScreen"
     )
     default void test_signUpNewAccount_shouldSucceed(@NotNull UserMode mode) {
         // Setup
@@ -78,7 +79,8 @@ public interface UIDashboardTestType extends UIBaseTestType, DashboardActionType
     @SuppressWarnings("unchecked")
     @Test(
         dataProviderClass = UIBaseTestType.class,
-        dataProvider = "generalUserModeProvider"
+        dataProvider = "generalUserModeProvider",
+        groups = "ValidateScreen"
     )
     default void test_loginToDashboard_shouldSucceed(@NotNull final UserMode MODE) {
         // Setup

@@ -1,11 +1,13 @@
 package com.holmusk.SuperLeapQA.navigation.type;
 
+import com.holmusk.SuperLeapQA.model.CardType;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.ui.dashboard.DashboardActionType;
 import com.holmusk.SuperLeapQA.ui.dob.DOBPickerActionType;
 import com.holmusk.SuperLeapQA.ui.invalidage.InvalidAgeActionType;
 import com.holmusk.SuperLeapQA.ui.login.LoginActionType;
 import com.holmusk.SuperLeapQA.ui.personalinfo.PersonalInfoActionType;
+import com.holmusk.SuperLeapQA.ui.photopicker.PhotoPickerActionType;
 import com.holmusk.SuperLeapQA.ui.registermode.RegisterModeActionType;
 import com.holmusk.SuperLeapQA.ui.validage.ValidAgeActionType;
 import com.holmusk.SuperLeapQA.ui.welcome.WelcomeActionType;
@@ -29,7 +31,8 @@ public interface NavigationType extends
     DOBPickerActionType,
     InvalidAgeActionType,
     ValidAgeActionType,
-    DashboardActionType
+    DashboardActionType,
+    PhotoPickerActionType
 {
     /**
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#SPLASH}
@@ -115,8 +118,7 @@ public interface NavigationType extends
 
         return rxa_loginWithDefaults(ENGINE, mode)
             .flatMap(a -> THIS.rxa_watchProgressBarUntilHidden(ENGINE))
-            .delay(generalDelay(), TimeUnit.MILLISECONDS)
-            .flatMap(a -> ENGINE.rxa_acceptAlert());
+            .delay(generalDelay(), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -376,5 +378,48 @@ public interface NavigationType extends
     @NotNull
     default Flowable<?> rxn_tutorial_dashboard(@NotNull Engine<?> engine) {
         return rxa_dismissDashboardTutorial(engine);
+    }
+
+    /**
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#ADD_CARD}
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rxa_openCardAddMenu(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxn_dashboard_addCard(@NotNull Engine<?> engine) {
+        return rxa_openCardAddMenu(engine);
+    }
+
+    /**
+     * We can access the photo picker by logging a new meal.
+     * When the user opens the meal-logging screen, a dialog popup may appear
+     * asking for camera permission.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#ADD_CARD}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#PHOTO_PICKER}
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see CardType#MEAL
+     * @see Engine#rxa_acceptAlert()
+     * @see #rxa_addCard(Engine, CardType)
+     */
+    @NotNull
+    default Flowable<?> rxn_addCard_photoPicker(@NotNull final Engine<?> ENGINE) {
+        return rxa_addCard(ENGINE, CardType.MEAL);
+    }
+
+    /**
+     * We skip photo selection by default.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#PHOTO_PICKER}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_MEAL}
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_click(WebElement)
+     * @see #rxe_skipPhoto(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxn_photoPicker_logMeal(@NotNull final Engine<?> ENGINE) {
+        return rxe_skipPhoto(ENGINE).flatMap(ENGINE::rxa_click);
     }
 }

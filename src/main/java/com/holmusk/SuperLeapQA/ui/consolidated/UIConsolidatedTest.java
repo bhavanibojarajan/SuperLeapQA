@@ -7,6 +7,7 @@ import com.holmusk.SuperLeapQA.ui.dashboard.UIDashboardTestType;
 import com.holmusk.SuperLeapQA.ui.dob.UIDoBPickerTestType;
 import com.holmusk.SuperLeapQA.ui.invalidage.UIInvalidAgeTestType;
 import com.holmusk.SuperLeapQA.ui.login.UILoginTestType;
+import com.holmusk.SuperLeapQA.ui.logmeal.UILogMealTestType;
 import com.holmusk.SuperLeapQA.ui.registermode.UIRegisterModeTestType;
 import com.holmusk.SuperLeapQA.ui.personalinfo.UIPersonalInfoTestType;
 import com.holmusk.SuperLeapQA.ui.validage.UIValidAgeTestType;
@@ -25,7 +26,8 @@ public final class UIConsolidatedTest extends UIBaseTest implements
     UIInvalidAgeTestType,
     UIValidAgeTestType,
     UIPersonalInfoTestType,
-    UIDashboardTestType
+    UIDashboardTestType,
+    UILogMealTestType
 {
     @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
     public UIConsolidatedTest(int index) {

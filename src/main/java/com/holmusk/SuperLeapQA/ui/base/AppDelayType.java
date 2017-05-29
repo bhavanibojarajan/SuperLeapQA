@@ -39,9 +39,26 @@ public interface AppDelayType {
     /**
      * Duration for {@link com.holmusk.SuperLeapQA.model.DashboardMode}
      * switcher swipe.
-     * @return {@link Long} value.
+     * @return {@link Integer} value.
      */
     default int dashboardModeSwitcherDuration() {
         return 0;
+    }
+
+    /**
+     * Delay for card-adding initialization.
+     * @return {@link Long} value.
+     */
+    default long cardAddScreenDelay() {
+        return 2000;
+    }
+
+    /**
+     * Delay for dialog dismissal. This is useful for when there may be
+     * multiple permission dialogs that need to be accepted consecutively.
+     * @return {@link Long} value.
+     */
+    default long dialogDismissalDelay() {
+        return 2000;
     }
 }

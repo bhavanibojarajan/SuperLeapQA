@@ -9,7 +9,8 @@ import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.type.BaseErrorType;
-import org.swiften.xtestkit.ios.IOSEngine;
+import org.swiften.xtestkit.base.type.PlatformType;
+import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.navigation.ScreenType;
 
 import java.util.List;
@@ -20,16 +21,21 @@ import java.util.List;
 public final class ScreenHolder implements ScreenType, NavigationType, BaseErrorType {
     @NotNull private final Screen SCREEN;
     @NotNull private final UserMode MODE;
+    @NotNull private final NavigationSupplier INITIALIZATION;
 
     @NotNull
-    public static ScreenHolder of(@NotNull Screen screen,
+    public static ScreenHolder of(@NotNull Engine<?> engine,
+                                  @NotNull Screen screen,
                                   @NotNull UserMode mode) {
-        return new ScreenHolder(screen, mode);
+        return new ScreenHolder(screen, mode, screen.rxa_onInitialized(engine));
     }
 
-    private ScreenHolder(@NotNull Screen screen, @NotNull UserMode mode) {
+    private ScreenHolder(@NotNull Screen screen,
+                         @NotNull UserMode mode,
+                         @NotNull NavigationSupplier init) {
         SCREEN = screen;
         MODE = mode;
+        INITIALIZATION = init;
     }
 
     @Override
@@ -43,19 +49,25 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
     }
 
     @NotNull
+    @Override
     public String toString() {
         return String.format("%s-%s", MODE, SCREEN);
     }
 
+    @NotNull
+    @Override
+    public NavigationSupplier rxa_onInitialized() {
+        return INITIALIZATION;
+    }
+
     /**
-     * @param engine {@link Engine} instance to check for
-     * {@link org.swiften.xtestkit.base.type.PlatformType}.
+     * @param platform {@link PlatformType} instance.
      * @return {@link Long} value.
-     * @see ScreenType#animationDelay(Engine)
+     * @see ScreenType#animationDelay(PlatformType)
      */
     @Override
-    public long animationDelay(@NotNull Engine<?> engine) {
-        if (engine instanceof IOSEngine) {
+    public long animationDelay(@NotNull PlatformType platform) {
+        if (platform.equals(Platform.IOS)) {
             return 1500;
         } else {
             return 0;
@@ -72,41 +84,48 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
     @Override
     public List<Direction> forwardAccessible(@NotNull final Engine<?> ENGINE) {
         final NavigationType THIS = this;
+        PlatformType platform = ENGINE.platform();
 
         switch (SCREEN) {
             case SPLASH:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.WELCOME, MODE),
-                        a -> THIS.rxn_splash_welcome()
+                        ScreenHolder.of(ENGINE, Screen.WELCOME, MODE),
+                        a -> THIS.rxn_splash_welcome(),
+                        platform
                     )
                 );
 
             case WELCOME:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.LOGIN, MODE),
-                        a -> THIS.rxn_welcome_login(ENGINE)
+                        ScreenHolder.of(ENGINE, Screen.LOGIN, MODE),
+                        a -> THIS.rxn_welcome_login(ENGINE),
+                        platform
                     ),
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.REGISTER, MODE),
-                        a -> THIS.rxn_welcome_register(ENGINE)
+                        ScreenHolder.of(ENGINE, Screen.REGISTER, MODE),
+                        a -> THIS.rxn_welcome_register(ENGINE),
+                        platform
                     )
                 );
 
             case LOGIN:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.FORGOT_PASSWORD, MODE),
-                        a -> THIS.rxn_login_forgotPassword(ENGINE)
+                        ScreenHolder.of(ENGINE, Screen.FORGOT_PASSWORD, MODE),
+                        a -> THIS.rxn_login_forgotPassword(ENGINE),
+                        platform
                     ),
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.REGISTER, MODE),
-                        a -> THIS.rxn_login_register(ENGINE)
+                        ScreenHolder.of(ENGINE, Screen.REGISTER, MODE),
+                        a -> THIS.rxn_login_register(ENGINE),
+                        platform
                     ),
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.DASHBOARD_TUTORIAL, MODE),
-                        a -> THIS.rxn_login_tutorial(ENGINE, MODE)
+                        ScreenHolder.of(ENGINE, Screen.DASHBOARD_TUTORIAL, MODE),
+                        a -> THIS.rxn_login_tutorial(ENGINE, MODE),
+                        platform
                     )
                 );
 
@@ -116,20 +135,23 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
             case REGISTER:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.DOB, MODE),
-                        a -> THIS.rxn_register_DoBPicker(ENGINE, MODE)
+                        ScreenHolder.of(ENGINE, Screen.DOB, MODE),
+                        a -> THIS.rxn_register_DoBPicker(ENGINE, MODE),
+                        platform
                     )
                 );
 
             case DOB:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.INVALID_AGE, MODE),
-                        a -> THIS.rxn_DoBPicker_invalidAge(ENGINE, MODE)
+                        ScreenHolder.of(ENGINE, Screen.INVALID_AGE, MODE),
+                        a -> THIS.rxn_DoBPicker_invalidAge(ENGINE, MODE),
+                        platform
                     ),
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.VALID_AGE, MODE),
-                        a -> THIS.rxn_DoBPicker_validAge(ENGINE, MODE)
+                        ScreenHolder.of(ENGINE, Screen.VALID_AGE, MODE),
+                        a -> THIS.rxn_DoBPicker_validAge(ENGINE, MODE),
+                        platform
                     )
                 );
 
@@ -139,44 +161,76 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
             case VALID_AGE:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.PERSONAL_INFO, MODE),
-                        a -> THIS.rxn_validAge_personalInfo(ENGINE, MODE)
+                        ScreenHolder.of(ENGINE, Screen.PERSONAL_INFO, MODE),
+                        a -> THIS.rxn_validAge_personalInfo(ENGINE, MODE),
+                        platform
                     )
                 );
 
             case PERSONAL_INFO:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.GUARANTOR_INFO, MODE),
-                        a -> THIS.rxn_personalInfo_guarantorInfo(ENGINE, MODE)
+                        ScreenHolder.of(ENGINE, Screen.GUARANTOR_INFO, MODE),
+                        a -> THIS.rxn_personalInfo_guarantorInfo(ENGINE, MODE),
+                        platform
                     )
                 );
 
             case GUARANTOR_INFO:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.USE_APP_NOW, MODE),
-                        a -> THIS.rxn_guarantorInfo_useApp(ENGINE, MODE)
+                        ScreenHolder.of(ENGINE, Screen.USE_APP_NOW, MODE),
+                        a -> THIS.rxn_guarantorInfo_useApp(ENGINE, MODE),
+                        platform
                     )
                 );
 
             case USE_APP_NOW:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.DASHBOARD_TUTORIAL, MODE),
-                        a -> THIS.rxn_useApp_tutorial(ENGINE)
+                        ScreenHolder.of(ENGINE, Screen.DASHBOARD_TUTORIAL, MODE),
+                        a -> THIS.rxn_useApp_tutorial(ENGINE),
+                        platform
                     )
                 );
 
             case DASHBOARD_TUTORIAL:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.DASHBOARD, MODE),
-                        a -> THIS.rxn_tutorial_dashboard(ENGINE)
+                        ScreenHolder.of(ENGINE, Screen.DASHBOARD, MODE),
+                        a -> THIS.rxn_tutorial_dashboard(ENGINE),
+                        platform
                     )
                 );
 
             case DASHBOARD:
+                return CollectionUtil.asList(
+                    new Direction(
+                        ScreenHolder.of(ENGINE, Screen.ADD_CARD, MODE),
+                        a -> THIS.rxn_dashboard_addCard(ENGINE),
+                        platform
+                    )
+                );
+
+            case ADD_CARD:
+                return CollectionUtil.asList(
+                    new Direction(
+                        ScreenHolder.of(ENGINE, Screen.PHOTO_PICKER, MODE),
+                        a -> THIS.rxn_addCard_photoPicker(ENGINE),
+                        platform
+                    )
+                );
+
+            case PHOTO_PICKER:
+                return CollectionUtil.asList(
+                    new Direction(
+                        ScreenHolder.of(ENGINE, Screen.LOG_MEAL, MODE),
+                        a -> THIS.rxn_photoPicker_logMeal(ENGINE),
+                        platform
+                    )
+                );
+
+            case LOG_MEAL:
                 return CollectionUtil.asList();
 
             default:
@@ -195,6 +249,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
     @Override
     public List<Direction> backwardAccessible(@NotNull final Engine<?> ENGINE) {
         final NavigationType THIS = this;
+        PlatformType platform = ENGINE.platform();
 
         switch (SCREEN) {
             case SPLASH:
@@ -206,68 +261,77 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
             case LOGIN:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.WELCOME, MODE),
-                        a -> THIS.rxn_login_welcome(ENGINE)
+                        ScreenHolder.of(ENGINE, Screen.WELCOME, MODE),
+                        a -> THIS.rxn_login_welcome(ENGINE),
+                        platform
                     )
                 );
 
             case FORGOT_PASSWORD:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.LOGIN, MODE),
-                        a -> Flowable.empty()
+                        ScreenHolder.of(ENGINE, Screen.LOGIN, MODE),
+                        a -> Flowable.empty(),
+                        platform
                     )
                 );
 
             case REGISTER:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.WELCOME, MODE),
-                        a -> THIS.rxn_register_welcome(ENGINE)
+                        ScreenHolder.of(ENGINE, Screen.WELCOME, MODE),
+                        a -> THIS.rxn_register_welcome(ENGINE),
+                        platform
                     )
                 );
 
             case DOB:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.REGISTER, MODE),
-                        a -> Flowable.empty()
+                        ScreenHolder.of(ENGINE, Screen.REGISTER, MODE),
+                        a -> Flowable.empty(),
+                        platform
                     )
                 );
 
             case INVALID_AGE:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.DOB, MODE),
-                        a -> THIS.rxn_invalidAge_DOBPicker(ENGINE)
+                        ScreenHolder.of(ENGINE, Screen.DOB, MODE),
+                        a -> THIS.rxn_invalidAge_DOBPicker(ENGINE),
+                        platform
                     ),
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.REGISTER, MODE),
-                        a -> THIS.rxn_invalidAge_welcome(ENGINE)
+                        ScreenHolder.of(ENGINE, Screen.REGISTER, MODE),
+                        a -> THIS.rxn_invalidAge_welcome(ENGINE),
+                        platform
                     )
                 );
 
             case VALID_AGE:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.DOB, MODE),
-                        a -> THIS.rxn_validAge_DoB(ENGINE)
+                        ScreenHolder.of(ENGINE, Screen.DOB, MODE),
+                        a -> THIS.rxn_validAge_DoB(ENGINE),
+                        platform
                     )
                 );
 
             case PERSONAL_INFO:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.VALID_AGE, MODE),
-                        a -> THIS.rxn_personalInfo_validAge(ENGINE)
+                        ScreenHolder.of(ENGINE, Screen.VALID_AGE, MODE),
+                        a -> THIS.rxn_personalInfo_validAge(ENGINE),
+                        platform
                     )
                 );
 
             case GUARANTOR_INFO:
                 return CollectionUtil.asList(
                     new Direction(
-                        ENGINE, ScreenHolder.of(Screen.PERSONAL_INFO, MODE),
-                        a -> THIS.rxn_guarantorInfo_personalInfo(ENGINE, MODE)
+                        ScreenHolder.of(ENGINE, Screen.PERSONAL_INFO, MODE),
+                        a -> THIS.rxn_guarantorInfo_personalInfo(ENGINE, MODE),
+                        platform
                     )
                 );
 
@@ -278,6 +342,15 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                 return CollectionUtil.asList();
 
             case DASHBOARD:
+                return CollectionUtil.asList();
+
+            case ADD_CARD:
+                return CollectionUtil.asList();
+
+            case PHOTO_PICKER:
+                return CollectionUtil.asList();
+
+            case LOG_MEAL:
                 return CollectionUtil.asList();
 
             default:

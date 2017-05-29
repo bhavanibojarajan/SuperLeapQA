@@ -1,5 +1,6 @@
 package com.holmusk.SuperLeapQA.ui.dashboard;
 
+import com.holmusk.SuperLeapQA.model.CardType;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.ui.base.BaseValidationType;
 import io.reactivex.Flowable;
@@ -45,6 +46,25 @@ public interface DashboardValidationType extends BaseValidationType {
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
+    }
+
+    /**
+     * Get the card selector button from the
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#ADD_CARD} menu.
+     * @param engine {@link Engine} instance.
+     * @param card {@link CardType} instance.
+     * @return {@link Flowable} instance.
+     * @see com.holmusk.SuperLeapQA.navigation.Screen#ADD_CARD
+     * @see CardType#cardSelectorText()
+     * @see Engine#rxe_withText(String...)
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_cardSelector(@NotNull Engine<?> engine,
+                                                  @NotNull CardType card) {
+        return engine
+            .rxe_withText(card.cardSelectorText())
+            .firstElement()
+            .toFlowable();
     }
 
     /**

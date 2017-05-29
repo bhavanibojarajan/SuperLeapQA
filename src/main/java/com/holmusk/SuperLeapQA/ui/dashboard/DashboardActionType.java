@@ -1,5 +1,6 @@
 package com.holmusk.SuperLeapQA.ui.dashboard;
 
+import com.holmusk.SuperLeapQA.model.CardType;
 import com.holmusk.SuperLeapQA.model.DashboardMode;
 import com.holmusk.SuperLeapQA.ui.invalidage.InvalidAgeActionType;
 import com.holmusk.SuperLeapQA.ui.personalinfo.PersonalInfoActionType;
@@ -36,15 +37,36 @@ public interface DashboardActionType extends
     }
 
     /**
-     * Click the add card button.
+     * Click the add card button to open the card-adding menu.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
      * @see #rxe_addCard(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_addCard(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_openCardAddMenu(@NotNull final Engine<?> ENGINE) {
         return rxe_addCard(ENGINE).flatMap(ENGINE::rxa_click);
+    }
+
+    /**
+     * Navigate to the screen associated with a {@link CardType}.
+     * @param ENGINE {@link Engine} instance.
+     * @param card {@link CardType} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_click(WebElement)
+     * @see #cardAddScreenDelay()
+     * @see #rxe_cardSelector(Engine, CardType)
+     */
+    @NotNull
+    default Flowable<?> rxa_addCard(@NotNull final Engine<?> ENGINE,
+                                    @NotNull CardType card) {
+        return rxe_cardSelector(ENGINE, card)
+            .flatMap(ENGINE::rxa_click)
+
+            /* We need some delay for the screen to fully initialize, because
+             * some screens require camera initialization - which can be fast
+             * or slow depending on the platform being tested */
+            .delay(cardAddScreenDelay(), TimeUnit.MILLISECONDS);
     }
 
     /**

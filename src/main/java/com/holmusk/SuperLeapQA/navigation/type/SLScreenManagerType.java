@@ -9,6 +9,7 @@ import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.navigation.ScreenHolder;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.navigation.ScreenManagerType;
 import org.swiften.xtestkit.navigation.ScreenType;
 
@@ -21,14 +22,15 @@ import java.util.List;
 public interface SLScreenManagerType extends ScreenManagerType {
     /**
      * Convenience to register all available {@link ScreenHolder}.
-     * @see ScreenHolder#of(Screen, UserMode)
+     * @see ScreenHolder#of(Engine, Screen, UserMode)
      */
     default void registerScreenHolders() {
+        final Engine<?> ENGINE = engine();
         UserMode[] modes = UserMode.values();
         Screen[] screens = Screen.values();
 
         ScreenHolder[] holders = Arrays.stream(modes)
-            .flatMap(a -> Arrays.stream(screens).map(b -> ScreenHolder.of(b, a)))
+            .flatMap(a -> Arrays.stream(screens).map(b -> ScreenHolder.of(ENGINE, b, a)))
             .toArray(ScreenHolder[]::new);
 
         register(holders);
@@ -39,13 +41,15 @@ public interface SLScreenManagerType extends ScreenManagerType {
      * @param MODE {@link UserMode} instance.
      * @param screens Varargs of {@link Screen}.
      * @return An Array of {@link ScreenHolder}.
-     * @see ScreenHolder#of(Screen, UserMode)
+     * @see ScreenHolder#of(Engine, Screen, UserMode)
      */
     @NotNull
     default ScreenHolder[] holders(@NotNull final UserMode MODE,
                                    @NotNull Screen...screens) {
+        final Engine<?> ENGINE = engine();
+
         return Arrays.stream(screens)
-            .map(a -> ScreenHolder.of(a, MODE))
+            .map(a -> ScreenHolder.of(ENGINE, a, MODE))
             .toArray(ScreenHolder[]::new);
     }
 
@@ -54,11 +58,11 @@ public interface SLScreenManagerType extends ScreenManagerType {
      * @param mode {@link UserMode} instance.
      * @param screens Varargs of {@link Screen}.
      * @see #holders(UserMode, Screen...)
-     * @see #multipleShortest(ScreenType...)
+     * @see #multiNodes(ScreenType...)
      */
-    default List<Node> multinodes(@NotNull UserMode mode,
+    default List<Node> multiNodes(@NotNull UserMode mode,
                                   @NotNull Screen...screens) {
-        return multipleShortest(holders(mode, screens));
+        return multiNodes(holders(mode, screens));
     }
 
     /**

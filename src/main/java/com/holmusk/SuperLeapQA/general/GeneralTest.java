@@ -3,11 +3,13 @@ package com.holmusk.SuperLeapQA.general;
 import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
+import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.javautilities.localizer.Localizer;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.navigation.ScreenManagerType;
 import org.testng.annotations.DataProvider;
@@ -17,6 +19,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -106,6 +109,8 @@ public final class GeneralTest {
         final Engine<?> ENGINE = mock(Engine.class);
         final List<ScreenManagerType.Node> FN = new ArrayList<>();
         final List<ScreenManagerType.Node> BN = new ArrayList<>();
+        doReturn(mock(PlatformType.class)).when(ENGINE).platform();
+        doReturn(Flowable.just(true)).when(ENGINE).rxa_acceptAlert();
 
         SLScreenManagerType manager = new SLScreenManagerType() {
             @NotNull
@@ -142,15 +147,18 @@ public final class GeneralTest {
         // When & Then
 
         /* DoB tests */
-        LogUtil.println(manager.multinodes(mode, Screen.SPLASH, Screen.DOB));
-        LogUtil.println(manager.multinodes(mode, Screen.DOB, Screen.INVALID_AGE));
-        LogUtil.println(manager.multinodes(mode, Screen.INVALID_AGE, Screen.DOB));
+        LogUtil.println(manager.multiNodes(mode, Screen.SPLASH, Screen.DOB));
+        LogUtil.println(manager.multiNodes(mode, Screen.DOB, Screen.INVALID_AGE));
+        LogUtil.println(manager.multiNodes(mode, Screen.INVALID_AGE, Screen.DOB));
 
         /* Personal info tests */
-        LogUtil.println(manager.multinodes(mode, Screen.SPLASH, Screen.PERSONAL_INFO));
+        LogUtil.println(manager.multiNodes(mode, Screen.SPLASH, Screen.PERSONAL_INFO));
 
         /* Dashboard tests */
-        LogUtil.println(manager.multinodes(mode, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD));
+        LogUtil.println(manager.multiNodes(mode, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD));
+
+        /* Log meal tests */
+        LogUtil.println(manager.multiNodes(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_MEAL));
     }
 
     @Test
