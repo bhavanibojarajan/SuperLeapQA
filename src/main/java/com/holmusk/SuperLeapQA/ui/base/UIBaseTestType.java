@@ -1,32 +1,22 @@
 package com.holmusk.SuperLeapQA.ui.base;
 
 import com.holmusk.SuperLeapQA.config.Config;
-import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.SuperLeapQA.model.type.SLTextType;
 import com.holmusk.SuperLeapQA.navigation.type.NavigationType;
 import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.collection.Zip;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.test.BaseTestType;
 import org.testng.annotations.DataProvider;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by haipham on 5/27/17.
  */
 public interface UIBaseTestType extends BaseTestType, NavigationType, SLScreenManagerType {
-    @NotNull
-    default List<Zip<SLTextType,String>> loginCredentials() {
-        return Arrays.asList(
-            new Zip<SLTextType,String>(TextInput.EMAIL, "haipham@gmail.com"),
-            new Zip<SLTextType,String>(TextInput.PASSWORD, "12345678")
-        );
-    }
-
     /**
      * This {@link DataProvider} provides {@link org.swiften.xtestkit.base.Engine}
      * instances for constructor methods.

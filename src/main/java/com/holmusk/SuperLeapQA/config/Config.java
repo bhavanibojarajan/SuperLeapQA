@@ -1,8 +1,6 @@
 package com.holmusk.SuperLeapQA.config;
 
 import org.jetbrains.annotations.NotNull;
-import org.swiften.xtestkit.android.AndroidEngine;
-import org.swiften.xtestkit.android.type.AndroidSDK;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.TestMode;
 import org.swiften.xtestkit.ios.IOSEngine;
@@ -51,13 +49,13 @@ public final class Config {
 //            .withTestMode(TestMode.ACTUAL)
 //            .build());
 //
-        ENGINES.add(AndroidEngine.builder()
-            .withSDK(AndroidSDK.SDK_22)
-            .withAppActivity(ANDROID_APP_ACTIVITY)
-            .withAppPackage(ANDROID_APP_PACKAGE)
-            .withDeviceName("Nexus_4_API_22")
-            .withTestMode(TestMode.SIMULATED)
-            .build());
+//        ENGINES.add(AndroidEngine.builder()
+//            .withSDK(AndroidSDK.SDK_22)
+//            .withAppActivity(ANDROID_APP_ACTIVITY)
+//            .withAppPackage(ANDROID_APP_PACKAGE)
+//            .withDeviceName("Nexus_4_API_22")
+//            .withTestMode(TestMode.SIMULATED)
+//            .build());
 
 //        ENGINES.add(AndroidEngine.builder()
 //            .withSDK(AndroidSDK.SDK_23)

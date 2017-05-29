@@ -103,6 +103,10 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                     new Direction(
                         ENGINE, ScreenHolder.of(Screen.REGISTER, MODE),
                         a -> THIS.rxn_login_register(ENGINE)
+                    ),
+                    new Direction(
+                        ENGINE, ScreenHolder.of(Screen.DASHBOARD_TUTORIAL, MODE),
+                        a -> THIS.rxn_login_tutorial(ENGINE, MODE)
                     )
                 );
 

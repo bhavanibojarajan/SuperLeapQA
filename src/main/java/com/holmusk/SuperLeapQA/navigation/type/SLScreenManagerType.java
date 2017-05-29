@@ -56,8 +56,8 @@ public interface SLScreenManagerType extends ScreenManagerType {
      * @see #holders(UserMode, Screen...)
      * @see #multipleShortest(ScreenType...)
      */
-    default List<Node> multipleShortest(@NotNull UserMode mode,
-                                        @NotNull Screen...screens) {
+    default List<Node> multinodes(@NotNull UserMode mode,
+                                  @NotNull Screen...screens) {
         return multipleShortest(holders(mode, screens));
     }
 

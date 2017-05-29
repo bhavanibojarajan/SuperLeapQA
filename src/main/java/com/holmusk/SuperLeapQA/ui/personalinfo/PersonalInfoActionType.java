@@ -1,16 +1,15 @@
 package com.holmusk.SuperLeapQA.ui.personalinfo;
 
+import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.type.SLTextType;
 import com.holmusk.SuperLeapQA.ui.validage.ValidAgeActionType;
-import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.type.PlatformType;
-import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.type.PlatformType;
 
 import java.util.List;
 
@@ -18,19 +17,6 @@ import java.util.List;
  * Created by haipham on 17/5/17.
  */
 public interface PersonalInfoActionType extends PersonalInfoValidationType, ValidAgeActionType {
-    /**
-     * Click the submit button to confirm personal info inputs.
-     * @param ENGINE {@link Engine} instance.
-     * @return {@link Flowable} instance.
-     * @see #rxe_personalInfoSubmit(Engine)
-     * @see Engine#rxa_click(WebElement)
-     * @see BooleanUtil#toTrue(Object)
-     */
-    @NotNull
-    default Flowable<?> rxa_confirmPersonalInfo(@NotNull final Engine<?> ENGINE) {
-        return rxe_personalInfoSubmit(ENGINE).flatMap(ENGINE::rxa_click);
-    }
-
     /**
      * Toggle the TOC checkbox to be accepted/rejected.
      * @param ENGINE {@link Engine} instance.
@@ -87,6 +73,18 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
     }
 
     /**
+     * Click the submit button to confirm personal info inputs.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_click(WebElement)
+     * @see #rxe_personalInfoSubmit(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxa_confirmPersonalInfo(@NotNull final Engine<?> ENGINE) {
+        return rxe_personalInfoSubmit(ENGINE).flatMap(ENGINE::rxa_click);
+    }
+
+    /**
      * Confirm additional personal inputs. This is only relevant to
      * {@link UserMode#requiresGuarantor()}.
      * @param engine {@link Engine} instance.
@@ -103,6 +101,23 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
         } else {
             return Flowable.just(true);
         }
+    }
+
+    /**
+     * Enter and confirm personal info.
+     * @param ENGINE {@link Engine} instance.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Flowable} instance.
+     * @see #rxa_enterPersonalInfo(Engine, UserMode)
+     * @see #rxa_confirmPersonalInfo(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxa_enterAndConfirmPersonalInfo(@NotNull final Engine ENGINE,
+                                                        @NotNull UserMode mode) {
+        final PersonalInfoActionType THIS = this;
+
+        return rxa_enterPersonalInfo(ENGINE, mode)
+            .flatMap(a -> THIS.rxa_confirmPersonalInfo(ENGINE));
     }
 
     /**
@@ -131,7 +146,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @return {@link Flowable} instance.
      */
     @NotNull
-    default Flowable<?> rxa_openTOC(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_openTC(@NotNull final Engine<?> ENGINE) {
         return rxe_TCAcceptanceLabel(ENGINE)
             .map(a -> {
                 Point point = a.getLocation();

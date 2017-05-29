@@ -35,4 +35,13 @@ public interface AppDelayType {
     default long webViewDelay() {
         return 3000;
     }
+
+    /**
+     * Duration for {@link com.holmusk.SuperLeapQA.model.DashboardMode}
+     * switcher swipe.
+     * @return {@link Long} value.
+     */
+    default int dashboardModeSwitcherDuration() {
+        return 0;
+    }
 }

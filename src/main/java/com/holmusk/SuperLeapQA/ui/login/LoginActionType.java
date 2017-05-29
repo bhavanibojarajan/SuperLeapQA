@@ -1,6 +1,7 @@
 package com.holmusk.SuperLeapQA.ui.login;
 
 import com.holmusk.SuperLeapQA.model.TextInput;
+import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.type.SLTextType;
 import com.holmusk.SuperLeapQA.ui.base.BaseActionType;
 import io.reactivex.Flowable;
@@ -53,5 +54,19 @@ public interface LoginActionType extends BaseActionType, LoginValidationType {
                                   @NotNull List<Zip<SLTextType,String>> inputs) {
         final LoginActionType THIS = this;
         return rxa_inputs(ENGINE, inputs).flatMap(a -> THIS.rxa_confirmLogin(ENGINE));
+    }
+
+    /**
+     * Login with default credentials, as supplied by
+     * {@link UserMode#loginCredentials()}.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see UserMode#loginCredentials()
+     * @see #rxa_login(Engine, List)
+     */
+    @NotNull
+    default Flowable<?> rxa_loginWithDefaults(@NotNull Engine<?> engine,
+                                              @NotNull UserMode mode) {
+        return rxa_login(engine, mode.loginCredentials());
     }
 }

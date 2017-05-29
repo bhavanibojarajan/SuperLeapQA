@@ -4,6 +4,7 @@ import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.model.type.SLTextType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.collection.Zip;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
@@ -51,6 +52,34 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      */
     public boolean isParent() {
         return this.equals(PARENT);
+    }
+
+    /**
+     * Get the default login credentials for the current {@link UserMode}.
+     * @return {@link List} of {@link Zip}.
+     * @see TextInput#EMAIL
+     * @see TextInput#PASSWORD
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    public List<Zip<SLTextType,String>> loginCredentials() {
+        switch (this) {
+            case PARENT:
+                return Arrays.asList(
+                    new Zip<>(TextInput.EMAIL, "haipham1@gmail.com"),
+                    new Zip<>(TextInput.PASSWORD, "12345678")
+                );
+
+            case TEEN_A18:
+            case TEEN_U18:
+                return Arrays.asList(
+                    new Zip<>(TextInput.EMAIL, "haipham@gmail.com"),
+                    new Zip<>(TextInput.PASSWORD, "12345678")
+                );
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 
     /**
@@ -182,6 +211,27 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
 
             default:
                 return false;
+        }
+    }
+
+    /**
+     * Get {@link DashboardMode#ACTIVITY} keyword to be searched, because
+     * each {@link UserMode} group has a different activity metric.
+     * @return {@link String} value.
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    public String dashboardActivityKeyword() {
+        switch (this) {
+            case PARENT:
+                return "dashboard_activity_title_mins";
+
+            case TEEN_A18:
+            case TEEN_U18:
+                return "dashboard_activity_title_steps";
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 

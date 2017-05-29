@@ -1,13 +1,11 @@
 package com.holmusk.SuperLeapQA.ui.login;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.SuperLeapQA.model.type.SLTextType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
 import com.holmusk.SuperLeapQA.ui.registermode.RegisterModeActionType;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
-import org.swiften.javautilities.collection.Zip;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.Test;
@@ -53,10 +51,10 @@ public interface UILoginTestType extends UIBaseTestType, LoginActionType, Regist
      * Login with predefined credentials and verify that it works correctly.
      * @see Screen#SPLASH
      * @see Screen#LOGIN
+     * @see UserMode#loginCredentials()
      * @see #rxa_login(Engine, List)
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
-     * @see #loginCredentials()
      */
     @Test
     @GuarantorAware(value = false)
@@ -65,13 +63,12 @@ public interface UILoginTestType extends UIBaseTestType, LoginActionType, Regist
         // Setup
         final UILoginTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        final List<Zip<SLTextType,String>> INPUTS = loginCredentials();
-        UserMode mode = UserMode.PARENT;
+        final UserMode MODE = UserMode.PARENT;
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN)
-            .flatMap(a -> THIS.rxa_login(ENGINE, INPUTS))
+        rxa_navigate(MODE, Screen.SPLASH, Screen.LOGIN)
+            .flatMap(a -> THIS.rxa_loginWithDefaults(ENGINE, MODE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

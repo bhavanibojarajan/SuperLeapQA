@@ -30,7 +30,7 @@ public final class Runner implements RepeatRunner.TestRunner {
     }
 
     @NotNull
-    @DataProvider(parallel = true)
+    @DataProvider(parallel = false)
     public static Iterator<Object[]> dataProvider() {
         return RUNNER.dataParameters();
     }

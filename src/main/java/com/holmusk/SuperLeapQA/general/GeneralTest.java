@@ -3,7 +3,6 @@ package com.holmusk.SuperLeapQA.general;
 import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
-import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.javautilities.localizer.Localizer;
@@ -143,12 +142,15 @@ public final class GeneralTest {
         // When & Then
 
         /* DoB tests */
-        LogUtil.println(manager.multipleShortest(mode, Screen.SPLASH, Screen.DOB));
-        LogUtil.println(manager.multipleShortest(mode, Screen.DOB, Screen.INVALID_AGE));
-        LogUtil.println(manager.multipleShortest(mode, Screen.INVALID_AGE, Screen.DOB));
+        LogUtil.println(manager.multinodes(mode, Screen.SPLASH, Screen.DOB));
+        LogUtil.println(manager.multinodes(mode, Screen.DOB, Screen.INVALID_AGE));
+        LogUtil.println(manager.multinodes(mode, Screen.INVALID_AGE, Screen.DOB));
 
         /* Personal info tests */
-        LogUtil.println(manager.multipleShortest(mode, Screen.SPLASH, Screen.PERSONAL_INFO));
+        LogUtil.println(manager.multinodes(mode, Screen.SPLASH, Screen.PERSONAL_INFO));
+
+        /* Dashboard tests */
+        LogUtil.println(manager.multinodes(mode, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD));
     }
 
     @Test

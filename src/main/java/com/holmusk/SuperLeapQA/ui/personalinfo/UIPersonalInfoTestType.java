@@ -154,7 +154,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_input(Engine, SLInputType, String)
-     * @see #rxa_openTOC(Engine)
+     * @see #rxa_openTC(Engine)
      * @see #rxa_makeNextInputVisible(Engine, WebElement)
      * @see #rxv_hasValue(Engine, SLInputType, String)
      */
@@ -198,7 +198,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
             .flatMap(ENGINE::rxa_togglePasswordMask)
             .delay(generalDelay(), TimeUnit.MILLISECONDS)
 
-            .flatMap(a -> THIS.rxa_openTOC(ENGINE))
+            .flatMap(a -> THIS.rxa_openTC(ENGINE))
             .delay(webViewDelay(), TimeUnit.MILLISECONDS)
             .flatMap(a -> ENGINE.rxa_navigateBackOnce())
             .flatMapIterable(a -> TEXT_INFO)

@@ -97,12 +97,12 @@ public class UIBaseTest implements UIBaseTestType {
     public void beforeMethod() {
         registerScreenHolders();
         BeforeParam param = BeforeParam.builder().withIndex(INDEX).build();
-        TEST_KIT.before(param);
+        TEST_KIT.beforeMethod(param);
     }
 
     @AfterMethod
     public void afterMethod() {
         AfterParam param = AfterParam.builder().withIndex(INDEX).build();
-        TEST_KIT.after(param);
+        TEST_KIT.afterMethod(param);
     }
 }

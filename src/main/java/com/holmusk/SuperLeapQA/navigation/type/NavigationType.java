@@ -2,11 +2,11 @@ package com.holmusk.SuperLeapQA.navigation.type;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.ui.dashboard.DashboardActionType;
-import com.holmusk.SuperLeapQA.ui.login.LoginActionType;
 import com.holmusk.SuperLeapQA.ui.dob.DOBPickerActionType;
 import com.holmusk.SuperLeapQA.ui.invalidage.InvalidAgeActionType;
-import com.holmusk.SuperLeapQA.ui.registermode.RegisterModeActionType;
+import com.holmusk.SuperLeapQA.ui.login.LoginActionType;
 import com.holmusk.SuperLeapQA.ui.personalinfo.PersonalInfoActionType;
+import com.holmusk.SuperLeapQA.ui.registermode.RegisterModeActionType;
 import com.holmusk.SuperLeapQA.ui.validage.ValidAgeActionType;
 import com.holmusk.SuperLeapQA.ui.welcome.WelcomeActionType;
 import io.reactivex.Flowable;
@@ -94,6 +94,29 @@ public interface NavigationType extends
     @NotNull
     default Flowable<?> rxn_login_register(@NotNull final Engine<?> ENGINE) {
         return rxe_loginRegister(ENGINE).flatMap(ENGINE::rxa_click);
+    }
+
+    /**
+     * Note that a dialog may pop up asking for push notification permission,
+     * so we accept by default.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOGIN}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD_TUTORIAL}
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_acceptAlert()
+     * @see #generalDelay()
+     * @see #rxa_loginWithDefaults(Engine, UserMode)
+     * @see #rxa_watchProgressBarUntilHidden(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxn_login_tutorial(@NotNull final Engine<?> ENGINE,
+                                           @NotNull UserMode mode) {
+        final NavigationType THIS = this;
+
+        return rxa_loginWithDefaults(ENGINE, mode)
+            .flatMap(a -> THIS.rxa_watchProgressBarUntilHidden(ENGINE))
+            .delay(generalDelay(), TimeUnit.MILLISECONDS)
+            .flatMap(a -> ENGINE.rxa_acceptAlert());
     }
 
     /**
@@ -258,19 +281,15 @@ public interface NavigationType extends
      * this method will go directly to the dashboard.
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#PERSONAL_INFO}
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#GUARANTOR_INFO}
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see #rxa_enterPersonalInfo(Engine, List)
-     * @see #rxa_confirmPersonalInfo(Engine)
+     * @see #rxa_enterAndConfirmPersonalInfo(Engine, UserMode)
      */
     @NotNull
-    default Flowable<?> rxn_personalInfo_guarantorInfo(@NotNull final Engine<?> ENGINE,
+    default Flowable<?> rxn_personalInfo_guarantorInfo(@NotNull Engine<?> engine,
                                                        @NotNull UserMode mode) {
-        final NavigationType THIS = this;
-
-        return rxa_enterPersonalInfo(ENGINE, mode)
-            .flatMap(a -> THIS.rxa_confirmPersonalInfo(ENGINE));
+        return rxa_enterAndConfirmPersonalInfo(engine, mode);
     }
 
     /**
@@ -352,10 +371,10 @@ public interface NavigationType extends
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_navigateBackOnce()
+     * @see #rxa_dismissDashboardTutorial(Engine)
      */
     @NotNull
     default Flowable<?> rxn_tutorial_dashboard(@NotNull Engine<?> engine) {
-        return engine.rxa_navigateBackOnce();
+        return rxa_dismissDashboardTutorial(engine);
     }
 }
