@@ -27,10 +27,10 @@ public interface SLScreenManagerType extends ScreenManagerType {
     default void registerScreenHolders() {
         final Engine<?> ENGINE = engine();
         UserMode[] modes = UserMode.values();
-        Screen[] screens = Screen.values();
+        final Screen[] SCREENS = Screen.values();
 
         ScreenHolder[] holders = Arrays.stream(modes)
-            .flatMap(a -> Arrays.stream(screens).map(b -> ScreenHolder.of(ENGINE, b, a)))
+            .flatMap(a -> Arrays.stream(SCREENS).map(b -> ScreenHolder.of(ENGINE, b, a)))
             .toArray(ScreenHolder[]::new);
 
         register(holders);

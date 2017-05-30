@@ -66,6 +66,12 @@ public class UIBaseTest implements UIBaseTestType {
     public void addBackwardNodes(@NotNull List<Node> nodes) {
         BACKWARD_NODES.addAll(nodes);
     }
+
+    @Override
+    public void clearAllNodes() {
+        FORWARD_NODES.clear();
+        BACKWARD_NODES.clear();
+    }
     //endregion
 
     @BeforeSuite
@@ -81,9 +87,6 @@ public class UIBaseTest implements UIBaseTestType {
     @BeforeClass
     public void beforeClass() {
         BeforeClassParam param = BeforeClassParam.builder().withIndex(INDEX).build();
-
-        /* Calling beforeClass() here ensures that each Engine will only start
-         * the test environment once */
         TEST_KIT.beforeClass(param);
     }
 
@@ -102,6 +105,7 @@ public class UIBaseTest implements UIBaseTestType {
 
     @AfterMethod
     public void afterMethod() {
+        clearAllNodes();
         AfterParam param = AfterParam.builder().withIndex(INDEX).build();
         TEST_KIT.afterMethod(param);
     }

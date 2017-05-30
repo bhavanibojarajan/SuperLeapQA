@@ -79,7 +79,7 @@ public interface DashboardValidationType extends BaseValidationType {
     default Flowable<WebElement> rxe_dashboardModeSwitcher(@NotNull Engine<?> engine) {
         if (engine instanceof IOSEngine) {
             return engine
-                .rx_ofClass(IOSView.ViewType.UI_SCROLLVIEW.className())
+                .rxe_ofClass(IOSView.ViewType.UI_SCROLLVIEW.className())
                 .firstElement()
                 .toFlowable();
         } else {

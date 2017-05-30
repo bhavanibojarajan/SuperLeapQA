@@ -4,9 +4,15 @@ import com.holmusk.SuperLeapQA.ui.registermode.RegisterModeActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.xtestkit.android.AndroidEngine;
+import org.swiften.xtestkit.android.element.action.date.AndroidDatePickerType;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.element.action.date.DateParam;
+import org.swiften.xtestkit.base.element.action.date.DatePickerType;
 import org.swiften.xtestkit.base.element.action.date.DateType;
 import org.swiften.xtestkit.base.type.DelayType;
+import org.swiften.xtestkit.ios.IOSEngine;
+import org.swiften.xtestkit.ios.element.action.date.IOSDatePickerType;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -62,12 +68,31 @@ public interface DOBPickerActionType extends DOBPickerValidationType, RegisterMo
      * @param engine {@link Engine} instance.
      * @param DATE {@link Date} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rx_selectDate(DateType)
+     * @see AndroidDatePickerType#VERTICAL_CALENDAR
+     * @see Engine#rxa_selectDate(DateType)
+     * @see DateParam.Builder#withDate(Date)
+     * @see DateParam.Builder#withDatePickerUnits()
+     * @see IOSDatePickerType#MMMM_d_YYYY
+     * @see #NO_SUCH_ELEMENT
      */
     @NotNull
     default Flowable<?> rxa_selectDoB(@NotNull Engine<?> engine,
                                       @NotNull final Date DATE) {
-        return engine.rx_selectDate(() -> DATE);
+        DatePickerType pickerType;
+
+        if (engine instanceof AndroidEngine) {
+            pickerType = AndroidDatePickerType.VERTICAL_CALENDAR;
+        } else if (engine instanceof IOSEngine) {
+            pickerType = IOSDatePickerType.MMMM_d_YYYY;
+        } else {
+            throw new RuntimeException(NO_SUCH_ELEMENT);
+        }
+
+        return engine.rxa_selectDate(DateParam.builder()
+            .withDate(DATE)
+            .withDatePickerUnits()
+            .withPickerType(pickerType)
+            .build());
     }
 
     /**

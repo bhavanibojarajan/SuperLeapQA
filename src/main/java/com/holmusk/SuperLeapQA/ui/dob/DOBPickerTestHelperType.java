@@ -23,7 +23,6 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
      * @see Engine#rxa_click(WebElement)
      * @see Engine#rxa_navigateBackOnce()
      * @see #rxa_openDoBPicker(Engine)
-     * @see #rxe_DoBElements(Engine)
      * @see #generalDelay()
      * @see ObjectUtil#nonNull(Object)
      */
@@ -45,7 +44,6 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
 
             /* Open the DoB dialog and verify that all elements are there */
             .flatMap(a -> THIS.rxa_openDoBPicker(ENGINE))
-            .flatMap(a -> THIS.rxe_DoBElements(ENGINE).all(ObjectUtil::nonNull).toFlowable())
             .delay(THIS.generalDelay(), TimeUnit.MILLISECONDS)
 
             /* Dismiss the dialog by navigating back once */

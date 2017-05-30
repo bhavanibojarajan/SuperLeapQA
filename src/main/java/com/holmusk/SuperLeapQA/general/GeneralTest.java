@@ -25,6 +25,7 @@ import static org.mockito.Mockito.mock;
 /**
  * Created by haipham on 5/11/17.
  */
+@SuppressWarnings("UndeclaredTests")
 public final class GeneralTest {
     @NotNull
     @DataProvider
@@ -139,6 +140,12 @@ public final class GeneralTest {
             @Override
             public List<Node> registeredBackwardNodes() {
                 return BN;
+            }
+
+            @Override
+            public void clearAllNodes() {
+                FN.clear();
+                BN.clear();
             }
         };
 

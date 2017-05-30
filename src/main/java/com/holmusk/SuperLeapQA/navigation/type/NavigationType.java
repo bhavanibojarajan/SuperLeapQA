@@ -107,18 +107,15 @@ public interface NavigationType extends
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_acceptAlert()
-     * @see #generalDelay()
+     * @see #loginProgressDelay()
      * @see #rxa_loginWithDefaults(Engine, UserMode)
      * @see #rxa_watchProgressBarUntilHidden(Engine)
      */
     @NotNull
     default Flowable<?> rxn_login_tutorial(@NotNull final Engine<?> ENGINE,
                                            @NotNull UserMode mode) {
-        final NavigationType THIS = this;
-
         return rxa_loginWithDefaults(ENGINE, mode)
-            .flatMap(a -> THIS.rxa_watchProgressBarUntilHidden(ENGINE))
-            .delay(generalDelay(), TimeUnit.MILLISECONDS);
+            .delay(loginProgressDelay(), TimeUnit.MILLISECONDS);
     }
 
     /**

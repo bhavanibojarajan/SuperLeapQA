@@ -54,19 +54,12 @@ public interface DashboardActionType extends
      * @param card {@link CardType} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
-     * @see #cardAddScreenDelay()
      * @see #rxe_cardSelector(Engine, CardType)
      */
     @NotNull
     default Flowable<?> rxa_addCard(@NotNull final Engine<?> ENGINE,
                                     @NotNull CardType card) {
-        return rxe_cardSelector(ENGINE, card)
-            .flatMap(ENGINE::rxa_click)
-
-            /* We need some delay for the screen to fully initialize, because
-             * some screens require camera initialization - which can be fast
-             * or slow depending on the platform being tested */
-            .delay(cardAddScreenDelay(), TimeUnit.MILLISECONDS);
+        return rxe_cardSelector(ENGINE, card).flatMap(ENGINE::rxa_click);
     }
 
     /**

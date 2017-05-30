@@ -30,7 +30,8 @@ public enum TextInput implements BaseErrorType, SLTextType {
     UNIT_NUMBER,
     PARENT_NAME,
     PARENT_EMAIL,
-    PARENT_MOBILE;
+    PARENT_MOBILE,
+    MEAL_DESCRIPTION;
 
     /**
      * @param platform {@link PlatformType} instance.
@@ -145,28 +146,31 @@ public enum TextInput implements BaseErrorType, SLTextType {
             case NAME:
             case PARENT_NAME:
             case CHILD_NAME:
-                return "input_title_abbv_name";
+                return "user_title_abbv_name";
 
             case PHONE:
             case MOBILE:
             case PARENT_MOBILE:
-                return "input_title_abbv_mobile";
+                return "user_title_abbv_mobile";
 
             case HOME:
-                return "input_title_abbv_home";
+                return "user_title_abbv_home";
 
             case EMAIL:
             case PARENT_EMAIL:
-                return "input_title_abbv_email";
+                return "user_title_abbv_email";
 
             case PASSWORD:
-                return "input_title_abbv_password";
+                return "user_title_abbv_password";
 
             case POSTAL_CODE:
-                return "input_title_abbv_postal";
+                return "user_title_abbv_postal";
 
             case UNIT_NUMBER:
-                return "input_title_abbv_unit";
+                return "user_title_abbv_unit";
+
+            case MEAL_DESCRIPTION:
+                return "mealLog_title_abbv_description";
 
             default:
                 LogUtil.println(this);
@@ -202,6 +206,9 @@ public enum TextInput implements BaseErrorType, SLTextType {
             case EMAIL:
             case PARENT_EMAIL:
                 return "testQA-" + StringTestUtil.randomString(10) + "@gmail.com";
+
+            case MEAL_DESCRIPTION:
+                return StringTestUtil.randomString(150);
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);

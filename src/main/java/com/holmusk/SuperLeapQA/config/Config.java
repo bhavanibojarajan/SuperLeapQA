@@ -1,6 +1,8 @@
 package com.holmusk.SuperLeapQA.config;
 
 import org.jetbrains.annotations.NotNull;
+import org.swiften.xtestkit.android.AndroidEngine;
+import org.swiften.xtestkit.android.type.AndroidVersion;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.TestMode;
 import org.swiften.xtestkit.ios.IOSEngine;
@@ -21,6 +23,8 @@ public final class Config {
     @NotNull private static final String IOS_APP_PATH;
     @NotNull private static final List<Engine> ENGINES;
     @NotNull public static final TestKit TEST_KIT;
+
+    public static final int MAX_PHOTO_COUNT = 4;
 
     static {
         ANDROID_APP_PACKAGE = "com.holmusk.superleap";
@@ -50,7 +54,7 @@ public final class Config {
 //            .build());
 //
 //        ENGINES.add(AndroidEngine.builder()
-//            .withSDK(AndroidSDK.SDK_22)
+//            .withSDK(AndroidVersion.SDK_22)
 //            .withAppActivity(ANDROID_APP_ACTIVITY)
 //            .withAppPackage(ANDROID_APP_PACKAGE)
 //            .withDeviceName("Nexus_4_API_22")
@@ -58,7 +62,7 @@ public final class Config {
 //            .build());
 
 //        ENGINES.add(AndroidEngine.builder()
-//            .withSDK(AndroidSDK.SDK_23)
+//            .withSDK(AndroidVersion.SDK_23)
 //            .withAppActivity(ANDROID_APP_ACTIVITY)
 //            .withAppPackage(ANDROID_APP_PACKAGE)
 //            .withDeviceName("Nexus_4_API_23")

@@ -35,19 +35,7 @@ public interface DOBPickerValidationType extends WelcomeValidationType {
      * @return {@link Flowable} instance.
      */
     @NotNull
-    Flowable<?> rxv_invalidAgeScreen(@NotNull Engine<?> engine,
-                                     @NotNull UserMode mode);
-
-    /**
-     * Get all calendar {@link WebElement} instances.
-     ** @param engine {@link Engine} instance.
-     * @return {@link Flowable} instance.
-     * @see Engine#rx_allCalendarElements()
-     */
-    @NotNull
-    default Flowable<WebElement> rxe_DoBElements(@NotNull Engine<?> engine) {
-        return engine.rx_allCalendarElements();
-    }
+    Flowable<?> rxv_invalidAgeScreen(@NotNull Engine<?> engine, @NotNull UserMode mode);
 
     /**
      * Get the DoB's editable text field. Due to design differences, this

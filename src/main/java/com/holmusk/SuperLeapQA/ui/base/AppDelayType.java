@@ -49,8 +49,8 @@ public interface AppDelayType {
      * Delay for card-adding initialization.
      * @return {@link Long} value.
      */
-    default long cardAddScreenDelay() {
-        return 2000;
+    default long photoPickerScreenDelay() {
+        return 4000;
     }
 
     /**
@@ -60,5 +60,14 @@ public interface AppDelayType {
      */
     default long dialogDismissalDelay() {
         return 2000;
+    }
+
+    /**
+     * Delay between the time the user logs in and that where the dashboard
+     * tutorial screen appears.
+     * @return {@link Long} value.
+     */
+    default long loginProgressDelay() {
+        return 5000;
     }
 }

@@ -201,7 +201,7 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * @param element {@link WebElement} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_hideKeyboard()
-     * @see Engine#rx_isLastInput(WebElement)
+     * @see Engine#rxv_isLastInput(WebElement)
      * @see Engine#rx_toggleNextOrFinishInput(WebElement)
      * @see #rxa_confirmTextInput(Engine)
      * @see #NOT_AVAILABLE
