@@ -56,7 +56,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * visibility and interacting with each of them.
      * @param MODE {@link UserMode} instance.
      * @see Screen#PERSONAL_INFO
-     * @see Engine#rx_toggleNextOrFinishInput(WebElement)
+     * @see Engine#rxa_toggleNextOrFinishInput(WebElement)
      * @see Engine#rxa_togglePasswordMask(WebElement)
      * @see Engine#isShowingPassword(WebElement)
      * @see ObjectUtil#nonNull(Object)

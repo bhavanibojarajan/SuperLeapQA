@@ -54,13 +54,13 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * Watch the progress bar until it's no longer visible.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see Engine#rxa_watchUntilHidden(WebElement)
      * @see #rxe_progressBar(Engine)
-     * @see Engine#rx_watchUntilHidden(WebElement)
      */
     @NotNull
-    default Flowable<Boolean> rxa_watchProgressBarUntilHidden(@NotNull final Engine<?> ENGINE) {
+    default Flowable<Boolean> rxa_watchProgressBar(@NotNull final Engine<?> ENGINE) {
         return rxe_progressBar(ENGINE)
-            .flatMap(ENGINE::rx_watchUntilHidden)
+            .flatMap(ENGINE::rxa_watchUntilHidden)
             .onErrorReturnItem(true);
     }
 
@@ -70,13 +70,13 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * @param TEXT {@link String} value.
      * @return {@link Flowable} instance.
      * @see #rxe_editField(Engine, SLInputType)
-     * @see Engine#rx_type(WebElement, String...)
+     * @see Engine#rxa_type(WebElement, String...)
      */
     @NotNull
     default Flowable<WebElement> rxa_input(@NotNull final Engine<?> ENGINE,
                                            @NotNull SLInputType input,
                                            @NotNull final String TEXT) {
-        return rxe_editField(ENGINE, input).flatMap(a -> ENGINE.rx_type(a, TEXT));
+        return rxe_editField(ENGINE, input).flatMap(a -> ENGINE.rxa_type(a, TEXT));
     }
 
     /**
@@ -202,7 +202,7 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * @return {@link Flowable} instance.
      * @see Engine#rxa_hideKeyboard()
      * @see Engine#rxv_isLastInput(WebElement)
-     * @see Engine#rx_toggleNextOrFinishInput(WebElement)
+     * @see Engine#rxa_toggleNextOrFinishInput(WebElement)
      * @see #rxa_confirmTextInput(Engine)
      * @see #NOT_AVAILABLE
      */

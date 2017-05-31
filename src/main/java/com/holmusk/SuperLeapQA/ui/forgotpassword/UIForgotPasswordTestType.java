@@ -73,7 +73,7 @@ public interface UIForgotPasswordTestType extends UIBaseTestType, ForgotPassword
         // When
         rxa_navigate(mode, Screen.SPLASH, Screen.FORGOT_PASSWORD)
             .flatMap(a -> THIS.rxa_recoverPassword(ENGINE))
-            .flatMap(a -> THIS.rxa_watchProgressBarUntilHidden(ENGINE))
+            .flatMap(a -> THIS.rxa_watchProgressBar(ENGINE))
             .flatMap(a -> THIS.rxv_emailSentConfirmation(ENGINE))
             .flatMap(a -> THIS.rxa_confirmEmailSent(ENGINE))
             .delay(generalDelay(), TimeUnit.MILLISECONDS)

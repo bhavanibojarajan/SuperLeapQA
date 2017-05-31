@@ -1,18 +1,34 @@
 package com.holmusk.SuperLeapQA.ui.logmeal;
 
+import com.holmusk.SuperLeapQA.model.Mood;
+import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.UserMode;
+import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
+import com.holmusk.SuperLeapQA.ui.mealpage.MealPageValidationType;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
+import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
+import org.swiften.javautilities.collection.CollectionTestUtil;
+import org.swiften.javautilities.number.NumberTestUtil;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.Test;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by haipham on 29/5/17.
  */
-public interface UILogMealTestType extends UIBaseTestType, LogMealActionType {
+public interface UILogMealTestType extends
+    UIBaseTestType,
+    LogMealActionType,
+    MealPageValidationType
+{
     /**
      * Validate {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_MEAL}
      * and confirm that all {@link org.openqa.selenium.WebElement} are present.
@@ -43,14 +59,25 @@ public interface UILogMealTestType extends UIBaseTestType, LogMealActionType {
 
     /**
      * Test that meal logging works as expected, by following the logging
-     * process and posting a meal onto the server.
+     * process and posting a meal onto the server. Afterwards, we can verify
+     * whether the information we entered is correctly stored.
+     * @see Engine#rxe_containsText(String...)
+     * @see ObjectUtil#nonNull(Object)
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#LOG_MEAL
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
+     * @see #mealLogProgressDelay()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_selectMealPhotos(Engine)
+     * @see #rxa_input(Engine, SLInputType, String)
+     * @see #rxa_selectMood(Engine, Mood)
+     * @see #rxa_openMealTimePicker(Engine)
+     * @see #rxa_selectMealTime(Engine, Date)
+     * @see #rxa_confirmMealTime(Engine)
+     * @see #rxa_submitMeal(Engine)
+     * @see #rxv_hasMealTime(Engine, Date)
      */
     @Test
     @SuppressWarnings("unchecked")
@@ -59,12 +86,32 @@ public interface UILogMealTestType extends UIBaseTestType, LogMealActionType {
         // Setup
         final UILogMealTestType THIS = this;
         final Engine<?> ENGINE = engine();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -NumberTestUtil.randomBetween(1, 5));
+        final Date TIME = calendar.getTime();
+        final TextInput DSC_INPUT = TextInput.MEAL_DESCRIPTION;
+        final String DESCRIPTION = DSC_INPUT.randomInput();
+        final Mood MOOD = CollectionTestUtil.randomElement(Mood.values());
         TestSubscriber subscriber = CustomTestSubscriber.create();
         UserMode mode = UserMode.PARENT;
 
         // When
         rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_MEAL)
-            .flatMap(a -> THIS.rxa_logNewMeal(ENGINE))
+            .flatMap(a -> THIS.rxa_selectMealPhotos(ENGINE))
+            .flatMap(a -> THIS.rxa_input(ENGINE, DSC_INPUT, DESCRIPTION))
+            .flatMap(a -> THIS.rxa_selectMood(ENGINE, MOOD))
+            .flatMap(a -> THIS.rxa_openMealTimePicker(ENGINE))
+            .flatMap(a -> THIS.rxa_selectMealTime(ENGINE, TIME))
+            .flatMap(a -> THIS.rxa_confirmMealTime(ENGINE))
+            .flatMap(a -> THIS.rxa_submitMeal(ENGINE))
+            .delay(mealLogProgressDelay(), TimeUnit.MILLISECONDS)
+            .flatMap(a -> Flowable.mergeArray(
+                ENGINE.rxe_containsText(MOOD.moodTitle()),
+                ENGINE.rxe_containsText(DESCRIPTION),
+                rxv_hasMealTime(ENGINE, TIME)
+            ))
+            .all(ObjectUtil::nonNull)
+            .toFlowable()
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

@@ -43,12 +43,12 @@ public interface DOBPickerValidationType extends WelcomeValidationType {
      * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rx_editable()
+     * @see Engine#rxe_editables()
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_DoBEditField(@NotNull Engine<?> engine) {
-        return engine.rx_editable().firstElement().toFlowable();
+        return engine.rxe_editables().firstElement().toFlowable();
     }
 
     /**

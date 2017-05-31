@@ -38,7 +38,7 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
      * @see Engine#rxe_containsText(String...)
      */
     @NotNull
-    default Flowable<WebElement> rx_e_backButtonTitle(@NotNull Engine<?> engine) {
+    default Flowable<WebElement> rxe_backButtonTitle(@NotNull Engine<?> engine) {
         return engine
             .rxe_containsText("register_title_whichOneBestDescribes")
             .firstElement()
@@ -51,7 +51,7 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsText(String...)
      * @see #rxe_signUp(Engine, UserMode)
-     * @see #rx_e_backButtonTitle(Engine)
+     * @see #rxe_backButtonTitle(Engine)
      * @see ObjectUtil#nonNull(Object)
      */
     @NotNull
@@ -67,7 +67,7 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
                 engine.rxe_containsText("register_title_initiativeByHPB"),
                 rxe_signUp(engine, UserMode.PARENT),
                 rxe_signUp(engine, UserMode.TEEN_U18),
-                rx_e_backButtonTitle(engine)
+                rxe_backButtonTitle(engine)
             )
             .all(ObjectUtil::nonNull)
             .toFlowable();

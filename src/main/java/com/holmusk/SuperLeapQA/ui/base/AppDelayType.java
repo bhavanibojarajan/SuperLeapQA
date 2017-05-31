@@ -63,11 +63,20 @@ public interface AppDelayType {
     }
 
     /**
-     * Delay between the time the user logs in and that where the dashboard
+     * Delay between the time the user logs in and that when the dashboard
      * tutorial screen appears.
      * @return {@link Long} value.
      */
     default long loginProgressDelay() {
         return 5000;
+    }
+
+    /**
+     * Delay between the time the user submits a meal, and that when the
+     * meal page appears.
+     * @return {@link Long} value.
+     */
+    default long mealLogProgressDelay() {
+        return 2000;
     }
 }

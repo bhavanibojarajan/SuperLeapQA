@@ -125,12 +125,12 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_personalInfoSubmit(Engine)
-     * @see Engine#rx_watchUntilHidden(WebElement)
+     * @see Engine#rxa_watchUntilHidden(WebElement)
      */
     @NotNull
     default Flowable<?> rxa_watchPersonalInfoScreen(@NotNull final Engine<?> ENGINE) {
         return rxe_personalInfoSubmit(ENGINE)
-            .flatMap(ENGINE::rx_watchUntilHidden)
+            .flatMap(ENGINE::rxa_watchUntilHidden)
             .onErrorReturnItem(true);
     }
 
@@ -154,6 +154,6 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
                 int x = point.getX(), y = point.getY(), h = size.getHeight();
                 return new Point(x + 10, y + h - 3);
             })
-            .flatMap(a -> ENGINE.rx_tap(a.getX(), a.getY()));
+            .flatMap(a -> ENGINE.rxa_tap(a.getX(), a.getY()));
     }
 }

@@ -97,7 +97,7 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
      * @see #rxa_makeNextInputVisible(Engine, WebElement)
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_confirmInvalidAgeInputs(Engine)
-     * @see #rxa_watchProgressBarUntilHidden(Engine)
+     * @see #rxa_watchProgressBar(Engine)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -120,7 +120,7 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
             .all(ObjectUtil::nonNull)
             .toFlowable()
             .flatMap(a -> THIS.rxa_confirmInvalidAgeInputs(ENGINE))
-            .flatMap(a -> THIS.rxa_watchProgressBarUntilHidden(ENGINE))
+            .flatMap(a -> THIS.rxa_watchProgressBar(ENGINE))
             .flatMap(a -> THIS.rxv_invalidAgeInputConfirmed(ENGINE))
             .flatMap(a -> THIS.rxa_completeInvalidAgeInput(ENGINE))
             .subscribe(subscriber);

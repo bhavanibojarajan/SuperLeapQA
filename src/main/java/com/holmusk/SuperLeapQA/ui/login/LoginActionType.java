@@ -25,9 +25,7 @@ public interface LoginActionType extends BaseActionType, LoginValidationType {
      */
     @NotNull
     default Flowable<?> rxa_confirmLogin(@NotNull final Engine<?> ENGINE) {
-        /* We need to click twice because on iOS, somehow the click action is
-         * not responsive enough, which leads to test failures */
-        return rxe_submit(ENGINE).flatMap(a -> ENGINE.rxa_click(a, () -> 2));
+        return rxe_submit(ENGINE).flatMap(ENGINE::rxa_click);
     }
 
     /**

@@ -150,6 +150,20 @@ public interface LogMealValidationType extends BaseValidationType {
     }
 
     /**
+     * Get the confirm button for meal time selection.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxe_containsText(String...)
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_mealTimeConfirm(@NotNull Engine<?> engine) {
+        return engine
+            .rxe_containsText("mealLog_title_save")
+            .firstElement()
+            .toFlowable();
+    }
+
+    /**
      * Validate {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_MEAL}.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.

@@ -9,10 +9,17 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.CollectionTestUtil;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.element.action.date.CalendarUnit;
+import org.swiften.xtestkit.base.element.action.date.DateParam;
+import org.swiften.xtestkit.base.element.action.date.DatePickerType;
+import org.swiften.xtestkit.base.element.action.date.DateType;
 import org.swiften.xtestkit.ios.IOSEngine;
+import org.swiften.xtestkit.ios.element.action.date.IOSDatePickerType;
 
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -131,6 +138,75 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
     }
 
     /**
+     * Select a meal time with a {@link Date} instance.
+     * @param engine {@link Engine} instance.
+     * @param date {@link Date} instance.
+     * @return {@link Flowable} instance.
+     * @see CalendarUnit#MONTH
+     * @see CalendarUnit#DAY
+     * @see CalendarUnit#HOUR
+     * @see CalendarUnit#MINUTE
+     * @see CalendarUnit#PERIOD
+     * @see DateParam.Builder#withDate(Date)
+     * @see DateParam.Builder#withPickerType(DatePickerType)
+     * @see DateParam.Builder#withCalendarUnits(List)
+     * @see Engine#rxa_selectDate(DateType)
+     * @see IOSDatePickerType#MMMd_h_mm_a
+     */
+    @NotNull
+    default Flowable<?> rxa_selectMealTime(@NotNull Engine<?> engine,
+                                           @NotNull Date date) {
+        DateParam.Builder builder = DateParam.builder().withDate(date);
+        List<CalendarUnit> units;
+        DatePickerType pickerType;
+
+        if (engine instanceof IOSEngine) {
+            units = Arrays.asList(
+                CalendarUnit.MONTH,
+                CalendarUnit.DAY,
+                CalendarUnit.HOUR,
+                CalendarUnit.MINUTE,
+                CalendarUnit.PERIOD
+            );
+
+            pickerType = IOSDatePickerType.MMMd_h_mm_a;
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
+
+        DateType param = builder
+            .withCalendarUnits(units)
+            .withPickerType(pickerType)
+            .build();
+
+        return engine.rxa_selectDate(param);
+    }
+
+    /**
+     * Confirm meal time selection.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_click(WebElement)
+     * @see #rxe_mealTimeConfirm(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxa_confirmMealTime(@NotNull final Engine<?> ENGINE) {
+        return rxe_mealTimeConfirm(ENGINE).flatMap(ENGINE::rxa_click);
+    }
+
+    /**
+     * Submit the current meal log.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_click(WebElement)
+     * @see #rxe_mealConfirm(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxa_submitMeal(@NotNull final Engine<?> ENGINE) {
+        return rxe_mealConfirm(ENGINE).flatMap(ENGINE::rxa_click);
+    }
+
+    /**
      * Log a new meal with random information.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
@@ -140,6 +216,9 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @see #rxa_randomInput(Engine, SLTextType)
      * @see #rxa_confirmMealDescription(Engine)
      * @see #rxa_openMealTimePicker(Engine)
+     * @see #rxa_selectMealTime(Engine, Date)
+     * @see #rxa_confirmMealTime(Engine)
+     * @see #rxa_submitMeal(Engine) 
      */
     @NotNull
     default Flowable<?> rxa_logNewMeal(@NotNull final Engine<?> ENGINE) {
@@ -149,6 +228,9 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
             .flatMap(a -> THIS.rxa_randomInput(ENGINE, TextInput.MEAL_DESCRIPTION))
             .flatMap(a -> THIS.rxa_confirmMealDescription(ENGINE))
             .flatMap(a -> THIS.rxa_selectRandomMood(ENGINE))
-            .flatMap(a -> THIS.rxa_openMealTimePicker(ENGINE));
+            .flatMap(a -> THIS.rxa_openMealTimePicker(ENGINE))
+            .flatMap(a -> THIS.rxa_selectMealTime(ENGINE, new Date()))
+            .flatMap(a -> THIS.rxa_confirmMealTime(ENGINE))
+            .flatMap(a -> THIS.rxa_submitMeal(ENGINE));
     }
 }

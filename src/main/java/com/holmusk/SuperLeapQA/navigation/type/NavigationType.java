@@ -6,6 +6,7 @@ import com.holmusk.SuperLeapQA.ui.dashboard.DashboardActionType;
 import com.holmusk.SuperLeapQA.ui.dob.DOBPickerActionType;
 import com.holmusk.SuperLeapQA.ui.invalidage.InvalidAgeActionType;
 import com.holmusk.SuperLeapQA.ui.login.LoginActionType;
+import com.holmusk.SuperLeapQA.ui.logmeal.LogMealActionType;
 import com.holmusk.SuperLeapQA.ui.personalinfo.PersonalInfoActionType;
 import com.holmusk.SuperLeapQA.ui.photopicker.PhotoPickerActionType;
 import com.holmusk.SuperLeapQA.ui.registermode.RegisterModeActionType;
@@ -32,7 +33,8 @@ public interface NavigationType extends
     InvalidAgeActionType,
     ValidAgeActionType,
     DashboardActionType,
-    PhotoPickerActionType
+    PhotoPickerActionType,
+    LogMealActionType
 {
     /**
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#SPLASH}
@@ -109,7 +111,7 @@ public interface NavigationType extends
      * @see Engine#rxa_acceptAlert()
      * @see #loginProgressDelay()
      * @see #rxa_loginWithDefaults(Engine, UserMode)
-     * @see #rxa_watchProgressBarUntilHidden(Engine)
+     * @see #rxa_watchProgressBar(Engine)
      */
     @NotNull
     default Flowable<?> rxn_login_tutorial(@NotNull final Engine<?> ENGINE,
@@ -324,7 +326,7 @@ public interface NavigationType extends
      * @return {@link Flowable} instance.
      * @see #rxa_enterGuarantorInfo(Engine, UserMode)
      * @see #rxa_confirmGuarantorInfo(Engine, UserMode)
-     * @see #rxa_watchProgressBarUntilHidden(Engine)
+     * @see #rxa_watchProgressBar(Engine)
      * @see #rxa_watchPersonalInfoScreen(Engine)
      * @see BooleanUtil#isTrue(boolean)
      */
@@ -338,14 +340,14 @@ public interface NavigationType extends
 
             /* First progress bar appears immediately after the submit button
              * is clicked */
-            .flatMap(a -> THIS.rxa_watchProgressBarUntilHidden(ENGINE))
+            .flatMap(a -> THIS.rxa_watchProgressBar(ENGINE))
 
             /* There is a short delay between the first and the second
              * progress bar */
             .flatMap(a -> THIS.rxa_watchPersonalInfoScreen(ENGINE))
 
             /* The second progress bar appears */
-            .flatMap(a -> THIS.rxa_watchProgressBarUntilHidden(ENGINE))
+            .flatMap(a -> THIS.rxa_watchProgressBar(ENGINE))
 
             /* On iOS, the app may ask the user for permission to send push
              * notifications. The default flow is to accept - we can test
@@ -418,5 +420,19 @@ public interface NavigationType extends
     @NotNull
     default Flowable<?> rxn_photoPicker_logMeal(@NotNull final Engine<?> ENGINE) {
         return rxe_skipPhoto(ENGINE).flatMap(ENGINE::rxa_click);
+    }
+
+    /**
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_MEAL}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#MEAL_PAGE}
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #mealLogProgressDelay()
+     * @see #rxa_logNewMeal(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxn_logMeal_mealPage(@NotNull Engine<?> engine) {
+        long delay = mealLogProgressDelay();
+        return rxa_logNewMeal(engine).delay(delay, TimeUnit.MILLISECONDS);
     }
 }

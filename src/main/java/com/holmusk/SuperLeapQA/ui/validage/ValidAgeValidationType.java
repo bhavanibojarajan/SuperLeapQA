@@ -30,7 +30,7 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
      * @see Engine#rxe_containsText(String...)
      */
     @NotNull
-    default Flowable<WebElement> rx_e_validAgeConfirm(@NotNull Engine<?> engine) {
+    default Flowable<WebElement> rxe_validAgeConfirm(@NotNull Engine<?> engine) {
         return engine.rxe_containsText("register_title_next").firstElement().toFlowable();
     }
 
@@ -42,7 +42,7 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<WebElement> rx_e_validAgeInputTitle(@NotNull Engine<?> engine) {
+    default Flowable<WebElement> rxe_validAgeInputTitle(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             return engine.rxe_containsText(
                 "parentSignUp_title_enterChildDetails",
@@ -59,8 +59,8 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_editField(Engine, SLInputType)
-     * @see #rx_e_validAgeConfirm(Engine)
-     * @see #rx_e_validAgeInputTitle(Engine)
+     * @see #rxe_validAgeConfirm(Engine)
+     * @see #rxe_validAgeInputTitle(Engine)
      */
     @NotNull
     @Override
@@ -78,8 +78,8 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
                 rxe_editField(engine, Weight.KG),
                 rxe_editField(engine, ChoiceInput.ETHNICITY),
                 rxe_editField(engine, ChoiceInput.COACH_PREF),
-                rx_e_validAgeConfirm(engine),
-                rx_e_validAgeInputTitle(engine)
+                rxe_validAgeConfirm(engine),
+                rxe_validAgeInputTitle(engine)
             )
             .all(ObjectUtil::nonNull)
             .toFlowable();
@@ -116,7 +116,7 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<WebElement> rx_e_numericChoiceConfirm(@NotNull Engine<?> engine) {
+    default Flowable<WebElement> rxe_numericChoiceConfirm(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             return engine
                 .rxe_containsID("btnDone")
@@ -141,7 +141,7 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<WebElement> rx_e_textChoiceConfirm(@NotNull Engine<?> engine) {
+    default Flowable<WebElement> rxe_textChoiceConfirm(@NotNull Engine<?> engine) {
         if (engine instanceof IOSEngine) {
             return engine
                 .rxe_containsText("input_title_done")
@@ -160,8 +160,8 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
      * @see Engine#rxe_containsText(String...)
      */
     @NotNull
-    default Flowable<WebElement> rx_e_errorPopup(@NotNull Engine<?> engine,
-                                                 @NotNull LCFormat error) {
+    default Flowable<WebElement> rxe_errorPopup(@NotNull Engine<?> engine,
+                                                @NotNull LCFormat error) {
         return engine.rxe_containsText(error).firstElement().toFlowable();
     }
 
@@ -170,11 +170,11 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
      * specific cases however, so use with care.
      * @param error {@link LCFormat} value.
      * @return {@link Flowable} instance.
-     * @see #rx_e_errorPopup(Engine, LCFormat)
+     * @see #rxe_errorPopup(Engine, LCFormat)
      */
     @NotNull
-    default Flowable<?> rx_isShowingError(@NotNull Engine<?> engine,
-                                          @NotNull LCFormat error) {
-        return rx_e_errorPopup(engine, error);
+    default Flowable<?> rxv_isShowingError(@NotNull Engine<?> engine,
+                                           @NotNull LCFormat error) {
+        return rxe_errorPopup(engine, error);
     }
 }

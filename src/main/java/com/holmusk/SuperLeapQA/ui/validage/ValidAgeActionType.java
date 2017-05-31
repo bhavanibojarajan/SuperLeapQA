@@ -39,9 +39,9 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<?> rx_a_selectChoice(@NotNull Engine<?> engine,
-                                          @NotNull SLChoiceInputType input,
-                                          @NotNull String selected) {
+    default Flowable<?> rxa_selectChoice(@NotNull Engine<?> engine,
+                                         @NotNull SLChoiceInputType input,
+                                         @NotNull String selected) {
         LogUtil.printfThread("Selecting %s for %s", selected, input);
 
         ChoiceParam param = ChoiceParam.builder()
@@ -63,19 +63,19 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * @param ENGINE {@link Engine} instance.
      * @param inputs {@link List} of {@link Zip} instances.
      * @return {@link Flowable} instance.
-     * @see #rx_a_selectChoice(Engine, SLChoiceInputType, String)
+     * @see #rxa_selectChoice(Engine, SLChoiceInputType, String)
      * @see BooleanUtil#isTrue(boolean)
      */
     @NotNull
     @SuppressWarnings("ConstantConditions")
     default <P extends SLChoiceInputType & SLNumericChoiceInputType>
-    Flowable<?> rx_a_selectChoice(@NotNull final Engine<?> ENGINE,
-                                  @NotNull List<Zip<P,String>> inputs) {
+    Flowable<?> rxa_selectChoice(@NotNull final Engine<?> ENGINE,
+                                 @NotNull List<Zip<P,String>> inputs) {
         final ValidAgeActionType THIS = this;
 
         return Flowable
             .fromIterable(inputs)
-            .concatMap(a -> THIS.rx_a_selectChoice(ENGINE, a.A, a.B))
+            .concatMap(a -> THIS.rxa_selectChoice(ENGINE, a.A, a.B))
             .all(ObjectUtil::nonNull)
             .toFlowable();
     }
@@ -84,12 +84,12 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * Confirm numeric choice input (e.g. for {@link Height} and {@link Weight}).
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_e_numericChoiceConfirm(Engine)
+     * @see #rxe_numericChoiceConfirm(Engine)
      * @see Engine#rxa_click(WebElement)
      */
     @NotNull
     default Flowable<?> rxa_confirmNumericChoice(@NotNull final Engine<?> ENGINE) {
-        return rx_e_numericChoiceConfirm(ENGINE).flatMap(ENGINE::rxa_click);
+        return rxe_numericChoiceConfirm(ENGINE).flatMap(ENGINE::rxa_click);
     }
 
     /**
@@ -106,7 +106,7 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * @see #rxa_clickInputField(Engine, SLInputType)
      */
     @NotNull
-    default Flowable<?> rx_a_selectUnitSystemPicker(
+    default Flowable<?> rxa_selectUnitSystemPicker(
         @NotNull final Engine<?> ENGINE,
         @NotNull final SLChoiceInputType CHOICE,
         @NotNull final SLNumericChoiceInputType NUMERIC
@@ -132,13 +132,13 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * item automatically dismisses the picker dialog.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rx_e_textChoiceConfirm(Engine)
+     * @see #rxe_textChoiceConfirm(Engine)
      * @see Engine#rxa_click(WebElement)
      */
     @NotNull
     default Flowable<?> rxa_confirmTextChoice(@NotNull final Engine<?> ENGINE) {
         if (ENGINE instanceof IOSEngine) {
-            return rx_e_textChoiceConfirm(ENGINE).flatMap(ENGINE::rxa_click);
+            return rxe_textChoiceConfirm(ENGINE).flatMap(ENGINE::rxa_click);
         } else {
             return Flowable.just(true);
         }
@@ -148,12 +148,12 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * Confirm the acceptable age inputs by clicking the next button, assuming
      * the user is already in the acceptable age input screen.
      * @return {@link Flowable} instance.
-     * @see #rx_e_validAgeConfirm(Engine)
+     * @see #rxe_validAgeConfirm(Engine)
      * @see Engine#rxa_click(WebElement)
      */
     @NotNull
     default Flowable<?> rxa_confirmValidAgeInputs(@NotNull final Engine<?> ENGINE) {
-        return rx_e_validAgeConfirm(ENGINE).flatMap(ENGINE::rxa_click);
+        return rxe_validAgeConfirm(ENGINE).flatMap(ENGINE::rxa_click);
     }
 
     /**
@@ -164,7 +164,7 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * @see Height#randomValue(UserMode)
      * @see Weight#randomValue(UserMode)
      * @see #rxa_clickInputField(Engine, SLInputType)
-     * @see #rx_a_selectChoice(Engine, SLChoiceInputType, String)
+     * @see #rxa_selectChoice(Engine, SLChoiceInputType, String)
      * @see #rxa_confirmNumericChoice(Engine)
      * @see #rxa_confirmTextChoice(Engine)
      */
@@ -186,19 +186,19 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
         final Weight WEIGHT_MODE = WEIGHT.get(0).A;
 
         return rxa_clickInputField(E, GENDER)
-            .flatMap(a -> THIS.rx_a_selectUnitSystemPicker(E, C_HEIGHT, HEIGHT_MODE))
-            .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT))
+            .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_HEIGHT, HEIGHT_MODE))
+            .flatMap(a -> THIS.rxa_selectChoice(E, HEIGHT))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
 
-            .flatMap(a -> THIS.rx_a_selectUnitSystemPicker(E, C_WEIGHT, WEIGHT_MODE))
-            .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT))
+            .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_WEIGHT, WEIGHT_MODE))
+            .flatMap(a -> THIS.rxa_selectChoice(E, WEIGHT))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
 
             .flatMap(a -> THIS.rxa_clickInputField(E, ChoiceInput.ETHNICITY))
-            .flatMap(a -> THIS.rx_a_selectChoice(E, ChoiceInput.ETHNICITY, ETH.stringValue()))
+            .flatMap(a -> THIS.rxa_selectChoice(E, ChoiceInput.ETHNICITY, ETH.stringValue()))
             .flatMap(a -> THIS.rxa_confirmTextChoice(E))
             .flatMap(a -> THIS.rxa_clickInputField(E, ChoiceInput.COACH_PREF))
-            .flatMap(a -> THIS.rx_a_selectChoice(E, ChoiceInput.COACH_PREF, CP.stringValue()))
+            .flatMap(a -> THIS.rxa_selectChoice(E, ChoiceInput.COACH_PREF, CP.stringValue()))
             .flatMap(a -> THIS.rxa_confirmTextChoice(E));
     }
 

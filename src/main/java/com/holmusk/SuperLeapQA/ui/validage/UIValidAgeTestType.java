@@ -34,9 +34,9 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
      * @see #generalUserModeProvider()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_clickInputField(Engine, SLInputType)
-     * @see #rx_a_selectChoice(Engine, List)
+     * @see #rxa_selectChoice(Engine, List)
      * @see #rxv_hasValue(Engine, SLInputType, String)
-     * @see #rx_a_selectUnitSystemPicker(Engine, SLChoiceInputType, SLNumericChoiceInputType)
+     * @see #rxa_selectUnitSystemPicker(Engine, SLChoiceInputType, SLNumericChoiceInputType)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -71,32 +71,32 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
 
         // When
         rxa_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE)
-            .flatMap(a -> THIS.rx_a_selectUnitSystemPicker(E, C_HEIGHT, Height.CM))
-            .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT_M))
+            .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_HEIGHT, Height.CM))
+            .flatMap(a -> THIS.rxa_selectChoice(E, HEIGHT_M))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
             .flatMap(a -> THIS.rxv_hasValue(E, C_HEIGHT, HEIGHT_M_STR))
 
-            .flatMap(a -> THIS.rx_a_selectUnitSystemPicker(E, C_HEIGHT, Height.FT))
-            .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT_I))
+            .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_HEIGHT, Height.FT))
+            .flatMap(a -> THIS.rxa_selectChoice(E, HEIGHT_I))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
             .flatMap(a -> THIS.rxv_hasValue(E, C_HEIGHT, HEIGHT_I_STR))
 
-            .flatMap(a -> THIS.rx_a_selectUnitSystemPicker(E, C_WEIGHT, Weight.KG))
-            .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT_M))
+            .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_WEIGHT, Weight.KG))
+            .flatMap(a -> THIS.rxa_selectChoice(E, WEIGHT_M))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
             .flatMap(a -> THIS.rxv_hasValue(E, C_WEIGHT, WEIGHT_M_STR))
 
-            .flatMap(a -> THIS.rx_a_selectUnitSystemPicker(E, C_WEIGHT, Weight.LB))
-            .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT_I))
+            .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_WEIGHT, Weight.LB))
+            .flatMap(a -> THIS.rxa_selectChoice(E, WEIGHT_I))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
             .flatMap(a -> THIS.rxv_hasValue(E, C_WEIGHT, WEIGHT_I_STR))
 
             .flatMap(a -> THIS.rxa_clickInputField(E, Gender.MALE))
             .flatMap(a -> THIS.rxa_clickInputField(E, Gender.FEMALE))
             .flatMap(a -> THIS.rxa_clickInputField(E, C_ETH))
-            .flatMap(a -> THIS.rx_a_selectChoice(E, C_ETH, ETH.stringValue()))
+            .flatMap(a -> THIS.rxa_selectChoice(E, C_ETH, ETH.stringValue()))
             .flatMap(a -> THIS.rxa_clickInputField(E, C_COACH))
-            .flatMap(a -> THIS.rx_a_selectChoice(E, C_COACH, CP.stringValue()))
+            .flatMap(a -> THIS.rxa_selectChoice(E, C_COACH, CP.stringValue()))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -153,7 +153,7 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
      * @see Height#randomValue(UserMode)
      * @see Weight#randomValue(UserMode)
      * @see #rxa_clickInputField(Engine, SLInputType)
-     * @see #rx_a_selectChoice(Engine, SLChoiceInputType, String)
+     * @see #rxa_selectChoice(Engine, SLChoiceInputType, String)
      * @see #rxa_confirmNumericChoice(Engine)
      * @see #rxa_confirmTextChoice(Engine)
      * @see #generalUserModeProvider()
@@ -190,45 +190,45 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
 
             /* At this stage, the gender error message should be shown */
             .flatMap(a -> THIS.rxa_confirmValidAgeInputs(E))
-            .flatMap(a -> THIS.rx_isShowingError(E, GENDER.emptyInputError(M)))
+            .flatMap(a -> THIS.rxv_isShowingError(E, GENDER.emptyInputError(M)))
             .flatMap(a -> THIS.rxa_clickInputField(E, GENDER))
 
             /* At this stage, the height error message should be shown */
             .flatMap(a -> THIS.rxa_clickInputField(E, Height.CM))
             .flatMap(a -> THIS.rxa_confirmValidAgeInputs(E))
-            .flatMap(a -> THIS.rx_isShowingError(E, Height.CM.emptyInputError(M)))
-            .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT_M))
+            .flatMap(a -> THIS.rxv_isShowingError(E, Height.CM.emptyInputError(M)))
+            .flatMap(a -> THIS.rxa_selectChoice(E, HEIGHT_M))
 
             /* At this stage, the height error message should be shown */
             .flatMap(a -> THIS.rxa_clickInputField(E, Height.FT))
             .flatMap(a -> THIS.rxa_confirmValidAgeInputs(E))
-            .flatMap(a -> THIS.rx_isShowingError(E, Height.FT.emptyInputError(M)))
-            .flatMap(a -> THIS.rx_a_selectChoice(E, HEIGHT_I))
+            .flatMap(a -> THIS.rxv_isShowingError(E, Height.FT.emptyInputError(M)))
+            .flatMap(a -> THIS.rxa_selectChoice(E, HEIGHT_I))
 
             /* At this stage, the weight error message should be shown */
             .flatMap(a -> THIS.rxa_clickInputField(E, Weight.KG))
             .flatMap(a -> THIS.rxa_confirmValidAgeInputs(E))
-            .flatMap(a -> THIS.rx_isShowingError(E, Weight.KG.emptyInputError(M)))
-            .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT_M))
+            .flatMap(a -> THIS.rxv_isShowingError(E, Weight.KG.emptyInputError(M)))
+            .flatMap(a -> THIS.rxa_selectChoice(E, WEIGHT_M))
 
             /* At this stage, the weight error message should be shown */
             .flatMap(a -> THIS.rxa_clickInputField(E, Weight.LB))
             .flatMap(a -> THIS.rxa_confirmValidAgeInputs(E))
-            .flatMap(a -> THIS.rx_isShowingError(E, Weight.LB.emptyInputError(M)))
-            .flatMap(a -> THIS.rx_a_selectChoice(E, WEIGHT_I))
+            .flatMap(a -> THIS.rxv_isShowingError(E, Weight.LB.emptyInputError(M)))
+            .flatMap(a -> THIS.rxa_selectChoice(E, WEIGHT_I))
 
             /* At this stage, the ethnicity error message should be shown */
             .flatMap(a -> THIS.rxa_confirmValidAgeInputs(E))
-            .flatMap(a -> THIS.rx_isShowingError(E, ChoiceInput.ETHNICITY.emptyInputError(M)))
+            .flatMap(a -> THIS.rxv_isShowingError(E, ChoiceInput.ETHNICITY.emptyInputError(M)))
             .flatMap(a -> THIS.rxa_clickInputField(E, ChoiceInput.ETHNICITY))
-            .flatMap(a -> THIS.rx_a_selectChoice(E, ChoiceInput.ETHNICITY, ETH.value()))
+            .flatMap(a -> THIS.rxa_selectChoice(E, ChoiceInput.ETHNICITY, ETH.value()))
             .flatMap(a -> THIS.rxa_confirmTextChoice(E))
 
             /* At this stage, the coach pref error message should be shown */
             .flatMap(a -> THIS.rxa_confirmValidAgeInputs(E))
-            .flatMap(a -> THIS.rx_isShowingError(E, ChoiceInput.COACH_PREF.emptyInputError(M)))
+            .flatMap(a -> THIS.rxv_isShowingError(E, ChoiceInput.COACH_PREF.emptyInputError(M)))
             .flatMap(a -> THIS.rxa_clickInputField(E, ChoiceInput.COACH_PREF))
-            .flatMap(a -> THIS.rx_a_selectChoice(E, ChoiceInput.COACH_PREF, CP.value()))
+            .flatMap(a -> THIS.rxa_selectChoice(E, ChoiceInput.COACH_PREF, CP.value()))
             .flatMap(a -> THIS.rxa_confirmTextChoice(E))
             .subscribe(subscriber);
 
