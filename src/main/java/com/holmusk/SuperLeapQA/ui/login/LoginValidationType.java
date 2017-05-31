@@ -10,8 +10,10 @@ import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
+import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
+import org.swiften.xtestkit.base.type.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
@@ -22,16 +24,37 @@ import org.swiften.xtestkit.mobile.Platform;
 public interface LoginValidationType extends BaseValidationType {
     /**
      * Get the submit button {@link WebElement}.
-     * @param engine {@link Engine} instance.
+     * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxe_containsText(String...)
+     * @see AndroidView.ViewType#BUTTON
+     * @see BaseViewType#className()
+     * @see Engine#rxe_withXPath(XPath...)
+     * @see IOSView.ViewType#UI_BUTTON
+     * @see XPath.Builder#setClass(String)
+     * @see XPath.Builder#containsText(String)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<WebElement> rxe_submit(@NotNull Engine<?> engine) {
-        return engine
-            .rxe_containsText("login_title_submit", "login_title_signIn")
-            .firstElement()
-            .toFlowable();
+    default Flowable<WebElement> rxe_submit(@NotNull final Engine<?> ENGINE) {
+        LocalizerType localizer = ENGINE.localizer();
+        String title, clsName;
+
+        if (ENGINE instanceof AndroidEngine) {
+            clsName = AndroidView.ViewType.BUTTON.className();
+            title = "login_title_signIn";
+        } else if (ENGINE instanceof IOSEngine) {
+            clsName = IOSView.ViewType.UI_BUTTON.className();
+            title = "login_title_submit";
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
+
+        XPath xPath = XPath.builder(ENGINE.platform())
+            .setClass(clsName)
+            .containsText(localizer.localize(title))
+            .build();
+
+        return ENGINE.rxe_withXPath(xPath).firstElement().toFlowable();
     }
 
     /**

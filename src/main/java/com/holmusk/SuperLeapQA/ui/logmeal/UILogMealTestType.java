@@ -6,7 +6,7 @@ import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
-import com.holmusk.SuperLeapQA.ui.mealpage.MealPageValidationType;
+import com.holmusk.SuperLeapQA.ui.mealpage.MealPageActionType;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
@@ -24,11 +24,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by haipham on 29/5/17.
  */
-public interface UILogMealTestType extends
-    UIBaseTestType,
-    LogMealActionType,
-    MealPageValidationType
-{
+public interface UILogMealTestType extends UIBaseTestType, LogMealActionType, MealPageActionType {
     /**
      * Validate {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_MEAL}
      * and confirm that all {@link org.openqa.selenium.WebElement} are present.
@@ -61,6 +57,7 @@ public interface UILogMealTestType extends
      * Test that meal logging works as expected, by following the logging
      * process and posting a meal onto the server. Afterwards, we can verify
      * whether the information we entered is correctly stored.
+     * Finally, we delete the meal to clean up.
      * @see Engine#rxe_containsText(String...)
      * @see ObjectUtil#nonNull(Object)
      * @see Screen#SPLASH
@@ -82,7 +79,7 @@ public interface UILogMealTestType extends
     @Test
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
-    default void test_logMeal_shouldWork() {
+    default void test_logMealThenDelete_shouldWork() {
         // Setup
         final UILogMealTestType THIS = this;
         final Engine<?> ENGINE = engine();
@@ -112,6 +109,8 @@ public interface UILogMealTestType extends
             ))
             .all(ObjectUtil::nonNull)
             .toFlowable()
+            .flatMap(a -> THIS.rxa_openEditMeal(ENGINE))
+            .flatMap(a -> THIS.rxa_deleteMeal(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

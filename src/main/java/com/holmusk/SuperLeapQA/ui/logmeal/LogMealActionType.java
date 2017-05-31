@@ -9,6 +9,7 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.CollectionTestUtil;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.action.date.CalendarUnit;
 import org.swiften.xtestkit.base.element.action.date.DateParam;
@@ -60,12 +61,18 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @param ENGINE {@link Engine} instance.
      * @param mood {@link Mood} instance.
      * @return {@link Flowable} instance.
+     * @see Engine#getMiddleCoordinate(WebElement)
      * @see Engine#rxa_click(WebElement)
+     * @see WebElement#getSize()
      * @see #rxe_mood(Engine, Mood)
      */
     @NotNull
     default Flowable<?> rxa_selectMood(@NotNull final Engine<?> ENGINE, @NotNull Mood mood) {
-        return rxe_mood(ENGINE, mood).flatMap(ENGINE::rxa_click);
+        LogUtil.printfThread("Selecting mood %s", mood);
+
+        /* On iOS, the click is not very responsive, so sometimes we need to
+         * click twice */
+        return rxe_mood(ENGINE, mood).flatMap(a -> ENGINE.rxa_click(a, () -> 2));
     }
 
     /**
@@ -218,7 +225,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @see #rxa_openMealTimePicker(Engine)
      * @see #rxa_selectMealTime(Engine, Date)
      * @see #rxa_confirmMealTime(Engine)
-     * @see #rxa_submitMeal(Engine) 
+     * @see #rxa_submitMeal(Engine)
      */
     @NotNull
     default Flowable<?> rxa_logNewMeal(@NotNull final Engine<?> ENGINE) {
