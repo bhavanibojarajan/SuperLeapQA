@@ -209,8 +209,16 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                         ScreenHolder.of(ENGINE, Screen.ADD_CARD, MODE),
                         a -> THIS.rxn_dashboard_addCard(ENGINE),
                         platform
+                    ),
+                    new Direction(
+                        ScreenHolder.of(ENGINE, Screen.SEARCH, MODE),
+                        a -> THIS.rxn_dashboard_search(ENGINE),
+                        platform
                     )
                 );
+
+            case SEARCH:
+                return CollectionUtil.asList();
 
             case ADD_CARD:
                 return CollectionUtil.asList(
@@ -352,6 +360,15 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
 
             case DASHBOARD:
                 return CollectionUtil.asList();
+
+            case SEARCH:
+                return CollectionUtil.asList(
+                    new Direction(
+                        ScreenHolder.of(ENGINE, Screen.DASHBOARD, MODE),
+                        a -> THIS.rxn_search_dashboard(ENGINE),
+                        platform
+                    )
+                );
 
             case ADD_CARD:
                 return CollectionUtil.asList();

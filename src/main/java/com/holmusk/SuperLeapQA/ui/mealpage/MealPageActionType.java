@@ -6,6 +6,8 @@ import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by haipham on 31/5/17.
  */
@@ -28,6 +30,7 @@ public interface MealPageActionType extends MealPageValidationType {
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
      * @see ObjectUtil#nonNull(Object)
+     * @see #mealDeleteProgressDelay()
      * @see #rxe_deleteMeal(Engine)
      * @see #rxe_deleteMealConfirm(Engine)
      */
@@ -37,6 +40,21 @@ public interface MealPageActionType extends MealPageValidationType {
             .concat(rxe_deleteMeal(ENGINE), rxe_deleteMealConfirm(ENGINE))
             .flatMap(ENGINE::rxa_click)
             .all(ObjectUtil::nonNull)
-            .toFlowable();
+            .toFlowable()
+            .delay(mealDeleteProgressDelay(), TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * Navigate back to
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD
+     * @see Engine#rxa_click(WebElement)
+     * @see #rxe_dashboardBack(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxa_backToDashboard(@NotNull final Engine<?> ENGINE) {
+        return rxe_dashboardBack(ENGINE).flatMap(ENGINE::rxa_click);
     }
 }

@@ -10,6 +10,7 @@ import com.holmusk.SuperLeapQA.ui.logmeal.LogMealActionType;
 import com.holmusk.SuperLeapQA.ui.personalinfo.PersonalInfoActionType;
 import com.holmusk.SuperLeapQA.ui.photopicker.PhotoPickerActionType;
 import com.holmusk.SuperLeapQA.ui.registermode.RegisterModeActionType;
+import com.holmusk.SuperLeapQA.ui.search.SearchActionType;
 import com.holmusk.SuperLeapQA.ui.validage.ValidAgeActionType;
 import com.holmusk.SuperLeapQA.ui.welcome.WelcomeActionType;
 import io.reactivex.Flowable;
@@ -33,6 +34,7 @@ public interface NavigationType extends
     InvalidAgeActionType,
     ValidAgeActionType,
     DashboardActionType,
+    SearchActionType,
     PhotoPickerActionType,
     LogMealActionType
 {
@@ -389,6 +391,30 @@ public interface NavigationType extends
     @NotNull
     default Flowable<?> rxn_dashboard_addCard(@NotNull Engine<?> engine) {
         return rxa_openCardAddMenu(engine);
+    }
+
+    /**
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#SEARCH}
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rxa_toggleDashboardSearch(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxn_dashboard_search(@NotNull Engine<?> engine) {
+        return rxa_toggleDashboardSearch(engine);
+    }
+
+    /**
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#SEARCH}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rxa_cancelSearch(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxn_search_dashboard(@NotNull Engine<?> engine) {
+        return rxa_cancelSearch(engine);
     }
 
     /**

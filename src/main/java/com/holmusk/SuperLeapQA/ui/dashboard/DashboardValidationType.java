@@ -116,6 +116,26 @@ public interface DashboardValidationType extends BaseValidationType {
     }
 
     /**
+     * Get the search button on
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxe_containsID(String...)
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_dashboardSearch(@NotNull Engine<?> engine) {
+        if (engine instanceof IOSEngine) {
+            return engine
+                .rxe_containsID("button search")
+                .firstElement()
+                .toFlowable();
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+
+    /**
      * Validate the Use App Now screen after the user finishes sign up.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.

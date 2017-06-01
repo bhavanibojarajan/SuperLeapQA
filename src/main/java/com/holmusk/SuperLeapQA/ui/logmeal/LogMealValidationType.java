@@ -10,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
+import org.swiften.xtestkit.base.type.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
@@ -100,6 +101,7 @@ public interface LogMealValidationType extends BaseValidationType {
      * Get the location switch.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see BaseViewType#className()
      * @see Engine#rxe_ofClass(String...)
      * @see IOSView.ViewType#UI_SWITCH
      * @see #NOT_AVAILABLE
@@ -120,6 +122,7 @@ public interface LogMealValidationType extends BaseValidationType {
      * Get the button to open the photo picker.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see BaseViewType#className()
      * @see Engine#rxe_withXPath(XPath...)
      * @see IOSView.ViewType#UI_BUTTON
      * @see IOSView.ViewType#UI_TABLEVIEW_CELL
@@ -167,9 +170,15 @@ public interface LogMealValidationType extends BaseValidationType {
      * Validate {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_MEAL}.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see Mood#values()
+     * @see ObjectUtil#nonNull(Object)
+     * @see TextInput#MEAL_DESCRIPTION
      * @see #rxe_editField(Engine, SLInputType)
      * @see #rxe_mealCancel(Engine)
      * @see #rxe_mealConfirm(Engine)
+     * @see #rxe_locationSwitch(Engine)
+     * @see #rxe_photoPicker(Engine)
+     * @see #rxe_mood(Engine, Mood)
      */
     @NotNull
     @SuppressWarnings("unchecked")

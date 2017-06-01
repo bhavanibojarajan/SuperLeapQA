@@ -80,6 +80,19 @@ public interface DashboardActionType extends
     }
 
     /**
+     * Toggle the search menu from
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_click(WebElement)
+     * @see #rxe_dashboardSearch(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxa_toggleDashboardSearch(@NotNull final Engine<?> ENGINE) {
+        return rxe_dashboardSearch(ENGINE).flatMap(ENGINE::rxa_click);
+    }
+
+    /**
      * Switch dashboard mode by swiping on the switcher view.
      * @param ENGINE {@link Engine} instance.
      * @param mode {@link DashboardMode} instance.

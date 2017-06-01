@@ -6,14 +6,18 @@ import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
+import com.holmusk.SuperLeapQA.ui.dashboard.DashboardActionType;
 import com.holmusk.SuperLeapQA.ui.mealpage.MealPageActionType;
+import com.holmusk.SuperLeapQA.ui.search.SearchActionType;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
+import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
+import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.Test;
 
@@ -24,7 +28,13 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by haipham on 29/5/17.
  */
-public interface UILogMealTestType extends UIBaseTestType, LogMealActionType, MealPageActionType {
+public interface UILogMealTestType extends
+    UIBaseTestType,
+    DashboardActionType,
+    LogMealActionType,
+    MealPageActionType,
+    SearchActionType
+{
     /**
      * Validate {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_MEAL}
      * and confirm that all {@link org.openqa.selenium.WebElement} are present.
@@ -57,12 +67,15 @@ public interface UILogMealTestType extends UIBaseTestType, LogMealActionType, Me
      * Test that meal logging works as expected, by following the logging
      * process and posting a meal onto the server. Afterwards, we can verify
      * whether the information we entered is correctly stored.
-     * Finally, we delete the meal to clean up.
+     * We then search for the meal from {@link Screen#SEARCH}.
+     * Finally, we delete the meal to clean up and verify that it is no longer
+     * searchable from {@link Screen#SEARCH}.
      * @see Engine#rxe_containsText(String...)
      * @see ObjectUtil#nonNull(Object)
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#LOG_MEAL
+     * @see Screen#SEARCH
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #mealLogProgressDelay()
@@ -74,6 +87,9 @@ public interface UILogMealTestType extends UIBaseTestType, LogMealActionType, Me
      * @see #rxa_selectMealTime(Engine, Date)
      * @see #rxa_confirmMealTime(Engine)
      * @see #rxa_submitMeal(Engine)
+     * @see #rxa_backToDashboard(Engine)
+     * @see #rxa_openEditMeal(Engine)
+     * @see #rxa_deleteMeal(Engine)
      * @see #rxv_hasMealTime(Engine, Date)
      */
     @Test
@@ -92,6 +108,15 @@ public interface UILogMealTestType extends UIBaseTestType, LogMealActionType, Me
         TestSubscriber subscriber = CustomTestSubscriber.create();
         UserMode mode = UserMode.PARENT;
 
+        final Flowable<?> RXV_MEAL_PAGE = Flowable
+            .mergeArray(
+                ENGINE.rxe_containsText(MOOD.moodTitle()),
+                ENGINE.rxe_containsText(DESCRIPTION),
+                rxv_hasMealTime(ENGINE, TIME)
+            )
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
+
         // When
         rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_MEAL)
             .flatMap(a -> THIS.rxa_selectMealPhotos(ENGINE))
@@ -102,15 +127,32 @@ public interface UILogMealTestType extends UIBaseTestType, LogMealActionType, Me
             .flatMap(a -> THIS.rxa_confirmMealTime(ENGINE))
             .flatMap(a -> THIS.rxa_submitMeal(ENGINE))
             .delay(mealLogProgressDelay(), TimeUnit.MILLISECONDS)
-            .flatMap(a -> Flowable.mergeArray(
-                ENGINE.rxe_containsText(MOOD.moodTitle()),
-                ENGINE.rxe_containsText(DESCRIPTION),
-                rxv_hasMealTime(ENGINE, TIME)
-            ))
-            .all(ObjectUtil::nonNull)
-            .toFlowable()
+            .flatMap(a -> RXV_MEAL_PAGE)
+
+            /* Go back to dashboard to access the search menu */
+            .flatMap(a -> THIS.rxa_backToDashboard(ENGINE))
+            .flatMap(a -> THIS.rxa_toggleDashboardSearch(ENGINE))
+
+            /* Search for the meal and verify that it is present */
+            .flatMap(a -> THIS.rxa_search(ENGINE, DESCRIPTION))
+            .flatMap(a -> THIS.rxa_openSearchResult(ENGINE, DESCRIPTION))
+            .flatMap(a -> RXV_MEAL_PAGE)
+
+            /* Delete the meal and verify that it is no longer searchable */
             .flatMap(a -> THIS.rxa_openEditMeal(ENGINE))
             .flatMap(a -> THIS.rxa_deleteMeal(ENGINE))
+            .flatMap(a -> THIS.rxa_backToDashboard(ENGINE))
+            .flatMap(a -> THIS.rxa_toggleDashboardSearch(ENGINE))
+            .flatMap(a -> THIS.rxa_search(ENGINE, DESCRIPTION))
+
+            /* At this stage, the meal should have been cleared from the
+             * search result. If it is still present, throw an error */
+            .flatMap(a -> THIS
+                .rxe_searchResult(ENGINE, DESCRIPTION)
+                .map(BooleanUtil::toTrue)
+                .flatMap(b -> RxUtil.error())
+                .onErrorReturnItem(true)
+            )
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

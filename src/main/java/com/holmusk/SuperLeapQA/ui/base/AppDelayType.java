@@ -50,7 +50,7 @@ public interface AppDelayType {
      * @return {@link Long} value.
      */
     default long photoPickerScreenDelay() {
-        return 4000;
+        return 3000;
     }
 
     /**
@@ -77,6 +77,15 @@ public interface AppDelayType {
      * @return {@link Long} value.
      */
     default long mealLogProgressDelay() {
+        return 2000;
+    }
+
+    /**
+     * Delay between the time the user deletes a meal, and that when the
+     * action succeeds.
+     * @return {@link Long} value.
+     */
+    default long mealDeleteProgressDelay() {
         return 2000;
     }
 }

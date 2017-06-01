@@ -208,7 +208,7 @@ public enum TextInput implements BaseErrorType, SLTextType {
                 return "testQA-" + StringTestUtil.randomString(10) + "@gmail.com";
 
             case MEAL_DESCRIPTION:
-                return StringTestUtil.randomString(30);
+                return StringTestUtil.randomString(20);
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);

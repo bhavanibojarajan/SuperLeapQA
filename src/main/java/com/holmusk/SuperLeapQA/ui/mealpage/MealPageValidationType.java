@@ -3,9 +3,12 @@ package com.holmusk.SuperLeapQA.ui.mealpage;
 import com.holmusk.SuperLeapQA.ui.base.BaseValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.type.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
+import org.swiften.xtestkit.ios.IOSView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -75,5 +78,30 @@ public interface MealPageValidationType extends BaseValidationType {
             .rxe_containsText("mealPage_title_delete")
             .firstElement()
             .toFlowable();
+    }
+
+    /**
+     * Get the button that we can click to get back to
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see BaseViewType#className()
+     * @see IOSView.ViewType#UI_BUTTON
+     * @see Point#getX()
+     * @see com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD
+     * @see WebElement#getLocation()
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_dashboardBack(@NotNull Engine<?> engine) {
+        if (engine instanceof IOSEngine) {
+            return engine
+                .rxe_ofClass(IOSView.ViewType.UI_BUTTON.className())
+                .filter(a -> a.getLocation().getX() == 0)
+                .firstElement()
+                .toFlowable();
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 }

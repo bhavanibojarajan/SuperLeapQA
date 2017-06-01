@@ -23,6 +23,7 @@ public enum Screen implements ScreenInitializationType {
     USE_APP_NOW,
     DASHBOARD_TUTORIAL,
     DASHBOARD,
+    SEARCH,
     ADD_CARD,
     PHOTO_PICKER,
     LOG_MEAL,
