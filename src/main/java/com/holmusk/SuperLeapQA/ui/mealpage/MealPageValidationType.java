@@ -104,4 +104,25 @@ public interface MealPageValidationType extends BaseValidationType {
             throw new RuntimeException(NOT_AVAILABLE);
         }
     }
+
+    /**
+     * Get the meal image {@link WebElement}.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see BaseViewType#className()
+     * @see Engine#rxe_ofClass(String...)
+     * @see IOSView.ViewType#UI_IMAGEVIEW
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_mealImage(@NotNull Engine<?> engine) {
+        if (engine instanceof IOSEngine) {
+            return engine
+                .rxe_ofClass(IOSView.ViewType.UI_IMAGEVIEW.className())
+                .firstElement()
+                .toFlowable();
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
 }

@@ -15,7 +15,6 @@ import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
-import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.type.PlatformType;
@@ -106,8 +105,8 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * {@link org.swiften.xtestkit.mobile.Platform#IOS} there is no way to
      * reveal the password content.
      * @see Engine#rxa_togglePasswordMask(WebElement)
+     * @see Engine#rxv_errorWithPageSource()
      * @see Engine#isShowingPassword(WebElement)
-     * @see RxUtil#error()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_randomInput(Engine, SLTextType)
      * @see #rxa_confirmTextInput(Engine)
@@ -130,7 +129,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
             .flatMap(a -> THIS.rxa_confirmTextInput(ENGINE)
                 .flatMap(b -> ENGINE.rxa_togglePasswordMask(a))
                 .filter(ENGINE::isShowingPassword)
-                .switchIfEmpty(RxUtil.error())
+                .switchIfEmpty(ENGINE.rxv_errorWithPageSource())
             )
             .subscribe(subscriber);
 

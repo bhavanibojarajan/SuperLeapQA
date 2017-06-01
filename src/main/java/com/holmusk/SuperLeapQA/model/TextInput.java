@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.string.StringTestUtil;
-import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
+import org.swiften.xtestkit.base.element.locator.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.ios.IOSView;
@@ -31,7 +31,8 @@ public enum TextInput implements BaseErrorType, SLTextType {
     PARENT_NAME,
     PARENT_EMAIL,
     PARENT_MOBILE,
-    MEAL_DESCRIPTION;
+    MEAL_DESCRIPTION,
+    MEAL_COMMENT;
 
     /**
      * @param platform {@link PlatformType} instance.
@@ -111,7 +112,7 @@ public enum TextInput implements BaseErrorType, SLTextType {
      * @see Platform#IOS
      * @see org.swiften.xtestkit.kit.TestKit#localize(String)
      * @see IOSView.ViewType#UI_TEXTFIELD
-     * @see IOSView.ViewType#UI_SECURE_TEXTFIELD
+     * @see IOSView.ViewType#UI_SECURETEXTFIELD
      * @see XPath.Builder#setClass(String)
      * @see XPath.Builder#containsText(XPath.ContainsText)
      * @see #iOSShortDescription()
@@ -123,7 +124,7 @@ public enum TextInput implements BaseErrorType, SLTextType {
         switch (this) {
             case PASSWORD:
                 return XPath.builder(platform)
-                    .setClass(IOSView.ViewType.UI_SECURE_TEXTFIELD.className())
+                    .setClass(IOSView.ViewType.UI_SECURETEXTFIELD.className())
                     .build();
 
             default:
@@ -172,6 +173,9 @@ public enum TextInput implements BaseErrorType, SLTextType {
             case MEAL_DESCRIPTION:
                 return "mealLog_title_abbv_description";
 
+            case MEAL_COMMENT:
+                return "mealLog_title_abbv_comment";
+
             default:
                 LogUtil.println(this);
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -208,6 +212,7 @@ public enum TextInput implements BaseErrorType, SLTextType {
                 return "testQA-" + StringTestUtil.randomString(10) + "@gmail.com";
 
             case MEAL_DESCRIPTION:
+            case MEAL_COMMENT:
                 return StringTestUtil.randomString(20);
 
             default:

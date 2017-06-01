@@ -11,12 +11,12 @@ import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.element.action.date.CalendarUnit;
-import org.swiften.xtestkit.base.element.action.date.DateParam;
-import org.swiften.xtestkit.base.element.action.date.DatePickerType;
-import org.swiften.xtestkit.base.element.action.date.DateType;
+import org.swiften.xtestkit.base.element.date.CalendarUnit;
+import org.swiften.xtestkit.base.element.date.DateParam;
+import org.swiften.xtestkit.base.element.date.DatePickerType;
+import org.swiften.xtestkit.base.element.date.DateType;
 import org.swiften.xtestkit.ios.IOSEngine;
-import org.swiften.xtestkit.ios.element.action.date.IOSDatePickerType;
+import org.swiften.xtestkit.ios.element.date.IOSDatePickerType;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -69,10 +69,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
     @NotNull
     default Flowable<?> rxa_selectMood(@NotNull final Engine<?> ENGINE, @NotNull Mood mood) {
         LogUtil.printfThread("Selecting mood %s", mood);
-
-        /* On iOS, the click is not very responsive, so sometimes we need to
-         * click twice */
-        return rxe_mood(ENGINE, mood).flatMap(a -> ENGINE.rxa_click(a, () -> 2));
+        return rxe_mood(ENGINE, mood).flatMap(ENGINE::rxa_click);
     }
 
     /**
@@ -231,13 +228,13 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
     default Flowable<?> rxa_logNewMeal(@NotNull final Engine<?> ENGINE) {
         final LogMealActionType THIS = this;
 
-        return rxa_selectMealPhotos(ENGINE)
-            .flatMap(a -> THIS.rxa_randomInput(ENGINE, TextInput.MEAL_DESCRIPTION))
-            .flatMap(a -> THIS.rxa_confirmMealDescription(ENGINE))
-            .flatMap(a -> THIS.rxa_selectRandomMood(ENGINE))
+        return rxa_selectRandomMood(ENGINE)
+            .flatMap(a -> THIS.rxa_selectMealPhotos(ENGINE))
             .flatMap(a -> THIS.rxa_openMealTimePicker(ENGINE))
             .flatMap(a -> THIS.rxa_selectMealTime(ENGINE, new Date()))
             .flatMap(a -> THIS.rxa_confirmMealTime(ENGINE))
+            .flatMap(a -> THIS.rxa_randomInput(ENGINE, TextInput.MEAL_DESCRIPTION))
+            .flatMap(a -> THIS.rxa_confirmMealDescription(ENGINE))
             .flatMap(a -> THIS.rxa_submitMeal(ENGINE));
     }
 }

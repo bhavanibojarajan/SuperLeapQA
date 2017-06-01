@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.base.Engine;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by haipham on 1/6/17.
  */
@@ -40,16 +42,20 @@ public interface SearchActionType extends SearchValidationType {
 
     /**
      * Locate a search result with a {@link String} query, then click on it
-     * to open the search result page.
+     * to open the search result page, then delay for a while for the page to
+     * load completely.
      * @param ENGINE {@link Engine} instance.
      * @param query {@link String} value.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see #generalDelay()
      * @see #rxe_searchResult(Engine, String)
      */
     @NotNull
     default Flowable<?> rxa_openSearchResult(@NotNull final Engine<?> ENGINE,
                                              @NotNull String query) {
-        return rxe_searchResult(ENGINE, query).flatMap(ENGINE::rxa_click);
+        return rxe_searchResult(ENGINE, query)
+            .flatMap(ENGINE::rxa_click)
+            .delay(generalDelay(), TimeUnit.MILLISECONDS);
     }
 }

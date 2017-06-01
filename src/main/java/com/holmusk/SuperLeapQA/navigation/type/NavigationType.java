@@ -2,11 +2,13 @@ package com.holmusk.SuperLeapQA.navigation.type;
 
 import com.holmusk.SuperLeapQA.model.CardType;
 import com.holmusk.SuperLeapQA.model.UserMode;
+import com.holmusk.SuperLeapQA.ui.chat.ChatActionType;
 import com.holmusk.SuperLeapQA.ui.dashboard.DashboardActionType;
 import com.holmusk.SuperLeapQA.ui.dob.DOBPickerActionType;
 import com.holmusk.SuperLeapQA.ui.invalidage.InvalidAgeActionType;
 import com.holmusk.SuperLeapQA.ui.login.LoginActionType;
 import com.holmusk.SuperLeapQA.ui.logmeal.LogMealActionType;
+import com.holmusk.SuperLeapQA.ui.mealpage.MealPageActionType;
 import com.holmusk.SuperLeapQA.ui.personalinfo.PersonalInfoActionType;
 import com.holmusk.SuperLeapQA.ui.photopicker.PhotoPickerActionType;
 import com.holmusk.SuperLeapQA.ui.registermode.RegisterModeActionType;
@@ -36,7 +38,9 @@ public interface NavigationType extends
     DashboardActionType,
     SearchActionType,
     PhotoPickerActionType,
-    LogMealActionType
+    LogMealActionType,
+    MealPageActionType,
+    ChatActionType
 {
     /**
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#SPLASH}
@@ -460,5 +464,29 @@ public interface NavigationType extends
     default Flowable<?> rxn_logMeal_mealPage(@NotNull Engine<?> engine) {
         long delay = mealLogProgressDelay();
         return rxa_logNewMeal(engine).delay(delay, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#MEAL_PAGE}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#CHAT}
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rxa_openChatWindow(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxn_mealPage_chat(@NotNull Engine<?> engine) {
+        return rxa_openChatWindow(engine);
+    }
+
+    /**
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#CHAT}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#MEAL_PAGE}
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rxa_dismissChatWindow(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxn_chat_mealPage(@NotNull Engine<?> engine) {
+        return rxa_dismissChatWindow(engine);
     }
 }

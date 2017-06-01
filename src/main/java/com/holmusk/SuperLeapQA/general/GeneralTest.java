@@ -166,6 +166,7 @@ public final class GeneralTest {
 
         /* Log meal tests */
         LogUtil.println(manager.multiNodes(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_MEAL));
+        LogUtil.println(manager.multiNodes(mode, Screen.SPLASH, Screen.LOGIN, Screen.MEAL_PAGE, Screen.CHAT));
     }
 
     @Test

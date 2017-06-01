@@ -54,15 +54,6 @@ public interface AppDelayType {
     }
 
     /**
-     * Delay for dialog dismissal. This is useful for when there may be
-     * multiple permission dialogs that need to be accepted consecutively.
-     * @return {@link Long} value.
-     */
-    default long dialogDismissalDelay() {
-        return 2000;
-    }
-
-    /**
      * Delay between the time the user logs in and that when the dashboard
      * tutorial screen appears.
      * @return {@link Long} value.

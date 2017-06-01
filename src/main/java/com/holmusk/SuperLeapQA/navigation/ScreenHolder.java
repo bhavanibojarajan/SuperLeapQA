@@ -248,6 +248,15 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                 );
 
             case MEAL_PAGE:
+                return CollectionUtil.asList(
+                    new Direction(
+                        ScreenHolder.of(ENGINE, Screen.CHAT, MODE),
+                        a -> THIS.rxn_mealPage_chat(ENGINE),
+                        platform
+                    )
+                );
+
+            case CHAT:
                 return CollectionUtil.asList();
 
             default:
@@ -381,6 +390,15 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
 
             case MEAL_PAGE:
                 return CollectionUtil.asList();
+
+            case CHAT:
+                return CollectionUtil.asList(
+                    new Direction(
+                        ScreenHolder.of(ENGINE, Screen.MEAL_PAGE, MODE),
+                        a -> THIS.rxn_chat_mealPage(ENGINE),
+                        platform
+                    )
+                );
 
             default:
                 LogUtil.println(this);

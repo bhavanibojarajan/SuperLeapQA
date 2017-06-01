@@ -8,10 +8,9 @@ import com.holmusk.SuperLeapQA.model.type.SLInputType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.element.locator.general.xpath.XPath;
+import org.swiften.xtestkit.base.element.locator.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.ios.IOSEngine;
@@ -47,6 +46,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_containsText(String...)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_progressBar(@NotNull Engine<?> engine) {
@@ -58,7 +58,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
                 .firstElement()
                 .toFlowable();
         } else {
-            return RxUtil.error();
+            throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 

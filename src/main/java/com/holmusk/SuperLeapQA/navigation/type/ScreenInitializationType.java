@@ -4,7 +4,6 @@ import com.holmusk.SuperLeapQA.ui.base.AppDelayType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 
 import java.util.concurrent.TimeUnit;
@@ -36,12 +35,10 @@ public interface ScreenInitializationType extends AppDelayType {
      * @return {@link Flowable} instance.
      * @see BooleanUtil#isTrue(boolean)
      * @see Engine#rxa_acceptAlert()
-     * @see #dialogDismissalDelay()
      * @see #photoPickerScreenDelay()
      */
     @NotNull
     default Flowable<?> rxn_photoPickerInitialized(@NotNull final Engine<?> ENGINE) {
-        final long DELAY = dialogDismissalDelay();
         final TimeUnit UNIT = TimeUnit.MILLISECONDS;
 
         /* We need some delay for the screen to fully initialize, because
@@ -50,7 +47,7 @@ public interface ScreenInitializationType extends AppDelayType {
         return Flowable
             .timer(photoPickerScreenDelay(), TimeUnit.MILLISECONDS)
             .flatMap(a -> Flowable.range(0, 3))
-            .concatMap(a -> ENGINE.rxa_acceptAlert().delay(DELAY, UNIT))
+            .concatMap(a -> ENGINE.rxa_acceptAlert())
             .all(BooleanUtil::isTrue)
             .toFlowable();
     }
