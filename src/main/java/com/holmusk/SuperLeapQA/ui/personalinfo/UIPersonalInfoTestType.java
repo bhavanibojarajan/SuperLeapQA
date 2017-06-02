@@ -18,8 +18,8 @@ import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.type.PlatformType;
-import org.swiften.xtestkit.model.InputType;
-import org.swiften.xtestkit.model.TextInputType;
+import org.swiften.xtestkit.base.model.InputType;
+import org.swiften.xtestkit.base.model.TextInputType;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 

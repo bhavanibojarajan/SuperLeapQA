@@ -3,7 +3,7 @@ package com.holmusk.SuperLeapQA.model.type;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
-import org.swiften.xtestkit.model.InputType;
+import org.swiften.xtestkit.base.model.InputType;
 
 /**
  * Created by haipham on 18/5/17.

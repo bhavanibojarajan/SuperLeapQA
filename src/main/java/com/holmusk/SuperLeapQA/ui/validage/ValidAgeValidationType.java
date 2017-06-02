@@ -15,7 +15,7 @@ import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.model.InputType;
+import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.ios.IOSEngine;
 

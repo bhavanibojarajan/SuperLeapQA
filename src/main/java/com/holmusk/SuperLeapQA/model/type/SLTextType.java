@@ -1,6 +1,6 @@
 package com.holmusk.SuperLeapQA.model.type;
 
-import org.swiften.xtestkit.model.TextInputType;
+import org.swiften.xtestkit.base.model.TextInputType;
 
 /**
  * Created by haipham on 18/5/17.

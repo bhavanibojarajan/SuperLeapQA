@@ -12,8 +12,8 @@ import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkit.model.InputType;
-import org.swiften.xtestkit.model.TextInputType;
+import org.swiften.xtestkit.base.model.InputType;
+import org.swiften.xtestkit.base.model.TextInputType;
 
 /**
  * Created by haipham on 5/10/17.

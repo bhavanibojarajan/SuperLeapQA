@@ -17,11 +17,12 @@ import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.locator.type.BaseLocatorErrorType;
 import org.swiften.xtestkit.base.element.locator.xpath.XPath;
+import org.swiften.xtestkit.base.type.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkit.model.InputType;
-import org.swiften.xtestkit.model.TextInputType;
+import org.swiften.xtestkit.base.model.InputType;
+import org.swiften.xtestkit.base.model.TextInputType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -170,9 +171,12 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * Confirm a text input.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see BaseViewType#className()
      * @see Engine#localizer()
-     * @see Engine#rxe_withXPath(XPath...)
      * @see Engine#rxa_click(WebElement)
+     * @see Engine#rxe_withXPath(XPath...)
+     * @see IOSView.ViewType#UI_BUTTON
+     * @see Platform#IOS
      * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
      * @see XPath.Builder#setClass(String)
      * @see XPath.Builder#containsText(String)

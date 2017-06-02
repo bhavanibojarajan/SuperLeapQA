@@ -1,3 +1,9 @@
 [submodule "HMUITestKit"]
 	path = HMUITestKit
 	url = https://github.com/Holmusk/HMUITestKit.git
+[submodule "JavaUtilities"]
+	path = JavaUtilities
+	url = https://github.com/protoman92/JavaUtilities.git
+[submodule "XTestKit"]
+	path = XTestKit
+	url = https://github.com/protoman92/XTestKit.git

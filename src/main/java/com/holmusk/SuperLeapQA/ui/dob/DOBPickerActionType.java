@@ -68,7 +68,7 @@ public interface DOBPickerActionType extends DOBPickerValidationType, RegisterMo
      * @param engine {@link Engine} instance.
      * @param DATE {@link Date} instance.
      * @return {@link Flowable} instance.
-     * @see AndroidDatePickerType#VERTICAL_CALENDAR
+     * @see AndroidDatePickerType#CALENDAR
      * @see Engine#rxa_selectDate(DateType)
      * @see DateParam.Builder#withDate(Date)
      * @see DateParam.Builder#withDatePickerUnits()
@@ -81,7 +81,7 @@ public interface DOBPickerActionType extends DOBPickerValidationType, RegisterMo
         DatePickerType pickerType;
 
         if (engine instanceof AndroidEngine) {
-            pickerType = AndroidDatePickerType.VERTICAL_CALENDAR;
+            pickerType = AndroidDatePickerType.CALENDAR;
         } else if (engine instanceof IOSEngine) {
             pickerType = IOSDatePickerType.MMMM_d_YYYY;
         } else {

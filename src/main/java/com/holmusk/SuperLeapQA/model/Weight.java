@@ -3,7 +3,7 @@ package com.holmusk.SuperLeapQA.model;
 import com.holmusk.SuperLeapQA.model.type.SLNumericChoiceInputType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
-import org.swiften.xtestkit.model.InputType;
+import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.base.element.locator.xpath.XPath;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;

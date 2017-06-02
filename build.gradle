@@ -18,14 +18,7 @@ repositories {
 }
 
 dependencies {
+    compile project(':HMUITestKit')
     compile project(':XTestKit')
     compile project(':JavaUtilities')
-
-    compile "org.apache.commons:commons-exec:+"
-    compile "commons-io:commons-io:+"
-    compile "org.jetbrains:annotations-java5:+"
-    compile "io.reactivex.rxjava2:rxjava:+"
-    compile "io.appium:java-client:+"
-    compile "org.testng:testng:+"
-    compile "org.mockito:mockito-core:+"
 }

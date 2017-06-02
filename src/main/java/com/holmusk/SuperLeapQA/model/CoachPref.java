@@ -10,7 +10,7 @@ import org.swiften.xtestkit.base.element.property.base.AttributeType;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkit.model.InputType;
+import org.swiften.xtestkit.base.model.InputType;
 
 /**
  * Created by haipham on 5/12/17.

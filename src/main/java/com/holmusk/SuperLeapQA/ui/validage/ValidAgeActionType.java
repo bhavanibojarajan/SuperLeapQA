@@ -68,9 +68,10 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      */
     @NotNull
     @SuppressWarnings("ConstantConditions")
-    default <P extends SLChoiceInputType & SLNumericChoiceInputType>
-    Flowable<?> rxa_selectChoice(@NotNull final Engine<?> ENGINE,
-                                 @NotNull List<Zip<P,String>> inputs) {
+    default <P extends SLChoiceInputType> Flowable<?> rxa_selectChoice(
+        @NotNull final Engine<?> ENGINE,
+        @NotNull List<Zip<P,String>> inputs
+    ) {
         final ValidAgeActionType THIS = this;
 
         return Flowable
@@ -211,8 +212,10 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * @see #rxa_confirmValidAgeInputs(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_enterAndConfirmValidAgeInputs(@NotNull final Engine<?> ENGINE,
-                                                          @NotNull UserMode mode) {
+    default Flowable<?> rxa_enterAndConfirmValidAgeInputs(
+        @NotNull final Engine<?> ENGINE,
+        @NotNull UserMode mode
+    ) {
         final ValidAgeActionType THIS = this;
 
         return rxa_enterValidAgeInputs(ENGINE, mode).flatMap(a ->

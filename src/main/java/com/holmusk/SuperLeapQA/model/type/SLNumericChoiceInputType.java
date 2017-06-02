@@ -5,12 +5,12 @@ import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.localizer.LCFormat;
-import org.swiften.xtestkit.model.ChoiceInputType;
+import org.swiften.xtestkit.base.model.ChoiceInputType;
 import org.swiften.xtestkit.base.element.locator.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkit.model.AndroidNumericPickerInputType;
+import org.swiften.xtestkit.android.model.AndroidNumericPickerInputType;
 import org.swiften.xtestkit.util.ValueRangeConverterType;
 
 import java.util.List;
