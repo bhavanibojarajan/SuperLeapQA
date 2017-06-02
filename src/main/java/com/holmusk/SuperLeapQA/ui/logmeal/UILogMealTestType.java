@@ -85,7 +85,7 @@ public interface UILogMealTestType extends
      * @see Screen#SEARCH
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
-     * @see #mealLogProgressDelay()
+     * @see #mealLogProgressDelay(Engine)
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_selectMealPhotos(Engine)
      * @see #rxa_input(Engine, SLInputType, String)
@@ -135,7 +135,7 @@ public interface UILogMealTestType extends
             .flatMap(a -> THIS.rxa_input(ENGINE, DSC_INPUT, DESCRIPTION))
             .flatMap(a -> THIS.rxa_confirmMealDescription(ENGINE))
             .flatMap(a -> THIS.rxa_submitMeal(ENGINE))
-            .delay(mealLogProgressDelay(), TimeUnit.MILLISECONDS)
+            .delay(mealLogProgressDelay(ENGINE), TimeUnit.MILLISECONDS)
             .flatMap(a -> RXV_MEAL_PAGE)
 
             /* Go back to dashboard to access the search menu */

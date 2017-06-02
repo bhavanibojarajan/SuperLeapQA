@@ -30,7 +30,7 @@ public interface LoginValidationType extends BaseValidationType {
      * @see BaseViewType#className()
      * @see Engine#rxe_withXPath(XPath...)
      * @see IOSView.ViewType#UI_BUTTON
-     * @see XPath.Builder#setClass(String)
+     * @see XPath.Builder#addClass(String)
      * @see XPath.Builder#containsText(String)
      * @see #NOT_AVAILABLE
      */
@@ -50,7 +50,7 @@ public interface LoginValidationType extends BaseValidationType {
         }
 
         XPath xPath = XPath.builder(ENGINE.platform())
-            .setClass(clsName)
+            .addClass(clsName)
             .containsText(localizer.localize(title))
             .build();
 
@@ -79,7 +79,7 @@ public interface LoginValidationType extends BaseValidationType {
      * @see IOSView.ViewType#UI_LINK
      * @see LocalizerType#localize(String)
      * @see Platform#IOS
-     * @see XPath.Builder#setClass(String)
+     * @see XPath.Builder#addClass(String)
      * @see XPath.Builder#containsText(String)
      * @see Engine#rxe_containsText(LCFormat...)
      * @see Engine#rxe_withXPath(XPath...)
@@ -97,7 +97,7 @@ public interface LoginValidationType extends BaseValidationType {
             String localized = localizer.localize("login_title_register");
 
             XPath xPath = XPath.builder(Platform.IOS)
-                .setClass(IOSView.ViewType.UI_LINK.className())
+                .addClass(IOSView.ViewType.UI_LINK.className())
                 .containsText(localized)
                 .build();
 

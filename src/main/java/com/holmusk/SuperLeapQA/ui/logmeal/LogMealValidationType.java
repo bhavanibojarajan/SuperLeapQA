@@ -87,7 +87,7 @@ public interface LogMealValidationType extends BaseValidationType {
      * @see IOSView.ViewType#UI_STATICTEXT
      * @see IOSView.ViewType#UI_TABLEVIEW_CELL
      * @see Platform#IOS
-     * @see XPath.Builder#setClass(String)
+     * @see XPath.Builder#addClass(String)
      * @see XPath.Builder#setIndex(XPath.AtIndex)
      */
     @NotNull
@@ -101,12 +101,12 @@ public interface LogMealValidationType extends BaseValidationType {
             Platform platform = Platform.IOS;
 
             XPath child = XPath.builder(platform)
-                .setClass(IOSView.ViewType.UI_STATICTEXT.className())
+                .addClass(IOSView.ViewType.UI_STATICTEXT.className())
                 .setIndex(2)
                 .build();
 
             XPath parent = XPath.builder(platform)
-                .setClass(IOSView.ViewType.UI_TABLEVIEW_CELL.className())
+                .addClass(IOSView.ViewType.UI_TABLEVIEW_CELL.className())
                 .setIndex(3)
                 .addChildXPath(child)
                 .build();
@@ -155,7 +155,7 @@ public interface LogMealValidationType extends BaseValidationType {
      * @see IOSView.ViewType#UI_BUTTON
      * @see IOSView.ViewType#UI_TABLEVIEW_CELL
      * @see Platform#IOS
-     * @see XPath.Builder#setClass(String)
+     * @see XPath.Builder#addClass(String)
      * @see XPath.Builder#setIndex(int)
      */
     @NotNull
@@ -167,12 +167,12 @@ public interface LogMealValidationType extends BaseValidationType {
             Platform platform = Platform.IOS;
 
             XPath child = XPath.builder(platform)
-                .setClass(IOSView.ViewType.UI_BUTTON.className())
+                .addClass(IOSView.ViewType.UI_BUTTON.className())
                 .setIndex(1)
                 .build();
 
             XPath parent = XPath.builder(platform)
-                .setClass(IOSView.ViewType.UI_TABLEVIEW_CELL.className())
+                .addClass(IOSView.ViewType.UI_TABLEVIEW_CELL.className())
                 .setIndex(1)
                 .addChildXPath(child)
                 .build();

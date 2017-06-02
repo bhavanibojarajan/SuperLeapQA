@@ -81,13 +81,13 @@ public enum Ethnicity implements
     /**
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
-     * @see InputType#inputViewXPath(PlatformType)
+     * @see InputType#inputViewXP(PlatformType)
      * @see #androidInputViewXPath()
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    public XPath inputViewXPath(@NotNull PlatformType platform) {
+    public XPath inputViewXP(@NotNull PlatformType platform) {
         switch ((Platform)platform) {
             case ANDROID:
                 return androidInputViewXPath();
@@ -104,21 +104,27 @@ public enum Ethnicity implements
      * Get {@link XPath} for the input view for {@link Platform#ANDROID}.
      * @return {@link XPath} instance.
      * @see Platform#ANDROID
+     * @see XPath.Builder#addAnyClass()
      * @see XPath.Builder#containsID(String)
      */
     @NotNull
     private XPath androidInputViewXPath() {
-        return XPath.builder(Platform.ANDROID).containsID("text1").build();
+        return XPath
+            .builder(Platform.ANDROID)
+            .containsID("text1")
+            .addAnyClass()
+            .build();
     }
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
      * @return {@link XPath} instance.
      * @see Platform#IOS
+     * @see XPath.Builder#addAnyClass()
      */
     @NotNull
     private XPath iOSInputViewXPath() {
-        return XPath.builder(Platform.IOS).build();
+        return XPath.builder(Platform.IOS).addAnyClass().build();
     }
 
     /**

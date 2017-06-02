@@ -70,7 +70,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @return {@link Flowable} instance.
      * @see Engine#platform()
      * @see Engine#rxe_withXPath(XPath...)
-     * @see SLInputType#inputViewXPath(PlatformType)
+     * @see SLInputType#inputViewXP(PlatformType)
      */
     @NotNull
     default Flowable<WebElement> rxe_editField(@NotNull Engine<?> engine,
@@ -78,7 +78,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
         PlatformType platform = engine.platform();
 
         return engine
-            .rxe_withXPath(input.inputViewXPath(platform))
+            .rxe_withXPath(input.inputViewXP(platform))
             .firstElement()
             .toFlowable();
     }

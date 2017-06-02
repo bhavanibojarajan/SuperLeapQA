@@ -88,7 +88,7 @@ public enum Height implements SLNumericChoiceInputType {
                                                   @NotNull final UserMode MODE,
                                                   @NotNull UnitSystem unit) {
         return instances(platform, unit).stream()
-            .map(a -> new Zip<>(a, String.valueOf(a.randomValue(MODE))))
+            .map(a -> Zip.of(a, String.valueOf(a.randomValue(MODE))))
             .collect(Collectors.toList());
     }
 
@@ -204,13 +204,13 @@ public enum Height implements SLNumericChoiceInputType {
     /**
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
-     * @see InputType#inputViewXPath(PlatformType)
+     * @see InputType#inputViewXP(PlatformType)
      * @see #androidInputViewXPath()
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    public XPath inputViewXPath(@NotNull PlatformType platform) {
+    public XPath inputViewXP(@NotNull PlatformType platform) {
         switch ((Platform)platform) {
             case ANDROID:
                 return androidInputViewXPath();
@@ -227,7 +227,9 @@ public enum Height implements SLNumericChoiceInputType {
      * Get {@link XPath} for the input view for {@link Platform#ANDROID}.
      * @return {@link XPath} instance.
      * @see Platform#ANDROID
+     * @see XPath.Builder#addAnyClass()
      * @see XPath.Builder#containsID(String)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     private XPath androidInputViewXPath() {
@@ -248,7 +250,11 @@ public enum Height implements SLNumericChoiceInputType {
                 throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        return XPath.builder(Platform.ANDROID).containsID(ID).build();
+        return XPath
+            .builder(Platform.ANDROID)
+            .containsID(ID)
+            .addAnyClass()
+            .build();
     }
 
     /**
@@ -256,7 +262,7 @@ public enum Height implements SLNumericChoiceInputType {
      * @return {@link XPath} instance.
      * @see Platform#IOS
      * @see IOSView.ViewType#UI_BUTTON
-     * @see XPath.Builder#setClass(String)
+     * @see XPath.Builder#addClass(String)
      * @see XPath.Builder#containsText(XPath.ContainsText)
      * @see #NOT_AVAILABLE
      */
@@ -278,7 +284,7 @@ public enum Height implements SLNumericChoiceInputType {
         }
 
         return XPath.builder(Platform.IOS)
-            .setClass(IOSView.ViewType.UI_BUTTON.className())
+            .addClass(IOSView.ViewType.UI_BUTTON.className())
             .containsText(text)
             .build();
     }

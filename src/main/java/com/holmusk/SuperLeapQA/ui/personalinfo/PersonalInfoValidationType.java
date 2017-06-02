@@ -51,7 +51,7 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
      * @see Platform#IOS
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_withXPath(XPath...)
-     * @see XPath.Builder#setClass(String)
+     * @see XPath.Builder#addClass(String)
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -60,7 +60,7 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
             return engine.rxe_containsID("ctv_toc").firstElement().toFlowable();
         } else if (engine instanceof IOSEngine) {
             XPath xPath = XPath.builder(Platform.IOS)
-                .setClass(IOSView.ViewType.UI_BUTTON.className())
+                .addClass(IOSView.ViewType.UI_BUTTON.className())
                 .build();
 
             /* Getting the T&C button this way is admittedly prone to failure,

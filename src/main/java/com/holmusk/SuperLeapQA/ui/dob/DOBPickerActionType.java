@@ -32,15 +32,16 @@ public interface DOBPickerActionType extends DOBPickerValidationType, RegisterMo
      * immediately upon entering the screen.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rxe_DoBEditField(Engine)
      * @see Engine#rxa_click(WebElement)
      * @see Engine#rxa_implicitlyWait(DelayType)
+     * @see #generalDelay(Engine)
+     * @see #rxe_DoBEditField(Engine)
      */
     @NotNull
     default Flowable<?> rxa_openDoBPicker(@NotNull Engine<?> ENGINE) {
         return rxe_DoBEditField(ENGINE)
             .flatMap(ENGINE::rxa_click)
-            .delay(generalDelay(), TimeUnit.MILLISECONDS);
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**

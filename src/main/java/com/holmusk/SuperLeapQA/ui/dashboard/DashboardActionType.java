@@ -78,7 +78,7 @@ public interface DashboardActionType extends
      * @see Engine#rxa_navigateBackOnce()
      * @see org.swiften.xtestkit.mobile.Platform#ANDROID
      * @see org.swiften.xtestkit.mobile.Platform#IOS
-     * @see #generalDelay()
+     * @see #generalDelay(Engine)
      * @see #rxe_addCard(Engine)
      * @see #NOT_AVAILABLE
      */
@@ -89,7 +89,7 @@ public interface DashboardActionType extends
         } else if (ENGINE instanceof IOSEngine) {
             return rxe_addCard(ENGINE)
                 .flatMap(a -> ENGINE.rxa_click(a, () -> 2))
-                .delay(generalDelay(), TimeUnit.MILLISECONDS);
+                .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -115,7 +115,7 @@ public interface DashboardActionType extends
      * @return {@link Flowable} instance.
      * @see DashboardMode#swipeDirection()
      * @see Engine#rxa_swipeGeneric(WebElement, DurationType)
-     * @see #dashboardModeSwitcherDuration()
+     * @see #dashboardModeSwitcherDuration(Engine)
      * @see #rxe_dashboardModeSwitcher(Engine)
      */
     @NotNull
@@ -123,7 +123,7 @@ public interface DashboardActionType extends
                                           @NotNull DashboardMode mode) {
         final UnidirectionParam PARAM = UnidirectionParam.builder()
             .withDirection(mode.swipeDirection())
-            .withDuration(dashboardModeSwitcherDuration())
+            .withDuration(dashboardModeSwitcherDuration(ENGINE))
             .withStartRatio(0.1d)
             .withEndRatio(0.9d)
             .withTimes(1)

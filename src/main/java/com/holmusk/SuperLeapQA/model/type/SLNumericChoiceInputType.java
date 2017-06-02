@@ -86,20 +86,20 @@ public interface SLNumericChoiceInputType extends
 
     /**
      * @return Return {@link XPath} value.
-     * @see ChoiceInputType#choicePickerXPath(PlatformType)
-     * @see #androidChoicePickerXPath()
-     * @see #iOSScrollViewPickerXPath()
+     * @see ChoiceInputType#choicePickerXP(PlatformType)
+     * @see #androidChoicePickerXP()
+     * @see #iOSScrollViewPickerXP()
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    default XPath choicePickerXPath(@NotNull PlatformType platform) {
+    default XPath choicePickerXP(@NotNull PlatformType platform) {
         switch ((Platform)platform) {
             case ANDROID:
-                return androidChoicePickerXPath();
+                return androidChoicePickerXP();
 
             case IOS:
-                return iOSScrollViewPickerXPath();
+                return iOSScrollViewPickerXP();
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -110,7 +110,7 @@ public interface SLNumericChoiceInputType extends
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
      * @see ChoiceInputType#choicePickerItemXPath(PlatformType)
-     * @see #androidChoicePickerItemXPath()
+     * @see #androidChoicePickerItemXP()
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -118,7 +118,7 @@ public interface SLNumericChoiceInputType extends
     default XPath choicePickerItemXPath(@NotNull PlatformType platform) {
         switch ((Platform)platform) {
             case ANDROID:
-                return androidChoicePickerItemXPath();
+                return androidChoicePickerItemXP();
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);

@@ -218,8 +218,7 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
     ) {
         final ValidAgeActionType THIS = this;
 
-        return rxa_enterValidAgeInputs(ENGINE, mode).flatMap(a ->
-            THIS.rxa_confirmValidAgeInputs(ENGINE)
-        );
+        return rxa_enterValidAgeInputs(ENGINE, mode)
+            .flatMap(a -> THIS.rxa_confirmValidAgeInputs(ENGINE));
     }
 }

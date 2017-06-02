@@ -91,7 +91,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                 return CollectionUtil.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.WELCOME, MODE),
-                        a -> THIS.rxn_splash_welcome(),
+                        a -> THIS.rxn_splash_welcome(ENGINE),
                         platform
                     )
                 );

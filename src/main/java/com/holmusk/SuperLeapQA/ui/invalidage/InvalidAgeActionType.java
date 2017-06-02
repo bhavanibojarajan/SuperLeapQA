@@ -48,7 +48,7 @@ public interface InvalidAgeActionType extends InvalidAgeValidationType, DOBPicke
      * @return {@link Flowable} instance.
      * @see #rxa_enterInvalidAgeInputs(Engine)
      * @see #rxa_confirmInvalidAgeInputs(Engine)
-     * @see #invalidAgeInputConfirmDelay()
+     * @see #invalidAgeInputConfirmDelay(Engine)
      */
     @NotNull
     default Flowable<?> rxa_enterAndConfirmInvalidAgeInputs(@NotNull final Engine<?> ENGINE) {
@@ -56,7 +56,7 @@ public interface InvalidAgeActionType extends InvalidAgeValidationType, DOBPicke
 
         return rxa_enterInvalidAgeInputs(ENGINE)
             .flatMap(a -> THIS.rxa_confirmInvalidAgeInputs(ENGINE))
-            .delay(invalidAgeInputConfirmDelay(), TimeUnit.MILLISECONDS);
+            .delay(invalidAgeInputConfirmDelay(ENGINE), TimeUnit.MILLISECONDS);
 
     }
 

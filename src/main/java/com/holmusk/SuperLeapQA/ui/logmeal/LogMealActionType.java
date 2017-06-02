@@ -12,6 +12,7 @@ import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
+import org.swiften.xtestkit.android.element.date.AndroidDatePickerType;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.date.CalendarUnit;
 import org.swiften.xtestkit.base.element.date.DateParam;
@@ -20,7 +21,6 @@ import org.swiften.xtestkit.base.element.date.DateType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.element.date.IOSDatePickerType;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -48,7 +48,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
-     * @see #generalDelay()
+     * @see #generalDelay(Engine)
      * @see #rxe_mealTime(Engine)
      */
     @NotNull
@@ -56,7 +56,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
         /* We delay by some time for the time picker to fully appear */
         return rxe_mealTime(ENGINE)
             .flatMap(ENGINE::rxa_click)
-            .delay(generalDelay(), TimeUnit.MILLISECONDS);
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -169,6 +169,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @param engine {@link Engine} instance.
      * @param date {@link Date} instance.
      * @return {@link Flowable} instance.
+     * @see AndroidDatePickerType#hh_mm_TIMEPICKER
      * @see CalendarUnit#MONTH
      * @see CalendarUnit#DAY
      * @see CalendarUnit#HOUR
@@ -184,29 +185,32 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
     default Flowable<?> rxa_selectMealTime(@NotNull Engine<?> engine,
                                            @NotNull Date date) {
         DateParam.Builder builder = DateParam.builder().withDate(date);
-        List<CalendarUnit> units;
-        DatePickerType pickerType;
 
-        if (engine instanceof IOSEngine) {
-            units = Arrays.asList(
-                CalendarUnit.MONTH,
-                CalendarUnit.DAY,
-                CalendarUnit.HOUR,
-                CalendarUnit.MINUTE,
-                CalendarUnit.PERIOD
-            );
+        DateType param;
 
-            pickerType = IOSDatePickerType.MMMd_h_mm_a;
+        if (engine instanceof AndroidEngine) {
+            param = builder
+                .withCalendarUnits(CalendarUnit.HOUR, CalendarUnit.MINUTE)
+                .withPickerType(AndroidDatePickerType.hh_mm_TIMEPICKER)
+                .build();
+
+            return engine.rxa_selectDate(param);
+        } else if (engine instanceof IOSEngine) {
+            param = builder
+                .withCalendarUnits(
+                    CalendarUnit.MONTH,
+                    CalendarUnit.DAY,
+                    CalendarUnit.HOUR,
+                    CalendarUnit.MINUTE,
+                    CalendarUnit.PERIOD
+                )
+                .withPickerType(IOSDatePickerType.MMMd_h_mm_a)
+                .build();
+
+            return engine.rxa_selectDate(param);
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
-
-        DateType param = builder
-            .withCalendarUnits(units)
-            .withPickerType(pickerType)
-            .build();
-
-        return engine.rxa_selectDate(param);
     }
 
     /**

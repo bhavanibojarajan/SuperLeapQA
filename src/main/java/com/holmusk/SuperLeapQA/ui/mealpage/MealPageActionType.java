@@ -21,14 +21,14 @@ public interface MealPageActionType extends MealPageValidationType {
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
-     * @see #generalDelay()
+     * @see #generalDelay(Engine)
      * @see #rxe_editMeal(Engine)
      */
     @NotNull
     default Flowable<?> rxa_openEditMeal(@NotNull final Engine<?> ENGINE) {
         return rxe_editMeal(ENGINE)
             .flatMap(ENGINE::rxa_click)
-            .delay(generalDelay(), TimeUnit.MILLISECONDS);
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -37,7 +37,7 @@ public interface MealPageActionType extends MealPageValidationType {
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
      * @see ObjectUtil#nonNull(Object)
-     * @see #mealDeleteProgressDelay()
+     * @see #mealDeleteProgressDelay(Engine)
      * @see #rxe_deleteMeal(Engine)
      * @see #rxe_deleteMealConfirm(Engine)
      */
@@ -48,7 +48,7 @@ public interface MealPageActionType extends MealPageValidationType {
             .flatMap(ENGINE::rxa_click)
             .all(ObjectUtil::nonNull)
             .toFlowable()
-            .delay(mealDeleteProgressDelay(), TimeUnit.MILLISECONDS);
+            .delay(mealDeleteProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**

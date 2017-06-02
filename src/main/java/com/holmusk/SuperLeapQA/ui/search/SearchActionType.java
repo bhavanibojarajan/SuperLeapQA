@@ -48,7 +48,7 @@ public interface SearchActionType extends SearchValidationType {
      * @param query {@link String} value.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
-     * @see #generalDelay()
+     * @see #generalDelay(Engine)
      * @see #rxe_searchResult(Engine, String)
      */
     @NotNull
@@ -56,6 +56,6 @@ public interface SearchActionType extends SearchValidationType {
                                              @NotNull String query) {
         return rxe_searchResult(ENGINE, query)
             .flatMap(ENGINE::rxa_click)
-            .delay(generalDelay(), TimeUnit.MILLISECONDS);
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 }

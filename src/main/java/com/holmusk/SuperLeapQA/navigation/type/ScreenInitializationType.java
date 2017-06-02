@@ -35,7 +35,7 @@ public interface ScreenInitializationType extends AppDelayType {
      * @return {@link Flowable} instance.
      * @see BooleanUtil#isTrue(boolean)
      * @see Engine#rxa_acceptAlert()
-     * @see #photoPickerScreenDelay()
+     * @see #photoPickerScreenDelay(Engine)
      */
     @NotNull
     default Flowable<?> rxn_photoPickerInitialized(@NotNull final Engine<?> ENGINE) {
@@ -45,7 +45,7 @@ public interface ScreenInitializationType extends AppDelayType {
          * camera initialization can be fast or slow depending on the platform
          * being tested */
         return Flowable
-            .timer(photoPickerScreenDelay(), TimeUnit.MILLISECONDS)
+            .timer(photoPickerScreenDelay(ENGINE), TimeUnit.MILLISECONDS)
             .flatMap(a -> Flowable.range(0, 3))
             .concatMap(a -> ENGINE.rxa_acceptAlert())
             .all(BooleanUtil::isTrue)

@@ -23,7 +23,7 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
      * @see Engine#rxa_click(WebElement)
      * @see Engine#rxa_navigateBackOnce()
      * @see #rxa_openDoBPicker(Engine)
-     * @see #generalDelay()
+     * @see #generalDelay(Engine)
      * @see ObjectUtil#nonNull(Object)
      */
     @NotNull
@@ -44,11 +44,11 @@ public interface DOBPickerTestHelperType extends DOBPickerActionType {
 
             /* Open the DoB dialog and verify that all elements are there */
             .flatMap(a -> THIS.rxa_openDoBPicker(ENGINE))
-            .delay(THIS.generalDelay(), TimeUnit.MILLISECONDS)
+            .delay(THIS.generalDelay(ENGINE), TimeUnit.MILLISECONDS)
 
             /* Dismiss the dialog by navigating back once */
             .flatMap(a -> ENGINE.rxa_navigateBackOnce())
-            .delay(THIS.generalDelay(), TimeUnit.MILLISECONDS);
+            .delay(THIS.generalDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**

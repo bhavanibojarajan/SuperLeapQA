@@ -7,6 +7,7 @@ import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.base.element.locator.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseErrorType;
+import org.swiften.xtestkit.base.type.BaseViewType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.ios.IOSView;
@@ -21,19 +22,20 @@ public enum Gender implements BaseErrorType, SLInputType {
     /**
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
-     * @see InputType#inputViewXPath(PlatformType)
-     * @see #androidInputViewXPath()
+     * @see InputType#inputViewXP(PlatformType)
+     * @see #androidInputViewXP()
+     * @see #iOSInputViewXP()
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    public XPath inputViewXPath(@NotNull PlatformType platform) {
+    public XPath inputViewXP(@NotNull PlatformType platform) {
         switch ((Platform)platform) {
             case ANDROID:
-                return androidInputViewXPath();
+                return androidInputViewXP();
 
             case IOS:
-                return iOSInputViewXPath();
+                return iOSInputViewXP();
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -44,10 +46,12 @@ public enum Gender implements BaseErrorType, SLInputType {
      * Get {@link XPath} for the input view for {@link Platform#ANDROID}.
      * @return {@link XPath} instance.
      * @see Platform#ANDROID
+     * @see XPath.Builder#addAnyClass()
      * @see XPath.Builder#containsID(String)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
-    private XPath androidInputViewXPath() {
+    private XPath androidInputViewXP() {
         final String ID;
 
         switch (this) {
@@ -63,20 +67,24 @@ public enum Gender implements BaseErrorType, SLInputType {
                 throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        return XPath.builder(Platform.ANDROID).containsID(ID).build();
+        return XPath.builder(Platform.ANDROID)
+            .containsID(ID)
+            .addAnyClass()
+            .build();
     }
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
      * @return {@link XPath} instance.
+     * @see BaseViewType#className()
      * @see Platform#IOS
-     * @see XPath.Builder#setClass(String)
-     * @see XPath.Builder#containsText(String)
      * @see IOSView.ViewType#UI_BUTTON
+     * @see XPath.Builder#addClass(String)
+     * @see XPath.Builder#containsText(String)
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    private XPath iOSInputViewXPath() {
+    private XPath iOSInputViewXP() {
         String text;
 
         switch (this) {
@@ -95,7 +103,7 @@ public enum Gender implements BaseErrorType, SLInputType {
         String localized = Config.TEST_KIT.localize(text);
 
         return XPath.builder(Platform.IOS)
-            .setClass(IOSView.ViewType.UI_BUTTON.className())
+            .addClass(IOSView.ViewType.UI_BUTTON.className())
             .containsText(localized)
             .build();
     }

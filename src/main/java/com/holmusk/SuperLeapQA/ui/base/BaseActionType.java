@@ -37,18 +37,16 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * Navigate backwards by clicking the back button.
      * @return {@link Flowable} instance.
      * @param ENGINE {@link Engine} instance.
-     * @see #generalDelay()
+     * @see #generalDelay(Engine)
      * @see #rxe_backButton(Engine)
      * @see BooleanUtil#toTrue(Object)
      * @see Engine#rxa_click(WebElement)
      */
     @NotNull
     default Flowable<Boolean> rxa_clickBackButton(@NotNull final Engine<?> ENGINE) {
-        long delay = generalDelay();
-
         return rxe_backButton(ENGINE)
             .flatMap(ENGINE::rxa_click).map(BooleanUtil::toTrue)
-            .delay(delay, TimeUnit.MILLISECONDS);
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -178,7 +176,7 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * @see IOSView.ViewType#UI_BUTTON
      * @see Platform#IOS
      * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
-     * @see XPath.Builder#setClass(String)
+     * @see XPath.Builder#addClass(String)
      * @see XPath.Builder#containsText(String)
      */
     @NotNull
@@ -188,7 +186,7 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
             String localized = ENGINE.localizer().localize(done);
 
             XPath xPath = XPath.builder(Platform.IOS)
-                .setClass(IOSView.ViewType.UI_BUTTON.className())
+                .addClass(IOSView.ViewType.UI_BUTTON.className())
                 .containsText(localized)
                 .build();
 

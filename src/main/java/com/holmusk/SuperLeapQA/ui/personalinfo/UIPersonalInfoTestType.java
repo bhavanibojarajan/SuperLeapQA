@@ -74,7 +74,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
         dataProvider = "generalUserModeProvider",
         groups = "ValidateScreen"
     )
-    default void test_personalInfoScreen_isValidScreen(@NotNull final UserMode MODE) {
+    default void test_personalInfo_isValidScreen(@NotNull final UserMode MODE) {
         // Setup
         final UIPersonalInfoTestType THIS = this;
         final Engine<?> ENGINE = engine();
@@ -151,6 +151,8 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * @see UserMode#personalInfo(PlatformType)
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
+     * @see #generalDelay(Engine)
+     * @see #webViewDelay(Engine)
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_input(Engine, SLInputType, String)
      * @see #rxa_openTC(Engine)
@@ -195,10 +197,10 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
              * can be verified. Otherwise, the text returned will be empty */
             .flatMap(a -> THIS.rxe_editField(ENGINE, TextInput.PASSWORD))
             .flatMap(ENGINE::rxa_togglePasswordMask)
-            .delay(generalDelay(), TimeUnit.MILLISECONDS)
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
 
             .flatMap(a -> THIS.rxa_openTC(ENGINE))
-            .delay(webViewDelay(), TimeUnit.MILLISECONDS)
+            .delay(webViewDelay(ENGINE), TimeUnit.MILLISECONDS)
             .flatMap(a -> ENGINE.rxa_navigateBackOnce())
             .flatMapIterable(a -> TEXT_INFO)
             .flatMap(a -> THIS.rxv_hasValue(ENGINE, a, INPUTS.get(a.toString())))

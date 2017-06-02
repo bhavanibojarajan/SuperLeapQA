@@ -37,19 +37,20 @@ public enum TextInput implements BaseErrorType, SLTextType {
     /**
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
-     * @see InputType#inputViewXPath(PlatformType)
-     * @see #androidInputViewXPath()
+     * @see InputType#inputViewXP(PlatformType)
+     * @see #androidInputViewXP()
+     * @see #iOSInputViewXP()
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    public XPath inputViewXPath(@NotNull PlatformType platform) {
+    public XPath inputViewXP(@NotNull PlatformType platform) {
         switch ((Platform)platform) {
             case ANDROID:
-                return androidInputViewXPath();
+                return androidInputViewXP();
 
             case IOS:
-                return iOSInputViewXPath();
+                return iOSInputViewXP();
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -60,10 +61,12 @@ public enum TextInput implements BaseErrorType, SLTextType {
      * Get {@link XPath} for the input view for {@link Platform#ANDROID}.
      * @return {@link XPath} instance.
      * @see Platform#ANDROID
+     * @see XPath.Builder#addAnyClass()
      * @see XPath.Builder#containsID(String)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
-    private XPath androidInputViewXPath() {
+    private XPath androidInputViewXP() {
         final String ID;
 
         switch (this) {
@@ -107,7 +110,11 @@ public enum TextInput implements BaseErrorType, SLTextType {
                 throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        return XPath.builder(Platform.ANDROID).containsID(ID).build();
+        return XPath
+            .builder(Platform.ANDROID)
+            .containsID(ID)
+            .addAnyClass()
+            .build();
     }
 
     /**
@@ -117,30 +124,35 @@ public enum TextInput implements BaseErrorType, SLTextType {
      * @see org.swiften.xtestkit.kit.TestKit#localize(String)
      * @see IOSView.ViewType#UI_TEXTFIELD
      * @see IOSView.ViewType#UI_SECURETEXTFIELD
-     * @see XPath.Builder#setClass(String)
+     * @see XPath.Builder#addAnyClass()
+     * @see XPath.Builder#addClass(String)
      * @see XPath.Builder#containsText(XPath.ContainsText)
      * @see #iOSShortDescription()
      */
     @NotNull
-    private XPath iOSInputViewXPath() {
+    private XPath iOSInputViewXP() {
         Platform platform = Platform.IOS;
 
         switch (this) {
             case PASSWORD:
                 return XPath.builder(platform)
-                    .setClass(IOSView.ViewType.UI_SECURETEXTFIELD.className())
+                    .addClass(IOSView.ViewType.UI_SECURETEXTFIELD.className())
                     .build();
 
             default:
                 String shortDescription = iOSShortDescription();
                 String localized = Config.TEST_KIT.localize(shortDescription);
-                return XPath.builder(platform).containsText(localized).build();
+
+                return XPath.builder(platform)
+                    .containsText(localized)
+                    .addAnyClass()
+                    .build();
         }
     }
 
     /**
      * Get a short description of the input field, to use with
-     * {@link #iOSInputViewXPath()}. This is done so we do not have to search
+     * {@link #iOSInputViewXP()}. This is done so we do not have to search
      * for the input fields by their indexes.
      * @return {@link String} value.
      * @see #NOT_AVAILABLE

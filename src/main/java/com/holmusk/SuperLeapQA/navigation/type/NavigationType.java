@@ -45,12 +45,13 @@ public interface NavigationType extends
     /**
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#SPLASH}
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#WELCOME}
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #splashDelay()
+     * @see #splashDelay(Engine)
      */
     @NotNull
-    default Flowable<?> rxn_splash_welcome() {
-        return Flowable.timer(splashDelay(), TimeUnit.MILLISECONDS);
+    default Flowable<?> rxn_splash_welcome(@NotNull Engine<?> engine) {
+        return Flowable.timer(splashDelay(engine), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -112,7 +113,7 @@ public interface NavigationType extends
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_acceptAlert()
-     * @see #loginProgressDelay()
+     * @see #loginProgressDelay(Engine)
      * @see #rxa_loginWithDefaults(Engine, UserMode)
      * @see #rxa_watchProgressBar(Engine)
      */
@@ -120,7 +121,7 @@ public interface NavigationType extends
     default Flowable<?> rxn_login_tutorial(@NotNull final Engine<?> ENGINE,
                                            @NotNull UserMode mode) {
         return rxa_loginWithDefaults(ENGINE, mode)
-            .delay(loginProgressDelay(), TimeUnit.MILLISECONDS);
+            .delay(loginProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -454,12 +455,12 @@ public interface NavigationType extends
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#MEAL_PAGE}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #mealLogProgressDelay()
+     * @see #mealLogProgressDelay(Engine)
      * @see #rxa_logNewMeal(Engine)
      */
     @NotNull
     default Flowable<?> rxn_logMeal_mealPage(@NotNull Engine<?> engine) {
-        long delay = mealLogProgressDelay();
+        long delay = mealLogProgressDelay(engine);
         return rxa_logNewMeal(engine).delay(delay, TimeUnit.MILLISECONDS);
     }
 

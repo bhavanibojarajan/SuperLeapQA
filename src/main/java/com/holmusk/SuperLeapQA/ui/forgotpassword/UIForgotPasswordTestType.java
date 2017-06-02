@@ -58,7 +58,7 @@ public interface UIForgotPasswordTestType extends UIBaseTestType, ForgotPassword
      * @see #rxv_loginScreen(Engine)
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
-     * @see #generalDelay()
+     * @see #generalDelay(Engine)
      */
     @Test
     @SuppressWarnings("unchecked")
@@ -76,7 +76,7 @@ public interface UIForgotPasswordTestType extends UIBaseTestType, ForgotPassword
             .flatMap(a -> THIS.rxa_watchProgressBar(ENGINE))
             .flatMap(a -> THIS.rxv_emailSentConfirmation(ENGINE))
             .flatMap(a -> THIS.rxa_confirmEmailSent(ENGINE))
-            .delay(generalDelay(), TimeUnit.MILLISECONDS)
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
             .flatMap(a -> THIS.rxv_loginScreen(ENGINE))
             .subscribe(subscriber);
 

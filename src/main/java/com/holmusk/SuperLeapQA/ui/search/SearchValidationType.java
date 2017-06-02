@@ -68,7 +68,7 @@ public interface SearchValidationType extends BaseValidationType {
      * @see IOSView.ViewType#UI_TABLEVIEW
      * @see IOSView.ViewType#UI_TABLEVIEW_CELL
      * @see XPath.Builder#containsText(String)
-     * @see XPath.Builder#setClass(String)
+     * @see XPath.Builder#addClass(String)
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -79,17 +79,17 @@ public interface SearchValidationType extends BaseValidationType {
 
         if (engine instanceof IOSEngine) {
             XPath child = XPath.builder(platform)
-                .setClass(IOSView.ViewType.UI_STATICTEXT.className())
+                .addClass(IOSView.ViewType.UI_STATICTEXT.className())
                 .containsText(query)
                 .build();
 
             XPath parent = XPath.builder(platform)
-                .setClass(IOSView.ViewType.UI_TABLEVIEW_CELL.className())
+                .addClass(IOSView.ViewType.UI_TABLEVIEW_CELL.className())
                 .addChildXPath(child)
                 .build();
 
             xPath = XPath.builder(platform)
-                .setClass(IOSView.ViewType.UI_TABLEVIEW.className())
+                .addClass(IOSView.ViewType.UI_TABLEVIEW.className())
                 .addChildXPath(parent)
                 .build();
         } else {

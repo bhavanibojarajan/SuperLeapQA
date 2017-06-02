@@ -39,8 +39,8 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
         UnitSystem unit = UnitSystem.IMPERIAL;
 
         final List<Zip<Height,String>> INPUTS = Arrays.asList(
-            new Zip<>(Height.FT, String.valueOf(FT)),
-            new Zip<>(Height.INCH, String.valueOf(0))
+            Zip.of(Height.FT, String.valueOf(FT)),
+            Zip.of(Height.INCH, String.valueOf(0))
         );
 
         final String STR = Height.stringValue(platform, unit, INPUTS);

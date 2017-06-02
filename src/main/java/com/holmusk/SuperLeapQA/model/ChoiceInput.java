@@ -47,19 +47,20 @@ public enum ChoiceInput implements SLTextChoiceInputType {
     /**
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
-     * @see InputType#inputViewXPath(PlatformType)
-     * @see #androidInputViewXPath()
+     * @see InputType#inputViewXP(PlatformType)
+     * @see #androidInputViewXP()
+     * @see #iOSInputViewXP()
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    public XPath inputViewXPath(@NotNull PlatformType platform) {
+    public XPath inputViewXP(@NotNull PlatformType platform) {
         switch ((Platform)platform) {
             case ANDROID:
-                return androidInputViewXPath();
+                return androidInputViewXP();
 
             case IOS:
-                return iOSInputViewXPath();
+                return iOSInputViewXP();
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -70,10 +71,12 @@ public enum ChoiceInput implements SLTextChoiceInputType {
      * Get {@link XPath} for the input view for {@link Platform#ANDROID}.
      * @return {@link XPath} instance.
      * @see Platform#ANDROID
+     * @see XPath.Builder#addAnyClass()
      * @see XPath.Builder#containsID(String)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
-    private XPath androidInputViewXPath() {
+    private XPath androidInputViewXP() {
         final String ID;
 
         switch (this) {
@@ -97,7 +100,11 @@ public enum ChoiceInput implements SLTextChoiceInputType {
                 throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        return XPath.builder(Platform.ANDROID).containsID(ID).build();
+        return XPath
+            .builder(Platform.ANDROID)
+            .containsID(ID)
+            .addAnyClass()
+            .build();
     }
 
     /**
@@ -107,12 +114,12 @@ public enum ChoiceInput implements SLTextChoiceInputType {
      * @see IOSView.ViewType#UI_TEXTFIELD
      * @see IOSView.ViewType#UI_TABLEVIEW_CELL
      * @see IOSView.ViewType#UI_TABLEVIEW
-     * @see XPath.Builder#setClass(String)
+     * @see XPath.Builder#addClass(String)
      * @see XPath.Builder#setIndex(int)
      * @see XPath.Builder#addChildXPath(XPath)
      */
     @NotNull
-    private XPath iOSInputViewXPath() {
+    private XPath iOSInputViewXP() {
         Platform platform = Platform.IOS;
 
         /* We need to add 2 to the index because the first cell is the Gender
@@ -121,16 +128,16 @@ public enum ChoiceInput implements SLTextChoiceInputType {
         int index = Arrays.asList(values()).indexOf(this) + 2;
 
         XPath textFieldXPath = XPath.builder(platform)
-            .setClass(IOSView.ViewType.UI_TEXTFIELD.className())
+            .addClass(IOSView.ViewType.UI_TEXTFIELD.className())
             .build();
 
         XPath cellXPath = XPath.builder(platform)
-            .setClass(IOSView.ViewType.UI_TABLEVIEW_CELL.className())
+            .addClass(IOSView.ViewType.UI_TABLEVIEW_CELL.className())
             .setIndex(index)
             .build();
 
         return XPath.builder(platform)
-            .setClass(IOSView.ViewType.UI_TABLEVIEW.className())
+            .addClass(IOSView.ViewType.UI_TABLEVIEW.className())
             .addChildXPath(cellXPath)
             .addChildXPath(textFieldXPath)
             .build();

@@ -66,15 +66,15 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
         switch (this) {
             case PARENT:
                 return Arrays.asList(
-                    new Zip<>(TextInput.EMAIL, "haipham-parent@gmail.com"),
-                    new Zip<>(TextInput.PASSWORD, "12345678")
+                    Zip.of(TextInput.EMAIL, "haipham-parent@gmail.com"),
+                    Zip.of(TextInput.PASSWORD, "12345678")
                 );
 
             case TEEN_A18:
             case TEEN_U18:
                 return Arrays.asList(
-                    new Zip<>(TextInput.EMAIL, "haipham@gmail.com"),
-                    new Zip<>(TextInput.PASSWORD, "12345678")
+                    Zip.of(TextInput.EMAIL, "haipham@gmail.com"),
+                    Zip.of(TextInput.PASSWORD, "12345678")
                 );
 
             default:
