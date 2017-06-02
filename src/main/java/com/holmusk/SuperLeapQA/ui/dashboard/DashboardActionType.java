@@ -8,10 +8,12 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.param.UnidirectionParam;
 import org.swiften.xtestkit.base.type.DurationType;
 import org.swiften.xtestkit.base.type.RepeatType;
+import org.swiften.xtestkit.ios.IOSEngine;
 
 import java.util.concurrent.TimeUnit;
 
@@ -63,20 +65,34 @@ public interface DashboardActionType extends
     }
 
     /**
-     * Dismiss the dashboard tutorial by click on the add card button twice.
-     * If this is not the first time the user is using the app, all this does
-     * is simply opening up the menu then closing it.
+     * Dismiss the dashboard tutorial.
+     * On {@link org.swiften.xtestkit.mobile.Platform#ANDROID}, this is done
+     * by navigating back once.
+     * On {@link org.swiften.xtestkit.mobile.Platform#IOS}, this is done by
+     * clicking on the add card button twice. If this is not the first time
+     * the user is using the app, all this does is simply opening up the menu
+     * then closing it.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement, RepeatType)
+     * @see Engine#rxa_navigateBackOnce()
+     * @see org.swiften.xtestkit.mobile.Platform#ANDROID
+     * @see org.swiften.xtestkit.mobile.Platform#IOS
      * @see #generalDelay()
      * @see #rxe_addCard(Engine)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_dismissDashboardTutorial(@NotNull final Engine<?> ENGINE) {
-        return rxe_addCard(ENGINE)
-            .flatMap(a -> ENGINE.rxa_click(a, () -> 2))
-            .delay(generalDelay(), TimeUnit.MILLISECONDS);
+        if (ENGINE instanceof AndroidEngine) {
+            return ENGINE.rxa_navigateBackOnce();
+        } else if (ENGINE instanceof IOSEngine) {
+            return rxe_addCard(ENGINE)
+                .flatMap(a -> ENGINE.rxa_click(a, () -> 2))
+                .delay(generalDelay(), TimeUnit.MILLISECONDS);
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 
     /**

@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.log.LogUtil;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.date.CalendarUnit;
 import org.swiften.xtestkit.base.element.date.DateParam;
@@ -31,13 +32,14 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * Open {@link com.holmusk.SuperLeapQA.navigation.Screen#PHOTO_PICKER}
      * from {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_MEAL}.
      * @param ENGINE {@link Engine} instance.
+     * @param index {@link Integer} value representing the pick index.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
-     * @see #rxe_photoPicker(Engine)
+     * @see #rxe_photoPicker(Engine, int)
      */
     @NotNull
-    default Flowable<?> rxa_openPhotoPicker(@NotNull final Engine<?> ENGINE) {
-        return rxe_photoPicker(ENGINE).flatMap(ENGINE::rxa_click);
+    default Flowable<?> rxa_openPhotoPicker(@NotNull final Engine<?> ENGINE, int index) {
+        return rxe_photoPicker(ENGINE, index).flatMap(ENGINE::rxa_click);
     }
 
     /**
@@ -102,21 +104,37 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
     /**
      * Select a number of photos for a meal log. The maximum number of photos
      * to be selected is specified by {@link Config#MAX_PHOTO_COUNT}.
+     * On {@link org.swiften.xtestkit.mobile.Platform#ANDROID}, we need to
+     * select the photos one by one (i.e. click on each photo placeholder to
+     * open up the photo picker, select 1 photo then confirm).
+     * On {@link org.swiften.xtestkit.mobile.Platform#ANDROID}, we can simply
+     * go to the picker and select multiple photos at once.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Config#MAX_PHOTO_COUNT
-     * @see #rxa_openPhotoPicker(Engine)
+     * @see #rxa_openPhotoPicker(Engine, int)
      * @see #rxa_selectLibraryPhotos(Engine, int)
      * @see #rxa_confirmPhoto(Engine)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_selectMealPhotos(@NotNull final Engine<?> ENGINE) {
         final LogMealActionType THIS = this;
         final int COUNT = Config.MAX_PHOTO_COUNT;
 
-        return rxa_openPhotoPicker(ENGINE)
-            .flatMap(a -> THIS.rxa_selectLibraryPhotos(ENGINE, COUNT))
-            .flatMap(a -> THIS.rxa_confirmPhoto(ENGINE));
+        if (ENGINE instanceof AndroidEngine) {
+            return Flowable
+                .range(0, COUNT)
+                .concatMap(a -> rxa_openPhotoPicker(ENGINE, a))
+                .flatMap(a -> THIS.rxa_selectLibraryPhotos(ENGINE, 1))
+                .flatMap(a -> THIS.rxa_confirmPhoto(ENGINE));
+        } else if (ENGINE instanceof IOSEngine) {
+            return rxa_openPhotoPicker(ENGINE, 0)
+                .flatMap(a -> THIS.rxa_selectLibraryPhotos(ENGINE, COUNT))
+                .flatMap(a -> THIS.rxa_confirmPhoto(ENGINE));
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 
     /**

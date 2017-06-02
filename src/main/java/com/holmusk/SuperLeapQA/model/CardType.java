@@ -32,4 +32,28 @@ public enum CardType implements BaseErrorType {
                 throw new RuntimeException(NOT_AVAILABLE);
         }
     }
+
+    /**
+     * Get the view id for each FAB button for
+     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
+     * @return {@link String} value.
+     * @see org.swiften.xtestkit.mobile.Platform#ANDROID
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    public String androidViewId() {
+        switch (this) {
+            case MEAL:
+                return "fab_food";
+
+            case WEIGHT:
+                return "fab_weight";
+
+            case ACTIVITY:
+                return "fab_activity";
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
 }

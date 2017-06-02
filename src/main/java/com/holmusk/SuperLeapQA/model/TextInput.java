@@ -98,6 +98,10 @@ public enum TextInput implements BaseErrorType, SLTextType {
                 ID = "et_home";
                 break;
 
+            case MEAL_DESCRIPTION:
+                ID = "ac_logfood_desc";
+                break;
+
             default:
                 LogUtil.println(this);
                 throw new RuntimeException(NOT_AVAILABLE);

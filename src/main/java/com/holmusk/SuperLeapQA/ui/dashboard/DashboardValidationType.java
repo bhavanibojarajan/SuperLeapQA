@@ -7,6 +7,7 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
@@ -38,7 +39,12 @@ public interface DashboardValidationType extends BaseValidationType {
      */
     @NotNull
     default Flowable<WebElement> rxe_addCard(@NotNull Engine<?> engine) {
-        if (engine instanceof IOSEngine) {
+        if (engine instanceof AndroidEngine) {
+            return engine
+                .rxe_containsID("fabMain")
+                .firstElement()
+                .toFlowable();
+        } else if (engine instanceof IOSEngine) {
             return engine
                 .rxe_containsID("card Add")
                 .firstElement()
@@ -55,16 +61,26 @@ public interface DashboardValidationType extends BaseValidationType {
      * @param card {@link CardType} instance.
      * @return {@link Flowable} instance.
      * @see com.holmusk.SuperLeapQA.navigation.Screen#ADD_CARD
+     * @see CardType#androidViewId()
      * @see CardType#cardSelectorText()
      * @see Engine#rxe_withText(String...)
      */
     @NotNull
     default Flowable<WebElement> rxe_cardSelector(@NotNull Engine<?> engine,
                                                   @NotNull CardType card) {
-        return engine
-            .rxe_withText(card.cardSelectorText())
-            .firstElement()
-            .toFlowable();
+        if (engine instanceof AndroidEngine) {
+            return engine
+                .rxe_containsID(card.androidViewId())
+                .firstElement()
+                .toFlowable();
+        } else if (engine instanceof IOSEngine) {
+            return engine
+                .rxe_withText(card.cardSelectorText())
+                .firstElement()
+                .toFlowable();
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 
     /**

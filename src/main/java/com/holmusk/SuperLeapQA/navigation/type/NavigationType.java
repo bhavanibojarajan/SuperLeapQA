@@ -47,13 +47,10 @@ public interface NavigationType extends
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#WELCOME}
      * @return {@link Flowable} instance.
      * @see #splashDelay()
-     * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
     default Flowable<?> rxn_splash_welcome() {
-        long delay = splashDelay();
-        TimeUnit unit = TimeUnit.MILLISECONDS;
-        return Flowable.timer(delay, unit);
+        return Flowable.timer(splashDelay(), TimeUnit.MILLISECONDS);
     }
 
     /**

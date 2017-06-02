@@ -2,11 +2,9 @@ package com.holmusk.SuperLeapQA.ui.photopicker;
 
 import com.holmusk.SuperLeapQA.model.PhotoPickerMode;
 import com.holmusk.SuperLeapQA.ui.base.BaseActionType;
-import com.holmusk.SuperLeapQA.ui.logmeal.LogMealActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
 
@@ -57,7 +55,7 @@ public interface PhotoPickerActionType extends BaseActionType, PhotoPickerValida
     /**
      * Select randomly a number of photos from {@link PhotoPickerMode#LIBRARY}.
      * @param ENGINE {@link Engine} instance.
-     * @param NUMBER_OF_PHOTOS {@link Integer} value.
+     * @param PHOTO_COUNT {@link Integer} value.
      * @return {@link Flowable} instance.
      * @see ObjectUtil#nonNull(Object)
      * @see PhotoPickerMode#LIBRARY
@@ -66,11 +64,11 @@ public interface PhotoPickerActionType extends BaseActionType, PhotoPickerValida
      */
     @NotNull
     default Flowable<?> rxa_selectLibraryPhotos(@NotNull final Engine<?> ENGINE,
-                                                final int NUMBER_OF_PHOTOS) {
+                                                final int PHOTO_COUNT) {
         final PhotoPickerActionType THIS = this;
 
         return rxa_selectPickerMode(ENGINE, PhotoPickerMode.LIBRARY)
-            .flatMap(a -> Flowable.range(0, NUMBER_OF_PHOTOS))
+            .flatMap(a -> Flowable.range(0, PHOTO_COUNT))
             .concatMap(a -> THIS.rxa_selectRandomPhoto(ENGINE))
             .all(ObjectUtil::nonNull)
             .toFlowable();
