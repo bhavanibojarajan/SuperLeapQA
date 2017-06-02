@@ -83,6 +83,7 @@ public interface LogMealValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_withXPath(XPath...)
+     * @see Engine#rxe_containsID(String...)
      * @see IOSView.ViewType#UI_STATICTEXT
      * @see IOSView.ViewType#UI_TABLEVIEW_CELL
      * @see Platform#IOS
@@ -91,7 +92,12 @@ public interface LogMealValidationType extends BaseValidationType {
      */
     @NotNull
     default Flowable<WebElement> rxe_mealTime(@NotNull Engine<?> engine) {
-        if (engine instanceof IOSEngine) {
+        if (engine instanceof AndroidEngine) {
+            return engine
+                .rxe_containsID("tv_logfood_time")
+                .firstElement()
+                .toFlowable();
+        } else if (engine instanceof IOSEngine) {
             Platform platform = Platform.IOS;
 
             XPath child = XPath.builder(platform)

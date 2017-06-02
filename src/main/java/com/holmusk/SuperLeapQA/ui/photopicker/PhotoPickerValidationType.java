@@ -3,12 +3,9 @@ package com.holmusk.SuperLeapQA.ui.photopicker;
 import com.holmusk.SuperLeapQA.model.PhotoPickerMode;
 import com.holmusk.SuperLeapQA.ui.base.BaseValidationType;
 import io.reactivex.Flowable;
-import org.intellij.lang.annotations.Flow;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.ios.IOSEngine;
-import org.swiften.xtestkit.ios.IOSView;
 
 /**
  * Created by haipham on 29/5/17.
@@ -60,17 +57,12 @@ public interface PhotoPickerValidationType extends BaseValidationType {
      * is in {@link com.holmusk.SuperLeapQA.model.PhotoPickerMode#LIBRARY}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxe_ofClass(String...)
-     * @see IOSView.ViewType#UI_IMAGEVIEW
+     * @see Engine#rxe_imageViews()
      * @see com.holmusk.SuperLeapQA.model.PhotoPickerMode#LIBRARY
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_imageViews(@NotNull Engine<?> engine) {
-        if (engine instanceof IOSEngine) {
-            return engine.rxe_ofClass(IOSView.ViewType.UI_IMAGEVIEW.className());
-        } else {
-            throw new RuntimeException(NOT_AVAILABLE);
-        }
+        return engine.rxe_imageViews();
     }
 }

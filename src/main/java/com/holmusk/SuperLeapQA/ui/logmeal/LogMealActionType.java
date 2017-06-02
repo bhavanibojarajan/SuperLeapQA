@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.log.LogUtil;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.date.CalendarUnit;
@@ -112,6 +113,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Config#MAX_PHOTO_COUNT
+     * @see ObjectUtil#nonNull(Object)
      * @see #rxa_openPhotoPicker(Engine, int)
      * @see #rxa_selectLibraryPhotos(Engine, int)
      * @see #rxa_confirmPhoto(Engine)
@@ -125,9 +127,12 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
         if (ENGINE instanceof AndroidEngine) {
             return Flowable
                 .range(0, COUNT)
+                .map(a -> a + 1)
                 .concatMap(a -> rxa_openPhotoPicker(ENGINE, a))
                 .flatMap(a -> THIS.rxa_selectLibraryPhotos(ENGINE, 1))
-                .flatMap(a -> THIS.rxa_confirmPhoto(ENGINE));
+                .flatMap(a -> THIS.rxa_confirmPhoto(ENGINE))
+                .all(ObjectUtil::nonNull)
+                .toFlowable();
         } else if (ENGINE instanceof IOSEngine) {
             return rxa_openPhotoPicker(ENGINE, 0)
                 .flatMap(a -> THIS.rxa_selectLibraryPhotos(ENGINE, COUNT))

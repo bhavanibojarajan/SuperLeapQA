@@ -1,0 +1,70 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="XTestKit"
+       parallel="classes"
+       thread-count="100"
+       data-provider-thread-count="100">
+
+    <test name="Test Kit Test">
+        <classes>
+            <class name="org.swiften.xtestkit.kit.MockTestKitTest"/>
+        </classes>
+    </test>
+
+    <test name="Base Engine Test">
+        <classes>
+            <class name="org.swiften.xtestkit.base.EngineTest"/>
+            <class name="org.swiften.xtestkit.base.AppiumCommandTest"/>
+            <class name="org.swiften.xtestkit.system.ProcessRunnerTest"/>
+            <class name="org.swiften.xtestkit.base.AddressTest"/>
+        </classes>
+    </test>
+
+    <test name="Base Engine Action Test">
+        <classes>
+            <class name="org.swiften.xtestkit.base.BaseActionTest"/>
+            <class name="org.swiften.xtestkit.base.BaseSwipeActionTest"/>
+            <class name="org.swiften.xtestkit.base.SwipeRepeatTest"/>
+            <class name="org.swiften.xtestkit.base.SwipeRepeatComparisonTest"/>
+        </classes>
+    </test>
+
+    <test name="Base Engine Locator Test">
+        <classes>
+            <class name="org.swiften.xtestkit.base.BaseLocatorTest"/>
+            <class name="org.swiften.xtestkit.base.XPathTest"/>
+        </classes>
+    </test>
+
+    <test name="Android Test">
+        <classes>
+            <class name="org.swiften.xtestkit.android.MockAndroidEngineTest"/>
+            <class name="org.swiften.xtestkit.android.MockADBHandlerTest"/>
+        </classes>
+    </test>
+
+    <test name="iOS Test">
+        <classes>
+            <class name="org.swiften.xtestkit.ios.MockIOSEngineTest"/>
+            <class name="org.swiften.xtestkit.ios.XCRunHandlerTest"/>
+        </classes>
+    </test>
+
+    <test name="Network Handler Test">
+        <classes>
+            <class name="org.swiften.xtestkit.system.NetworkHandlerTest"/>
+        </classes>
+    </test>
+
+    <test name="Repeat Runner Test">
+        <classes>
+            <class name="org.swiften.xtestkit.test.RepeatRunnerTest"/>
+        </classes>
+    </test>
+
+    <test name="Util Test">
+        <classes>
+            <class name="org.swiften.xtestkit.util.ValueRangeTest"/>
+        </classes>
+    </test>
+
+</suite>

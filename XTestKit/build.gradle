@@ -1,0 +1,130 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+}
+
+plugins {
+    id "com.jfrog.bintray" version "1.7.3"
+}
+
+group 'com.swiften'
+version '1.0'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+repositories {
+    mavenCentral()
+    jcenter()
+
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+}
+
+//publishing {
+//    publications {
+//        mavenJava(MavenPublication) {
+//            from components.java
+//            artifact sourceJar
+//            artifact javadocJar
+//
+//            pom.withXml {
+//                asNode().with {
+//                    appendNode('packaging', 'jar')
+//                    appendNode('name', gradle.PROJECT_NAME)
+//                    appendNode('description', gradle.PROJECT_DESCRIPTION)
+//                    appendNode('url', gradle.PROJECT_URL)
+//                    appendNode('scm').with {
+//                        appendNode('url', gradle.PROJECT_URL)
+//                        appendNode('connection', gradle.SCM_URL)
+//                    }
+//                    appendNode('issueManagement').with {
+//                        appendNode('url', gradle.ISSUE_TRACKER_URL)
+//                        appendNode('system', gradle.ISSUE_TRACKER_SYSTEM)
+//                    }
+//                    appendNode('licenses').with {
+//                        appendNode('license').with {
+//                            appendNode('name', gradle.LICENSE_NAME)
+//                            appendNode('url', gradle.LICENSE_URL)
+//                        }
+//                    }
+//                    appendNode('developers').with {
+//                        appendNode('developer').with {
+//                            appendNode('name', 'Hai Pham')
+//                            appendNode('email', 'swiften.svc@gmail.com')
+//                        }
+//                    }
+//                }
+//            }
+//
+//            tasks.withType(Jar) {
+//                from(project.projectDir) {
+//                    include 'LICENSE.md'
+//                    into 'META-INF'
+//                }
+//            }
+//        }
+//    }
+//
+//    repositories {
+//        maven {
+//            url mavenUrl()
+//            credentials {
+//                username mavenUsername()
+//                password mavenPassword()
+//            }
+//        }
+//    }
+//}
+//
+//task sourceJar(element: Jar, dependsOn: classes) {
+//    classifier 'sources'
+//    from sourceSets.main.allSource
+//}
+//
+//task javadocJar(element: Jar, dependsOn: javadoc) {
+//    classifier = 'javadoc'
+//    from javadoc.destinationDir
+//}
+//
+//def mavenUrl() {
+//    if (gradle.PROJECT_VERSION.contains('SNAPSHOT')) {
+//        return 'https://oss.sonatype.org/content/repositories/snapshots/'
+//    } else {
+//        return 'https://oss.sonatype.org/content/repositories/'
+//    }
+//}
+//
+//def mavenUsername() {
+//    return hasProperty('MAVEN_USERNAME') ? MAVEN_USERNAME : ''
+//}
+//
+//def mavenPassword() {
+//    return hasProperty('MAVEN_PASSWORD') ? MAVEN_PASSWORD : ''
+//}
+
+sourceCompatibility = 1.8
+
+dependencies {
+    compile project(':JavaUtilities')
+
+    compile "org.apache.commons:commons-exec:+"
+    compile "commons-io:commons-io:+"
+    compile "org.jetbrains:annotations-java5:+"
+    compile "io.reactivex.rxjava2:rxjava:+"
+    compile "io.appium:java-client:+"
+    compile "org.testng:testng:+"
+    compile "org.mockito:mockito-core:+"
+}
+
+/* Get Gradle home directory to set up Gradle project */
+task getHomeDir {
+    doLast {
+        println gradle.gradleHomeDir
+    }
+}
