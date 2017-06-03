@@ -1,9 +1,8 @@
 package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.SuperLeapQA.config.Config;
-import com.holmusk.SuperLeapQA.model.type.SLInputType;
+import com.holmusk.HMUITestKit.model.HMInputType;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.base.element.locator.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseErrorType;
@@ -15,7 +14,7 @@ import org.swiften.xtestkit.ios.IOSView;
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Gender implements BaseErrorType, SLInputType {
+public enum Gender implements BaseErrorType, HMInputType {
     MALE,
     FEMALE;
 
@@ -106,31 +105,5 @@ public enum Gender implements BaseErrorType, SLInputType {
             .addClass(IOSView.ViewType.UI_BUTTON.className())
             .containsText(localized)
             .build();
-    }
-
-    /**
-     * @return {@link String} value.
-     * @see SLInputType#emptyInputError(UserMode)
-     */
-    @NotNull
-    @Override
-    public LCFormat emptyInputError(@NotNull UserMode mode) {
-        String error;
-
-        switch (mode) {
-            case PARENT:
-                error = "parentSignUp_error_genderNotSelected";
-                break;
-
-            case TEEN_U18:
-                error = "teenSignUp_error_genderNotSelected";
-                break;
-
-            default:
-                error = "";
-                break;
-        }
-
-        return LCFormat.builder().withPattern(error).build();
     }
 }

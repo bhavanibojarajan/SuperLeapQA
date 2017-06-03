@@ -15,6 +15,7 @@ public enum Screen implements ScreenInitializationType {
     LOGIN,
     FORGOT_PASSWORD,
     REGISTER,
+    SHA,
     DOB,
     INVALID_AGE,
     VALID_AGE,

@@ -1,6 +1,6 @@
 package com.holmusk.SuperLeapQA.model;
 
-import com.holmusk.SuperLeapQA.model.type.SLNumericChoiceType;
+import com.holmusk.HMUITestKit.model.UnitSystem;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.xtestkit.base.model.InputType;
@@ -145,16 +145,6 @@ public enum Height implements SLNumericChoiceType {
         }
     }
     //endregion
-
-    /**
-     * @return {@link String} value.
-     * @see SLNumericChoiceType#emptyInputError(UserMode)
-     */
-    @NotNull
-    @Override
-    public String emptyInputErrorFormat() {
-        return "register_error_heightValueNotSet";
-    }
 
     //region Picker Index
     /**

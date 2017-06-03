@@ -1,9 +1,7 @@
 package com.holmusk.SuperLeapQA.model;
 
-import com.holmusk.SuperLeapQA.model.type.SLInputType;
-import com.holmusk.SuperLeapQA.model.type.SLTextChoiceType;
+import com.holmusk.HMUITestKit.model.HMTextChoiceType;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.base.element.locator.xpath.XPath;
 import org.swiften.xtestkit.base.type.PlatformType;
@@ -16,22 +14,22 @@ import java.util.List;
 /**
  * Created by haipham on 5/13/17.
  */
-public enum ChoiceInput implements SLTextChoiceType {
+public enum ChoiceInput implements HMTextChoiceType {
     HEIGHT,
     WEIGHT,
     ETHNICITY,
     COACH_PREF;
 
     /**
-     * @return {@link List} of {@link SLTextChoiceType}.
-     * @see SLTextChoiceType#allTextChoices()
+     * @return {@link List} of {@link HMTextChoiceType}.
+     * @see HMTextChoiceType#allTextChoices()
      * @see Ethnicity#values()
      * @see CoachPref#values()
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    public List<? extends SLTextChoiceType.Item> allTextChoices() {
+    public List<? extends HMTextChoiceType.Item> allTextChoices() {
         switch (this) {
             case ETHNICITY:
                 return Arrays.asList(Ethnicity.values());
@@ -143,28 +141,5 @@ public enum ChoiceInput implements SLTextChoiceType {
             .build();
     }
 
-    /**
-     * @return {@link String} value.
-     * @see SLInputType#emptyInputError(UserMode)
-     */
-    @NotNull
-    @Override
-    public LCFormat emptyInputError(@NotNull UserMode mode) {
-        String error;
 
-        switch (this) {
-            case COACH_PREF:
-                error = "register_error_coachPrefNotSet";
-                break;
-
-            case ETHNICITY:
-                error = "register_error_ethnicityNotSet";
-                break;
-
-            default:
-                throw new RuntimeException(NOT_AVAILABLE);
-        }
-
-        return LCFormat.builder().withPattern(error).build();
-    }
 }

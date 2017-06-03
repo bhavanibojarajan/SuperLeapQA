@@ -1,10 +1,8 @@
 package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.SuperLeapQA.config.Config;
-import com.holmusk.SuperLeapQA.model.type.SLInputType;
-import com.holmusk.SuperLeapQA.model.type.SLTextType;
+import com.holmusk.HMUITestKit.model.HMTextType;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.string.StringTestUtil;
 import org.swiften.xtestkit.base.element.locator.xpath.XPath;
@@ -18,7 +16,7 @@ import org.swiften.xtestkit.base.model.TextInputType;
 /**
  * Created by haipham on 5/10/17.
  */
-public enum TextInput implements BaseErrorType, SLTextType {
+public enum TextInput implements BaseErrorType, HMTextType {
     NAME,
     EMAIL,
     PHONE,
@@ -234,15 +232,5 @@ public enum TextInput implements BaseErrorType, SLTextType {
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
         }
-    }
-
-    /**
-     * @return {@link String} value.
-     * @see SLInputType#emptyInputError(UserMode)
-     */
-    @NotNull
-    @Override
-    public LCFormat emptyInputError(@NotNull UserMode mode) {
-        return LCFormat.empty();
     }
 }

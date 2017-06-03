@@ -1,14 +1,13 @@
 package com.holmusk.SuperLeapQA.navigation;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.SuperLeapQA.navigation.type.NavigationType;
-import io.reactivex.Flowable;
+import com.holmusk.SuperLeapQA.navigation.type.BackwardNavigationType;
+import com.holmusk.SuperLeapQA.navigation.type.ForwardNavigationType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.navigation.ScreenType;
@@ -18,7 +17,11 @@ import java.util.List;
 /**
  * Created by haipham on 5/21/17.
  */
-public final class ScreenHolder implements ScreenType, NavigationType, BaseErrorType {
+public final class ScreenHolder implements
+    ScreenType,
+    ForwardNavigationType,
+    BackwardNavigationType
+{
     @NotNull private final Screen SCREEN;
     @NotNull private final UserMode MODE;
     @NotNull private final NavigationSupplier INITIALIZATION;
@@ -75,6 +78,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
     }
 
     /**
+     * Override this to provide default implementation.
      * @param ENGINE {@link Engine} instance. This is necessary because
      *               most of the time the navigation will rely on the
      *               {@link org.openqa.selenium.WebDriver}.
@@ -83,7 +87,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
     @NotNull
     @Override
     public List<Direction> forwardAccessible(@NotNull final Engine<?> ENGINE) {
-        final NavigationType THIS = this;
+        final ScreenHolder THIS = this;
         PlatformType platform = ENGINE.platform();
 
         switch (SCREEN) {
@@ -135,8 +139,17 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
             case REGISTER:
                 return CollectionUtil.asList(
                     new Direction(
+                        ScreenHolder.of(ENGINE, Screen.SHA, MODE),
+                        a -> THIS.rxn_register_sha(ENGINE, MODE),
+                        platform
+                    )
+                );
+
+            case SHA:
+                return CollectionUtil.asList(
+                    new Direction(
                         ScreenHolder.of(ENGINE, Screen.DOB, MODE),
-                        a -> THIS.rxn_register_DoBPicker(ENGINE, MODE),
+                        a -> THIS.rxn_sha_DoBPicker(ENGINE, MODE),
                         platform
                     )
                 );
@@ -266,6 +279,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
     }
 
     /**
+     * Override this to provide default implementation.
      * @param ENGINE {@link Engine} instance. This is necessary because
      *               most of the time the navigation will rely on the
      *               {@link org.openqa.selenium.WebDriver}.
@@ -274,7 +288,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
     @NotNull
     @Override
     public List<Direction> backwardAccessible(@NotNull final Engine<?> ENGINE) {
-        final NavigationType THIS = this;
+        final ScreenHolder THIS = this;
         PlatformType platform = ENGINE.platform();
 
         switch (SCREEN) {
@@ -294,13 +308,7 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                 );
 
             case FORGOT_PASSWORD:
-                return CollectionUtil.asList(
-                    new Direction(
-                        ScreenHolder.of(ENGINE, Screen.LOGIN, MODE),
-                        a -> Flowable.empty(),
-                        platform
-                    )
-                );
+                return CollectionUtil.asList();
 
             case REGISTER:
                 return CollectionUtil.asList(
@@ -311,14 +319,11 @@ public final class ScreenHolder implements ScreenType, NavigationType, BaseError
                     )
                 );
 
+            case SHA:
+                return CollectionUtil.asList();
+
             case DOB:
-                return CollectionUtil.asList(
-                    new Direction(
-                        ScreenHolder.of(ENGINE, Screen.REGISTER, MODE),
-                        a -> Flowable.empty(),
-                        platform
-                    )
-                );
+                return CollectionUtil.asList();
 
             case INVALID_AGE:
                 return CollectionUtil.asList(

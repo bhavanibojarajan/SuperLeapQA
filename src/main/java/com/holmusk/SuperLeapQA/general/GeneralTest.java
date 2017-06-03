@@ -40,34 +40,6 @@ public final class GeneralTest {
     }
 
     @Test
-    public void test_emptyInputErrors_shouldBeCorrect() {
-        // Setup & When
-        LCFormat parent_gender = Gender.FEMALE.emptyInputError(UserMode.PARENT);
-        LCFormat teen_gender = Gender.MALE.emptyInputError(UserMode.TEEN_U18);
-        LCFormat parent_ft_height = Height.FT.emptyInputError(UserMode.PARENT);
-        LCFormat parent_cm_height = Height.CM.emptyInputError(UserMode.PARENT);
-        LCFormat parent_kg_weight = Weight.KG.emptyInputError(UserMode.PARENT);
-        LCFormat parent_lb_weight = Weight.LB.emptyInputError(UserMode.PARENT);
-        LCFormat teen_ft_height = Height.FT.emptyInputError(UserMode.TEEN_U18);
-        LCFormat teen_cm_height = Height.CM.emptyInputError(UserMode.TEEN_U18);
-        LCFormat teen_kg_weight = Weight.KG.emptyInputError(UserMode.TEEN_U18);
-        LCFormat teen_lb_weight = Weight.LB.emptyInputError(UserMode.TEEN_U18);
-        Localizer localizer = Localizer.builder().addBundle("Strings", Locale.US).build();
-
-        // Then
-        LogUtil.println(localizer.localize(parent_gender));
-        LogUtil.println(localizer.localize(teen_gender));
-        LogUtil.println(localizer.localize(parent_ft_height));
-        LogUtil.println(localizer.localize(parent_cm_height));
-        LogUtil.println(localizer.localize(parent_kg_weight));
-        LogUtil.println(localizer.localize(parent_lb_weight));
-        LogUtil.println(localizer.localize(teen_ft_height));
-        LogUtil.println(localizer.localize(teen_cm_height));
-        LogUtil.println(localizer.localize(teen_kg_weight));
-        LogUtil.println(localizer.localize(teen_lb_weight));
-    }
-
-    @Test
     public void test_randomTextInput_shouldWork() {
         // Setup & When
         String name = TextInput.NAME.randomInput();

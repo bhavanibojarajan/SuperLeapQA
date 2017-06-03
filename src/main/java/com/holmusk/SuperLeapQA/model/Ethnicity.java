@@ -1,10 +1,9 @@
 package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.SuperLeapQA.config.Config;
-import com.holmusk.SuperLeapQA.model.type.SLInputType;
-import com.holmusk.SuperLeapQA.model.type.SLTextChoiceType;
+import com.holmusk.HMUITestKit.model.HMInputType;
+import com.holmusk.HMUITestKit.model.HMTextChoiceType;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.xtestkit.base.element.locator.xpath.XPath;
 import org.swiften.xtestkit.base.element.property.base.AttributeType;
 import org.swiften.xtestkit.base.type.BaseErrorType;
@@ -18,8 +17,8 @@ import org.swiften.xtestkit.base.model.InputType;
 public enum Ethnicity implements
     AttributeType<String>,
     BaseErrorType,
-    SLInputType,
-    SLTextChoiceType.Item
+    HMInputType,
+    HMTextChoiceType.Item
 {
     CHINESE,
     MALAY,
@@ -125,17 +124,5 @@ public enum Ethnicity implements
     @NotNull
     private XPath iOSInputViewXPath() {
         return XPath.builder(Platform.IOS).addAnyClass().build();
-    }
-
-    /**
-     * @return {@link String} value.
-     * @see SLInputType#emptyInputError(UserMode)
-     */
-    @NotNull
-    @Override
-    public LCFormat emptyInputError(@NotNull UserMode mode) {
-        return LCFormat.builder()
-            .withPattern("register_error_ethnicityNotSet")
-            .build();
     }
 }

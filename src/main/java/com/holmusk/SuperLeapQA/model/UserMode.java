@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.model;
 
-import com.holmusk.SuperLeapQA.model.type.SLInputType;
-import com.holmusk.SuperLeapQA.model.type.SLTextType;
+import com.holmusk.HMUITestKit.model.HMInputType;
+import com.holmusk.HMUITestKit.model.HMTextType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
@@ -62,7 +62,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    public List<Zip<SLTextType,String>> loginCredentials() {
+    public List<Zip<HMTextType,String>> loginCredentials() {
         switch (this) {
             case PARENT:
                 return Arrays.asList(
@@ -85,7 +85,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     /**
      * Get the personal information inputs for this {@link UserMode}.
      * @param platform {@link PlatformType} instance.
-     * @return {@link List} of {@link SLInputType}.
+     * @return {@link List} of {@link HMInputType}.
      * @see Platform#ANDROID
      * @see Platform#IOS
      * @see #androidPersonalInfo()
@@ -93,7 +93,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    public List<SLTextType> personalInfo(@NotNull PlatformType platform) {
+    public List<HMTextType> personalInfo(@NotNull PlatformType platform) {
         switch ((Platform)platform) {
             case ANDROID:
                 return androidPersonalInfo();
@@ -107,13 +107,13 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     }
 
     /**
-     * Get personal info {@link SLInputType} for
+     * Get personal info {@link HMInputType} for
      * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
-     * @return {@link List} of {@link SLInputType}.
+     * @return {@link List} of {@link HMInputType}.
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    private List<SLTextType> androidPersonalInfo() {
+    private List<HMTextType> androidPersonalInfo() {
         switch (this) {
             case PARENT:
                 return Arrays.asList(
@@ -141,12 +141,12 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     }
 
     /**
-     * Get personal info {@link SLInputType} for
+     * Get personal info {@link HMInputType} for
      * {@link org.swiften.xtestkit.mobile.Platform#IOS}.
-     * @return {@link List} of {@link SLInputType}.
+     * @return {@link List} of {@link HMInputType}.
      * @see #NOT_AVAILABLE
      */
-    private List<SLTextType> iOSPersonalInfo() {
+    private List<HMTextType> iOSPersonalInfo() {
         switch (this) {
             case PARENT:
                 return Arrays.asList(
@@ -179,12 +179,12 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * Get additional personal inputs, esp. for {@link UserMode#TEEN_U18} since
      * users will need to enter parent's information as well.
      * @param platform {@link PlatformType} instance.
-     * @return {@link List} of {@link SLInputType}.
+     * @return {@link List} of {@link HMInputType}.
      * @see Arrays#asList(Object[])
      * @see Collections#emptyList()
      */
     @NotNull
-    public List<SLTextType> guarantorInfo(@NotNull PlatformType platform) {
+    public List<HMTextType> guarantorInfo(@NotNull PlatformType platform) {
         switch (this) {
             case TEEN_U18:
             case TEEN_A18:

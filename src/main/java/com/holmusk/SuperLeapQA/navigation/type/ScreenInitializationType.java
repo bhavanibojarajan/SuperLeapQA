@@ -1,6 +1,6 @@
 package com.holmusk.SuperLeapQA.navigation.type;
 
-import com.holmusk.SuperLeapQA.ui.base.AppDelayType;
+import com.holmusk.SuperLeapQA.test.base.AppDelayType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.bool.BooleanUtil;
