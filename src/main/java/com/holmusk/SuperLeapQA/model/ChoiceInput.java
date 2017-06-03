@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
-import com.holmusk.SuperLeapQA.model.type.SLTextChoiceInputType;
+import com.holmusk.SuperLeapQA.model.type.SLTextChoiceType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.xtestkit.base.model.InputType;
@@ -16,22 +16,22 @@ import java.util.List;
 /**
  * Created by haipham on 5/13/17.
  */
-public enum ChoiceInput implements SLTextChoiceInputType {
+public enum ChoiceInput implements SLTextChoiceType {
     HEIGHT,
     WEIGHT,
     ETHNICITY,
     COACH_PREF;
 
     /**
-     * @return {@link List} of {@link SLTextChoiceInputType}.
-     * @see SLTextChoiceInputType#allTextChoices()
+     * @return {@link List} of {@link SLTextChoiceType}.
+     * @see SLTextChoiceType#allTextChoices()
      * @see Ethnicity#values()
      * @see CoachPref#values()
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    public List<? extends SLTextChoiceInputType.Item> allTextChoices() {
+    public List<? extends SLTextChoiceType.Item> allTextChoices() {
         switch (this) {
             case ETHNICITY:
                 return Arrays.asList(Ethnicity.values());

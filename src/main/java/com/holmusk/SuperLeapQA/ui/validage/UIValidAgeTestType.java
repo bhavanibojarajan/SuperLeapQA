@@ -1,9 +1,9 @@
 package com.holmusk.SuperLeapQA.ui.validage;
 
 import com.holmusk.SuperLeapQA.model.*;
-import com.holmusk.SuperLeapQA.model.type.SLChoiceInputType;
+import com.holmusk.SuperLeapQA.model.type.SLChoiceType;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
-import com.holmusk.SuperLeapQA.model.type.SLNumericChoiceInputType;
+import com.holmusk.SuperLeapQA.model.type.SLNumericChoiceType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.ui.base.UIBaseTestType;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
@@ -36,7 +36,7 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
      * @see #rxa_clickInputField(Engine, SLInputType)
      * @see #rxa_selectChoice(Engine, List)
      * @see #rxv_hasValue(Engine, SLInputType, String)
-     * @see #rxa_selectUnitSystemPicker(Engine, SLChoiceInputType, SLNumericChoiceInputType)
+     * @see #rxa_selectUnitSystemPicker(Engine, SLChoiceType, SLNumericChoiceType)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -153,7 +153,7 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
      * @see Height#randomValue(UserMode)
      * @see Weight#randomValue(UserMode)
      * @see #rxa_clickInputField(Engine, SLInputType)
-     * @see #rxa_selectChoice(Engine, SLChoiceInputType, String)
+     * @see #rxa_selectChoice(Engine, SLChoiceType, String)
      * @see #rxa_confirmNumericChoice(Engine)
      * @see #rxa_confirmTextChoice(Engine)
      * @see #generalUserModeProvider()

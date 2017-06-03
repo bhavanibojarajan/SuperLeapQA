@@ -59,14 +59,14 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
      * @param MODE {@link UserMode} instance.
      * @return {@link Flowable} instance.
      * @see Height#FT
-     * @see Height#selectableNumericRange(UserMode)
+     * @see Height#selectableRange(UserMode)
      * @see #rx_h_inchToFoot(Engine, int)
      */
     @NotNull
     default Flowable<?> rx_h_inchToFootRecursive(@NotNull final Engine<?> ENGINE,
                                                  @NotNull final UserMode MODE) {
         final ValidAgeTestHelperType THIS = this;
-        final List<Integer> SELECTABLE = Height.FT.selectableNumericRange(MODE);
+        final List<Integer> SELECTABLE = Height.FT.selectableRange(MODE);
         final int LENGTH = SELECTABLE.size();
 
         class Repeater {

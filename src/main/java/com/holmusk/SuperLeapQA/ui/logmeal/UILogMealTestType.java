@@ -113,8 +113,8 @@ public interface UILogMealTestType extends
         final TextInput DSC_INPUT = TextInput.MEAL_DESCRIPTION;
         final String DESCRIPTION = DSC_INPUT.randomInput();
         final Mood MOOD = CollectionTestUtil.randomElement(Mood.values());
-        TestSubscriber subscriber = CustomTestSubscriber.create();
         UserMode mode = UserMode.PARENT;
+        TestSubscriber subscriber = CustomTestSubscriber.create();
 
         final Flowable<?> RXV_MEAL_PAGE = Flowable
             .mergeArray(

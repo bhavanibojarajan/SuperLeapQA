@@ -2,7 +2,7 @@ package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.SuperLeapQA.config.Config;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
-import com.holmusk.SuperLeapQA.model.type.SLTextChoiceInputType;
+import com.holmusk.SuperLeapQA.model.type.SLTextChoiceType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.xtestkit.base.element.locator.xpath.XPath;
@@ -19,7 +19,7 @@ public enum CoachPref implements
     AttributeType<String>,
     BaseErrorType,
     SLInputType,
-    SLTextChoiceInputType.Item
+    SLTextChoiceType.Item
 {
     MALE,
     FEMALE,
@@ -45,7 +45,7 @@ public enum CoachPref implements
 
     /**
      * @return {@link String} value.
-     * @see SLTextChoiceInputType.Item#stringValue()
+     * @see SLTextChoiceType.Item#stringValue()
      * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
      */
     @NotNull

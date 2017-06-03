@@ -21,7 +21,7 @@ import java.util.Optional;
  * {@link com.holmusk.SuperLeapQA.model.ChoiceInput#ETHNICITY} or
  * {@link com.holmusk.SuperLeapQA.model.ChoiceInput#COACH_PREF}
  */
-public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType {
+public interface SLTextChoiceType extends SLChoiceType, BaseErrorType {
     /**
      * Get all text choice inputs. Usually this interface is implemented by
      * a {@link Enum}, so this method should call {@link Enum} values.
@@ -33,14 +33,14 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
     /**
      * @param selected The selected {@link String} choice.
      * @return {@link XPath} instance.
-     * @see SLChoiceInputType#androidTargetChoiceItemXP(String)
+     * @see SLChoiceType#androidTargetItemXP(String)
      * @see XPath.Builder#addAnyClass()
      * @see XPath.Builder#containsText(String)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    default XPath androidTargetChoiceItemXP(@NotNull String selected) {
+    default XPath androidTargetItemXP(@NotNull String selected) {
         return XPath.builder(Platform.ANDROID)
             .containsText(selected)
             .addAnyClass()
@@ -50,7 +50,7 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
     /**
      * @param VALUE {@link String} value.
      * @return {@link Integer} value.
-     * @see SLChoiceInputType#numericValue(String)
+     * @see SLChoiceType#numericValue(String)
      * @see #allTextChoices()
      * @see #NOT_AVAILABLE
      */
@@ -73,7 +73,7 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
     /**
      * @param value {@link Integer} value.
      * @return {@link String} value.
-     * @see SLChoiceInputType#stringValue(double)
+     * @see SLChoiceType#stringValue(double)
      * @see #allTextChoices()
      */
     @NotNull
@@ -107,13 +107,13 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
     /**
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
-     * @see ChoiceInputType#choicePickerItemXPath(PlatformType)
+     * @see ChoiceInputType#choicePickerItemXP(PlatformType)
      * @see #androidChoicePickerItemXP()
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    default XPath choicePickerItemXPath(@NotNull PlatformType platform) {
+    default XPath choicePickerItemXP(@NotNull PlatformType platform) {
         switch ((Platform)platform) {
             case ANDROID:
                 return androidChoicePickerItemXP();
@@ -172,7 +172,7 @@ public interface SLTextChoiceInputType extends SLChoiceInputType, BaseErrorType 
         /**
          * Use this {@link String} to locale a {@link Item} instance. This
          * can be helpful when we are calling
-         * {@link SLTextChoiceInputType#numericValue(String)}.
+         * {@link SLTextChoiceType#numericValue(String)}.
          * @return {@link String} value.
          */
         @NotNull

@@ -1,6 +1,6 @@
 package com.holmusk.SuperLeapQA.model;
 
-import com.holmusk.SuperLeapQA.model.type.SLNumericChoiceInputType;
+import com.holmusk.SuperLeapQA.model.type.SLNumericChoiceType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.xtestkit.base.model.InputType;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Weight implements SLNumericChoiceInputType {
+public enum Weight implements SLNumericChoiceType {
     KG,
     KG_DEC,
     LB,
@@ -75,7 +75,7 @@ public enum Weight implements SLNumericChoiceInputType {
      * @param unit {@link UnitSystem} instance.
      * @return {@link List} of {@link Zip}.
      * @see #instances(PlatformType, UnitSystem)
-     * @see SLNumericChoiceInputType#randomValue(UserMode)
+     * @see SLNumericChoiceType#randomValue(UserMode)
      */
     @NotNull
     public static List<Zip<Weight,String>> random(@NotNull PlatformType platform,
@@ -120,7 +120,7 @@ public enum Weight implements SLNumericChoiceInputType {
 
     /**
      * @return {@link String} value.
-     * @see SLNumericChoiceInputType#emptyInputError(UserMode)
+     * @see SLNumericChoiceType#emptyInputError(UserMode)
      */
     @NotNull
     @Override
@@ -131,7 +131,7 @@ public enum Weight implements SLNumericChoiceInputType {
     //region Picker Index
     /**
      * @return {@link Integer} value.
-     * @see SLNumericChoiceInputType#androidScrollablePickerIndex()
+     * @see SLNumericChoiceType#androidScrollablePickerIndex()
      * @see #NOT_AVAILABLE
      */
     @Override
@@ -152,7 +152,7 @@ public enum Weight implements SLNumericChoiceInputType {
 
     /**
      * @return {@link Integer} value.
-     * @see SLNumericChoiceInputType#iOSScrollablePickerIndex()
+     * @see SLNumericChoiceType#iOSScrollablePickerIndex()
      * @see #NOT_AVAILABLE
      */
     @Override
@@ -268,7 +268,7 @@ public enum Weight implements SLNumericChoiceInputType {
      * the type of {@link Weight}.
      * @param value {@link Integer} value.
      * @return {@link String} value.
-     * @see SLNumericChoiceInputType#stringValue(double)
+     * @see SLNumericChoiceType#stringValue(double)
      */
     @NotNull
     @Override
@@ -279,12 +279,12 @@ public enum Weight implements SLNumericChoiceInputType {
     /**
      * @param mode {@link UserMode} instance.
      * @return {@link Integer} value.
-     * @see SLNumericChoiceInputType#minSelectableNumericValue(UserMode)
+     * @see SLNumericChoiceType#minSelectableValue(UserMode)
      * @see UserMode#isParent()
      * @see #NOT_AVAILABLE
      */
     @Override
-    public int minSelectableNumericValue(@NotNull UserMode mode) {
+    public int minSelectableValue(@NotNull UserMode mode) {
         switch (this) {
             case KG_DEC:
             case LB_DEC:
@@ -306,12 +306,12 @@ public enum Weight implements SLNumericChoiceInputType {
      * {@link StackOverflowError} from too much scrolling.
      * @param mode {@link UserMode} instance.
      * @return {@link Integer} value.
-     * @see SLNumericChoiceInputType#maxSelectableNumericValue(UserMode)
+     * @see SLNumericChoiceType#maxSelectableValue(UserMode)
      * @see UserMode#isParent()
      * @see #NOT_AVAILABLE
      */
     @Override
-    public int maxSelectableNumericValue(@NotNull UserMode mode) {
+    public int maxSelectableValue(@NotNull UserMode mode) {
         switch (this) {
             case KG_DEC:
             case LB_DEC:

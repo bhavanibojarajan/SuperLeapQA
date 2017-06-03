@@ -16,7 +16,7 @@ public interface SLInputType extends InputType {
     /**
      * Get the relevant empty input error messages for sign up, where applicable.
      * Some {@link InputType} may not have a standard error message, however.
-     * (e.g. {@link SLNumericChoiceInputType}.
+     * (e.g. {@link SLNumericChoiceType}.
      * where min/max values are taken into account).
      * @return {@link LCFormat} value.
      */

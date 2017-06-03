@@ -1,9 +1,9 @@
 package com.holmusk.SuperLeapQA.ui.validage;
 
 import com.holmusk.SuperLeapQA.model.*;
-import com.holmusk.SuperLeapQA.model.type.SLChoiceInputType;
+import com.holmusk.SuperLeapQA.model.type.SLChoiceType;
 import com.holmusk.SuperLeapQA.model.type.SLInputType;
-import com.holmusk.SuperLeapQA.model.type.SLNumericChoiceInputType;
+import com.holmusk.SuperLeapQA.model.type.SLNumericChoiceType;
 import com.holmusk.SuperLeapQA.ui.dob.DOBPickerActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +17,7 @@ import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.choice.ChoiceMode;
 import org.swiften.xtestkit.base.element.choice.ChoiceParam;
 import org.swiften.xtestkit.base.element.choice.ChoiceType;
+import org.swiften.xtestkit.base.model.ChoiceInputType;
 import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.android.AndroidEngine;
@@ -31,44 +32,44 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
     /**
      * Select a value, assuming the user is in the value selection picker.
      * @param engine {@link Engine} instance.
-     * @param input {@link SLNumericChoiceInputType} instance.
+     * @param input {@link SLNumericChoiceType} instance.
      * @param selected {@link String} value.
      * @return {@link Flowable} instance.
-     * @see ChoiceMode#GENERAL
+     * @see ChoiceParam.Builder#withGeneralMode()
+     * @see ChoiceParam.Builder#withInput(ChoiceInputType)
+     * @see ChoiceParam.Builder#withSelectedChoice(String)
      * @see Engine#rxa_selectChoice(ChoiceType)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_selectChoice(@NotNull Engine<?> engine,
-                                         @NotNull SLChoiceInputType input,
+                                         @NotNull SLChoiceType input,
                                          @NotNull String selected) {
         LogUtil.printfThread("Selecting %s for %s", selected, input);
 
-        ChoiceParam param = ChoiceParam.builder()
-            .withMode(ChoiceMode.GENERAL)
+        return engine.rxa_selectChoice(ChoiceParam.builder()
+            .withGeneralMode()
             .withInput(input)
             .withSelectedChoice(selected)
-            .build();
-
-        return engine.rxa_selectChoice(param);
+            .build());
     }
 
     /**
-     * Select values for a set {@link SLNumericChoiceInputType}. This is
+     * Select values for a set {@link SLNumericChoiceType}. This is
      * useful when we want to select {@link Height} or {@link Weight} based
      * on different units of measurement (metric/imperial), since the app
      * requires a combination of two inputs from two
-     * {@link SLNumericChoiceInputType} (e.g. {@link Height#CM} and
+     * {@link SLNumericChoiceType} (e.g. {@link Height#CM} and
      * {@link Height#CM_DEC}).
      * @param ENGINE {@link Engine} instance.
      * @param inputs {@link List} of {@link Zip} instances.
      * @return {@link Flowable} instance.
-     * @see #rxa_selectChoice(Engine, SLChoiceInputType, String)
+     * @see #rxa_selectChoice(Engine, SLChoiceType, String)
      * @see BooleanUtil#isTrue(boolean)
      */
     @NotNull
     @SuppressWarnings("ConstantConditions")
-    default <P extends SLChoiceInputType> Flowable<?> rxa_selectChoice(
+    default <P extends SLChoiceType> Flowable<?> rxa_selectChoice(
         @NotNull final Engine<?> ENGINE,
         @NotNull List<Zip<P,String>> inputs
     ) {
@@ -101,16 +102,16 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * On {@link Platform#IOS}, the choice mode is within the picker, so we
      * need to open the picker first, then select the mode.
      * @param ENGINE {@link Engine} instance.
-     * @param CHOICE {@link SLChoiceInputType} instance.
-     * @param NUMERIC {@link SLNumericChoiceInputType} instance.
+     * @param CHOICE {@link SLChoiceType} instance.
+     * @param NUMERIC {@link SLNumericChoiceType} instance.
      * @return {@link Flowable} instance.
      * @see #rxa_clickInputField(Engine, SLInputType)
      */
     @NotNull
     default Flowable<?> rxa_selectUnitSystemPicker(
         @NotNull final Engine<?> ENGINE,
-        @NotNull final SLChoiceInputType CHOICE,
-        @NotNull final SLNumericChoiceInputType NUMERIC
+        @NotNull final SLChoiceType CHOICE,
+        @NotNull final SLNumericChoiceType NUMERIC
     ) {
         final ValidAgeActionType THIS = this;
 
@@ -165,7 +166,7 @@ public interface ValidAgeActionType extends ValidAgeValidationType, DOBPickerAct
      * @see Height#randomValue(UserMode)
      * @see Weight#randomValue(UserMode)
      * @see #rxa_clickInputField(Engine, SLInputType)
-     * @see #rxa_selectChoice(Engine, SLChoiceInputType, String)
+     * @see #rxa_selectChoice(Engine, SLChoiceType, String)
      * @see #rxa_confirmNumericChoice(Engine)
      * @see #rxa_confirmTextChoice(Engine)
      */

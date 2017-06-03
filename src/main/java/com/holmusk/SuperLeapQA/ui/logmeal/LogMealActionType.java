@@ -1,5 +1,6 @@
 package com.holmusk.SuperLeapQA.ui.logmeal;
 
+import com.holmusk.HMUITestKit.android.type.date.EEEMMMddInput;
 import com.holmusk.SuperLeapQA.config.Config;
 import com.holmusk.SuperLeapQA.model.Mood;
 import com.holmusk.SuperLeapQA.model.TextInput;
@@ -8,12 +9,14 @@ import com.holmusk.SuperLeapQA.ui.photopicker.PhotoPickerActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.element.date.AndroidDatePickerType;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.element.choice.ChoiceType;
 import org.swiften.xtestkit.base.element.date.CalendarUnit;
 import org.swiften.xtestkit.base.element.date.DateParam;
 import org.swiften.xtestkit.base.element.date.DatePickerType;
@@ -66,11 +69,11 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @return {@link Flowable} instance.
      * @see Engine#getMiddleCoordinate(WebElement)
      * @see Engine#rxa_click(WebElement)
-     * @see WebElement#getSize()
      * @see #rxe_mood(Engine, Mood)
      */
     @NotNull
-    default Flowable<?> rxa_selectMood(@NotNull final Engine<?> ENGINE, @NotNull Mood mood) {
+    default Flowable<?> rxa_selectMood(@NotNull final Engine<?> ENGINE,
+                                       @NotNull Mood mood) {
         LogUtil.printfThread("Selecting mood %s", mood);
         return rxe_mood(ENGINE, mood).flatMap(ENGINE::rxa_click);
     }
@@ -98,8 +101,10 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @see #rxe_locationSwitch(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_toggleLocation(@NotNull final Engine<?> ENGINE, final boolean ON) {
-        return rxe_locationSwitch(ENGINE).flatMap(a -> ENGINE.rxa_toggleSwitch(a, ON));
+    default Flowable<?> rxa_toggleLocation(@NotNull final Engine<?> ENGINE,
+                                           final boolean ON) {
+        return rxe_locationSwitch(ENGINE)
+            .flatMap(a -> ENGINE.rxa_toggleSwitch(a, ON));
     }
 
     /**
@@ -166,10 +171,11 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
 
     /**
      * Select a meal time with a {@link Date} instance.
-     * @param engine {@link Engine} instance.
+     * @param ENGINE {@link Engine} instance.
      * @param date {@link Date} instance.
      * @return {@link Flowable} instance.
      * @see AndroidDatePickerType#hh_mm_TIMEPICKER
+     * @see BooleanUtil#isTrue(boolean)
      * @see CalendarUnit#MONTH
      * @see CalendarUnit#DAY
      * @see CalendarUnit#HOUR
@@ -178,25 +184,36 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @see DateParam.Builder#withDate(Date)
      * @see DateParam.Builder#withPickerType(DatePickerType)
      * @see DateParam.Builder#withCalendarUnits(List)
+     * @see EEEMMMddInput#choiceParam(DateType)
+     * @see Engine#rxa_selectChoice(ChoiceType)
      * @see Engine#rxa_selectDate(DateType)
      * @see IOSDatePickerType#MMMd_h_mm_a
      */
     @NotNull
-    default Flowable<?> rxa_selectMealTime(@NotNull Engine<?> engine,
+    default Flowable<?> rxa_selectMealTime(@NotNull final Engine<?> ENGINE,
                                            @NotNull Date date) {
         DateParam.Builder builder = DateParam.builder().withDate(date);
 
-        DateType param;
+        if (ENGINE instanceof AndroidEngine) {
+            DateType dateParam = DateParam.builder().withDate(date).build();
+            ChoiceType dateChoice = EEEMMMddInput.choiceParam(dateParam);
 
-        if (engine instanceof AndroidEngine) {
-            param = builder
+            DateType timeParam = DateParam.builder()
+                .withDate(date)
                 .withCalendarUnits(CalendarUnit.HOUR, CalendarUnit.MINUTE)
                 .withPickerType(AndroidDatePickerType.hh_mm_TIMEPICKER)
                 .build();
 
-            return engine.rxa_selectDate(param);
-        } else if (engine instanceof IOSEngine) {
-            param = builder
+            return Flowable
+                .concat(
+                    ENGINE.rxa_selectChoice(dateChoice),
+                    ENGINE.rxa_selectDate(timeParam)
+                )
+                .all(BooleanUtil::isTrue)
+                .toFlowable();
+        } else if (ENGINE instanceof IOSEngine) {
+            DateType dateTimeParam = DateParam.builder()
+                .withDate(date)
                 .withCalendarUnits(
                     CalendarUnit.MONTH,
                     CalendarUnit.DAY,
@@ -207,7 +224,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
                 .withPickerType(IOSDatePickerType.MMMd_h_mm_a)
                 .build();
 
-            return engine.rxa_selectDate(param);
+            return ENGINE.rxa_selectDate(dateTimeParam);
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

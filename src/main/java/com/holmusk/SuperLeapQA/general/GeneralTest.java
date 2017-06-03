@@ -173,6 +173,6 @@ public final class GeneralTest {
     public void test_xPathCreation_shouldWork() {
         // Setup && When && Then
         LogUtil.println(ChoiceInput.COACH_PREF.inputViewXP(Platform.IOS));
-        LogUtil.println(Height.CM.choicePickerItemXPath(Platform.ANDROID));
+        LogUtil.println(Height.CM.choicePickerItemXP(Platform.ANDROID));
     }
 }

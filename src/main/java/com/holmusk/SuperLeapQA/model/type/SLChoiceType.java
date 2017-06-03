@@ -13,7 +13,7 @@ import org.swiften.xtestkit.ios.model.IOSChoiceInputType;
  * {@link ChoiceInputType}
  * for Superleap.
  */
-public interface SLChoiceInputType extends
+public interface SLChoiceType extends
     AndroidChoiceInputType,
     IOSChoiceInputType,
     BaseErrorType,
