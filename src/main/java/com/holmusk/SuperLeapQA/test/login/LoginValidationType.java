@@ -15,7 +15,7 @@ import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.type.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**

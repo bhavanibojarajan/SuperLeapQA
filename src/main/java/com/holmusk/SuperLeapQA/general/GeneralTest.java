@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.navigation.ScreenManagerType;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;

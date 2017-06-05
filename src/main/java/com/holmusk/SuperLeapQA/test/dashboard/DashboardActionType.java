@@ -14,7 +14,7 @@ import org.swiften.xtestkit.base.param.UnidirectionParam;
 import org.swiften.xtestkit.base.type.DurationType;
 import org.swiften.xtestkit.base.type.RepeatType;
 import org.swiften.xtestkit.ios.IOSEngine;
-import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkit.mobile.Platform;
 
 import java.util.concurrent.TimeUnit;
 

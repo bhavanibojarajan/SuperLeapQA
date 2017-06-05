@@ -9,7 +9,7 @@ import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.navigation.ScreenType;
 
 import java.util.List;

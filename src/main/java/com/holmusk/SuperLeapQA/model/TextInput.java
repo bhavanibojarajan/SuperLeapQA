@@ -10,7 +10,7 @@ import org.swiften.xtestkit.base.model.TextInputType;
 import org.swiften.xtestkit.base.type.BaseViewType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
-import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 

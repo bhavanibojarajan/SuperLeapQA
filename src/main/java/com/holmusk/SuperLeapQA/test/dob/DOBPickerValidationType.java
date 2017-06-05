@@ -8,7 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
-import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkit.mobile.Platform;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

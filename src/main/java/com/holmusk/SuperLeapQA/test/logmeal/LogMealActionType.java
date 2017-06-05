@@ -23,7 +23,7 @@ import org.swiften.xtestkit.base.element.date.DatePickerType;
 import org.swiften.xtestkit.base.element.date.DateType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.element.date.IOSDatePickerType;
-import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkit.mobile.Platform;
 
 import java.util.Date;
 import java.util.List;

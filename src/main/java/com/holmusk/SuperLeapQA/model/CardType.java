@@ -2,7 +2,7 @@ package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
-import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkit.mobile.Platform;
 
 /**
  * Created by haipham on 29/5/17.

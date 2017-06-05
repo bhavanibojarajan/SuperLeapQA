@@ -8,7 +8,7 @@ import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.util.ValueRangeConverterType;
 
 import java.util.Arrays;

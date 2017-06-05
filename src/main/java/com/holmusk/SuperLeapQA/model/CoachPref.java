@@ -6,7 +6,7 @@ import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
-import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.property.base.AttributeType;
 import org.swiften.xtestkitcomponents.xpath.XPath;

@@ -10,7 +10,7 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkit.mobile.Platform;
 
 import java.util.List;
 

@@ -20,7 +20,7 @@ import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.base.model.TextInputType;
-import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkit.mobile.Platform;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 

@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
