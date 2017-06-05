@@ -7,3 +7,6 @@
 [submodule "XTestKit"]
 	path = XTestKit
 	url = https://github.com/protoman92/XTestKit.git
+[submodule "XTestKitComponents"]
+	path = XTestKitComponents
+	url = https://github.com/protoman92/XTestKitComponents.git
