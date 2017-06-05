@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.test.login;
 
-import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.HMUITestKit.model.HMInputType;
+import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
@@ -12,11 +12,11 @@ import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.element.locator.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
  * Created by haipham on 5/26/17.

@@ -4,6 +4,7 @@ import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.xtestkit.base.Engine;
 
 /**
@@ -12,33 +13,30 @@ import org.swiften.xtestkit.base.Engine;
 public interface SHAActionType extends SHAValidationType {
     /**
      * Either indicate yes or no for SHA status. This is only relevant for
-     * {@link UserMode#requiresGuarantor()}.
+     * {@link UserMode#isTeen()}.
      * @param ENGINE {@link Engine} instance.
      * @param mode {@link UserMode} instance.
-     * @param participating {@link Boolean} value.
+     * @param PARTICIPATING {@link Boolean} value.
      * @return {@link Flowable} instance.
+     * @see BooleanUtil#toTrue(Object)
      * @see Engine#rxa_click(WebElement)
-     * @see UserMode#requiresGuarantor()
+     * @see UserMode#isTeen()
      * @see #rxe_shaYes(Engine)
      * @see #rxe_shaNo(Engine)
      */
     @NotNull
     default Flowable<?> rxa_setSHAStatus(@NotNull final Engine<?> ENGINE,
                                          @NotNull UserMode mode,
-                                         boolean participating) {
-        if (mode.requiresGuarantor()) {
-            Flowable<WebElement> rxe_element;
+                                         final boolean PARTICIPATING) {
+        final SHAActionType THIS = this;
 
-            if (participating) {
-                rxe_element = rxe_shaYes(ENGINE);
-            } else {
-                rxe_element = rxe_shaNo(ENGINE);
-            }
-
-            return rxe_element.flatMap(ENGINE::rxa_click);
-        } else {
-            return Flowable.just(true);
-        }
+        return Flowable.just(mode)
+            .filter(UserMode::isTeen)
+            .flatMap(a -> PARTICIPATING ?
+                THIS.rxe_shaYes(ENGINE) : THIS.rxe_shaNo(ENGINE))
+            .flatMap(ENGINE::rxa_click)
+            .map(BooleanUtil::toTrue)
+            .defaultIfEmpty(true);
     }
 
     /**

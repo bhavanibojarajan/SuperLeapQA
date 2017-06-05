@@ -1,15 +1,15 @@
 package com.holmusk.SuperLeapQA.model;
 
-import com.holmusk.SuperLeapQA.config.Config;
 import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.HMUITestKit.model.HMTextChoiceType;
+import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.xtestkit.base.element.locator.xpath.XPath;
-import org.swiften.xtestkit.base.element.property.base.AttributeType;
-import org.swiften.xtestkit.base.type.BaseErrorType;
-import org.swiften.xtestkit.base.type.PlatformType;
-import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.base.model.InputType;
+import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.property.base.AttributeType;
+import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
  * Created by haipham on 5/12/17.
@@ -68,7 +68,7 @@ public enum Ethnicity implements
 
     /**
      * @return {@link String} value.
-     * @see SLTextChoiceInputItemType#stringValue()
+     * @see HMTextChoiceType.Item#stringValue()
      * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
      */
     @NotNull

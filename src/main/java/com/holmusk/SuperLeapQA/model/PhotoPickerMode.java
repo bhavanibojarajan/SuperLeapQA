@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
-import org.swiften.xtestkit.base.type.BaseErrorType;
+import org.swiften.xtestkitcomponents.common.BaseErrorType;
 
 /**
  * Created by haipham on 29/5/17.

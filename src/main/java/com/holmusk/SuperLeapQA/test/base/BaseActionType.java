@@ -4,13 +4,13 @@ package com.holmusk.SuperLeapQA.test.base;
  * Created by haipham on 5/7/17.
  */
 
-import com.holmusk.SuperLeapQA.model.Height;
-import com.holmusk.SuperLeapQA.model.TextInput;
-import com.holmusk.SuperLeapQA.model.Weight;
 import com.holmusk.HMUITestKit.model.HMChoiceType;
 import com.holmusk.HMUITestKit.model.HMInputType;
-import com.holmusk.SuperLeapQA.model.SLNumericChoiceType;
 import com.holmusk.HMUITestKit.model.HMTextType;
+import com.holmusk.SuperLeapQA.model.Height;
+import com.holmusk.SuperLeapQA.model.SLNumericChoiceType;
+import com.holmusk.SuperLeapQA.model.TextInput;
+import com.holmusk.SuperLeapQA.model.Weight;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -23,14 +23,14 @@ import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.choice.ChoiceParam;
 import org.swiften.xtestkit.base.element.choice.ChoiceType;
 import org.swiften.xtestkit.base.element.locator.type.BaseLocatorErrorType;
-import org.swiften.xtestkit.base.element.locator.xpath.XPath;
 import org.swiften.xtestkit.base.model.ChoiceInputType;
+import org.swiften.xtestkit.base.model.InputType;
+import org.swiften.xtestkit.base.model.TextInputType;
 import org.swiften.xtestkit.base.type.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkit.base.model.InputType;
-import org.swiften.xtestkit.base.model.TextInputType;
+import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkitcomponents.xpath.XPath;
 
 import java.util.Arrays;
 import java.util.List;

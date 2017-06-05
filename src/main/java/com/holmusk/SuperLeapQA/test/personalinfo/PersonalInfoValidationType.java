@@ -8,13 +8,13 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
-import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.android.AndroidEngine;
-import org.swiften.xtestkit.base.element.locator.xpath.XPath;
-import org.swiften.xtestkit.base.type.PlatformType;
+import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
  * Created by haipham on 17/5/17.

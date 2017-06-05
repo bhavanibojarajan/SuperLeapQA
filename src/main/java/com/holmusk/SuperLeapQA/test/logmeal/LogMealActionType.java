@@ -1,6 +1,6 @@
 package com.holmusk.SuperLeapQA.test.logmeal;
 
-import com.holmusk.HMUITestKit.android.type.date.EEEMMMddInput;
+import com.holmusk.HMUITestKit.android.element.date.EEEMMMddInput;
 import com.holmusk.SuperLeapQA.config.Config;
 import com.holmusk.SuperLeapQA.model.Mood;
 import com.holmusk.SuperLeapQA.model.TextInput;
@@ -23,6 +23,7 @@ import org.swiften.xtestkit.base.element.date.DatePickerType;
 import org.swiften.xtestkit.base.element.date.DateType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.element.date.IOSDatePickerType;
+import org.swiften.xtestkitcomponents.platform.Platform;
 
 import java.util.Date;
 import java.util.List;
@@ -110,10 +111,10 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
     /**
      * Select a number of photos for a meal log. The maximum number of photos
      * to be selected is specified by {@link Config#MAX_PHOTO_COUNT}.
-     * On {@link org.swiften.xtestkit.mobile.Platform#ANDROID}, we need to
+     * On {@link Platform#ANDROID}, we need to
      * select the photos one by one (i.e. click on each photo placeholder to
      * open up the photo picker, select 1 photo then confirm).
-     * On {@link org.swiften.xtestkit.mobile.Platform#ANDROID}, we can simply
+     * On {@link Platform#ANDROID}, we can simply
      * go to the picker and select multiple photos at once.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
@@ -149,7 +150,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
 
     /**
      * Confirm meal description. This is only relevant for
-     * {@link org.swiften.xtestkit.mobile.Platform#IOS} because the meal
+     * {@link Platform#IOS} because the meal
      * description entry requires an Ok button to be pressed to be confirmed.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.

@@ -1,4 +1,5 @@
 rootProject.name = 'SuperLeapQA'
 include 'HMUITestKit'
 include 'XTestKit'
+include 'XTestKitComponents'
 include 'JavaUtilities'

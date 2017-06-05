@@ -4,34 +4,43 @@ import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
+import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.Test;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by haipham on 23/5/17.
  */
-public interface UIDoBPickerTestType extends UIBaseTestType, DOBPickerTestHelperType {
+public interface UIDoBPickerTestType extends UIBaseTestType, DOBPickerActionType {
     /**
      * This test validates that {@link Screen#DOB} selection works by
-     * sequentially selecting DoBs from a range of {@link java.util.Date}.
-     * Note that this test is not guarantor-aware, so
+     * sequentially selecting DoBs and validating that DoBs that fall out of
+     * {@link UserMode#validAgeCategoryRange()} should not bring the user
+     * to the correct sign up screen. This action assumes the user is in
+     * {@link Screen#DOB}, but has not opened the DoB picker yet.
      * {@link UserMode#TEEN_U18} and {@link UserMode#TEEN_A18} will
-     * be treated the same.
+     * be treated the same. This is why we use
+     * {@link UserMode#validAgeCategoryRange()} instead of
+     * {@link UserMode#validAgeRange()}.
      * @param MODE {@link UserMode} instance.
+     * @see Screen#SPLASH
      * @see Screen#DOB
-     * @see #engine()
      * @see UserMode#offsetFromCategoryValidRange(int)
-     * @see #rxh_validateDoBsRecursive(Engine, UserMode, List)
-     * @see #generalUserModeProvider()
+     * @see UserMode#validAgeCategoryRange()
      * @see #assertCorrectness(TestSubscriber)
+     * @see #generalUserModeProvider()
+     * @see #engine()
+     * @see #rxa_openDoBPicker(Engine)
+     * @see #rxa_clickBackButton(Engine)
+     * @see #rxa_selectDoBToBeOfAge(Engine, int)
+     * @see #rxa_confirmDoB(Engine)
+     * @see #rxv_validAgeScreen(Engine)
+     * @see #rxv_invalidAgeScreen(Engine, UserMode)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -43,12 +52,39 @@ public interface UIDoBPickerTestType extends UIBaseTestType, DOBPickerTestHelper
         // Setup
         final UIDoBPickerTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        TestSubscriber subscriber = CustomTestSubscriber.create();
         final List<Integer> AGES = MODE.offsetFromCategoryValidRange(2);
+        final List<Integer> RANGE = MODE.validAgeCategoryRange();
+        final int LENGTH = AGES.size();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        class Repeater {
+            @NotNull
+            private Flowable<?> repeat(final int INDEX) {
+                if (INDEX < LENGTH) {
+                    final int AGE = AGES.get(INDEX);
+                    final boolean VALID = RANGE.contains(AGE);
+
+                    return THIS.rxa_openDoBPicker(ENGINE)
+                        .flatMap(a -> THIS.rxa_selectDoBToBeOfAge(ENGINE, AGE))
+                        .flatMap(a -> THIS.rxa_confirmDoB(ENGINE))
+                        .flatMap(a -> {
+                            if (VALID) {
+                                return THIS.rxv_validAgeScreen(ENGINE);
+                            } else {
+                                return THIS.rxv_invalidAgeScreen(ENGINE, MODE);
+                            }
+                        })
+                        .flatMap(a -> THIS.rxa_clickBackButton(ENGINE))
+                        .flatMap(a -> new Repeater().repeat(INDEX + 1));
+                } else {
+                    return Flowable.just(true);
+                }
+            }
+        }
 
         // When
         rxa_navigate(MODE, Screen.SPLASH, Screen.DOB)
-            .flatMap(a -> THIS.rxh_validateDoBsRecursive(ENGINE, MODE, AGES))
+            .flatMap(a -> new Repeater().repeat(0))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

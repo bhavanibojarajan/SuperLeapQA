@@ -206,12 +206,12 @@ public interface ForwardNavigationType extends
      * @param ENGINE {@link Engine} instance.
      * @param MODE {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see #rxa_enterAndConfirmValidAgeInputs(Engine, UserMode)
+     * @see #rxa_completeValidAgeInputs(Engine, UserMode)
      */
     @NotNull
     default Flowable<?> rxn_validAge_personalInfo(@NotNull final Engine<?> ENGINE,
                                                   @NotNull final UserMode MODE) {
-        return rxa_enterAndConfirmValidAgeInputs(ENGINE, MODE);
+        return rxa_completeValidAgeInputs(ENGINE, MODE);
     }
 
     /**

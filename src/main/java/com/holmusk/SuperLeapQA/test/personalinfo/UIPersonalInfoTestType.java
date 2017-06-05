@@ -17,9 +17,10 @@ import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.type.PlatformType;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.base.model.TextInputType;
+import org.swiften.xtestkitcomponents.platform.Platform;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -35,6 +36,9 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * This {@link DataProvider} is used to check for either/or input
      * requirement when the user is entering guarantor information.
      * @return {@link Iterator} instance.
+     * @see TextInput#PARENT_NAME
+     * @see TextInput#PARENT_EMAIL
+     * @see TextInput#PARENT_MOBILE
      */
     @NotNull
     @DataProvider
@@ -52,12 +56,16 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
     /**
      * This test validates that the password mask, when clicks, reveals the
      * password. It is only applicable to
-     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID} since on
-     * {@link org.swiften.xtestkit.mobile.Platform#IOS} there is no way to
+     * {@link Platform#ANDROID} since on
+     * {@link Platform#IOS} there is no way to
      * reveal the password content.
+     * @see Engine#isShowingPassword(WebElement)
      * @see Engine#rxa_togglePasswordMask(WebElement)
      * @see Engine#rxv_errorWithPageSource()
-     * @see Engine#isShowingPassword(WebElement)
+     * @see Screen#SPLASH
+     * @see Screen#PERSONAL_INFO
+     * @see #assertCorrectness(TestSubscriber)
+     * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_randomInput(Engine, HMTextType)
      * @see #rxa_confirmTextInput(Engine)
@@ -94,10 +102,11 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * This test confirms that when the user clicks on the TOC and opens up
      * the Web browser, {@link Screen#PERSONAL_INFO} inputs are saved and then
      * restored when the user gets back to the app. This is more relevant for
-     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
-     * @see org.swiften.xtestkit.mobile.Platform#ANDROID
+     * {@link Platform#ANDROID}.
      * @see BooleanUtil#isTrue(boolean)
+     * @see HMTextType#randomInput()
      * @see ObjectUtil#nonNull(Object)
+     * @see Screen#SPLASH
      * @see Screen#PERSONAL_INFO
      * @see UserMode#personalInfo(PlatformType)
      * @see #assertCorrectness(TestSubscriber)
@@ -169,14 +178,16 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * {@link Screen#PERSONAL_INFO}.
      * @param MODE {@link UserMode} instance.
      * @see Engine#rxa_hideKeyboard()
+     * @see Screen#SPLASH
      * @see Screen#PERSONAL_INFO
      * @see UserMode#personalInfo(PlatformType)
+     * @see #assertCorrectness(TestSubscriber)
+     * @see #generalUserModeProvider()
+     * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_randomInputs(Engine, List)
      * @see #rxa_confirmPersonalInfo(Engine)
      * @see #rxv_personalInfoScreen(Engine, UserMode)
-     * @see #assertCorrectness(TestSubscriber)
-     * @see #engine()
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -213,14 +224,16 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * This test is only applicable for {@link UserMode#TEEN_U18}, so we use
      * {@link DataProvider} that provides {@link InputType}.
      * @param INPUTS {@link List} of {@link InputType}.
+     * @see Screen#SPLASH
      * @see Screen#GUARANTOR_INFO
+     * @see UserMode#TEEN_U18
+     * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
+     * @see #parentPersonalInfoProvider()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_randomInputs(Engine, List)
      * @see #rxa_confirmGuarantorInfo(Engine, UserMode)
      * @see #rxe_progressBar(Engine)
-     * @see #parentPersonalInfoProvider()
-     * @see #assertCorrectness(TestSubscriber)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -257,11 +270,13 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * not. It uses a custom {@link DataProvider} that provides only
      * {@link UserMode#TEEN_U18} and {@link UserMode#TEEN_A18}.
      * @param MODE {@link UserMode} instance.
+     * @see Screen#SPLASH
      * @see Screen#GUARANTOR_INFO
-     * @see #engine()
-     * @see #rxa_navigate(UserMode, Screen...)
-     * @see #guarantorSpecificUserModeProvider()
+     * @see Screen#USE_APP_NOW
      * @see #assertCorrectness(TestSubscriber)
+     * @see #engine()
+     * @see #guarantorSpecificUserModeProvider()
+     * @see #rxa_navigate(UserMode, Screen...)
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = true)

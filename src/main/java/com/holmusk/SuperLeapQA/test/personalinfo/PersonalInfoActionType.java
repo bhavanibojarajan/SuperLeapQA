@@ -9,7 +9,8 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.type.PlatformType;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.platform.Platform;
 
 import java.util.List;
 
@@ -138,7 +139,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * Open the main website and access the TOC page. This is primarily to
      * check that when the user navigates back to the app, the previous state
      * is saved and restored.
-     * On {@link org.swiften.xtestkit.mobile.Platform#ANDROID}, the link
+     * On {@link Platform#ANDROID}, the link
      * text is not a separate view, so we need to manually calculate an
      * approximate position, a press/tap on which will open up the web
      * browser.

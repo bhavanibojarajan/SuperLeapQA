@@ -45,13 +45,18 @@ public interface UILogMealTestType extends
      * We then search for the meal from {@link Screen#SEARCH}.
      * Finally, we delete the meal to clean up and verify that it is no longer
      * searchable from {@link Screen#SEARCH}.
+     * @see CollectionTestUtil#randomElement(Object[])
      * @see Engine#rxe_containsText(String...)
      * @see Engine#rxv_errorWithPageSource()
+     * @see Mood#moodTitle()
+     * @see Mood#values()
      * @see ObjectUtil#nonNull(Object)
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#LOG_MEAL
      * @see Screen#SEARCH
+     * @see TextInput#MEAL_DESCRIPTION
+     * @see TextInput#randomInput()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #mealLogProgressDelay(Engine)
@@ -145,6 +150,7 @@ public interface UILogMealTestType extends
      * We then verify that the messages can be searched from
      * {@link Screen#SEARCH}, but will not be so after we delete the meal from
      * the database.
+     * @see BooleanUtil#toTrue(Object)
      * @see Engine#rxa_clearSearchBar()
      * @see Engine#rxa_click(WebElement)
      * @see Engine#rxv_errorWithPageSource()
@@ -155,6 +161,7 @@ public interface UILogMealTestType extends
      * @see Screen#CHAT
      * @see Screen#SEARCH
      * @see TextInput#MEAL_COMMENT
+     * @see TextInput#randomInput()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)

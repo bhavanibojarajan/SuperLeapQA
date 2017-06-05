@@ -10,9 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.element.locator.xpath.XPath;
-import org.swiften.xtestkit.base.type.BaseErrorType;
-import org.swiften.xtestkit.base.type.PlatformType;
+import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.base.model.InputType;
 

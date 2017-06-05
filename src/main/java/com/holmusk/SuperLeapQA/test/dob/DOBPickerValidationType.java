@@ -8,6 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
+import org.swiften.xtestkitcomponents.platform.Platform;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,7 +41,7 @@ public interface DOBPickerValidationType extends WelcomeValidationType {
     /**
      * Get the DoB's editable text field. Due to design differences, this
      * {@link WebElement} only appears in
-     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}
+     * {@link Platform#ANDROID}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_editables()

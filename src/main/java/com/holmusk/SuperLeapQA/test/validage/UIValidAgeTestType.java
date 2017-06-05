@@ -1,23 +1,14 @@
 package com.holmusk.SuperLeapQA.test.validage;
 
-import com.holmusk.HMUITestKit.model.UnitSystem;
 import com.holmusk.SuperLeapQA.model.*;
-import com.holmusk.HMUITestKit.model.HMChoiceType;
-import com.holmusk.HMUITestKit.model.HMInputType;
-import com.holmusk.SuperLeapQA.model.SLNumericChoiceType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.collection.CollectionTestUtil;
-import org.swiften.javautilities.collection.Zip;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.type.PlatformType;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 /**
  * Created by haipham on 23/5/17.
@@ -32,7 +23,7 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
      * @param MODE {@link UserMode} instance.
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rx_h_inchToFootRecursive(Engine, UserMode)
+     * @see #rxh_inchToFootRecursive(Engine, UserMode)
      * @see #generalUserModeProvider()
      * @see #assertCorrectness(TestSubscriber)
      */
@@ -50,7 +41,7 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
 
         // When
         rxa_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE)
-            .flatMap(a -> THIS.rx_h_inchToFootRecursive(ENGINE, MODE))
+            .flatMap(a -> THIS.rxh_inchToFootRecursive(ENGINE, MODE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

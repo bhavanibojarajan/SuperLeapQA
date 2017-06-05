@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.test.consolidated;
+package com.holmusk.SuperLeapQA.test.screen;
 
 import com.holmusk.SuperLeapQA.runner.Runner;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTest;

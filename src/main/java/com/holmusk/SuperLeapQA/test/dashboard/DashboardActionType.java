@@ -14,6 +14,7 @@ import org.swiften.xtestkit.base.param.UnidirectionParam;
 import org.swiften.xtestkit.base.type.DurationType;
 import org.swiften.xtestkit.base.type.RepeatType;
 import org.swiften.xtestkit.ios.IOSEngine;
+import org.swiften.xtestkitcomponents.platform.Platform;
 
 import java.util.concurrent.TimeUnit;
 
@@ -66,9 +67,9 @@ public interface DashboardActionType extends
 
     /**
      * Dismiss the dashboard tutorial.
-     * On {@link org.swiften.xtestkit.mobile.Platform#ANDROID}, this is done
+     * On {@link Platform#ANDROID}, this is done
      * by navigating back once.
-     * On {@link org.swiften.xtestkit.mobile.Platform#IOS}, this is done by
+     * On {@link Platform#IOS}, this is done by
      * clicking on the add card button twice. If this is not the first time
      * the user is using the app, all this does is simply opening up the menu
      * then closing it.
@@ -76,8 +77,8 @@ public interface DashboardActionType extends
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement, RepeatType)
      * @see Engine#rxa_navigateBackOnce()
-     * @see org.swiften.xtestkit.mobile.Platform#ANDROID
-     * @see org.swiften.xtestkit.mobile.Platform#IOS
+     * @see Platform#ANDROID
+     * @see Platform#IOS
      * @see #generalDelay(Engine)
      * @see #rxe_addCard(Engine)
      * @see #NOT_AVAILABLE

@@ -1,16 +1,17 @@
 package com.holmusk.SuperLeapQA.general;
 
-import com.holmusk.SuperLeapQA.model.*;
+import com.holmusk.SuperLeapQA.model.ChoiceInput;
+import com.holmusk.SuperLeapQA.model.Height;
+import com.holmusk.SuperLeapQA.model.TextInput;
+import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.localizer.LCFormat;
-import org.swiften.javautilities.localizer.Localizer;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.type.PlatformType;
-import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.platform.Platform;
 import org.swiften.xtestkit.navigation.ScreenManagerType;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -54,8 +55,8 @@ public final class GeneralTest {
     public void test_birthDayCalculation_shouldBeCorrect() {
         // Setup
         Calendar calendar = Calendar.getInstance();
-        LocalDate date1 = LocalDate.of(2017, 5, 25);
-        LocalDate date2 = LocalDate.of(2002, 5, 24);
+        LocalDate date1 = LocalDate.of(2017, 6, 5);
+        LocalDate date2 = LocalDate.of(2013, 6, 5);
 
         // When
         long yearDiff = ChronoUnit.YEARS.between(date1, date2);
@@ -116,8 +117,7 @@ public final class GeneralTest {
 
             @Override
             public void clearAllNodes() {
-                FN.clear();
-                BN.clear();
+                FN.clear(); BN.clear();
             }
         };
 

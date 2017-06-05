@@ -1,15 +1,17 @@
 package com.holmusk.SuperLeapQA.test.validage;
 
+import com.holmusk.HMUITestKit.model.HMChoiceType;
 import com.holmusk.SuperLeapQA.model.ChoiceInput;
 import com.holmusk.SuperLeapQA.model.Height;
 import com.holmusk.HMUITestKit.model.UnitSystem;
+import com.holmusk.SuperLeapQA.model.SLNumericChoiceType;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.HMUITestKit.model.HMInputType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.type.PlatformType;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,13 +27,19 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
      * @param ENGINE {@link Engine} instance.
      * @param FT {@link Height#FT} value to be selected.
      * @return {@link Flowable} instance.
+     * @see ChoiceInput#HEIGHT
+     * @see Engine#platform()
+     * @see Height#FT
+     * @see Height#INCH
      * @see Height#stringValue(PlatformType, UnitSystem, List)
+     * @see UnitSystem#IMPERIAL
      * @see #rxa_selectChoice(Engine, List)
      * @see #rxa_confirmNumericChoice(Engine)
+     * @see #rxa_selectUnitSystemPicker(Engine, HMChoiceType, SLNumericChoiceType)
      * @see #rxv_hasValue(Engine, HMInputType, String)
      */
     @NotNull
-    default Flowable<?> rx_h_inchToFoot(@NotNull final Engine<?> ENGINE, final int FT) {
+    default Flowable<?> rxh_inchToFoot(@NotNull final Engine<?> ENGINE, final int FT) {
         final ValidAgeTestHelperType THIS = this;
         final ChoiceInput C_HEIGHT = ChoiceInput.HEIGHT;
         final Height H_FT = Height.FT;
@@ -60,11 +68,11 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
      * @return {@link Flowable} instance.
      * @see Height#FT
      * @see Height#selectableRange(UserMode)
-     * @see #rx_h_inchToFoot(Engine, int)
+     * @see #rxh_inchToFoot(Engine, int)
      */
     @NotNull
-    default Flowable<?> rx_h_inchToFootRecursive(@NotNull final Engine<?> ENGINE,
-                                                 @NotNull final UserMode MODE) {
+    default Flowable<?> rxh_inchToFootRecursive(@NotNull final Engine<?> ENGINE,
+                                                @NotNull final UserMode MODE) {
         final ValidAgeTestHelperType THIS = this;
         final List<Integer> SELECTABLE = Height.FT.selectableRange(MODE);
         final int LENGTH = SELECTABLE.size();
@@ -74,7 +82,7 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
             private Flowable<?> repeat(final int INDEX) {
                 if (INDEX < LENGTH) {
                     return THIS
-                        .rx_h_inchToFoot(ENGINE, SELECTABLE.get(INDEX))
+                        .rxh_inchToFoot(ENGINE, SELECTABLE.get(INDEX))
                         .flatMap(a -> new Repeater().repeat(INDEX + 1));
                 } else {
                     return Flowable.just(true);

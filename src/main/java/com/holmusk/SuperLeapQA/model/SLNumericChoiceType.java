@@ -1,17 +1,9 @@
 package com.holmusk.SuperLeapQA.model;
 
-import com.holmusk.HMUITestKit.model.HMChoiceType;
 import com.holmusk.HMUITestKit.model.HMNumericChoiceType;
-import com.holmusk.SuperLeapQA.model.UserMode;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.collection.CollectionUtil;
-import org.swiften.xtestkit.base.model.ChoiceInputType;
-import org.swiften.xtestkit.base.element.locator.xpath.XPath;
-import org.swiften.xtestkit.base.type.PlatformType;
-import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkit.android.model.AndroidNumericPickerInputType;
-import org.swiften.xtestkit.util.ValueRangeConverterType;
 
 import java.util.List;
 import java.util.Optional;

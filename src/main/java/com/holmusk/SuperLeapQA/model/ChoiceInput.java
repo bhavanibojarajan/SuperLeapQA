@@ -3,10 +3,10 @@ package com.holmusk.SuperLeapQA.model;
 import com.holmusk.HMUITestKit.model.HMTextChoiceType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.model.InputType;
-import org.swiften.xtestkit.base.element.locator.xpath.XPath;
-import org.swiften.xtestkit.base.type.PlatformType;
-import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.ios.IOSView;
+import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.xpath.XPath;
 
 import java.util.Arrays;
 import java.util.List;
@@ -109,9 +109,9 @@ public enum ChoiceInput implements HMTextChoiceType {
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
      * @return {@link XPath} instance.
      * @see Platform#IOS
-     * @see IOSView.ViewType#UI_TEXTFIELD
-     * @see IOSView.ViewType#UI_TABLEVIEW_CELL
-     * @see IOSView.ViewType#UI_TABLEVIEW
+     * @see IOSView.ViewType#UI_TEXT_FIELD
+     * @see IOSView.ViewType#UI_TABLE_VIEW_CELL
+     * @see IOSView.ViewType#UI_TABLE_VIEW
      * @see XPath.Builder#addClass(String)
      * @see XPath.Builder#setIndex(int)
      * @see XPath.Builder#addChildXPath(XPath)
@@ -126,16 +126,16 @@ public enum ChoiceInput implements HMTextChoiceType {
         int index = Arrays.asList(values()).indexOf(this) + 2;
 
         XPath textFieldXPath = XPath.builder(platform)
-            .addClass(IOSView.ViewType.UI_TEXTFIELD.className())
+            .addClass(IOSView.ViewType.UI_TEXT_FIELD.className())
             .build();
 
         XPath cellXPath = XPath.builder(platform)
-            .addClass(IOSView.ViewType.UI_TABLEVIEW_CELL.className())
+            .addClass(IOSView.ViewType.UI_TABLE_VIEW_CELL.className())
             .setIndex(index)
             .build();
 
         return XPath.builder(platform)
-            .addClass(IOSView.ViewType.UI_TABLEVIEW.className())
+            .addClass(IOSView.ViewType.UI_TABLE_VIEW.className())
             .addChildXPath(cellXPath)
             .addChildXPath(textFieldXPath)
             .build();

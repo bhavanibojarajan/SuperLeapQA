@@ -40,13 +40,19 @@ public interface UIBaseTestType extends BaseTestType, ForwardNavigationType, SLS
      * do not care whether a guarantor is required.
      * @return {@link Iterator} instance.
      * @see UserMode#PARENT
+     * @see UserMode#TEEN_A18
      * @see UserMode#TEEN_U18
      */
     @NotNull
     @DataProvider
     static Iterator<Object[]> generalUserModeProvider() {
         List<Object[]> data = new LinkedList<>();
-        UserMode[] modes = new UserMode[] { UserMode.TEEN_U18 };
+
+        UserMode[] modes = new UserMode[] {
+            UserMode.PARENT,
+            UserMode.TEEN_A18,
+            UserMode.TEEN_U18
+        };
 
         for (UserMode mode : modes) {
             data.add(new Object[] { mode });

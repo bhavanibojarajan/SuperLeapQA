@@ -1,17 +1,18 @@
 package com.holmusk.SuperLeapQA.model;
 
-import com.holmusk.SuperLeapQA.config.Config;
 import com.holmusk.HMUITestKit.model.HMTextType;
+import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.string.StringTestUtil;
-import org.swiften.xtestkit.base.element.locator.xpath.XPath;
-import org.swiften.xtestkit.base.type.BaseErrorType;
-import org.swiften.xtestkit.base.type.PlatformType;
-import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.base.model.TextInputType;
+import org.swiften.xtestkit.base.type.BaseViewType;
+import org.swiften.xtestkit.ios.IOSView;
+import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
  * Created by haipham on 5/10/17.
@@ -21,6 +22,7 @@ public enum TextInput implements BaseErrorType, HMTextType {
     EMAIL,
     PHONE,
     CHILD_NAME,
+    CHILD_ID,
     MOBILE,
     PASSWORD,
     HOME,
@@ -86,6 +88,10 @@ public enum TextInput implements BaseErrorType, HMTextType {
                 ID = "et_childname";
                 break;
 
+            case CHILD_ID:
+                ID = "et_childnric";
+                break;
+
             case MOBILE:
             case PARENT_MOBILE:
                 ID = "et_mobile";
@@ -118,10 +124,11 @@ public enum TextInput implements BaseErrorType, HMTextType {
     /**
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
      * @return {@link XPath} instance.
+     * @see BaseViewType#className()
+     * @see IOSView.ViewType#UI_TEXT_FIELD
+     * @see IOSView.ViewType#UI_SECURE_TEXT_FIELD
      * @see Platform#IOS
      * @see org.swiften.xtestkit.kit.TestKit#localize(String)
-     * @see IOSView.ViewType#UI_TEXTFIELD
-     * @see IOSView.ViewType#UI_SECURETEXTFIELD
      * @see XPath.Builder#addAnyClass()
      * @see XPath.Builder#addClass(String)
      * @see XPath.Builder#containsText(XPath.ContainsText)
@@ -134,12 +141,12 @@ public enum TextInput implements BaseErrorType, HMTextType {
         switch (this) {
             case PASSWORD:
                 return XPath.builder(platform)
-                    .addClass(IOSView.ViewType.UI_SECURETEXTFIELD.className())
+                    .addClass(IOSView.ViewType.UI_SECURE_TEXT_FIELD.className())
                     .build();
 
             default:
-                String shortDescription = iOSShortDescription();
-                String localized = Config.TEST_KIT.localize(shortDescription);
+                String shortDsc = iOSShortDescription();
+                String localized = Config.TEST_KIT.localize(shortDsc);
 
                 return XPath.builder(platform)
                     .containsText(localized)
@@ -200,6 +207,9 @@ public enum TextInput implements BaseErrorType, HMTextType {
      * Get a random text input.
      * @return {@link String} value.
      * @see TextInputType#randomInput()
+     * @see StringTestUtil#randomDigitString(int)
+     * @see StringTestUtil#randomString(int)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
@@ -212,6 +222,9 @@ public enum TextInput implements BaseErrorType, HMTextType {
             case HOME:
             case UNIT_NUMBER:
                 return "testQA-" + StringTestUtil.randomString(10);
+
+            case CHILD_ID:
+                return "G1235695F";
 
             case PHONE:
             case MOBILE:

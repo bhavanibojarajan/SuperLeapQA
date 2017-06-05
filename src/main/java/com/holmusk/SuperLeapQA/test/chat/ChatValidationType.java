@@ -57,14 +57,14 @@ public interface ChatValidationType extends BaseValidationType {
      * @return {@link Flowable} instance.
      * @see BaseViewType#className()
      * @see Engine#rxe_ofClass(String...)
-     * @see IOSView.ViewType#UI_TABLEVIEW
+     * @see IOSView.ViewType#UI_TABLE_VIEW
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_chatListView(@NotNull Engine<?> engine) {
         if (engine instanceof IOSEngine) {
             return engine
-                .rxe_ofClass(IOSView.ViewType.UI_TABLEVIEW.className())
+                .rxe_ofClass(IOSView.ViewType.UI_TABLE_VIEW.className())
                 .firstElement()
                 .toFlowable();
         } else {

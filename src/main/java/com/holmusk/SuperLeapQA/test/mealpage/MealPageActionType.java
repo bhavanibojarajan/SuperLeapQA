@@ -75,6 +75,8 @@ public interface MealPageActionType extends MealPageValidationType {
      * @return {@link Flowable} instance.
      * @see Engine#rxa_swipeGeneric(WebElement, DurationType)
      * @see Engine#rxe_window()
+     * @see com.holmusk.SuperLeapQA.navigation.Screen#MEAL_PAGE
+     * @see com.holmusk.SuperLeapQA.navigation.Screen#SEARCH
      * @see Unidirection#UP_DOWN
      * @see UnidirectionParam.Builder#withDirection(Unidirection)
      * @see UnidirectionParam.Builder#withStartRatio(double)

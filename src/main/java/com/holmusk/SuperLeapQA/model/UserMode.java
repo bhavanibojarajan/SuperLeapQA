@@ -4,10 +4,11 @@ import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.HMUITestKit.model.HMTextType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zip;
-import org.swiften.xtestkit.base.type.BaseErrorType;
-import org.swiften.xtestkit.base.type.PlatformType;
-import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.platform.Platform;
 import org.swiften.xtestkit.util.ValueRangeConverterType;
 
 import java.util.Arrays;
@@ -83,6 +84,30 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     }
 
     /**
+     * Get the {@link HMTextType} inputs for the current {@link UserMode}.
+     * When the user is {@link UserMode#isParent()}, he/she also needs to
+     * enter the child's name and NRIC to be verified.
+     * @param platform {@link PlatformType} instance.
+     * @return {@link List} of {@link HMTextType}.
+     * @see CollectionUtil#asList(Object[])
+     * @see Collections#emptyList()
+     * @see TextInput#CHILD_NAME
+     * @see TextInput#CHILD_ID
+     * @see UserMode#isParent()
+     */
+    @NotNull
+    public List<HMTextType> validAgeInfo(@NotNull PlatformType platform) {
+        if (isParent()) {
+            return CollectionUtil.asList(
+                TextInput.CHILD_NAME,
+                TextInput.CHILD_ID
+            );
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    /**
      * Get the personal information inputs for this {@link UserMode}.
      * @param platform {@link PlatformType} instance.
      * @return {@link List} of {@link HMInputType}.
@@ -108,7 +133,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
 
     /**
      * Get personal info {@link HMInputType} for
-     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
+     * {@link Platform#ANDROID}.
      * @return {@link List} of {@link HMInputType}.
      * @see #NOT_AVAILABLE
      */
@@ -142,7 +167,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
 
     /**
      * Get personal info {@link HMInputType} for
-     * {@link org.swiften.xtestkit.mobile.Platform#IOS}.
+     * {@link Platform#IOS}.
      * @return {@link List} of {@link HMInputType}.
      * @see #NOT_AVAILABLE
      */

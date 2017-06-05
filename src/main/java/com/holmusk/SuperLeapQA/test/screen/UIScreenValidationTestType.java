@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.test.consolidated;
+package com.holmusk.SuperLeapQA.test.screen;
 
 import com.holmusk.HMUITestKit.model.HMChoiceType;
 import com.holmusk.HMUITestKit.model.HMInputType;
@@ -9,9 +9,9 @@ import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.navigation.type.BackwardNavigationType;
 import com.holmusk.SuperLeapQA.navigation.type.ForwardNavigationType;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
-import com.holmusk.SuperLeapQA.test.dob.DOBPickerTestHelperType;
 import com.holmusk.SuperLeapQA.test.personalinfo.UIPersonalInfoTestType;
 import com.holmusk.SuperLeapQA.util.GuarantorAware;
+import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -21,12 +21,13 @@ import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.type.PlatformType;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.testng.annotations.Test;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by haipham on 6/4/17.
@@ -34,8 +35,7 @@ import java.util.List;
 public interface UIScreenValidationTestType extends
     UIBaseTestType,
     ForwardNavigationType,
-    BackwardNavigationType,
-    DOBPickerTestHelperType
+    BackwardNavigationType
 {
     /**
      * This test validates {@link Screen#WELCOME} by checking that all
@@ -105,6 +105,7 @@ public interface UIScreenValidationTestType extends
      * and interacting with them.
      * @see Screen#SPLASH
      * @see Screen#FORGOT_PASSWORD
+     * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxv_forgotPassword(Engine)
@@ -140,8 +141,8 @@ public interface UIScreenValidationTestType extends
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rxv_registerScreen(Engine)
      * @see #rxa_clickBackButton(Engine)
+     * @see #rxv_registerScreen(Engine)
      * @see #rxv_welcomeScreen(Engine)
      */
     @Test
@@ -151,10 +152,11 @@ public interface UIScreenValidationTestType extends
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
+        UserMode mode = UserMode.PARENT;
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(UserMode.PARENT, Screen.SPLASH, Screen.REGISTER)
+        rxa_navigate(mode, Screen.SPLASH, Screen.REGISTER)
             .flatMap(a -> THIS.rxv_registerScreen(ENGINE))
 
             /* Make sure the back button works */
@@ -173,17 +175,21 @@ public interface UIScreenValidationTestType extends
      * by checking that all {@link org.openqa.selenium.WebElement} are present
      * and back navigation shows {@link Screen#REGISTER}.
      * @param mode {@link UserMode} instance.
+     * @see Engine#rxa_click(WebElement)
+     * @see Engine#rxa_navigateBackOnce()
+     * @see Engine#rxe_containsText(String...)
+     * @see ObjectUtil#nonNull(Object)
      * @see Screen#SPLASH
      * @see Screen#REGISTER
      * @see Screen#DOB
      * @see #assertCorrectness(TestSubscriber)
-     * @see #generalUserModeProvider()
      * @see #engine()
+     * @see #generalDelay(Engine)
+     * @see #generalUserModeProvider()
      * @see #rxa_clickBackButton(Engine)
      * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rxh_DoBPickerScreen(Engine)
+     * @see #rxa_openDoBPicker(Engine)
      * @see #rxv_registerScreen(Engine)
-     * @see #generalUserModeProvider()
      */
     @SuppressWarnings("unchecked")
     @GuarantorAware(value = false)
@@ -199,7 +205,19 @@ public interface UIScreenValidationTestType extends
 
         // When
         rxa_navigate(mode, Screen.SPLASH, Screen.DOB)
-            .flatMap(a -> THIS.rxh_DoBPickerScreen(ENGINE))
+            .flatMap(a -> Flowable.mergeArray(
+                ENGINE.rxe_containsText("register_title_dateOfBirth"),
+                ENGINE.rxe_containsText(
+                    "parentSignUp_title_whatIsYourChild",
+                    "teenSignUp_title_whatIsYour"
+                )
+            ))
+            .all(ObjectUtil::nonNull)
+            .toFlowable()
+            .flatMap(a -> THIS.rxa_openDoBPicker(ENGINE))
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
+            .flatMap(a -> ENGINE.rxa_navigateBackOnce())
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
             .flatMap(a -> THIS.rxa_clickBackButton(ENGINE))
             .flatMap(a -> THIS.rxv_registerScreen(ENGINE))
             .subscribe(subscriber);
@@ -305,6 +323,11 @@ public interface UIScreenValidationTestType extends
      * This test validates that {@link Screen#VALID_AGE} contains the
      * correct {@link org.openqa.selenium.WebElement} by verifying their
      * visibility,
+     * The procedures here mimic
+     * {@link #rxa_enterValidAgeInputs(Engine, UserMode)} in lots of ways,
+     * but this is intentional because we want to check for numeric formatting
+     * for {@link ChoiceInput#HEIGHT} and {@link ChoiceInput#WEIGHT} choice
+     * selection.
      * @param MODE {@link UserMode} instance.
      * @see ChoiceInput#HEIGHT
      * @see ChoiceInput#WEIGHT
@@ -314,14 +337,23 @@ public interface UIScreenValidationTestType extends
      * @see CollectionTestUtil#randomElement(Object[])
      * @see Engine#platform()
      * @see Ethnicity#values()
+     * @see Height#CM
+     * @see Height#CM_DEC
+     * @see Height#FT
+     * @see Height#INCH
      * @see Height#random(PlatformType, UserMode, UnitSystem)
      * @see Height#stringValue(PlatformType, UnitSystem, List)
+     * @see Weight#KG
+     * @see Weight#KG_DEC
+     * @see Weight#LB
+     * @see Weight#LB_DEC
      * @see Weight#random(PlatformType, UserMode, UnitSystem)
      * @see Weight#stringValue(PlatformType, UnitSystem, List)
      * @see Screen#SPLASH
      * @see Screen#VALID_AGE
      * @see UnitSystem#IMPERIAL
      * @see UnitSystem#METRIC
+     * @see UserMode#validAgeInfo(PlatformType)
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #generalUserModeProvider()
@@ -345,6 +377,7 @@ public interface UIScreenValidationTestType extends
         PlatformType p = E.platform();
         UnitSystem metric = UnitSystem.METRIC;
         UnitSystem imperial = UnitSystem.IMPERIAL;
+        final List<HMTextType> INPUTS = MODE.validAgeInfo(p);
         final ChoiceInput C_HEIGHT = ChoiceInput.HEIGHT;
         final ChoiceInput C_WEIGHT = ChoiceInput.WEIGHT;
         final ChoiceInput C_ETH = ChoiceInput.ETHNICITY;
@@ -359,35 +392,42 @@ public interface UIScreenValidationTestType extends
         final String WEIGHT_I_STR = Weight.stringValue(p, imperial, WEIGHT_I);
         final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
         final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
-
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         rxa_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE)
+            .flatMap(a -> THIS.rxa_randomInputs(E, INPUTS))
+
             .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_HEIGHT, Height.CM))
+
             .flatMap(a -> THIS.rxa_selectChoice(E, HEIGHT_M))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
             .flatMap(a -> THIS.rxv_hasValue(E, C_HEIGHT, HEIGHT_M_STR))
 
             .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_HEIGHT, Height.FT))
+
             .flatMap(a -> THIS.rxa_selectChoice(E, HEIGHT_I))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
             .flatMap(a -> THIS.rxv_hasValue(E, C_HEIGHT, HEIGHT_I_STR))
 
             .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_WEIGHT, Weight.KG))
+
             .flatMap(a -> THIS.rxa_selectChoice(E, WEIGHT_M))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
             .flatMap(a -> THIS.rxv_hasValue(E, C_WEIGHT, WEIGHT_M_STR))
 
             .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_WEIGHT, Weight.LB))
+
             .flatMap(a -> THIS.rxa_selectChoice(E, WEIGHT_I))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
             .flatMap(a -> THIS.rxv_hasValue(E, C_WEIGHT, WEIGHT_I_STR))
 
             .flatMap(a -> THIS.rxa_clickInputField(E, Gender.MALE))
             .flatMap(a -> THIS.rxa_clickInputField(E, Gender.FEMALE))
+
             .flatMap(a -> THIS.rxa_clickInputField(E, C_ETH))
             .flatMap(a -> THIS.rxa_selectChoice(E, C_ETH, ETH.stringValue()))
+
             .flatMap(a -> THIS.rxa_clickInputField(E, C_COACH))
             .flatMap(a -> THIS.rxa_selectChoice(E, C_COACH, CP.stringValue()))
             .subscribe(subscriber);

@@ -1,5 +1,6 @@
 package com.holmusk.SuperLeapQA.test.validage;
 
+import com.holmusk.HMUITestKit.model.HMTextChoiceType;
 import com.holmusk.HMUITestKit.model.UnitSystem;
 import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.HMUITestKit.model.HMChoiceType;
@@ -12,8 +13,8 @@ import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.type.PlatformType;
-import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.platform.Platform;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.ios.IOSEngine;
 
@@ -102,16 +103,30 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
     }
 
     /**
-     * Enter random acceptable age inputs in order to access the personal
-     * information input screen.
+     * Enter random acceptable age inputs in order to access
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#PERSONAL_INFO}.
+     * When the user is {@link UserMode#isParent()}, he/she needs to enter the
+     * child's name and NRIC as well.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
+     * @see ChoiceInput#HEIGHT
+     * @see ChoiceInput#WEIGHT
+     * @see CoachPref#values()
+     * @see CollectionTestUtil#randomElement(Object[])
+     * @see Ethnicity#values()
+     * @see Gender#values()
      * @see Height#randomValue(UserMode)
+     * @see HMTextChoiceType.Item#stringValue()
+     * @see com.holmusk.SuperLeapQA.navigation.Screen#PERSONAL_INFO
+     * @see UnitSystem#values()
+     * @see UserMode#validAgeInfo(PlatformType)
      * @see Weight#randomValue(UserMode)
      * @see #rxa_clickInputField(Engine, HMInputType)
      * @see #rxa_selectChoice(Engine, HMChoiceType, String)
+     * @see #rxa_selectUnitSystemPicker(Engine, HMChoiceType, SLNumericChoiceType)
      * @see #rxa_confirmNumericChoice(Engine)
      * @see #rxa_confirmTextChoice(Engine)
+     * @see #rxa_randomInputs(Engine, List)
      */
     @NotNull
     @SuppressWarnings({"unchecked", "ConstantConditions"})
@@ -130,7 +145,8 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
         final Height HEIGHT_MODE = HEIGHT.get(0).A;
         final Weight WEIGHT_MODE = WEIGHT.get(0).A;
 
-        return rxa_clickInputField(E, GENDER)
+        return rxa_randomInputs(E, mode.validAgeInfo(platform))
+            .flatMap(a -> rxa_clickInputField(E, GENDER))
             .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_HEIGHT, HEIGHT_MODE))
             .flatMap(a -> THIS.rxa_selectChoice(E, HEIGHT))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
@@ -157,10 +173,8 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @see #rxa_confirmValidAgeInputs(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_enterAndConfirmValidAgeInputs(
-        @NotNull final Engine<?> ENGINE,
-        @NotNull UserMode mode
-    ) {
+    default Flowable<?> rxa_completeValidAgeInputs(@NotNull final Engine<?> ENGINE,
+                                                   @NotNull UserMode mode) {
         final ValidAgeActionType THIS = this;
 
         return rxa_enterValidAgeInputs(ENGINE, mode)

@@ -3,7 +3,7 @@ package com.holmusk.SuperLeapQA.test.base;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.type.BaseErrorType;
+import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkit.ios.IOSEngine;
 
 /**

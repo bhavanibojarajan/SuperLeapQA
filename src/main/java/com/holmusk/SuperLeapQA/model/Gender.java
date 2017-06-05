@@ -1,15 +1,15 @@
 package com.holmusk.SuperLeapQA.model;
 
-import com.holmusk.SuperLeapQA.config.Config;
 import com.holmusk.HMUITestKit.model.HMInputType;
+import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.model.InputType;
-import org.swiften.xtestkit.base.element.locator.xpath.XPath;
-import org.swiften.xtestkit.base.type.BaseErrorType;
 import org.swiften.xtestkit.base.type.BaseViewType;
-import org.swiften.xtestkit.base.type.PlatformType;
-import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.ios.IOSView;
+import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
  * Created by haipham on 5/10/17.

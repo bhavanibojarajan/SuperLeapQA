@@ -88,14 +88,14 @@ public interface DashboardValidationType extends BaseValidationType {
      * dashboard modes.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see IOSView.ViewType#UI_SCROLLVIEW
+     * @see IOSView.ViewType#UI_SCROLL_VIEW
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_dashboardModeSwitcher(@NotNull Engine<?> engine) {
         if (engine instanceof IOSEngine) {
             return engine
-                .rxe_ofClass(IOSView.ViewType.UI_SCROLLVIEW.className())
+                .rxe_ofClass(IOSView.ViewType.UI_SCROLL_VIEW.className())
                 .firstElement()
                 .toFlowable();
         } else {

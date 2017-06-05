@@ -5,11 +5,11 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.element.locator.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseViewType;
-import org.swiften.xtestkit.base.type.PlatformType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
  * Created by haipham on 1/6/17.
@@ -40,14 +40,14 @@ public interface SearchValidationType extends BaseValidationType {
      * @return {@link Flowable} instance.
      * @see BaseViewType#className()
      * @see Engine#rxe_ofClass(String...)
-     * @see IOSView.ViewType#UI_SEARCHBAR
+     * @see IOSView.ViewType#UI_SEARCH_BAR
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_searchBar(@NotNull Engine<?> engine) {
         if (engine instanceof IOSEngine) {
             return engine
-                .rxe_ofClass(IOSView.ViewType.UI_SEARCHBAR.className())
+                .rxe_ofClass(IOSView.ViewType.UI_SEARCH_BAR.className())
                 .firstElement()
                 .toFlowable();
         } else {
@@ -64,9 +64,9 @@ public interface SearchValidationType extends BaseValidationType {
      * @see BaseViewType#className()
      * @see Engine#platform()
      * @see Engine#rxe_withXPath(XPath...)
-     * @see IOSView.ViewType#UI_STATICTEXT
-     * @see IOSView.ViewType#UI_TABLEVIEW
-     * @see IOSView.ViewType#UI_TABLEVIEW_CELL
+     * @see IOSView.ViewType#UI_STATIC_TEXT
+     * @see IOSView.ViewType#UI_TABLE_VIEW
+     * @see IOSView.ViewType#UI_TABLE_VIEW_CELL
      * @see XPath.Builder#containsText(String)
      * @see XPath.Builder#addClass(String)
      * @see #NOT_AVAILABLE
@@ -79,17 +79,17 @@ public interface SearchValidationType extends BaseValidationType {
 
         if (engine instanceof IOSEngine) {
             XPath child = XPath.builder(platform)
-                .addClass(IOSView.ViewType.UI_STATICTEXT.className())
+                .addClass(IOSView.ViewType.UI_STATIC_TEXT.className())
                 .containsText(query)
                 .build();
 
             XPath parent = XPath.builder(platform)
-                .addClass(IOSView.ViewType.UI_TABLEVIEW_CELL.className())
+                .addClass(IOSView.ViewType.UI_TABLE_VIEW_CELL.className())
                 .addChildXPath(child)
                 .build();
 
             xPath = XPath.builder(platform)
-                .addClass(IOSView.ViewType.UI_TABLEVIEW.className())
+                .addClass(IOSView.ViewType.UI_TABLE_VIEW.className())
                 .addChildXPath(parent)
                 .build();
         } else {

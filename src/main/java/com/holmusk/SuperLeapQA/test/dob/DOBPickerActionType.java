@@ -13,6 +13,7 @@ import org.swiften.xtestkit.base.element.date.DateType;
 import org.swiften.xtestkit.base.type.DelayType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.element.date.IOSDatePickerType;
+import org.swiften.xtestkitcomponents.platform.Platform;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -26,9 +27,9 @@ public interface DOBPickerActionType extends BaseActionType, DOBPickerValidation
      * Open the DoB dialog in the sign up screen. This can be used both
      * for parent sign up and teen sign up.
      * Due to design differences, only
-     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID} requires the
+     * {@link Platform#ANDROID} requires the
      * DoB picker to be opened. On
-     * {@link org.swiften.xtestkit.mobile.Platform#IOS}, the picker is visible
+     * {@link Platform#IOS}, the picker is visible
      * immediately upon entering the screen.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.

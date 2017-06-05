@@ -111,14 +111,14 @@ public interface MealPageValidationType extends BaseValidationType {
      * @return {@link Flowable} instance.
      * @see BaseViewType#className()
      * @see Engine#rxe_ofClass(String...)
-     * @see IOSView.ViewType#UI_IMAGEVIEW
+     * @see IOSView.ViewType#UI_IMAGE_VIEW
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_mealImage(@NotNull Engine<?> engine) {
         if (engine instanceof IOSEngine) {
             return engine
-                .rxe_ofClass(IOSView.ViewType.UI_IMAGEVIEW.className())
+                .rxe_ofClass(IOSView.ViewType.UI_IMAGE_VIEW.className())
                 .firstElement()
                 .toFlowable();
         } else {

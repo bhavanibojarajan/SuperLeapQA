@@ -20,5 +20,6 @@ repositories {
 dependencies {
     compile project(':HMUITestKit')
     compile project(':XTestKit')
+    compile project(':XTestKitComponents')
     compile project(':JavaUtilities')
 }

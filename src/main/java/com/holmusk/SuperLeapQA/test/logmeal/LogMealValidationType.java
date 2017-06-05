@@ -1,9 +1,9 @@
 package com.holmusk.SuperLeapQA.test.logmeal;
 
+import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.SuperLeapQA.config.Config;
 import com.holmusk.SuperLeapQA.model.Mood;
 import com.holmusk.SuperLeapQA.model.TextInput;
-import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
@@ -12,11 +12,11 @@ import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.element.locator.xpath.XPath;
 import org.swiften.xtestkit.base.type.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.platform.Platform;
+import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
  * Created by haipham on 29/5/17.
@@ -84,8 +84,8 @@ public interface LogMealValidationType extends BaseValidationType {
      * @return {@link Flowable} instance.
      * @see Engine#rxe_withXPath(XPath...)
      * @see Engine#rxe_containsID(String...)
-     * @see IOSView.ViewType#UI_STATICTEXT
-     * @see IOSView.ViewType#UI_TABLEVIEW_CELL
+     * @see IOSView.ViewType#UI_STATIC_TEXT
+     * @see IOSView.ViewType#UI_TABLE_VIEW_CELL
      * @see Platform#IOS
      * @see XPath.Builder#addClass(String)
      * @see XPath.Builder#setIndex(XPath.AtIndex)
@@ -101,12 +101,12 @@ public interface LogMealValidationType extends BaseValidationType {
             Platform platform = Platform.IOS;
 
             XPath child = XPath.builder(platform)
-                .addClass(IOSView.ViewType.UI_STATICTEXT.className())
+                .addClass(IOSView.ViewType.UI_STATIC_TEXT.className())
                 .setIndex(2)
                 .build();
 
             XPath parent = XPath.builder(platform)
-                .addClass(IOSView.ViewType.UI_TABLEVIEW_CELL.className())
+                .addClass(IOSView.ViewType.UI_TABLE_VIEW_CELL.className())
                 .setIndex(3)
                 .addChildXPath(child)
                 .build();
@@ -153,7 +153,7 @@ public interface LogMealValidationType extends BaseValidationType {
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_withXPath(XPath...)
      * @see IOSView.ViewType#UI_BUTTON
-     * @see IOSView.ViewType#UI_TABLEVIEW_CELL
+     * @see IOSView.ViewType#UI_TABLE_VIEW_CELL
      * @see Platform#IOS
      * @see XPath.Builder#addClass(String)
      * @see XPath.Builder#setIndex(int)
@@ -172,7 +172,7 @@ public interface LogMealValidationType extends BaseValidationType {
                 .build();
 
             XPath parent = XPath.builder(platform)
-                .addClass(IOSView.ViewType.UI_TABLEVIEW_CELL.className())
+                .addClass(IOSView.ViewType.UI_TABLE_VIEW_CELL.className())
                 .setIndex(1)
                 .addChildXPath(child)
                 .build();
