@@ -2,6 +2,8 @@ package com.holmusk.SuperLeapQA.test.validage;
 
 import com.holmusk.HMUITestKit.model.HMTextChoiceType;
 import com.holmusk.HMUITestKit.model.UnitSystem;
+import com.holmusk.SuperLeapQA.bmi.BMIParam;
+import com.holmusk.SuperLeapQA.bmi.BMIUtil;
 import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.HMUITestKit.model.HMChoiceType;
 import com.holmusk.HMUITestKit.model.HMInputType;
@@ -109,6 +111,11 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * child's name and NRIC as well.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
+     * @see BMIParam.Builder#withEthnicity(Ethnicity)
+     * @see BMIParam.Builder#withGender(Gender)
+     * @see BMIParam.Builder#withHeight(List)
+     * @see BMIParam.Builder#withWeight(List)
+     * @see BMIUtil#withinHealthyRange(BMIParam)
      * @see ChoiceInput#HEIGHT
      * @see ChoiceInput#WEIGHT
      * @see CoachPref#values()
@@ -121,6 +128,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @see UnitSystem#values()
      * @see UserMode#validAgeInfo(PlatformType)
      * @see Weight#randomValue(UserMode)
+     * @see Zip#A
      * @see #rxa_clickInputField(Engine, HMInputType)
      * @see #rxa_selectChoice(Engine, HMChoiceType, String)
      * @see #rxa_selectUnitSystemPicker(Engine, HMChoiceType, SLNumericChoiceType)
@@ -138,20 +146,36 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
         final Gender GENDER = CollectionTestUtil.randomElement(Gender.values());
         final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
         final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
-        final List<Zip<Height,String>> HEIGHT = Height.random(platform, mode, unit);
-        final List<Zip<Weight,String>> WEIGHT = Weight.random(platform, mode, unit);
         final ChoiceInput C_HEIGHT = ChoiceInput.HEIGHT;
         final ChoiceInput C_WEIGHT = ChoiceInput.WEIGHT;
-        final Height HEIGHT_MODE = HEIGHT.get(0).A;
-        final Weight WEIGHT_MODE = WEIGHT.get(0).A;
+
+        List<Zip<Height,String>> HEIGHT;
+        List<Zip<Weight,String>> WEIGHT;
+        BMIParam param;
+
+        /* Keep randomizing until BMI falls out of healthy range */
+        do {
+            HEIGHT = Height.random(platform, mode, unit);
+            WEIGHT = Weight.random(platform, mode, unit);
+
+            param = BMIParam.builder()
+                .withEthnicity(ETH)
+                .withGender(GENDER)
+                .withHeight(HEIGHT)
+                .withWeight(WEIGHT)
+                .build();
+        } while (BMIUtil.withinHealthyRange(param));
+
+        final Height H_MODE = HEIGHT.get(0).A;
+        final Weight W_MODE = WEIGHT.get(0).A;
 
         return rxa_randomInputs(E, mode.validAgeInfo(platform))
-            .flatMap(a -> rxa_clickInputField(E, GENDER))
-            .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_HEIGHT, HEIGHT_MODE))
+            .flatMap(a -> THIS.rxa_clickInputField(E, GENDER))
+            .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_HEIGHT, H_MODE))
             .flatMap(a -> THIS.rxa_selectChoice(E, HEIGHT))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
 
-            .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_WEIGHT, WEIGHT_MODE))
+            .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_WEIGHT, W_MODE))
             .flatMap(a -> THIS.rxa_selectChoice(E, WEIGHT))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
 

@@ -1,7 +1,9 @@
 package com.holmusk.SuperLeapQA.model;
 
+import com.holmusk.HMUITestKit.model.HMUnitSystemConvertibleType;
 import com.holmusk.HMUITestKit.model.UnitSystem;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.base.type.BaseViewType;
@@ -14,14 +16,13 @@ import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Height implements SLNumericChoiceType {
+public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
     FT,
     INCH,
     CM,
@@ -32,14 +33,17 @@ public enum Height implements SLNumericChoiceType {
      * Get the {@link Height} instances for {@link UnitSystem#METRIC}.
      * @param platform {@link PlatformType} instance.
      * @return {@link List} of {@link Height}.
+     * @see CollectionUtil#asList(Object[])
      * @see Platform#ANDROID
+     * @see #CM
+     * @see #CM_DEC
      */
     @NotNull
     public static List<Height> metric(@NotNull PlatformType platform) {
         if (platform.equals(Platform.ANDROID)) {
-            return Collections.singletonList(CM);
+            return CollectionUtil.asList(CM);
         } else {
-            return Arrays.asList(CM, CM_DEC);
+            return CollectionUtil.asList(CM, CM_DEC);
         }
     }
 
@@ -47,6 +51,8 @@ public enum Height implements SLNumericChoiceType {
      * Get the {@link Height} instances for {@link UnitSystem#IMPERIAL}.
      * @param platform {@link PlatformType} instance.
      * @return {@link List} of {@link Height}.
+     * @see #FT
+     * @see #INCH
      */
     @NotNull
     public static List<Height> imperial(@NotNull PlatformType platform) {
@@ -59,8 +65,10 @@ public enum Height implements SLNumericChoiceType {
      * @param platform {@link PlatformType} instance.
      * @param unit {@link UnitSystem} instance.
      * @return {@link List} of {@link Height}.
-     * @see #metric(PlatformType)
+     * @see UnitSystem#IMPERIAL
+     * @see UnitSystem#METRIC
      * @see #imperial(PlatformType)
+     * @see #metric(PlatformType)
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -84,8 +92,8 @@ public enum Height implements SLNumericChoiceType {
      * @param MODE {@link UserMode} instance.
      * @param unit {@link UnitSystem} instance.
      * @return {@link List} of {@link Zip}.
-     * @see #instances(PlatformType, UnitSystem)
      * @see SLNumericChoiceType#randomValue(UserMode)
+     * @see #instances(PlatformType, UnitSystem)*
      */
     @NotNull
     public static List<Zip<Height,String>> random(@NotNull PlatformType platform,
@@ -101,6 +109,8 @@ public enum Height implements SLNumericChoiceType {
      * {@link Height}.
      * @param platform {@link PlatformType} instance.
      * @return {@link String} value.
+     * @see Platform#ANDROID
+     * @see Platform#IOS
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -150,10 +160,37 @@ public enum Height implements SLNumericChoiceType {
     }
     //endregion
 
+    /**
+     * Override this method to provide default implementation.
+     * @return {@link UnitSystem} instance.
+     * @see HMUnitSystemConvertibleType#unitSystem()
+     * @see UnitSystem#IMPERIAL
+     * @see UnitSystem#METRIC
+     * @see #FT
+     * @see #INCH
+     */
+    @NotNull
+    @Override
+    public UnitSystem unitSystem() {
+        switch (this) {
+            case FT:
+            case INCH:
+                return UnitSystem.IMPERIAL;
+
+            default:
+                return UnitSystem.METRIC;
+        }
+    }
+
     //region Picker Index
     /**
+     * Override this method to provide default implementation.
      * @return {@link Integer} value.
      * @see SLNumericChoiceType#androidScrollablePickerIndex()
+     * @see #CM
+     * @see #CM_DEC
+     * @see #FT
+     * @see #INCH
      * @see #NOT_AVAILABLE
      */
     @Override
@@ -173,8 +210,13 @@ public enum Height implements SLNumericChoiceType {
     }
 
     /**
+     * Override this method to provide default implementation.
      * @return {@link Integer} value.
      * @see SLNumericChoiceType#iOSScrollablePickerIndex()
+     * @see #CM
+     * @see #CM_DEC
+     * @see #FT
+     * @see #INCH
      * @see #NOT_AVAILABLE
      */
     @Override
@@ -196,9 +238,12 @@ public enum Height implements SLNumericChoiceType {
 
     //region Input View XPath
     /**
+     * Override this method to provide default implementation.
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
      * @see InputType#inputViewXP(PlatformType)
+     * @see Platform#ANDROID
+     * @see Platform#IOS
      * @see #androidInputViewXPath()
      * @see #NOT_AVAILABLE
      */
@@ -224,6 +269,10 @@ public enum Height implements SLNumericChoiceType {
      * @see Attributes#of(PlatformType)
      * @see Platform#ANDROID
      * @see XPath.Builder#addAttribute(Attribute)
+     * @see #CM
+     * @see #CM_DEC
+     * @see #FT
+     * @see #INCH
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -262,6 +311,8 @@ public enum Height implements SLNumericChoiceType {
      * @see Platform#IOS
      * @see IOSView.ViewType#UI_BUTTON
      * @see XPath.Builder#addAttribute(Attribute)
+     * @see #CM
+     * @see #FT
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -312,6 +363,10 @@ public enum Height implements SLNumericChoiceType {
      * @return {@link Integer} value.
      * @see SLNumericChoiceType#minSelectableValue(UserMode)
      * @see UserMode#isParent()
+     * @see #CM
+     * @see #CM_DEC
+     * @see #FT
+     * @see #INCH
      * @see #NOT_AVAILABLE
      */
     @Override
@@ -339,6 +394,10 @@ public enum Height implements SLNumericChoiceType {
      * @return {@link Integer} value.
      * @see SLNumericChoiceType#maxSelectableValue(UserMode)
      * @see UserMode#isParent()
+     * @see #CM
+     * @see #CM_DEC
+     * @see #FT
+     * @see #INCH
      * @see #NOT_AVAILABLE
      */
     @Override

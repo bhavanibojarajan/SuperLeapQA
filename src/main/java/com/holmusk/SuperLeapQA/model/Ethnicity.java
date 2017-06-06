@@ -127,4 +127,27 @@ public enum Ethnicity implements
     private XPath iOSInputViewXP() {
         return XPath.builder().addAttribute(CompoundAttribute.empty()).build();
     }
+
+    /**
+     * Check if the current {@link Ethnicity} is Asia-based.
+     * @return {@link Boolean} value.
+     * @see #ASIAN_OTHER
+     * @see #CHINESE
+     * @see #INDIAN
+     * @see #JAPANESE
+     * @see #MALAY
+     */
+    public boolean isAsian() {
+        switch (this) {
+            case ASIAN_OTHER:
+            case CHINESE:
+            case INDIAN:
+            case JAPANESE:
+            case MALAY:
+                return true;
+
+            default:
+                return false;
+        }
+    }
 }

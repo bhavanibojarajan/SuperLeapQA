@@ -50,7 +50,7 @@ public interface UIBaseTestType extends BaseTestType, ForwardNavigationType, SLS
 
         UserMode[] modes = new UserMode[] {
             UserMode.PARENT,
-            UserMode.TEEN_A18,
+//            UserMode.TEEN_A18,
             UserMode.TEEN_U18
         };
 

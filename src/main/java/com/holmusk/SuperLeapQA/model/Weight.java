@@ -1,5 +1,6 @@
 package com.holmusk.SuperLeapQA.model;
 
+import com.holmusk.HMUITestKit.model.HMUnitSystemConvertibleType;
 import com.holmusk.HMUITestKit.model.UnitSystem;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Weight implements SLNumericChoiceType {
+public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
     KG,
     KG_DEC,
     LB,
@@ -120,6 +121,28 @@ public enum Weight implements SLNumericChoiceType {
         }
     }
     //endregion
+
+    /**
+     * Override this method to provide default implementation.
+     * @return {@link UnitSystem} instance.
+     * @see HMUnitSystemConvertibleType#unitSystem()
+     * @see UnitSystem#IMPERIAL
+     * @see UnitSystem#METRIC
+     * @see #LB
+     * @see #LB_DEC
+     */
+    @NotNull
+    @Override
+    public UnitSystem unitSystem() {
+        switch (this) {
+            case LB:
+            case LB_DEC:
+                return UnitSystem.IMPERIAL;
+
+            default:
+                return UnitSystem.METRIC;
+        }
+    }
 
     //region Picker Index
     /**
