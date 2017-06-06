@@ -175,7 +175,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @param ENGINE {@link Engine} instance.
      * @param date {@link Date} instance.
      * @return {@link Flowable} instance.
-     * @see AndroidDatePickerType#hh_mm_TIMEPICKER
+     * @see AndroidDatePickerType#hh_mm_TIME_PICKER
      * @see BooleanUtil#isTrue(boolean)
      * @see CalendarUnit#MONTH
      * @see CalendarUnit#DAY
@@ -202,7 +202,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
             DateType timeParam = DateParam.builder()
                 .withDate(date)
                 .withCalendarUnits(CalendarUnit.HOUR, CalendarUnit.MINUTE)
-                .withPickerType(AndroidDatePickerType.hh_mm_TIMEPICKER)
+                .withPickerType(AndroidDatePickerType.hh_mm_TIME_PICKER)
                 .build();
 
             return Flowable

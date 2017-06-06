@@ -3,9 +3,13 @@ package com.holmusk.SuperLeapQA.model;
 import com.holmusk.HMUITestKit.model.HMTextChoiceType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.model.InputType;
+import org.swiften.xtestkit.base.type.BaseViewType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.xpath.Attribute;
+import org.swiften.xtestkitcomponents.xpath.Attributes;
+import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
 import java.util.Arrays;
@@ -68,13 +72,16 @@ public enum ChoiceInput implements HMTextChoiceType {
     /**
      * Get {@link XPath} for the input view for {@link Platform#ANDROID}.
      * @return {@link XPath} instance.
+     * @see Attributes#containsID(String)
+     * @see Attributes#of(PlatformType)
      * @see Platform#ANDROID
-     * @see XPath.Builder#addAnyClass()
-     * @see XPath.Builder#containsID(String)
+     * @see XPath.Builder#addAttribute(Attribute)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     private XPath androidInputViewXP() {
+        Attributes attrs = Attributes.of(Platform.ANDROID);
+
         final String ID;
 
         switch (this) {
@@ -98,23 +105,22 @@ public enum ChoiceInput implements HMTextChoiceType {
                 throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        return XPath
-            .builder(Platform.ANDROID)
-            .containsID(ID)
-            .addAnyClass()
-            .build();
+        Attribute attribute = attrs.containsID(ID);
+        return XPath.builder().addAttribute(attribute).build();
     }
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
      * @return {@link XPath} instance.
+     * @see BaseViewType#className()
+     * @see CompoundAttribute#forClass(String)
+     * @see CompoundAttribute#withIndex(Integer)
      * @see Platform#IOS
      * @see IOSView.ViewType#UI_TEXT_FIELD
      * @see IOSView.ViewType#UI_TABLE_VIEW_CELL
      * @see IOSView.ViewType#UI_TABLE_VIEW
-     * @see XPath.Builder#addClass(String)
-     * @see XPath.Builder#setIndex(int)
-     * @see XPath.Builder#addChildXPath(XPath)
+     * @see XPath.Builder#addAttribute(Attribute)
+     * @see #values()
      */
     @NotNull
     private XPath iOSInputViewXP() {
@@ -124,20 +130,14 @@ public enum ChoiceInput implements HMTextChoiceType {
          * picker, which is also a UITableViewCell. We want to skip this cell.
          * And also, the XPath index is 1-based */
         int index = Arrays.asList(values()).indexOf(this) + 2;
+        String tf = IOSView.ViewType.UI_TEXT_FIELD.className();
+        String tblCell = IOSView.ViewType.UI_TABLE_VIEW_CELL.className();
+        String tblView = IOSView.ViewType.UI_TABLE_VIEW.className();
 
-        XPath textFieldXPath = XPath.builder(platform)
-            .addClass(IOSView.ViewType.UI_TEXT_FIELD.className())
-            .build();
-
-        XPath cellXPath = XPath.builder(platform)
-            .addClass(IOSView.ViewType.UI_TABLE_VIEW_CELL.className())
-            .setIndex(index)
-            .build();
-
-        return XPath.builder(platform)
-            .addClass(IOSView.ViewType.UI_TABLE_VIEW.className())
-            .addChildXPath(cellXPath)
-            .addChildXPath(textFieldXPath)
+        return XPath.builder()
+            .addAttribute(CompoundAttribute.forClass(tblView).withIndex(index))
+            .addAttribute(CompoundAttribute.forClass(tblCell))
+            .addAttribute(CompoundAttribute.forClass(tf))
             .build();
     }
 

@@ -10,10 +10,13 @@ import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.type.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.xpath.Attribute;
+import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
@@ -47,11 +50,13 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
      * Get the Terms and Conditions checkbox.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see IOSView.ViewType#UI_BUTTON
-     * @see Platform#IOS
+     * @see BaseViewType#className()
+     * @see CompoundAttribute#forClass(String)
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_withXPath(XPath...)
-     * @see XPath.Builder#addClass(String)
+     * @see IOSView.ViewType#UI_BUTTON
+     * @see Platform#IOS
+     * @see XPath.Builder#addAttribute(Attribute)
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -59,9 +64,9 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
         if (engine instanceof AndroidEngine) {
             return engine.rxe_containsID("ctv_toc").firstElement().toFlowable();
         } else if (engine instanceof IOSEngine) {
-            XPath xPath = XPath.builder(Platform.IOS)
-                .addClass(IOSView.ViewType.UI_BUTTON.className())
-                .build();
+            String clsName = IOSView.ViewType.UI_BUTTON.className();
+            CompoundAttribute attribute = CompoundAttribute.forClass(clsName);
+            XPath xPath = XPath.builder().addAttribute(attribute).build();
 
             /* Getting the T&C button this way is admittedly prone to failure,
              * but there is hardly a better way, since the page source for

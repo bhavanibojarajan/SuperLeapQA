@@ -9,6 +9,9 @@ import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.property.base.AttributeType;
+import org.swiften.xtestkitcomponents.xpath.Attribute;
+import org.swiften.xtestkitcomponents.xpath.Attributes;
+import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
@@ -78,26 +81,26 @@ public enum CoachPref implements
     /**
      * Get {@link XPath} for the input view for {@link Platform#ANDROID}.
      * @return {@link XPath} instance.
+     * @see Attributes#containsID(String)
+     * @see Attributes#of(PlatformType)
      * @see Platform#ANDROID
-     * @see XPath.Builder#addAnyClass()
-     * @see XPath.Builder#containsID(String)
+     * @see XPath.Builder#addAttribute(Attribute)
      */
     @NotNull
     private XPath androidInputViewXP() {
-        return XPath.builder(Platform.ANDROID)
-            .containsID("text1")
-            .addAnyClass()
-            .build();
+        Attributes attrs = Attributes.of(Platform.ANDROID);
+        Attribute attribute = attrs.containsID("text1");
+        return XPath.builder().addAttribute(attribute).build();
     }
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
      * @return {@link XPath} instance.
-     * @see Platform#IOS
-     * @see XPath.Builder#addAnyClass()
+     * @see CompoundAttribute#empty()
+     * @see XPath.Builder#addAttribute(CompoundAttribute)
      */
     @NotNull
     private XPath iOSInputViewXP() {
-        return XPath.builder(Platform.IOS).addAnyClass().build();
+        return XPath.builder().addAttribute(CompoundAttribute.empty()).build();
     }
 }

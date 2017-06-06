@@ -9,6 +9,9 @@ import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.property.base.AttributeType;
+import org.swiften.xtestkitcomponents.xpath.Attribute;
+import org.swiften.xtestkitcomponents.xpath.Attributes;
+import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
@@ -81,7 +84,7 @@ public enum Ethnicity implements
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
      * @see InputType#inputViewXP(PlatformType)
-     * @see #androidInputViewXPath()
+     * @see #androidInputViewXP()
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -89,10 +92,10 @@ public enum Ethnicity implements
     public XPath inputViewXP(@NotNull PlatformType platform) {
         switch ((Platform)platform) {
             case ANDROID:
-                return androidInputViewXPath();
+                return androidInputViewXP();
 
             case IOS:
-                return iOSInputViewXPath();
+                return iOSInputViewXP();
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -102,27 +105,26 @@ public enum Ethnicity implements
     /**
      * Get {@link XPath} for the input view for {@link Platform#ANDROID}.
      * @return {@link XPath} instance.
+     * @see Attributes#containsID(String)
+     * @see Attributes#of(PlatformType)
      * @see Platform#ANDROID
-     * @see XPath.Builder#addAnyClass()
-     * @see XPath.Builder#containsID(String)
+     * @see XPath.Builder#addAttribute(Attribute)
      */
     @NotNull
-    private XPath androidInputViewXPath() {
-        return XPath
-            .builder(Platform.ANDROID)
-            .containsID("text1")
-            .addAnyClass()
-            .build();
+    private XPath androidInputViewXP() {
+        Attributes attrs = Attributes.of(Platform.ANDROID);
+        Attribute attribute = attrs.containsID("text1");
+        return XPath.builder().addAttribute(attribute).build();
     }
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
      * @return {@link XPath} instance.
-     * @see Platform#IOS
-     * @see XPath.Builder#addAnyClass()
+     * @see CompoundAttribute#empty()
+     * @see XPath.Builder#addAttribute(CompoundAttribute)
      */
     @NotNull
-    private XPath iOSInputViewXPath() {
-        return XPath.builder(Platform.IOS).addAnyClass().build();
+    private XPath iOSInputViewXP() {
+        return XPath.builder().addAttribute(CompoundAttribute.empty()).build();
     }
 }

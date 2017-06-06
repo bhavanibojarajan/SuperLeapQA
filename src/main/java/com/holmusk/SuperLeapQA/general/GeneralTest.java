@@ -54,7 +54,6 @@ public final class GeneralTest {
     @Test
     public void test_birthDayCalculation_shouldBeCorrect() {
         // Setup
-        Calendar calendar = Calendar.getInstance();
         LocalDate date1 = LocalDate.of(2017, 6, 5);
         LocalDate date2 = LocalDate.of(2013, 6, 5);
 

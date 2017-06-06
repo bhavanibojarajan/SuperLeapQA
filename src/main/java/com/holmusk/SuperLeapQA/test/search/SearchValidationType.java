@@ -9,6 +9,9 @@ import org.swiften.xtestkit.base.type.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.xpath.Attribute;
+import org.swiften.xtestkitcomponents.xpath.Attributes;
+import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
@@ -61,14 +64,17 @@ public interface SearchValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @param query {@link String} value.
      * @return {@link Flowable} instance.
+     * @see Attributes#of(PlatformType)
+     * @see Attributes#containsText(String)
      * @see BaseViewType#className()
+     * @see CompoundAttribute#forClass(String)
+     * @see CompoundAttribute#single(Attribute)
      * @see Engine#platform()
      * @see Engine#rxe_withXPath(XPath...)
      * @see IOSView.ViewType#UI_STATIC_TEXT
      * @see IOSView.ViewType#UI_TABLE_VIEW
      * @see IOSView.ViewType#UI_TABLE_VIEW_CELL
-     * @see XPath.Builder#containsText(String)
-     * @see XPath.Builder#addClass(String)
+     * @see XPath.Builder#addAttribute(Attribute)
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -78,19 +84,19 @@ public interface SearchValidationType extends BaseValidationType {
         XPath xPath;
 
         if (engine instanceof IOSEngine) {
-            XPath child = XPath.builder(platform)
-                .addClass(IOSView.ViewType.UI_STATIC_TEXT.className())
-                .containsText(query)
-                .build();
+            Attributes attrs = Attributes.of(platform);
+            String tblView = IOSView.ViewType.UI_TABLE_VIEW.className();
+            String tblCell = IOSView.ViewType.UI_TABLE_VIEW_CELL.className();
 
-            XPath parent = XPath.builder(platform)
-                .addClass(IOSView.ViewType.UI_TABLE_VIEW_CELL.className())
-                .addChildXPath(child)
-                .build();
+            Attribute attr = attrs.containsText(query);
 
-            xPath = XPath.builder(platform)
-                .addClass(IOSView.ViewType.UI_TABLE_VIEW.className())
-                .addChildXPath(parent)
+            CompoundAttribute cAttr = CompoundAttribute.single(attr)
+                .withClass(IOSView.ViewType.UI_STATIC_TEXT.className());
+
+            xPath = XPath.builder()
+                .addAttribute(CompoundAttribute.forClass(tblView))
+                .addAttribute(CompoundAttribute.forClass(tblCell))
+                .addAttribute(cAttr)
                 .build();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);

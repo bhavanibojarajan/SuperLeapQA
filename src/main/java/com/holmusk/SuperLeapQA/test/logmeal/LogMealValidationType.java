@@ -16,6 +16,8 @@ import org.swiften.xtestkit.base.type.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.xpath.Attribute;
+import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
@@ -82,13 +84,14 @@ public interface LogMealValidationType extends BaseValidationType {
      * Get the meal time display text view.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see BaseViewType#className()
+     * @see CompoundAttribute#forClass(String)
+     * @see CompoundAttribute#withIndex(Integer)
      * @see Engine#rxe_withXPath(XPath...)
      * @see Engine#rxe_containsID(String...)
      * @see IOSView.ViewType#UI_STATIC_TEXT
      * @see IOSView.ViewType#UI_TABLE_VIEW_CELL
-     * @see Platform#IOS
-     * @see XPath.Builder#addClass(String)
-     * @see XPath.Builder#setIndex(XPath.AtIndex)
+     * @see XPath.Builder#addAttribute(Attribute)
      */
     @NotNull
     default Flowable<WebElement> rxe_mealTime(@NotNull Engine<?> engine) {
@@ -98,20 +101,20 @@ public interface LogMealValidationType extends BaseValidationType {
                 .firstElement()
                 .toFlowable();
         } else if (engine instanceof IOSEngine) {
-            Platform platform = Platform.IOS;
+            CompoundAttribute first = CompoundAttribute
+                .forClass(IOSView.ViewType.UI_TABLE_VIEW_CELL.className())
+                .withIndex(3);
 
-            XPath child = XPath.builder(platform)
-                .addClass(IOSView.ViewType.UI_STATIC_TEXT.className())
-                .setIndex(2)
+            CompoundAttribute second = CompoundAttribute
+                .forClass(IOSView.ViewType.UI_STATIC_TEXT.className())
+                .withIndex(2);
+
+            XPath xPath = XPath.builder()
+                .addAttribute(first)
+                .addAttribute(second)
                 .build();
 
-            XPath parent = XPath.builder(platform)
-                .addClass(IOSView.ViewType.UI_TABLE_VIEW_CELL.className())
-                .setIndex(3)
-                .addChildXPath(child)
-                .build();
-
-            return engine.rxe_withXPath(parent).firstElement().toFlowable();
+            return engine.rxe_withXPath(xPath).firstElement().toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -150,13 +153,15 @@ public interface LogMealValidationType extends BaseValidationType {
      * @param index {@link Integer} value representing the current pick index.
      * @return {@link Flowable} instance.
      * @see BaseViewType#className()
+     * @see CompoundAttribute#forClass(String)
+     * @see CompoundAttribute#withIndex(Integer)
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_withXPath(XPath...)
      * @see IOSView.ViewType#UI_BUTTON
      * @see IOSView.ViewType#UI_TABLE_VIEW_CELL
      * @see Platform#IOS
-     * @see XPath.Builder#addClass(String)
-     * @see XPath.Builder#setIndex(int)
+     * @see XPath.Builder#addAttribute(Attribute)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_photoPicker(@NotNull Engine<?> engine, int index) {
@@ -164,20 +169,20 @@ public interface LogMealValidationType extends BaseValidationType {
             String id = String.format("photo%d", index);
             return engine.rxe_containsID(id).firstElement().toFlowable();
         } else if (engine instanceof IOSEngine) {
-            Platform platform = Platform.IOS;
+            CompoundAttribute first = CompoundAttribute
+                .forClass(IOSView.ViewType.UI_TABLE_VIEW_CELL.className())
+                .withIndex(1);
 
-            XPath child = XPath.builder(platform)
-                .addClass(IOSView.ViewType.UI_BUTTON.className())
-                .setIndex(1)
+            CompoundAttribute second = CompoundAttribute
+                .forClass(IOSView.ViewType.UI_BUTTON.className())
+                .withIndex(1);
+
+            XPath xPath = XPath.builder()
+                .addAttribute(first)
+                .addAttribute(second)
                 .build();
 
-            XPath parent = XPath.builder(platform)
-                .addClass(IOSView.ViewType.UI_TABLE_VIEW_CELL.className())
-                .setIndex(1)
-                .addChildXPath(child)
-                .build();
-
-            return engine.rxe_withXPath(parent).firstElement().toFlowable();
+            return engine.rxe_withXPath(xPath).firstElement().toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

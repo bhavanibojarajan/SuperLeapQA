@@ -30,6 +30,10 @@ import org.swiften.xtestkit.base.type.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.xpath.Attribute;
+import org.swiften.xtestkitcomponents.xpath.Attributes;
+import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
 import java.util.Arrays;
@@ -177,27 +181,32 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * Confirm a text input.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see Attributes#containsText(String)
+     * @see Attributes#of(PlatformType)
      * @see BaseViewType#className()
+     * @see CompoundAttribute#single(Attribute)
+     * @see CompoundAttribute#withClass(String)
      * @see Engine#localizer()
      * @see Engine#rxa_click(WebElement)
      * @see Engine#rxe_withXPath(XPath...)
      * @see IOSView.ViewType#UI_BUTTON
      * @see Platform#IOS
      * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
-     * @see XPath.Builder#addClass(String)
-     * @see XPath.Builder#containsText(String)
+     * @see XPath.Builder#addAttribute(Attribute)
      */
     @NotNull
     default Flowable<?> rxa_confirmTextInput(@NotNull final Engine<?> ENGINE) {
         if (ENGINE instanceof IOSEngine) {
             String done = "input_title_done";
             String localized = ENGINE.localizer().localize(done);
+            Attributes attrs = Attributes.of(Platform.IOS);
 
-            XPath xPath = XPath.builder(Platform.IOS)
-                .addClass(IOSView.ViewType.UI_BUTTON.className())
-                .containsText(localized)
-                .build();
+            Attribute attribute = attrs.containsText(localized);
 
+            CompoundAttribute cAttr = CompoundAttribute.single(attribute)
+                .withClass(IOSView.ViewType.UI_BUTTON.className());
+
+            XPath xPath = XPath.builder().addAttribute(cAttr).build();
             return ENGINE.rxe_withXPath(xPath).flatMap(ENGINE::rxa_click);
         } else {
             return Flowable.just(true);

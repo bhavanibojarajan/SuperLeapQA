@@ -7,6 +7,9 @@ import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.xpath.Attribute;
+import org.swiften.xtestkitcomponents.xpath.Attributes;
+import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
 import java.util.Arrays;
@@ -188,13 +191,16 @@ public enum Weight implements SLNumericChoiceType {
     /**
      * Get {@link XPath} for the input view for {@link Platform#ANDROID}.
      * @return {@link XPath} instance.
+     * @see Attributes#containsID(String)
+     * @see Attributes#of(PlatformType)
      * @see Platform#ANDROID
-     * @see XPath.Builder#addAnyClass()
-     * @see XPath.Builder#containsID(String)
+     * @see XPath.Builder#addAttribute(Attribute)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     private XPath androidInputViewXPath() {
+        Attributes attrs = Attributes.of(Platform.ANDROID);
+
         final String ID;
 
         switch (this) {
@@ -212,24 +218,26 @@ public enum Weight implements SLNumericChoiceType {
                 throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        return XPath
-            .builder(Platform.ANDROID)
-            .containsID(ID)
-            .addAnyClass()
-            .build();
+        Attribute attribute = attrs.containsID(ID);
+        return XPath.builder().addAttribute(attribute).build();
     }
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
      * @return {@link XPath} instance.
+     * @see Attributes#containsText(String)
+     * @see Attributes#of(PlatformType)
+     * @see CompoundAttribute#single(Attribute)
+     * @see CompoundAttribute#withClass(String)
      * @see Platform#IOS
      * @see IOSView.ViewType#UI_BUTTON
-     * @see XPath.Builder#addClass(String)
-     * @see XPath.Builder#containsText(XPath.ContainsText)
+     * @see XPath.Builder#addAttribute(CompoundAttribute)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     private XPath iOSInputViewXPath() {
+        Attributes attrs = Attributes.of(Platform.IOS);
+
         String text;
 
         switch (this) {
@@ -245,10 +253,12 @@ public enum Weight implements SLNumericChoiceType {
                 throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        return XPath.builder(Platform.IOS)
-            .addClass(IOSView.ViewType.UI_BUTTON.className())
-            .containsText(text)
-            .build();
+        Attribute attr = attrs.containsText(text);
+
+        CompoundAttribute cAttr = CompoundAttribute.single(attr)
+            .withClass(IOSView.ViewType.UI_BUTTON.className());
+
+        return XPath.builder().addAttribute(cAttr).build();
     }
     //endregion
 

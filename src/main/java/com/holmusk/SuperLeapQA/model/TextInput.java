@@ -12,6 +12,9 @@ import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.xpath.Attribute;
+import org.swiften.xtestkitcomponents.xpath.Attributes;
+import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
@@ -60,13 +63,16 @@ public enum TextInput implements BaseErrorType, HMTextType {
     /**
      * Get {@link XPath} for the input view for {@link Platform#ANDROID}.
      * @return {@link XPath} instance.
+     * @see Attributes#containsID(String)
+     * @see Attributes#of(PlatformType)
      * @see Platform#ANDROID
-     * @see XPath.Builder#addAnyClass()
-     * @see XPath.Builder#containsID(String)
+     * @see XPath.Builder#addAttribute(Attribute)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     private XPath androidInputViewXP() {
+        Attributes attrs = Attributes.of(Platform.ANDROID);
+
         final String ID;
 
         switch (this) {
@@ -114,44 +120,40 @@ public enum TextInput implements BaseErrorType, HMTextType {
                 throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        return XPath
-            .builder(Platform.ANDROID)
-            .containsID(ID)
-            .addAnyClass()
-            .build();
+        Attribute attribute = attrs.containsID(ID);
+        return XPath.builder().addAttribute(attribute).build();
     }
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
      * @return {@link XPath} instance.
+     * @see Attributes#containsText(String)
+     * @see Attributes#of(PlatformType)
      * @see BaseViewType#className()
+     * @see CompoundAttribute#forClass(String)
      * @see IOSView.ViewType#UI_TEXT_FIELD
      * @see IOSView.ViewType#UI_SECURE_TEXT_FIELD
      * @see Platform#IOS
      * @see org.swiften.xtestkit.kit.TestKit#localize(String)
-     * @see XPath.Builder#addAnyClass()
-     * @see XPath.Builder#addClass(String)
-     * @see XPath.Builder#containsText(XPath.ContainsText)
+     * @see XPath.Builder#addAttribute(Attribute)
+     * @see XPath.Builder#addAttribute(CompoundAttribute)
      * @see #iOSShortDescription()
      */
     @NotNull
     private XPath iOSInputViewXP() {
-        Platform platform = Platform.IOS;
+        Attributes attrs = Attributes.of(Platform.IOS);
 
         switch (this) {
             case PASSWORD:
-                return XPath.builder(platform)
-                    .addClass(IOSView.ViewType.UI_SECURE_TEXT_FIELD.className())
-                    .build();
+                String cls = IOSView.ViewType.UI_SECURE_TEXT_FIELD.className();
+                CompoundAttribute a1 = CompoundAttribute.forClass(cls);
+                return XPath.builder().addAttribute(a1).build();
 
             default:
                 String shortDsc = iOSShortDescription();
                 String localized = Config.TEST_KIT.localize(shortDsc);
-
-                return XPath.builder(platform)
-                    .containsText(localized)
-                    .addAnyClass()
-                    .build();
+                Attribute a2 = attrs.containsText(localized);
+                return XPath.builder().addAttribute(a2).build();
         }
     }
 

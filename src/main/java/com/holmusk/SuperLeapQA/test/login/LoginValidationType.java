@@ -16,6 +16,10 @@ import org.swiften.xtestkit.base.type.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.xpath.Attribute;
+import org.swiften.xtestkitcomponents.xpath.Attributes;
+import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
@@ -27,17 +31,23 @@ public interface LoginValidationType extends BaseValidationType {
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see AndroidView.ViewType#BUTTON
+     * @see Attributes#containsText(String)
+     * @see Attributes#of(PlatformType)
      * @see BaseViewType#className()
+     * @see CompoundAttribute#single(Attribute)
+     * @see CompoundAttribute#withClass(String)
      * @see Engine#rxe_withXPath(XPath...)
      * @see IOSView.ViewType#UI_BUTTON
-     * @see XPath.Builder#addClass(String)
-     * @see XPath.Builder#containsText(String)
+     * @see LocalizerType#localize(String)
+     * @see XPath.Builder#addAttribute(Attribute)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_submit(@NotNull final Engine<?> ENGINE) {
         LocalizerType localizer = ENGINE.localizer();
+        PlatformType platform = ENGINE.platform();
         String title, clsName;
+        Attributes attrs = Attributes.of(platform);
 
         if (ENGINE instanceof AndroidEngine) {
             clsName = AndroidView.ViewType.BUTTON.className();
@@ -49,11 +59,13 @@ public interface LoginValidationType extends BaseValidationType {
             throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        XPath xPath = XPath.builder(ENGINE.platform())
-            .addClass(clsName)
-            .containsText(localizer.localize(title))
-            .build();
+        Attribute attribute = attrs.containsText(localizer.localize(title));
 
+        CompoundAttribute cAttr = CompoundAttribute
+            .single(attribute)
+            .withClass(clsName);
+
+        XPath xPath = XPath.builder().addAttribute(cAttr).build();
         return ENGINE.rxe_withXPath(xPath).firstElement().toFlowable();
     }
 
@@ -75,14 +87,18 @@ public interface LoginValidationType extends BaseValidationType {
      * Get the register button {@link WebElement}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see Attributes#containsText(String)
+     * @see Attributes#of(PlatformType)
+     * @see BaseViewType#className()
+     * @see CompoundAttribute#single(Attribute)
+     * @see CompoundAttribute#withClass(String)
      * @see Engine#localizer()
+     * @see Engine#rxe_containsText(LCFormat...)
+     * @see Engine#rxe_withXPath(XPath...)
      * @see IOSView.ViewType#UI_LINK
      * @see LocalizerType#localize(String)
      * @see Platform#IOS
-     * @see XPath.Builder#addClass(String)
-     * @see XPath.Builder#containsText(String)
-     * @see Engine#rxe_containsText(LCFormat...)
-     * @see Engine#rxe_withXPath(XPath...)
+     * @see XPath.Builder#addAttribute(Attribute)
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -95,12 +111,14 @@ public interface LoginValidationType extends BaseValidationType {
         } else if (engine instanceof IOSEngine) {
             LocalizerType localizer = engine.localizer();
             String localized = localizer.localize("login_title_register");
+            Attributes attrs = Attributes.of(Platform.IOS);
 
-            XPath xPath = XPath.builder(Platform.IOS)
-                .addClass(IOSView.ViewType.UI_LINK.className())
-                .containsText(localized)
-                .build();
+            Attribute attribute = attrs.containsText(localized);
 
+            CompoundAttribute cAttr = CompoundAttribute.single(attribute)
+                .withClass(IOSView.ViewType.UI_LINK.className());
+
+            XPath xPath = XPath.builder().addAttribute(cAttr).build();
             return engine.rxe_withXPath(xPath).firstElement().toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
