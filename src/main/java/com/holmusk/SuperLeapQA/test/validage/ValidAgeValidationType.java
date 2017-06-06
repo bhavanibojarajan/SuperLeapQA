@@ -91,15 +91,16 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
      * @param VALUE {@link String} value.
      * @param <P> Generics parameter.
      * @return {@link Flowable} instance.
-     * @see #rxe_editField(Engine, HMInputType)
-     * @see Engine#getText(WebElement)
      * @see BooleanUtil#toTrue(Object)
+     * @see Engine#getText(WebElement)
+     * @see #rxe_editField(Engine, HMInputType)
      */
     @NotNull
-    default <P extends HMInputType> Flowable<?>
-    rxv_hasValue(@NotNull final Engine<?> ENGINE,
-                 @NotNull final P INPUT,
-                 @NotNull final String VALUE) {
+    default <P extends HMInputType> Flowable<?> rxv_hasValue(
+        @NotNull final Engine<?> ENGINE,
+        @NotNull final P INPUT,
+        @NotNull final String VALUE
+    ) {
         return rxe_editField(ENGINE, INPUT)
             .map(ENGINE::getText)
             .doOnNext(a -> LogUtil.printfThread("Current value for %s: %s", INPUT, a))
@@ -113,6 +114,7 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
      * and {@link Weight}).
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsID(String...)
+     * @see Engine#rxe_containsText(String...)
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -176,5 +178,24 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
     default Flowable<?> rxv_isShowingError(@NotNull Engine<?> engine,
                                            @NotNull LCFormat error) {
         return rxe_errorPopup(engine, error);
+    }
+
+    /**
+     * Verify the unqualified BMI pop-up.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxe_containsText(String...)
+     * @see ObjectUtil#nonNull(Object)
+     */
+    @NotNull
+    @SuppressWarnings("unchecked")
+    default Flowable<?> rxv_unqualifiedBMI(@NotNull Engine<?> engine) {
+        return Flowable
+            .mergeArray(
+                engine.rxe_containsText("register_title_bmiUnqualified"),
+                engine.rxe_containsText("register_title_ok")
+            )
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
     }
 }

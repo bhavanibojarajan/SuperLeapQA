@@ -10,7 +10,7 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.collection.CollectionTestUtil;
+import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
@@ -83,13 +83,13 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * Select a random {@link Mood} from all available {@link Mood}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see CollectionTestUtil#randomElement(Object[])
+     * @see CollectionUtil#randomElement(Object[])
      * @see Mood#values()
      * @see #rxa_selectMood(Engine, Mood)
      */
     @NotNull
     default Flowable<?> rxa_selectRandomMood(@NotNull Engine<?> engine) {
-        Mood mood = CollectionTestUtil.randomElement(Mood.values());
+        Mood mood = CollectionUtil.randomElement(Mood.values());
         return rxa_selectMood(engine, mood);
     }
 

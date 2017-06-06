@@ -113,8 +113,8 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @see #rxa_confirmPersonalInfo(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_enterAndConfirmPersonalInfo(@NotNull final Engine ENGINE,
-                                                        @NotNull UserMode mode) {
+    default Flowable<?> rxa_completePersonalInfo(@NotNull final Engine ENGINE,
+                                                 @NotNull UserMode mode) {
         final PersonalInfoActionType THIS = this;
 
         return rxa_enterPersonalInfo(ENGINE, mode)

@@ -12,7 +12,7 @@ import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.collection.CollectionTestUtil;
+import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
@@ -50,7 +50,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @param CHOICE {@link HMChoiceType} instance.
      * @param NUMERIC {@link SLNumericChoiceType} instance.
      * @return {@link Flowable} instance.
-     * @see #rxa_clickInputField(Engine, HMInputType)
+     * @see #rxa_clickInput(Engine, HMInputType)
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -62,11 +62,11 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
         final ValidAgeActionType THIS = this;
 
         if (ENGINE instanceof AndroidEngine) {
-            return rxa_clickInputField(ENGINE, NUMERIC)
-                .flatMap(a -> THIS.rxa_clickInputField(ENGINE, CHOICE));
+            return rxa_clickInput(ENGINE, NUMERIC)
+                .flatMap(a -> THIS.rxa_clickInput(ENGINE, CHOICE));
         } else if (ENGINE instanceof IOSEngine) {
-            return rxa_clickInputField(ENGINE, CHOICE)
-                .flatMap(a -> THIS.rxa_clickInputField(ENGINE, NUMERIC));
+            return rxa_clickInput(ENGINE, CHOICE)
+                .flatMap(a -> THIS.rxa_clickInput(ENGINE, NUMERIC));
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -109,17 +109,22 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#PERSONAL_INFO}.
      * When the user is {@link UserMode#isParent()}, he/she needs to enter the
      * child's name and NRIC as well.
+     * @param E {@link Engine} instance.
      * @param mode {@link UserMode} instance.
+     * @param validBMI {@link Boolean} value. If this is true, we will select
+     *                  height and weight such that the calculated BMI value
+     *                  passes the test.
      * @return {@link Flowable} instance.
      * @see BMIParam.Builder#withEthnicity(Ethnicity)
      * @see BMIParam.Builder#withGender(Gender)
      * @see BMIParam.Builder#withHeight(List)
      * @see BMIParam.Builder#withWeight(List)
-     * @see BMIUtil#withinHealthyRange(BMIParam)
+     * @see BMIUtil#withinWidestHealthyRange(UserMode, BMIParam)
+     * @see BMIUtil#withinTightestHealthyRange(UserMode, BMIParam)
      * @see ChoiceInput#HEIGHT
      * @see ChoiceInput#WEIGHT
      * @see CoachPref#values()
-     * @see CollectionTestUtil#randomElement(Object[])
+     * @see CollectionUtil#randomElement(Object[])
      * @see Ethnicity#values()
      * @see Gender#values()
      * @see Height#randomValue(UserMode)
@@ -129,7 +134,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @see UserMode#validAgeInfo(PlatformType)
      * @see Weight#randomValue(UserMode)
      * @see Zip#A
-     * @see #rxa_clickInputField(Engine, HMInputType)
+     * @see #rxa_clickInput(Engine, HMInputType)
      * @see #rxa_selectChoice(Engine, HMChoiceType, String)
      * @see #rxa_selectUnitSystemPicker(Engine, HMChoiceType, SLNumericChoiceType)
      * @see #rxa_confirmNumericChoice(Engine)
@@ -139,51 +144,67 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
     @NotNull
     @SuppressWarnings({"unchecked", "ConstantConditions"})
     default Flowable<?> rxa_enterValidAgeInputs(@NotNull final Engine<?> E,
-                                                @NotNull UserMode mode) {
+                                                @NotNull UserMode mode,
+                                                boolean validBMI) {
         final ValidAgeActionType THIS = this;
         PlatformType platform = E.platform();
-        UnitSystem unit = CollectionTestUtil.randomElement(UnitSystem.values());
-        final Gender GENDER = CollectionTestUtil.randomElement(Gender.values());
-        final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
-        final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
+        UnitSystem unit = CollectionUtil.randomElement(UnitSystem.values());
+        final Gender GENDER = CollectionUtil.randomElement(Gender.values());
+        final Ethnicity ETH = CollectionUtil.randomElement(Ethnicity.values());
+        final CoachPref CP = CollectionUtil.randomElement(CoachPref.values());
         final ChoiceInput C_HEIGHT = ChoiceInput.HEIGHT;
         final ChoiceInput C_WEIGHT = ChoiceInput.WEIGHT;
+        final ChoiceInput C_ETH = ChoiceInput.ETHNICITY;
+        final ChoiceInput C_COACH = ChoiceInput.COACH_PREF;
 
-        List<Zip<Height,String>> HEIGHT;
-        List<Zip<Weight,String>> WEIGHT;
+        List<Zip<Height,String>> height;
+        List<Zip<Weight,String>> weight;
         BMIParam param;
 
-        /* Keep randomizing until BMI falls out of healthy range */
+        /* Keep randomizing until BMI falls out of healthy range, otherwise
+         * the BMI check will fail */
         do {
-            HEIGHT = Height.random(platform, mode, unit);
-            WEIGHT = Weight.random(platform, mode, unit);
+            height = Height.random(platform, mode, unit);
+            weight = Weight.random(platform, mode, unit);
 
             param = BMIParam.builder()
                 .withEthnicity(ETH)
                 .withGender(GENDER)
-                .withHeight(HEIGHT)
-                .withWeight(WEIGHT)
+                .withHeight(height)
+                .withWeight(weight)
                 .build();
-        } while (BMIUtil.withinHealthyRange(param));
+        } while (validBMI
+            ? BMIUtil.withinTightestHealthyRange(mode, param)
+            : !BMIUtil.withinWidestHealthyRange(mode, param));
 
-        final Height H_MODE = HEIGHT.get(0).A;
-        final Weight W_MODE = WEIGHT.get(0).A;
+        final Height H_MODE = height.get(0).A;
+        final Weight W_MODE = weight.get(0).A;
+        final List<Zip<Height,String>> HEIGHT = height;
+        final List<Zip<Weight,String>> WEIGHT = weight;
 
         return rxa_randomInputs(E, mode.validAgeInfo(platform))
-            .flatMap(a -> THIS.rxa_clickInputField(E, GENDER))
+
+            /* Select gender */
+            .flatMap(a -> THIS.rxa_clickInput(E, GENDER))
+
+            /* Select unit system and height */
             .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_HEIGHT, H_MODE))
             .flatMap(a -> THIS.rxa_selectChoice(E, HEIGHT))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
 
+            /* Select unit system and weight */
             .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_WEIGHT, W_MODE))
             .flatMap(a -> THIS.rxa_selectChoice(E, WEIGHT))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
 
-            .flatMap(a -> THIS.rxa_clickInputField(E, ChoiceInput.ETHNICITY))
-            .flatMap(a -> THIS.rxa_selectChoice(E, ChoiceInput.ETHNICITY, ETH.stringValue()))
+            /* Select ethnicity */
+            .flatMap(a -> THIS.rxa_clickInput(E, C_ETH))
+            .flatMap(a -> THIS.rxa_selectChoice(E, C_ETH, ETH.stringValue()))
             .flatMap(a -> THIS.rxa_confirmTextChoice(E))
-            .flatMap(a -> THIS.rxa_clickInputField(E, ChoiceInput.COACH_PREF))
-            .flatMap(a -> THIS.rxa_selectChoice(E, ChoiceInput.COACH_PREF, CP.stringValue()))
+
+            /* Select coach preference */
+            .flatMap(a -> THIS.rxa_clickInput(E, C_COACH))
+            .flatMap(a -> THIS.rxa_selectChoice(E, C_COACH, CP.stringValue()))
             .flatMap(a -> THIS.rxa_confirmTextChoice(E));
     }
 
@@ -191,18 +212,33 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * Enter and confirm valid age inputs.
      * @param ENGINE {@link Engine} instance.
      * @param mode {@link UserMode} instance.
+     * @param validBMI {@link Boolean} value.
      * @return {@link Flowable} instance.
      * @see #validAgeInputProgressDelay(Engine)
-     * @see #rxa_enterValidAgeInputs(Engine, UserMode)
+     * @see #rxa_enterValidAgeInputs(Engine, UserMode, boolean)
      * @see #rxa_confirmValidAgeInputs(Engine)
      */
     @NotNull
     default Flowable<?> rxa_completeValidAgeInputs(@NotNull final Engine<?> ENGINE,
-                                                   @NotNull UserMode mode) {
+                                                   @NotNull UserMode mode,
+                                                   boolean validBMI) {
         final ValidAgeActionType THIS = this;
 
-        return rxa_enterValidAgeInputs(ENGINE, mode)
+        return rxa_enterValidAgeInputs(ENGINE, mode, validBMI)
             .flatMap(a -> THIS.rxa_confirmValidAgeInputs(ENGINE))
             .delay(validAgeInputProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * Same as above, but declare valid BMI by default.
+     * @param engine {@link Engine} instance.
+     * @param mode {@link UserMode} instance.
+     * @return {@link Flowable} instance.
+     * @see #rxa_completeValidAgeInputs(Engine, UserMode, boolean)
+     */
+    @NotNull
+    default Flowable<?> rxa_completeValidAgeInputs(@NotNull Engine<?> engine,
+                                                   @NotNull UserMode mode) {
+        return rxa_completeValidAgeInputs(engine, mode, true);
     }
 }

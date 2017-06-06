@@ -4,7 +4,6 @@ import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import com.holmusk.SuperLeapQA.test.registermode.RegisterModeActionType;
-import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
@@ -26,7 +25,6 @@ public interface UILoginTestType extends UIBaseTestType, LoginActionType {
      * @see #engine()
      */
     @Test
-    @GuarantorAware(value = false)
     @SuppressWarnings("unchecked")
     default void test_loginInputs_shouldWork() {
         // Setup
@@ -56,7 +54,6 @@ public interface UILoginTestType extends UIBaseTestType, LoginActionType {
      * @see #assertCorrectness(TestSubscriber)
      */
     @Test
-    @GuarantorAware(value = false)
     @SuppressWarnings("unchecked")
     default void test_loginToRegister_shouldWork() {
         // Setup

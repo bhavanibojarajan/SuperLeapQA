@@ -6,7 +6,6 @@ import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.HMUITestKit.model.HMTextType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
-import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -66,7 +65,6 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
      * @see #rxv_invalidAgeInputConfirmed(Engine)
      */
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = false)
     @Test(
         dataProviderClass = UIInvalidAgeTestType.class,
         dataProvider = "userModeInputProvider"
@@ -110,13 +108,12 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
      * @see #engine()
      * @see #generalUserModeProvider()
      * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rxa_enterAndConfirmInvalidAgeInputs(Engine)
+     * @see #rxa_completeInvalidAgeInputs(Engine)
      * @see #rxv_invalidAgeInputConfirmed(Engine)
      * @see #rxv_welcomeScreen(Engine)
      * @see #rxe_invalidAgeOk(Engine)
      */
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = false)
     @Test(
         dataProviderClass = UIBaseTestType.class,
         dataProvider = "generalUserModeProvider"
@@ -129,7 +126,7 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
 
         // When
         rxa_navigate(mode, Screen.SPLASH, Screen.INVALID_AGE)
-            .flatMap(a -> THIS.rxa_enterAndConfirmInvalidAgeInputs(ENGINE))
+            .flatMap(a -> THIS.rxa_completeInvalidAgeInputs(ENGINE))
             .flatMap(a -> THIS.rxv_invalidAgeInputConfirmed(ENGINE))
             .flatMap(a -> THIS.rxe_invalidAgeOk(ENGINE))
             .flatMap(ENGINE::rxa_click)

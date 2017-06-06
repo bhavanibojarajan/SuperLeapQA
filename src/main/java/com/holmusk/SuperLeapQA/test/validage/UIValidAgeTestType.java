@@ -1,19 +1,48 @@
 package com.holmusk.SuperLeapQA.test.validage;
 
+import com.holmusk.HMUITestKit.model.UnitSystem;
 import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.SuperLeapQA.navigation.Screen;
+import com.holmusk.SuperLeapQA.test.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
-import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by haipham on 23/5/17.
  */
 public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperType {
+    /**
+     * Get the {@link UserMode} to be used for BMI check, because not all
+     * {@link UserMode} requires such a check.
+     * @return {@link Iterator}.
+     * @see UserMode#requiresBMICheck()
+     * @see UserMode#values()
+     */
+    @NotNull
+    @DataProvider
+    static Iterator<Object[]> bmiCheckUserModeProvider() {
+        List<Object[]> data = new LinkedList<>();
+        UserMode[] modes = UserMode.values();
+
+        for (UserMode mode : modes) {
+            if (mode.requiresBMICheck()) {
+                data.add(new Object[] { mode });
+            }
+        }
+
+        return data.iterator();
+    }
+
     /**
      * Confirm that when the user selects
      * {@link ChoiceInput#HEIGHT} in
@@ -28,7 +57,6 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
      * @see #assertCorrectness(TestSubscriber)
      */
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = false)
     @Test(
         dataProviderClass = UIBaseTestType.class,
         dataProvider = "generalUserModeProvider"
@@ -42,6 +70,42 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
         // When
         rxa_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE)
             .flatMap(a -> THIS.rxh_inchToFootRecursive(ENGINE, MODE))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * Confirm that when BMI calculation fails (i.e. the user is within
+     * healthy BMI range), the app should notify and fail the process. We do
+     * so by deliberating selecting height/weight so that BMI calculations
+     * return a healthy figure.
+     * @param MODE {@link UserMode} instance.
+     * @see Screen#SPLASH
+     * @see Screen#VALID_AGE
+     * @see #assertCorrectness(TestSubscriber)
+     * @see #engine()
+     * @see #rxa_completeValidAgeInputs(Engine, UserMode, boolean)
+     * @see #rxv_unqualifiedBMI(Engine)
+     */
+    @SuppressWarnings("unchecked")
+    @Test(
+        dataProviderClass = UIValidAgeTestType.class,
+        dataProvider = "bmiCheckUserModeProvider"
+    )
+    default void test_BMIOutOfRange_shouldNotifyUser(@NotNull final UserMode MODE) {
+        // Setup
+        final UIValidAgeTestType THIS = this;
+        final Engine<?> ENGINE = engine();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rxa_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE)
+            .flatMap(a -> THIS.rxa_completeValidAgeInputs(ENGINE, MODE, false))
+            .flatMap(a -> THIS.rxv_unqualifiedBMI(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

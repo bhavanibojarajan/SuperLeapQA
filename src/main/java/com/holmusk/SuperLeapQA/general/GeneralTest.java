@@ -1,13 +1,14 @@
 package com.holmusk.SuperLeapQA.general;
 
-import com.holmusk.SuperLeapQA.model.ChoiceInput;
-import com.holmusk.SuperLeapQA.model.Height;
-import com.holmusk.SuperLeapQA.model.TextInput;
-import com.holmusk.SuperLeapQA.model.UserMode;
+import com.holmusk.HMUITestKit.model.UnitSystem;
+import com.holmusk.SuperLeapQA.bmi.BMIParam;
+import com.holmusk.SuperLeapQA.bmi.BMIUtil;
+import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.collection.Zip;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
@@ -145,5 +146,38 @@ public final class GeneralTest {
         // Setup && When && Then
         LogUtil.println(ChoiceInput.COACH_PREF.inputViewXP(Platform.IOS));
         LogUtil.println(Height.CM.choicePickerItemXP(Platform.ANDROID));
+    }
+
+    @Test
+    public void test_bmiRanges_shouldWork() {
+        // Setup
+        Ethnicity asian = Ethnicity.ASIAN_OTHER;
+        Gender male = Gender.MALE;
+        UserMode userMode = UserMode.TEEN_U18;
+
+        List<Zip<Height,String>> height = Height.random(
+            Platform.ANDROID,
+            userMode,
+            UnitSystem.IMPERIAL);
+
+        List<Zip<Weight,String>> weight = Weight.random(
+            Platform.ANDROID,
+            userMode,
+            UnitSystem.IMPERIAL
+        );
+
+        BMIParam param1 = BMIParam.builder()
+            .withEthnicity(asian)
+            .withGender(male)
+            .withHeight(height)
+            .withWeight(weight)
+            .build();
+
+        // When & Then
+        LogUtil.println(BMIUtil.tightestHealthyRange(userMode, param1));
+        LogUtil.println(BMIUtil.widestHealthyRange(userMode, param1));
+        LogUtil.println(BMIUtil.withinTightestHealthyRange(userMode, param1));
+        LogUtil.println(param1.heightM());
+        LogUtil.println(param1.weightKG());
     }
 }

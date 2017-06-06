@@ -79,11 +79,11 @@ public interface BackwardNavigationType extends
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#WELCOME}
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rxa_enterAndConfirmInvalidAgeInputs(Engine)
+     * @see #rxa_completeInvalidAgeInputs(Engine)
      */
     @NotNull
     default Flowable<?> rxn_invalidAge_welcome(@NotNull final Engine<?> ENGINE) {
-        return rxa_enterAndConfirmInvalidAgeInputs(ENGINE);
+        return rxa_completeInvalidAgeInputs(ENGINE);
     }
 
     /**

@@ -21,7 +21,7 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.collection.CollectionTestUtil;
+import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.xtestkit.base.Engine;
 
 import java.util.List;
@@ -196,7 +196,7 @@ public interface ForwardNavigationType extends
     default Flowable<?> rxn_DoBPicker_validAge(@NotNull Engine<?> engine,
                                                @NotNull UserMode mode) {
         List<Integer> range = mode.validAgeRange();
-        int age = CollectionTestUtil.randomElement(range);
+        int age = CollectionUtil.randomElement(range);
         return rxn_DoBPicker_ageInput(engine, age);
     }
 
@@ -224,12 +224,12 @@ public interface ForwardNavigationType extends
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see #rxa_enterAndConfirmPersonalInfo(Engine, UserMode)
+     * @see #rxa_completePersonalInfo(Engine, UserMode)
      */
     @NotNull
     default Flowable<?> rxn_personalInfo_guarantorInfo(@NotNull Engine<?> engine,
                                                        @NotNull UserMode mode) {
-        return rxa_enterAndConfirmPersonalInfo(engine, mode);
+        return rxa_completePersonalInfo(engine, mode);
     }
 
     /**

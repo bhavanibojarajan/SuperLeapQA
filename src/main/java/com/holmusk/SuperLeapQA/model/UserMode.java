@@ -47,6 +47,31 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     }
 
     /**
+     * Check whether the current use requires guarantor information. This
+     * is only applicable for {@link #TEEN_U18}.
+     * @return {@link Boolean} value.
+     * @see #TEEN_U18
+     */
+    public boolean requiresGuarantor() {
+        switch (this) {
+            case TEEN_U18:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Check whether the current {@link UserMode} requires BMI check.
+     * @return {@link Boolean} value.
+     * @see #isTeen()
+     */
+    public boolean requiresBMICheck() {
+        return isTeen();
+    }
+
+    /**
      * Check if the current {@link UserMode} is in the parent category.
      * @return {@link Boolean} instance.
      * @see #PARENT
@@ -221,21 +246,6 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
 
             default:
                 return Collections.emptyList();
-        }
-    }
-
-    /**
-     * Check whether the current use requires guarantor information. This
-     * is only applicable for {@link #TEEN_U18}.
-     * @return {@link Boolean} value.
-     */
-    public boolean requiresGuarantor() {
-        switch (this) {
-            case TEEN_U18:
-                return true;
-
-            default:
-                return false;
         }
     }
 

@@ -2,7 +2,6 @@ package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.HMUITestKit.model.HMNumericChoiceType;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.collection.CollectionTestUtil;
 import org.swiften.javautilities.collection.CollectionUtil;
 
 import java.util.List;
@@ -73,11 +72,11 @@ public interface SLNumericChoiceType extends HMNumericChoiceType {
      * Get a random numeric value from {@link #selectableRange(UserMode)}.
      * @return {@link Integer} value.
      * @see #selectableRange(UserMode)
-     * @see CollectionTestUtil#randomElement(List)
+     * @see CollectionUtil#randomElement(List)
      */
     default int randomValue(@NotNull UserMode mode) {
         List<Integer> selectableRange = selectableRange(mode);
-        return CollectionTestUtil.randomElement(selectableRange);
+        return CollectionUtil.randomElement(selectableRange);
     }
     //endregion
 }

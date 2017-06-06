@@ -6,6 +6,9 @@ import com.holmusk.SuperLeapQA.model.Ethnicity;
 import com.holmusk.SuperLeapQA.model.Gender;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
+import org.swiften.javautilities.log.LogUtil;
+import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.xtestkitcomponents.common.BaseErrorType;
 
 import java.util.List;
 
@@ -93,7 +96,7 @@ public final class BMIParam {
     /**
      * Builder class for {@link BMIParam}.
      */
-    public static final class Builder {
+    public static final class Builder implements BaseErrorType {
         @NotNull private final BMIParam PARAM;
 
         Builder() {
@@ -137,6 +140,30 @@ public final class BMIParam {
         }
 
         /**
+         * Set the {@link #heightM} value.
+         * @param heightM {@link Double} value.
+         * @return The current {@link Builder} instance.
+         * @see #heightM
+         */
+        @NotNull
+        public Builder withHeight(double heightM) {
+            PARAM.heightM = heightM;
+            return this;
+        }
+
+        /**
+         * Set the {@link #weightKG} value.
+         * @param weightKG {@link Double} value.
+         * @return The current {@link Builder} instance.
+         * @see #weightKG
+         */
+        @NotNull
+        public Builder withWeight(double weightKG) {
+            PARAM.weightKG = weightKG;
+            return this;
+        }
+
+        /**
          * Set {@link #heightM}.
          * @param unit {@link UnitSystem} instance.
          * @param primary {@link Double} value.
@@ -144,7 +171,7 @@ public final class BMIParam {
          * @return The current {@link Builder} instance.
          * @see UnitSystem#IMPERIAL
          * @see UnitSystem#METRIC
-         * @see #heightM
+         * @see #withHeight(UnitSystem, double, double)
          */
         @NotNull
         public Builder withHeight(@NotNull UnitSystem unit,
@@ -152,18 +179,14 @@ public final class BMIParam {
                                   double secondary) {
             switch (unit) {
                 case METRIC:
-                    PARAM.heightM = (primary + secondary / 10) / 100;
-                    break;
+                    return withHeight((primary + secondary / 10) / 100);
 
                 case IMPERIAL:
-                    PARAM.heightM = (primary + secondary / 12) * 30.48 / 100;
-                    break;
+                    return withHeight((primary + secondary / 12) * 30.48 / 100);
 
                 default:
-                    break;
+                    return this;
             }
-
-            return this;
         }
 
         /**
@@ -172,51 +195,36 @@ public final class BMIParam {
          * @param <T> Generics parameter.
          * @return The current {@link Builder} instance.
          * @see HMUnitSystemConvertibleType#unitSystem()
+         * @see ObjectUtil#nonNull(Object)
          * @see Zip#A
          * @see Zip#B
          * @see #withHeight(UnitSystem, double, double)
+         * @see #NOT_AVAILABLE
          */
         @NotNull
         public <T extends HMUnitSystemConvertibleType> Builder withHeight(
             @NotNull List<Zip<T,String>> inputs
         ) {
-            if (inputs.size() > 1) {
-                Zip<T,String> primary = inputs.get(0);
-                Zip<T,String> secondary = inputs.get(0);
-                T mode = primary.A;
-                UnitSystem unit = mode.unitSystem();
-                double pValue = Double.valueOf(primary.B);
-                double sValue = Double.valueOf(secondary.B);
-                return withHeight(unit, pValue, sValue);
-            } else {
-                return this;
-            }
-        }
+            int size = inputs.size();
 
-        /**
-         * Set {@link #weightKG} using inputs acquired via randomization.
-         * @param inputs {@link List} of {@link Zip}.
-         * @param <T> Generics parameter.
-         * @return The current {@link Builder} instance.
-         * @see HMUnitSystemConvertibleType#unitSystem()
-         * @see Zip#A
-         * @see Zip#B
-         * @see #withWeight(UnitSystem, double, double)
-         */
-        @NotNull
-        public <T extends HMUnitSystemConvertibleType> Builder withWeight(
-            @NotNull List<Zip<T,String>> inputs
-        ) {
-            if (inputs.size() > 1) {
+            if (size > 0) {
                 Zip<T,String> primary = inputs.get(0);
-                Zip<T,String> secondary = inputs.get(0);
                 T mode = primary.A;
                 UnitSystem unit = mode.unitSystem();
-                double pValue = Double.valueOf(primary.B);
-                double sValue = Double.valueOf(secondary.B);
-                return withWeight(unit, pValue, sValue);
+                double primaryValue = Double.valueOf(primary.B);
+
+                double secondaryValue;
+
+                if (size > 1) {
+                    Zip<T, String> secondary = inputs.get(1);
+                    secondaryValue = Double.valueOf(secondary.B);
+                } else {
+                    secondaryValue = 0d;
+                }
+
+                return withHeight(unit, primaryValue, secondaryValue);
             } else {
-                return this;
+                throw new RuntimeException(NOT_AVAILABLE);
             }
         }
 
@@ -228,7 +236,7 @@ public final class BMIParam {
          * @return The current {@link Builder} instance.
          * @see UnitSystem#IMPERIAL
          * @see UnitSystem#METRIC
-         * @see #weightKG
+         * @see #withWeight(double)
          */
         @NotNull
         public Builder withWeight(@NotNull UnitSystem unit,
@@ -236,18 +244,78 @@ public final class BMIParam {
                                   double secondary) {
             switch (unit) {
                 case METRIC:
-                    PARAM.weightKG = primary + secondary / 10;
-                    break;
+                    return withWeight(primary + secondary / 10);
 
                 case IMPERIAL:
-                    PARAM.weightKG = (primary + secondary / 10) * 0.453d;
-                    break;
+                    return withWeight((primary + secondary / 10) * 0.453d);
 
                 default:
-                    break;
+                    return this;
             }
+        }
 
-            return this;
+        /**
+         * Set {@link #weightKG} using inputs acquired via randomization.
+         * @param inputs {@link List} of {@link Zip}.
+         * @param <T> Generics parameter.
+         * @return The current {@link Builder} instance.
+         * @see HMUnitSystemConvertibleType#unitSystem()
+         * @see ObjectUtil#nonNull(Object)
+         * @see Zip#A
+         * @see Zip#B
+         * @see #withWeight(UnitSystem, double, double)
+         * @see #NOT_AVAILABLE
+         */
+        @NotNull
+        public <T extends HMUnitSystemConvertibleType> Builder withWeight(
+            @NotNull List<Zip<T,String>> inputs
+        ) {
+            int size = inputs.size();
+
+            if (size > 0) {
+                Zip<T,String> primary = inputs.get(0);
+                T mode = primary.A;
+                UnitSystem unit = mode.unitSystem();
+                double primaryValue = Double.valueOf(primary.B);
+
+                double secondaryValue;
+
+                if (size > 1) {
+                    Zip<T, String> secondary = inputs.get(1);
+                    secondaryValue = Double.valueOf(secondary.B);
+                } else {
+                    secondaryValue = 0d;
+                }
+
+                return withWeight(unit, primaryValue, secondaryValue);
+            } else {
+                throw new RuntimeException(NOT_AVAILABLE);
+            }
+        }
+
+        /**
+         * Copy properties from another {@link BMIParam}.
+         * @param param {@link BMIParam} instance.
+         * @return The current {@link Builder} instance.
+         * @see BMIParam#age()
+         * @see BMIParam#ethnicity()
+         * @see BMIParam#gender()
+         * @see BMIParam#heightM()
+         * @see BMIParam#weightKG()
+         * @see #withAge(int)
+         * @see #withEthnicity(Ethnicity)
+         * @see #withGender(Gender)
+         * @see #withHeight(double)
+         * @see #withWeight(double)
+         */
+        @NotNull
+        public Builder withBMIParam(@NotNull BMIParam param) {
+            return this
+                .withHeight(param.heightM())
+                .withWeight(param.weightKG())
+                .withAge(param.age())
+                .withEthnicity(param.ethnicity())
+                .withGender(param.gender());
         }
 
         /**

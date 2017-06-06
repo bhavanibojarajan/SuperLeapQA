@@ -9,12 +9,11 @@ import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import com.holmusk.SuperLeapQA.test.dashboard.DashboardActionType;
 import com.holmusk.SuperLeapQA.test.mealpage.MealPageActionType;
 import com.holmusk.SuperLeapQA.test.search.SearchActionType;
-import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.collection.CollectionTestUtil;
+import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
@@ -45,7 +44,7 @@ public interface UILogMealTestType extends
      * We then search for the meal from {@link Screen#SEARCH}.
      * Finally, we delete the meal to clean up and verify that it is no longer
      * searchable from {@link Screen#SEARCH}.
-     * @see CollectionTestUtil#randomElement(Object[])
+     * @see CollectionUtil#randomElement(Object[])
      * @see Engine#rxe_containsText(String...)
      * @see Engine#rxv_errorWithPageSource()
      * @see Mood#moodTitle()
@@ -76,7 +75,6 @@ public interface UILogMealTestType extends
      */
     @Test
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = false)
     default void test_logMealThenDelete_shouldWork() {
         // Setup
         final UILogMealTestType THIS = this;
@@ -86,7 +84,7 @@ public interface UILogMealTestType extends
         final Date TIME = calendar.getTime();
         final TextInput DSC_INPUT = TextInput.MEAL_DESCRIPTION;
         final String DESCRIPTION = DSC_INPUT.randomInput();
-        final Mood MOOD = CollectionTestUtil.randomElement(Mood.values());
+        final Mood MOOD = CollectionUtil.randomElement(Mood.values());
         UserMode mode = UserMode.PARENT;
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
@@ -178,7 +176,6 @@ public interface UILogMealTestType extends
      */
     @Test
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = false)
     default void test_logMealWithComments_shouldWork() {
         // Setup
         final UILogMealTestType THIS = this;

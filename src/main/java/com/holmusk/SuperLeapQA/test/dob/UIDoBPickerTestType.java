@@ -3,7 +3,6 @@ package com.holmusk.SuperLeapQA.test.dob;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
-import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +42,6 @@ public interface UIDoBPickerTestType extends UIBaseTestType, DOBPickerActionType
      * @see #rxv_invalidAgeScreen(Engine, UserMode)
      */
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = false)
     @Test(
         dataProviderClass = UIBaseTestType.class,
         dataProvider = "generalUserModeProvider"

@@ -6,7 +6,6 @@ import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.HMUITestKit.model.HMTextType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
-import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
@@ -71,7 +70,6 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * @see #rxa_confirmTextInput(Engine)
      */
     @Test
-    @GuarantorAware(value = false)
     @SuppressWarnings("unchecked")
     default void test_togglePasswordMask_shouldWork() {
         // Setup
@@ -120,7 +118,6 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * @see #rxv_hasValue(Engine, HMInputType, String)
      */
     @Test
-    @GuarantorAware(value = false)
     @SuppressWarnings("unchecked")
     default void test_leavePersonalInfo_shouldSaveState() {
         // Setup
@@ -190,7 +187,6 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * @see #rxv_personalInfoScreen(Engine, UserMode)
      */
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = false)
     @Test(
         dataProviderClass = UIBaseTestType.class,
         dataProvider = "generalUserModeProvider"
@@ -236,7 +232,6 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * @see #rxe_progressBar(Engine)
      */
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = false)
     @Test(
         dataProviderClass = UIPersonalInfoTestType.class,
         dataProvider = "parentPersonalInfoProvider"
@@ -279,7 +274,6 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * @see #rxa_navigate(UserMode, Screen...)
      */
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = true)
     @Test(
         dataProviderClass = UIBaseTestType.class,
         dataProvider = "guarantorSpecificUserModeProvider"

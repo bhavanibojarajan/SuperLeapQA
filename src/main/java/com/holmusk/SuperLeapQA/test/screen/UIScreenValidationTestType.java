@@ -10,12 +10,11 @@ import com.holmusk.SuperLeapQA.navigation.type.BackwardNavigationType;
 import com.holmusk.SuperLeapQA.navigation.type.ForwardNavigationType;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import com.holmusk.SuperLeapQA.test.personalinfo.UIPersonalInfoTestType;
-import com.holmusk.SuperLeapQA.util.GuarantorAware;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.collection.CollectionTestUtil;
+import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.object.ObjectUtil;
@@ -49,7 +48,6 @@ public interface UIScreenValidationTestType extends
      */
     @Test
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = false)
     default void test_welcomeScreen_containsCorrectElements() {
         // Setup
         final UIScreenValidationTestType THIS = this;
@@ -80,7 +78,6 @@ public interface UIScreenValidationTestType extends
      */
     @Test
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = false)
     default void test_loginPage_isValidScreen() {
         // Setup
         final UIScreenValidationTestType THIS = this;
@@ -112,7 +109,6 @@ public interface UIScreenValidationTestType extends
      */
     @Test
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = false)
     default void test_forgotPassword_isValidScreen() {
         // Setup
         final UIScreenValidationTestType THIS = this;
@@ -147,7 +143,6 @@ public interface UIScreenValidationTestType extends
      */
     @Test
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = false)
     default void test_registerScreen_isValidScreen() {
         // Setup
         final UIScreenValidationTestType THIS = this;
@@ -192,7 +187,6 @@ public interface UIScreenValidationTestType extends
      * @see #rxv_registerScreen(Engine)
      */
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = false)
     @Test(
         dataProviderClass = UIBaseTestType.class,
         dataProvider = "generalUserModeProvider"
@@ -249,7 +243,6 @@ public interface UIScreenValidationTestType extends
      * @see #rxv_DoBEditFieldHasDate(Engine, Date)
      */
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = false)
     @Test(
         dataProviderClass = UIBaseTestType.class,
         dataProvider = "generalUserModeProvider"
@@ -293,10 +286,9 @@ public interface UIScreenValidationTestType extends
      * @see #generalUserModeProvider()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_confirmInvalidAgeInputs(Engine)
-     * @see #rxa_clickInputField(Engine, HMInputType)
+     * @see #rxa_clickInput(Engine, HMInputType)
      */
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = false)
     @Test(
         dataProviderClass = UIBaseTestType.class,
         dataProvider = "generalUserModeProvider"
@@ -310,7 +302,7 @@ public interface UIScreenValidationTestType extends
         // When
         rxa_navigate(mode, Screen.SPLASH, Screen.INVALID_AGE)
             .flatMap(a -> THIS.rxa_confirmInvalidAgeInputs(ENGINE))
-            .flatMap(a -> THIS.rxa_clickInputField(ENGINE, TextInput.NAME))
+            .flatMap(a -> THIS.rxa_clickInput(ENGINE, TextInput.NAME))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -328,13 +320,14 @@ public interface UIScreenValidationTestType extends
      * but this is intentional because we want to check for numeric formatting
      * for {@link ChoiceInput#HEIGHT} and {@link ChoiceInput#WEIGHT} choice
      * selection.
+     * Be aware that this test does not take into account BMI calculations.
      * @param MODE {@link UserMode} instance.
      * @see ChoiceInput#HEIGHT
      * @see ChoiceInput#WEIGHT
      * @see ChoiceInput#ETHNICITY
      * @see ChoiceInput#COACH_PREF
      * @see CoachPref#values()
-     * @see CollectionTestUtil#randomElement(Object[])
+     * @see CollectionUtil#randomElement(Object[])
      * @see Engine#platform()
      * @see Ethnicity#values()
      * @see Height#CM
@@ -358,14 +351,13 @@ public interface UIScreenValidationTestType extends
      * @see #engine()
      * @see #generalUserModeProvider()
      * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rxa_clickInputField(Engine, HMInputType)
+     * @see #rxa_clickInput(Engine, HMInputType)
      * @see #rxa_selectChoice(Engine, List)
      * @see #rxa_selectUnitSystemPicker(Engine, HMChoiceType, SLNumericChoiceType)
      * @see #rxa_confirmNumericChoice(Engine)
      * @see #rxv_hasValue(Engine, HMInputType, String)
      */
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = false)
     @Test(
         dataProviderClass = UIBaseTestType.class,
         dataProvider = "generalUserModeProvider"
@@ -390,45 +382,56 @@ public interface UIScreenValidationTestType extends
         final String HEIGHT_I_STR = Height.stringValue(p, imperial, HEIGHT_I);
         final String WEIGHT_M_STR = Weight.stringValue(p, metric, WEIGHT_M);
         final String WEIGHT_I_STR = Weight.stringValue(p, imperial, WEIGHT_I);
-        final Ethnicity ETH = CollectionTestUtil.randomElement(Ethnicity.values());
-        final CoachPref CP = CollectionTestUtil.randomElement(CoachPref.values());
+        final Ethnicity ETH = CollectionUtil.randomElement(Ethnicity.values());
+        final CoachPref CP = CollectionUtil.randomElement(CoachPref.values());
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         rxa_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE)
-            .flatMap(a -> THIS.rxa_randomInputs(E, INPUTS))
 
+            /* Select metric unit system for height selection */
+            .flatMap(a -> THIS.rxa_randomInputs(E, INPUTS))
             .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_HEIGHT, Height.CM))
 
+            /* Select height in metric */
             .flatMap(a -> THIS.rxa_selectChoice(E, HEIGHT_M))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
             .flatMap(a -> THIS.rxv_hasValue(E, C_HEIGHT, HEIGHT_M_STR))
 
+            /* Select imperial unit system for height selection */
             .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_HEIGHT, Height.FT))
 
+            /* Select height in imperial */
             .flatMap(a -> THIS.rxa_selectChoice(E, HEIGHT_I))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
             .flatMap(a -> THIS.rxv_hasValue(E, C_HEIGHT, HEIGHT_I_STR))
 
+            /* Select metric unit system for weight selection */
             .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_WEIGHT, Weight.KG))
 
+            /* Select weight in metric */
             .flatMap(a -> THIS.rxa_selectChoice(E, WEIGHT_M))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
             .flatMap(a -> THIS.rxv_hasValue(E, C_WEIGHT, WEIGHT_M_STR))
 
+            /* Select imperial unit system for weight selection */
             .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_WEIGHT, Weight.LB))
 
+            /* Select weight in imperial */
             .flatMap(a -> THIS.rxa_selectChoice(E, WEIGHT_I))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
             .flatMap(a -> THIS.rxv_hasValue(E, C_WEIGHT, WEIGHT_I_STR))
 
-            .flatMap(a -> THIS.rxa_clickInputField(E, Gender.MALE))
-            .flatMap(a -> THIS.rxa_clickInputField(E, Gender.FEMALE))
+            /* Select gender */
+            .flatMap(a -> THIS.rxa_clickInput(E, Gender.MALE))
+            .flatMap(a -> THIS.rxa_clickInput(E, Gender.FEMALE))
 
-            .flatMap(a -> THIS.rxa_clickInputField(E, C_ETH))
+            /* Select ethnicity */
+            .flatMap(a -> THIS.rxa_clickInput(E, C_ETH))
             .flatMap(a -> THIS.rxa_selectChoice(E, C_ETH, ETH.stringValue()))
 
-            .flatMap(a -> THIS.rxa_clickInputField(E, C_COACH))
+            /* Select coach preference */
+            .flatMap(a -> THIS.rxa_clickInput(E, C_COACH))
             .flatMap(a -> THIS.rxa_selectChoice(E, C_COACH, CP.stringValue()))
             .subscribe(subscriber);
 
@@ -443,10 +446,10 @@ public interface UIScreenValidationTestType extends
      * correct {@link org.openqa.selenium.WebElement} by verifying their
      * visibility and interacting with each of them.
      * @param MODE {@link UserMode} instance.
+     * @see Engine#isShowingPassword(WebElement)
      * @see Engine#platform()
      * @see Engine#rxa_toggleNextOrFinishInput(WebElement)
      * @see Engine#rxa_togglePasswordMask(WebElement)
-     * @see Engine#isShowingPassword(WebElement)
      * @see ObjectUtil#nonNull(Object)
      * @see Screen#SPLASH
      * @see Screen#PERSONAL_INFO
@@ -460,7 +463,6 @@ public interface UIScreenValidationTestType extends
      * @see #rxe_editField(Engine, HMInputType)
      */
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = false)
     @Test(
         dataProviderClass = UIBaseTestType.class,
         dataProvider = "generalUserModeProvider"
@@ -511,7 +513,6 @@ public interface UIScreenValidationTestType extends
      * @see #rxv_dashboardTutorial(Engine)
      */
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = true)
     @Test(
         dataProviderClass = UIBaseTestType.class,
         dataProvider = "guarantorSpecificUserModeProvider"
@@ -591,7 +592,6 @@ public interface UIScreenValidationTestType extends
      */
     @Test
     @SuppressWarnings("unchecked")
-    @GuarantorAware(value = false)
     default void test_logMeal_isValidScreen() {
         // Setup
         final UIScreenValidationTestType THIS = this;

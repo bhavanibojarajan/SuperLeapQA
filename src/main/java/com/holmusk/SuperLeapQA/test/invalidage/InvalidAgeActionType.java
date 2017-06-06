@@ -51,7 +51,7 @@ public interface InvalidAgeActionType extends BaseActionType, InvalidAgeValidati
      * @see #invalidAgeInputProgressDelay(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_enterAndConfirmInvalidAgeInputs(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_completeInvalidAgeInputs(@NotNull final Engine<?> ENGINE) {
         final InvalidAgeActionType THIS = this;
 
         return rxa_enterInvalidAgeInputs(ENGINE)
