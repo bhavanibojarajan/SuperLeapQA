@@ -11,10 +11,11 @@ import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.param.UnidirectionParam;
-import org.swiften.xtestkit.base.type.DurationType;
-import org.swiften.xtestkit.base.type.RepeatType;
+import org.swiften.xtestkitcomponents.common.DurationType;
+import org.swiften.xtestkitcomponents.common.RepeatType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.unidirection.Unidirection;
 
 import java.util.concurrent.TimeUnit;
 
@@ -116,6 +117,11 @@ public interface DashboardActionType extends
      * @return {@link Flowable} instance.
      * @see DashboardMode#swipeDirection()
      * @see Engine#rxa_swipeGeneric(WebElement, DurationType)
+     * @see UnidirectionParam.Builder#withDirection(Unidirection)
+     * @see UnidirectionParam.Builder#withDuration(int)
+     * @see UnidirectionParam.Builder#withEndRatio(double)
+     * @see UnidirectionParam.Builder#withStartRatio(double)
+     * @see UnidirectionParam.Builder#withTimes(int)
      * @see #dashboardModeSwitcherDuration(Engine)
      * @see #rxe_dashboardModeSwitcher(Engine)
      */
@@ -132,5 +138,30 @@ public interface DashboardActionType extends
 
         return rxe_dashboardModeSwitcher(ENGINE)
             .flatMap(a -> ENGINE.rxa_swipeGeneric(a, PARAM));
+    }
+
+    /**
+     * Scroll to the bottom of the screen to validate cards.
+     * @param E {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_swipeGeneric(WebElement, DurationType)
+     * @see Engine#rxe_window()
+     * @see Unidirection#DOWN_UP
+     * @see UnidirectionParam.Builder#withDirection(Unidirection)
+     * @see UnidirectionParam.Builder#withDuration(int)
+     * @see UnidirectionParam.Builder#withEndRatio(double)
+     * @see UnidirectionParam.Builder#withStartRatio(double)
+     * @see UnidirectionParam.Builder#withTimes(int)
+     */
+    @NotNull
+    default Flowable<?> rxa_scrollToBottom(@NotNull final Engine<?> E) {
+        final UnidirectionParam PARAM = UnidirectionParam.builder()
+            .withDirection(Unidirection.DOWN_UP)
+            .withStartRatio(0.1d)
+            .withEndRatio(0.9d)
+            .withTimes(1)
+            .build();
+
+        return E.rxe_window().flatMap(a -> E.rxa_swipeGeneric(a, PARAM));
     }
 }

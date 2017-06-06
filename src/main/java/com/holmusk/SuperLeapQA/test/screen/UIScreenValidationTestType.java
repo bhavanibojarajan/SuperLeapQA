@@ -20,6 +20,7 @@ import org.swiften.javautilities.number.NumberTestUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.element.swipe.SwipeParam;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.testng.annotations.Test;
 
@@ -316,7 +317,7 @@ public interface UIScreenValidationTestType extends
      * correct {@link org.openqa.selenium.WebElement} by verifying their
      * visibility,
      * The procedures here mimic
-     * {@link #rxa_enterValidAgeInputs(Engine, UserMode)} in lots of ways,
+     * {@link #rxa_enterValidAgeInputs(Engine, UserMode, boolean)} in lots of ways,
      * but this is intentional because we want to check for numeric formatting
      * for {@link ChoiceInput#HEIGHT} and {@link ChoiceInput#WEIGHT} choice
      * selection.
@@ -550,6 +551,7 @@ public interface UIScreenValidationTestType extends
      * @see Screen#DASHBOARD
      * @see #generalUserModeProvider()
      * @see #rxa_navigate(UserMode, Screen...)
+     * @see #rxa_scrollToBottom(Engine)
      * @see #rxa_dashboardMode(Engine, DashboardMode)
      * @see #rxv_dashboardBMI(Engine)
      * @see #rxv_dashboardActivity(Engine, UserMode)
@@ -567,11 +569,12 @@ public interface UIScreenValidationTestType extends
 
         // When
         rxa_navigate(MODE, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD)
-            .flatMap(a -> THIS.rxv_dashboard(ENGINE))
             .flatMap(a -> THIS.rxa_dashboardMode(ENGINE, DashboardMode.BMI))
             .flatMap(a -> THIS.rxv_dashboardBMI(ENGINE))
             .flatMap(a -> THIS.rxa_dashboardMode(ENGINE, DashboardMode.ACTIVITY))
             .flatMap(a -> THIS.rxv_dashboardActivity(ENGINE, MODE))
+            .flatMap(a -> THIS.rxa_scrollToBottom(ENGINE))
+            .flatMap(a -> THIS.rxv_cardListView(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

@@ -26,7 +26,7 @@ import org.swiften.xtestkit.base.element.locator.type.BaseLocatorErrorType;
 import org.swiften.xtestkit.base.model.ChoiceInputType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.base.model.TextInputType;
-import org.swiften.xtestkit.base.type.BaseViewType;
+import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;

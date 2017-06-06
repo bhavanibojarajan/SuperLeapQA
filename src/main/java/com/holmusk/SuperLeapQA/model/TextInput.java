@@ -7,7 +7,7 @@ import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.string.StringTestUtil;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.base.model.TextInputType;
-import org.swiften.xtestkit.base.type.BaseViewType;
+import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkit.mobile.Platform;

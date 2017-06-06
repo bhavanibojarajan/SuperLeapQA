@@ -4,7 +4,7 @@ import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.model.InputType;
-import org.swiften.xtestkit.base.type.BaseViewType;
+import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkit.mobile.Platform;
@@ -79,10 +79,10 @@ public enum Gender implements BaseErrorType, HMInputType {
     /**
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
      * @return {@link XPath} instance.
-     * @see Attribute#withClass(String)
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
      * @see BaseViewType#className()
+     * @see CompoundAttribute#withClass(String)
      * @see Config#TEST_KIT
      * @see Platform#IOS
      * @see IOSView.ViewType#UI_BUTTON

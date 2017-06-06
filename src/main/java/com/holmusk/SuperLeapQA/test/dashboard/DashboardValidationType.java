@@ -8,9 +8,11 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
+import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
+import org.swiften.xtestkitcomponents.view.BaseViewType;
 
 /**
  * Created by haipham on 5/16/17.
@@ -88,12 +90,20 @@ public interface DashboardValidationType extends BaseValidationType {
      * dashboard modes.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see BaseViewType#className()
+     * @see Engine#rxe_ofClass(String...)
+     * @see AndroidView.ViewType#VIEW_PAGER
      * @see IOSView.ViewType#UI_SCROLL_VIEW
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_dashboardModeSwitcher(@NotNull Engine<?> engine) {
-        if (engine instanceof IOSEngine) {
+        if (engine instanceof AndroidEngine) {
+            return engine
+                .rxe_ofClass(AndroidView.ViewType.VIEW_PAGER.className())
+                .firstElement()
+                .toFlowable();
+        } else if (engine instanceof IOSEngine) {
             return engine
                 .rxe_ofClass(IOSView.ViewType.UI_SCROLL_VIEW.className())
                 .firstElement()
@@ -232,7 +242,7 @@ public interface DashboardValidationType extends BaseValidationType {
     }
 
     /**
-     * Validate the dashboard screen.
+     * Validate the dashboard screen's card list view.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see ObjectUtil#nonNull(Object)
@@ -241,7 +251,7 @@ public interface DashboardValidationType extends BaseValidationType {
      * @see #rxe_logWeight(Engine)
      */
     @NotNull
-    default Flowable<?> rxv_dashboard(@NotNull Engine<?> engine) {
+    default Flowable<?> rxv_cardListView(@NotNull Engine<?> engine) {
         return Flowable
             .mergeArray(
                 rxe_logMeal(engine),

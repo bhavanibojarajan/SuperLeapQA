@@ -5,9 +5,9 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.element.general.Unidirection;
+import org.swiften.xtestkitcomponents.unidirection.Unidirection;
 import org.swiften.xtestkit.base.param.UnidirectionParam;
-import org.swiften.xtestkit.base.type.DurationType;
+import org.swiften.xtestkitcomponents.common.DurationType;
 
 import java.util.concurrent.TimeUnit;
 
