@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionUtil;
+import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
@@ -185,7 +186,8 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @see DateParam.Builder#withDate(Date)
      * @see DateParam.Builder#withPickerType(DatePickerType)
      * @see DateParam.Builder#withCalendarUnits(List)
-     * @see EEEMMMddInput#choiceParam(DateType)
+     * @see EEEMMMddInput#choiceParam(LocalizerType, DateType)
+     * @see Engine#localizer()
      * @see Engine#rxa_selectChoice(ChoiceType)
      * @see Engine#rxa_selectDate(DateType)
      * @see IOSDatePickerType#MMMd_h_mm_a
@@ -196,10 +198,11 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
         DateParam.Builder builder = DateParam.builder().withDate(date);
 
         if (ENGINE instanceof AndroidEngine) {
-            DateType dateParam = DateParam.builder().withDate(date).build();
-            ChoiceType dateChoice = EEEMMMddInput.choiceParam(dateParam);
+            DateType dp = DateParam.builder().withDate(date).build();
+            LocalizerType localizer = ENGINE.localizer();
+            ChoiceType dateChoice = EEEMMMddInput.choiceParam(localizer, dp);
 
-            DateType timeParam = DateParam.builder()
+            DateType tp = DateParam.builder()
                 .withDate(date)
                 .withCalendarUnits(CalendarUnit.HOUR, CalendarUnit.MINUTE)
                 .withPickerType(AndroidDatePickerType.hh_mm_TIME_PICKER)
@@ -208,12 +211,12 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
             return Flowable
                 .concat(
                     ENGINE.rxa_selectChoice(dateChoice),
-                    ENGINE.rxa_selectDate(timeParam)
+                    ENGINE.rxa_selectDate(tp)
                 )
                 .all(BooleanUtil::isTrue)
                 .toFlowable();
         } else if (ENGINE instanceof IOSEngine) {
-            DateType dateTimeParam = DateParam.builder()
+            DateType dtParam = DateParam.builder()
                 .withDate(date)
                 .withCalendarUnits(
                     CalendarUnit.MONTH,
@@ -225,7 +228,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
                 .withPickerType(IOSDatePickerType.MMMd_h_mm_a)
                 .build();
 
-            return ENGINE.rxa_selectDate(dateTimeParam);
+            return ENGINE.rxa_selectDate(dtParam);
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

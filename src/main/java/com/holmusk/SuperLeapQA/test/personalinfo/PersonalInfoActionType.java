@@ -13,6 +13,7 @@ import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by haipham on 17/5/17.
@@ -53,27 +54,6 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
     }
 
     /**
-     * Enter random additional personal info inputs in order to access the
-     * next screen. This is only relevant for {@link UserMode#requiresGuarantor()}.
-     * @param engine {@link Engine} instance.
-     * @param mode {@link UserMode} instance.
-     * @return {@link Flowable} instance.
-     * @see UserMode#guarantorInfo(PlatformType)
-     * @see UserMode#requiresGuarantor()
-     * @see #rxa_randomInput(Engine, HMTextType)
-     */
-    @NotNull
-    default Flowable<?> rxa_enterGuarantorInfo(@NotNull Engine<?> engine,
-                                               @NotNull UserMode mode) {
-        if (mode.requiresGuarantor()) {
-            PlatformType platform = engine.platform();
-            return rxa_randomInputs(engine, mode.guarantorInfo(platform));
-        } else {
-            return Flowable.just(true);
-        }
-    }
-
-    /**
      * Click the submit button to confirm personal info inputs.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
@@ -86,29 +66,11 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
     }
 
     /**
-     * Confirm additional personal inputs. This is only relevant to
-     * {@link UserMode#requiresGuarantor()}.
-     * @param engine {@link Engine} instance.
-     * @param mode {@link UserMode} instance.
-     * @return {@link Flowable} instance.
-     * @see UserMode#requiresGuarantor()
-     * @see #rxa_confirmPersonalInfo(Engine)
-     */
-    @NotNull
-    default Flowable<?> rxa_confirmGuarantorInfo(@NotNull Engine<?> engine,
-                                                 @NotNull UserMode mode) {
-        if (mode.requiresGuarantor()) {
-            return rxa_confirmPersonalInfo(engine);
-        } else {
-            return Flowable.just(true);
-        }
-    }
-
-    /**
      * Enter and confirm personal info.
      * @param ENGINE {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
+     * @see #personalInfoProgressDelay(Engine)
      * @see #rxa_enterPersonalInfo(Engine, UserMode)
      * @see #rxa_confirmPersonalInfo(Engine)
      */
@@ -118,21 +80,8 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
         final PersonalInfoActionType THIS = this;
 
         return rxa_enterPersonalInfo(ENGINE, mode)
-            .flatMap(a -> THIS.rxa_confirmPersonalInfo(ENGINE));
-    }
-
-    /**
-     * Watch until the personal info screen is no longer visible.
-     * @param ENGINE {@link Engine} instance.
-     * @return {@link Flowable} instance.
-     * @see #rxe_personalInfoSubmit(Engine)
-     * @see Engine#rxa_watchUntilHidden(WebElement)
-     */
-    @NotNull
-    default Flowable<?> rxa_watchPersonalInfoScreen(@NotNull final Engine<?> ENGINE) {
-        return rxe_personalInfoSubmit(ENGINE)
-            .flatMap(ENGINE::rxa_watchUntilHidden)
-            .onErrorReturnItem(true);
+            .flatMap(a -> THIS.rxa_confirmPersonalInfo(ENGINE))
+            .delay(personalInfoProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**

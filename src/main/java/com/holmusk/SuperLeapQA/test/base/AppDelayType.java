@@ -31,7 +31,7 @@ public interface AppDelayType extends BaseErrorType {
      */
     default long loginProgressDelay(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
-            return 8000;
+            return 15000;
         } else {
             return 5000;
         }
@@ -89,6 +89,16 @@ public interface AppDelayType extends BaseErrorType {
      */
     default long validAgeInputProgressDelay(@NotNull Engine<?> engine) {
         return 3000;
+    }
+
+    /**
+     * The delay between the time the user submits personal info and the time
+     * when the app navigates to the next page.
+     * @param engine {@link Engine} instance.
+     * @return {@link Long} value.
+     */
+    default long personalInfoProgressDelay(@NotNull Engine<?> engine) {
+        return 0;
     }
 
     /**

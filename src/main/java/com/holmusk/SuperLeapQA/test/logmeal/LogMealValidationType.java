@@ -193,13 +193,23 @@ public interface LogMealValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsText(String...)
+     * @see #rxe_mealTime(Engine)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_mealTimeConfirm(@NotNull Engine<?> engine) {
-        return engine
-            .rxe_containsText("mealLog_title_save")
-            .firstElement()
-            .toFlowable();
+        if (engine instanceof AndroidEngine) {
+            /* If testing on Android, clicking on the meal time label should
+             * dismiss the time picker */
+            return rxe_mealTime(engine);
+        } else if (engine instanceof IOSEngine) {
+            return engine
+                .rxe_containsText("mealLog_title_save")
+                .firstElement()
+                .toFlowable();
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 
     /**

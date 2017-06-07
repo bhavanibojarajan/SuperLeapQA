@@ -105,7 +105,7 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
         return rxe_editField(ENGINE, INPUT)
             .map(ENGINE::getText)
             .doOnNext(a -> LogUtil.printft("Value for %s: %s", INPUT, a))
-            .filter(a -> a.equals(VALUE))
+            .filter(a -> a.toLowerCase().equals(VALUE.toLowerCase()))
             .switchIfEmpty(ENGINE.rxv_errorWithPageSource(
                 String.format("Value for %s does not equal %s", INPUT, VALUE))
             )
@@ -196,7 +196,10 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
         return Flowable
             .mergeArray(
                 engine.rxe_containsText("register_title_bmiUnqualified"),
-                engine.rxe_containsText("register_title_ok")
+                engine.rxe_containsText(
+                    "register_title_ok",
+                    "register_title_close"
+                )
             )
             .all(ObjectUtil::nonNull)
             .toFlowable();

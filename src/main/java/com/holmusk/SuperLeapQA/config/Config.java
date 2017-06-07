@@ -1,7 +1,9 @@
 package com.holmusk.SuperLeapQA.config;
 
+import com.holmusk.HMUITestKit.android.HMAndroidEngine;
 import com.holmusk.HMUITestKit.ios.HMIOSEngine;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.xtestkit.android.type.AndroidVersion;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.TestMode;
 import org.swiften.xtestkit.kit.TestKit;
@@ -50,13 +52,13 @@ public final class Config {
 //            .withTestMode(TestMode.ACTUAL)
 //            .build());
 //
-//        ENGINES.add(HMAndroidEngine.builder()
-//            .withSDK(AndroidVersion.SDK_22)
-//            .withAppActivity(ANDROID_APP_ACTIVITY)
-//            .withAppPackage(ANDROID_APP_PACKAGE)
-//            .withDeviceName("Nexus_4_API_22")
-//            .withTestMode(TestMode.SIMULATED)
-//            .build());
+        ENGINES.add(HMAndroidEngine.builder()
+            .withSDK(AndroidVersion.SDK_22)
+            .withAppActivity(ANDROID_APP_ACTIVITY)
+            .withAppPackage(ANDROID_APP_PACKAGE)
+            .withDeviceName("Nexus_4_API_22")
+            .withTestMode(TestMode.SIMULATED)
+            .build());
 
 //        ENGINES.add(HMAndroidEngine.builder()
 //            .withSDK(AndroidVersion.SDK_23)
@@ -66,19 +68,20 @@ public final class Config {
 //            .withTestMode(TestMode.SIMULATED)
 //            .build());
 //
-        ENGINES.add(HMIOSEngine.builder()
-            .withDeviceUID("771F28EC-C5FC-45B8-8C2A-AF346B219936")
-            .withApp(IOS_APP_PATH)
-            .withAppPackage(IOS_APP_PACKAGE)
-            .withDeviceName("iPhone 7 Plus")
-            .withPlatformVersion("10.3")
-            .withTestMode(TestMode.SIMULATED)
-            .build());
+//        ENGINES.add(HMIOSEngine.builder()
+//            .withDeviceUID("771F28EC-C5FC-45B8-8C2A-AF346B219936")
+//            .withApp(IOS_APP_PATH)
+//            .withAppPackage(IOS_APP_PACKAGE)
+//            .withDeviceName("iPhone 7 Plus")
+//            .withPlatformVersion("10.3")
+//            .withTestMode(TestMode.SIMULATED)
+//            .build());
 
 
         TEST_KIT = TestKit.builder()
             .withEngines(ENGINES)
             .addResourceBundle("SuperleapQA", Locale.US)
+            .addResourceBundle("HMUITestKit", Locale.US)
             .build();
     }
 

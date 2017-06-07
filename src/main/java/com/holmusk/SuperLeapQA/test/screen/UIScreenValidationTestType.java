@@ -167,8 +167,7 @@ public interface UIScreenValidationTestType extends
 
     /**
      * This test checks that {@link Screen#DOB} has correct elements,
-     * by checking that all {@link org.openqa.selenium.WebElement} are present
-     * and back navigation shows {@link Screen#REGISTER}.
+     * by checking that all {@link org.openqa.selenium.WebElement} are present.
      * @param mode {@link UserMode} instance.
      * @see Engine#rxa_click(WebElement)
      * @see Engine#rxa_navigateBackOnce()
@@ -211,9 +210,6 @@ public interface UIScreenValidationTestType extends
             .flatMap(a -> THIS.rxa_openDoBPicker(ENGINE))
             .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
             .flatMap(a -> ENGINE.rxa_navigateBackOnce())
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
-            .flatMap(a -> THIS.rxa_clickBackButton(ENGINE))
-            .flatMap(a -> THIS.rxv_registerScreen(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

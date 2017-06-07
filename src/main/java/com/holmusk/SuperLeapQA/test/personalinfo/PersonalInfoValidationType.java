@@ -7,6 +7,7 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
@@ -16,6 +17,7 @@ import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
+import org.swiften.xtestkitcomponents.xpath.Attributes;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
@@ -24,11 +26,24 @@ import org.swiften.xtestkitcomponents.xpath.XPath;
  */
 public interface PersonalInfoValidationType extends ValidAgeValidationType {
     /**
-     * Get the submit button for the personal info screen. Depending on the
-     * current {@link UserMode}, the confirm button text may change.
+     * Get the submit button for
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#PERSONAL_INFO}.
+     * Depending on the current {@link UserMode}, the confirm button text may
+     * change.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see Attributes#containsText(String)
+     * @see Attributes#of(PlatformType)
+     * @see BaseViewType#className()
+     * @see CompoundAttribute.Builder#addAttribute(Attribute)
+     * @see CompoundAttribute.Builder#withClass(String)
+     * @see Engine#localizer()
      * @see Engine#rxe_containsID(String...)
+     * @see Engine#rxe_withXPath(XPath...)
+     * @see LocalizerType#localize(String)
+     * @see XPath.Builder#addAttribute(CompoundAttribute)
+     * @see IOSView.ViewType#UI_BUTTON
+     * @see Platform#IOS
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -37,10 +52,17 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
         if (engine instanceof AndroidEngine) {
             return engine.rxe_containsID("btnNext").firstElement().toFlowable();
         } else if (engine instanceof IOSEngine) {
-            return engine.rxe_containsText(
-                "register_title_submit",
-                "register_title_next"
-            ).firstElement().toFlowable();
+            LocalizerType localizer = engine.localizer();
+            Attributes attrs = Attributes.of(Platform.IOS);
+            String localized = localizer.localize("register_title_register");
+
+            CompoundAttribute cAttr = CompoundAttribute.builder()
+                .addAttribute(attrs.containsText(localized))
+                .withClass(IOSView.ViewType.UI_BUTTON.className())
+                .build();
+
+            XPath xPath = XPath.builder().addAttribute(cAttr).build();
+            return engine.rxe_withXPath(xPath).firstElement().toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

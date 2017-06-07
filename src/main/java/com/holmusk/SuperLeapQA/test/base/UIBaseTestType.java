@@ -49,7 +49,7 @@ public interface UIBaseTestType extends BaseTestType, ForwardNavigationType, SLS
         List<Object[]> data = new LinkedList<>();
 
         UserMode[] modes = new UserMode[] {
-            UserMode.PARENT,
+//            UserMode.PARENT,
 //            UserMode.TEEN_A18,
             UserMode.TEEN_U18
         };

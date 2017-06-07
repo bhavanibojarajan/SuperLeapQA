@@ -7,6 +7,7 @@ import com.holmusk.SuperLeapQA.test.chat.ChatActionType;
 import com.holmusk.SuperLeapQA.test.dashboard.DashboardActionType;
 import com.holmusk.SuperLeapQA.test.dob.DOBPickerActionType;
 import com.holmusk.SuperLeapQA.test.forgotpassword.ForgotPasswordActionType;
+import com.holmusk.SuperLeapQA.test.guarantorinfo.GuarantorInfoActionType;
 import com.holmusk.SuperLeapQA.test.invalidage.InvalidAgeActionType;
 import com.holmusk.SuperLeapQA.test.login.LoginActionType;
 import com.holmusk.SuperLeapQA.test.logmeal.LogMealActionType;
@@ -42,6 +43,7 @@ public interface ForwardNavigationType extends
     ValidAgeActionType,
     AddressActionType,
     PersonalInfoActionType,
+    GuarantorInfoActionType,
     DashboardActionType,
     SearchActionType,
     PhotoPickerActionType,
@@ -252,22 +254,15 @@ public interface ForwardNavigationType extends
      * personal info screen.
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#GUARANTOR_INFO}
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#USE_APP_NOW}
-     * @param ENGINE {@link Engine} instance.
-     * @param MODE {@link UserMode} instance.
+     * @param engine {@link Engine} instance.
+     * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see BooleanUtil#isTrue(boolean)
-     * @see #registerProgressDelay(Engine)
-     * @see #rxa_enterGuarantorInfo(Engine, UserMode)
-     * @see #rxa_confirmGuarantorInfo(Engine, UserMode)
+     * @see #rxa_completeGuarantorInfo(Engine, UserMode)
      */
     @NotNull
-    default Flowable<?> rxn_guarantorInfo_useApp(@NotNull final Engine<?> ENGINE,
-                                                 @NotNull final UserMode MODE) {
-        final PersonalInfoActionType THIS = this;
-
-        return rxa_enterGuarantorInfo(ENGINE, MODE)
-            .flatMap(a -> THIS.rxa_confirmGuarantorInfo(ENGINE, MODE))
-            .delay(registerProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+    default Flowable<?> rxn_guarantorInfo_useApp(@NotNull Engine<?> engine,
+                                                 @NotNull UserMode mode) {
+        return rxa_completeGuarantorInfo(engine, mode);
     }
 
     /**
