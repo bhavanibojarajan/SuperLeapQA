@@ -16,11 +16,10 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zip;
-import org.swiften.javautilities.number.NumberTestUtil;
+import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.element.swipe.SwipeParam;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.testng.annotations.Test;
 
@@ -230,7 +229,10 @@ public interface UIScreenValidationTestType extends
      * {@link java.util.Date} with which to interact with the calendar/date
      * picker.
      * @param MODE {@link UserMode} instance.
-     * @see NumberTestUtil#randomBetween(int, int)
+     * @see NumberUtil#randomBetween(int, int)
+     * @see Calendar#DAY_OF_MONTH
+     * @see Calendar#MONTH
+     * @see Calendar#YEAR
      * @see Screen#SPLASH
      * @see Screen#DOB
      * @see Screen#INVALID_AGE
@@ -253,9 +255,9 @@ public interface UIScreenValidationTestType extends
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH, NumberTestUtil.randomBetween(1, 28));
-        calendar.set(Calendar.MONTH, NumberTestUtil.randomBetween(0, 11));
-        calendar.set(Calendar.YEAR, NumberTestUtil.randomBetween(1970, 2000));
+        calendar.set(Calendar.DAY_OF_MONTH, NumberUtil.randomBetween(1, 28));
+        calendar.set(Calendar.MONTH, NumberUtil.randomBetween(0, 11));
+        calendar.set(Calendar.YEAR, NumberUtil.randomBetween(1970, 2000));
         final Date DATE = calendar.getTime();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 

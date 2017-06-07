@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
-import org.swiften.xtestkitcomponents.unidirection.Unidirection;
+import org.swiften.xtestkitcomponents.direction.Unidirection;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 
 /**

@@ -122,8 +122,8 @@ public interface BackwardNavigationType extends
      * @see #rxa_clickBackButton(Engine)
      */
     @NotNull
-    default Flowable<?> rxn_guarantorInfo_personalInfo(@NotNull Engine<?> engine,
-                                                       @NotNull UserMode mode) {
+    default Flowable<?> rxn_guarantorInfo_addressInfo(@NotNull Engine<?> engine,
+                                                      @NotNull UserMode mode) {
         if (mode.requiresGuarantor()) {
             return rxa_clickBackButton(engine);
         } else {

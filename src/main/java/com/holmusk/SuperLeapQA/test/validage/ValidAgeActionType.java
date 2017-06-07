@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zip;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
@@ -119,8 +120,8 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @see BMIParam.Builder#withGender(Gender)
      * @see BMIParam.Builder#withHeight(List)
      * @see BMIParam.Builder#withWeight(List)
-     * @see BMIUtil#withinWidestHealthyRange(UserMode, BMIParam)
-     * @see BMIUtil#withinTightestHealthyRange(UserMode, BMIParam)
+     * @see BMIUtil#outOfWidestInvalidRange(UserMode, BMIParam)
+     * @see BMIUtil#withinTightestInvalidRange(UserMode, BMIParam)
      * @see ChoiceInput#HEIGHT
      * @see ChoiceInput#WEIGHT
      * @see CoachPref#values()
@@ -173,9 +174,18 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
                 .withHeight(height)
                 .withWeight(weight)
                 .build();
+
+            LogUtil.printfThread("Current BMI: %.2f", param.bmi());
         } while (validBMI
-            ? BMIUtil.withinTightestHealthyRange(mode, param)
-            : !BMIUtil.withinWidestHealthyRange(mode, param));
+            ? BMIUtil.withinTightestInvalidRange(mode, param)
+            : BMIUtil.outOfWidestInvalidRange(mode, param));
+
+        LogUtil.printfThread(
+            "Selecting height: %s, weight: %s, BMI: %.2f",
+            height,
+            weight,
+            param.bmi()
+        );
 
         final Height H_MODE = height.get(0).A;
         final Weight W_MODE = weight.get(0).A;

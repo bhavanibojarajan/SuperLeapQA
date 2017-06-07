@@ -20,6 +20,7 @@ public enum Screen implements ScreenInitializationType {
     INVALID_AGE,
     VALID_AGE,
     PERSONAL_INFO,
+    ADDRESS_INFO,
     GUARANTOR_INFO,
     USE_APP_NOW,
     DASHBOARD_TUTORIAL,

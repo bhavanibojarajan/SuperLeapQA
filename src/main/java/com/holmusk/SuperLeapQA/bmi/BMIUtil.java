@@ -5,7 +5,6 @@ import com.holmusk.SuperLeapQA.model.Gender;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
-import org.swiften.javautilities.log.LogUtil;
 
 import java.util.Collection;
 import java.util.List;
@@ -17,81 +16,81 @@ import java.util.stream.Collectors;
  */
 public final class BMIUtil {
     /**
-     * Get the healthy BMI range based on {@link Ethnicity}, {@link Gender}
+     * Get the invalid BMI range based on {@link Ethnicity}, {@link Gender}
      * and age.
      * @param param {@link BMIParam} instance.
      * @return {@link Zip} instance.
      * @see BMIParam#ethnicity()
      * @see Ethnicity#isAsian()
-     * @see #asianHealthyRange(BMIParam)
-     * @see #otherHealthyRange(BMIParam)
+     * @see #asianInvalidRange(BMIParam)
+     * @see #otherInvalidRange(BMIParam)
      */
     @NotNull
-    public static Zip<Double,Double> healthyRange(@NotNull BMIParam param) {
+    public static Zip<Double,Double> invalidRange(@NotNull BMIParam param) {
         Ethnicity ethnicity = param.ethnicity();
 
         if (ethnicity.isAsian()) {
-            return asianHealthyRange(param);
+            return asianInvalidRange(param);
         } else {
-            return otherHealthyRange(param);
+            return otherInvalidRange(param);
         }
     }
 
     /**
-     * Get the tightest healthy range, for which no matter what the user's
-     * age is, the BMI should be healthy.
+     * Get the tightest invalid range, for which no matter what the user's
+     * age is, the BMI should be invalid.
      * @param mode {@link UserMode} instance.
      * @param param {@link BMIParam} instance.
      * @return {@link Zip} instance.
-     * @see #allHealthyRangesBasedOnAge(UserMode, BMIParam)
+     * @see #allInvalidRangesBasedOnAge(UserMode, BMIParam)
      * @see #tightestRange(Collection)
      */
     @NotNull
-    public static Zip<Double,Double> tightestHealthyRange(
+    public static Zip<Double,Double> tightestInvalidRange(
         @NotNull UserMode mode,
         @NotNull BMIParam param
     ) {
-        return tightestRange(allHealthyRangesBasedOnAge(mode, param));
+        return tightestRange(allInvalidRangesBasedOnAge(mode, param));
     }
 
     /**
      * Get the widest healthy range - any number falling out of which should
-     * be considered unhealthy BMI.
+     * be considered valid BMI.
      * @param mode {@link UserMode} instance.
      * @param param {@link BMIParam} instance.
      * @return {@link Zip} instance.
-     * @see #allHealthyRangesBasedOnAge(UserMode, BMIParam)
+     * @see #allInvalidRangesBasedOnAge(UserMode, BMIParam)
      * @see #widestRange(Collection)
      */
     @NotNull
-    public static Zip<Double,Double> widestHealthyRange(
+    public static Zip<Double,Double> widestInvalidRange(
         @NotNull UserMode mode,
         @NotNull BMIParam param
     ) {
-        return widestRange(allHealthyRangesBasedOnAge(mode, param));
+        return widestRange(allInvalidRangesBasedOnAge(mode, param));
     }
 
     /**
-     * Get all available healthy {@link Zip} range based on
-     * {@link UserMode#validAgeCategoryRange()}.
+     * Get all available invalid {@link Zip} ranges based on
+     * {@link UserMode#validAgeRange()}.
      * @param mode {@link UserMode} instance.
      * @param PARAM {@link BMIParam} instance.
      * @return {@link Collection} of {@link Zip}.
      * @see BMIParam.Builder#withAge(int)
      * @see BMIParam.Builder#withBMIParam(BMIParam)
-     * @see UserMode#validAgeCategoryRange()
+     * @see UserMode#validAgeRange()
      */
     @NotNull
-    private static Collection<Zip<Double,Double>> allHealthyRangesBasedOnAge(
+    private static Collection<Zip<Double,Double>> allInvalidRangesBasedOnAge(
         @NotNull UserMode mode,
         @NotNull final BMIParam PARAM
     ) {
-        List<Integer> ages = mode.validAgeCategoryRange();
+        List<Integer> ages = mode.validAgeRange();
 
         return ages.stream()
             .map(a -> BMIParam.builder().withBMIParam(PARAM).withAge(a))
             .map(BMIParam.Builder::build)
-            .map(BMIUtil::healthyRange)
+            .map(BMIUtil::invalidRange)
             .collect(Collectors.toList());
     }
 
@@ -161,84 +160,80 @@ public final class BMIUtil {
     }
 
     /**
-     * Check whether {@link BMIParam#bmi()} is not within a certain range.
-     * @param range {@link Zip} instance.
-     * @param param {@link BMIParam} instance.
-     * @return {@link Boolean} value.
-     * @see #withinRange(Zip, BMIParam)
-     */
-    private static boolean notWithinRange(@NotNull Zip<Double,Double> range,
-                                          @NotNull BMIParam param) {
-        return !withinRange(range, param);
-    }
-
-    /**
-     * Check whether {@link BMIParam#bmi()} is within healthy range.
-     * @param param {@link BMIParam} instance.
-     * @return {@link Boolean} value.
-     * @see #healthyRange(BMIParam)
-     * @see #withinRange(Zip, BMIParam)
-     */
-    public static boolean withinHealthyRange(@NotNull BMIParam param) {
-        Zip<Double,Double> range = healthyRange(param);
-        return withinRange(range, param);
-    }
-
-    /**
-     * Check whether {@link BMIParam#bmi()} is within tightest healthy range.
+     * Check whether {@link BMIParam#bmi()} is within tightest invalid range.
      * @param mode {@link UserMode} instance.
      * @param param {@link BMIParam} instance.
      * @return {@link Boolean} value.
-     * @see #tightestHealthyRange(UserMode, BMIParam)
+     * @see #tightestInvalidRange(UserMode, BMIParam)
      * @see #withinRange(Zip, BMIParam)
      */
-    public static boolean withinTightestHealthyRange(@NotNull UserMode mode,
+    public static boolean withinTightestInvalidRange(@NotNull UserMode mode,
                                                      @NotNull BMIParam param) {
-        return withinRange(tightestHealthyRange(mode, param), param);
+        return withinRange(tightestInvalidRange(mode, param), param);
     }
 
     /**
-     * Check whether {@link BMIParam#bmi()} is within widest healthy range.
+     * Check whether {@link BMIParam#bmi()} is within widest invalid range.
      * @param mode {@link UserMode} instance.
      * @param param {@link BMIParam} instance.
      * @return {@link Boolean} value.
-     * @see #widestHealthyRange(UserMode, BMIParam)
+     * @see #widestInvalidRange(UserMode, BMIParam)
      * @see #withinRange(Zip, BMIParam)
      */
-    public static boolean withinWidestHealthyRange(@NotNull UserMode mode,
+    public static boolean withinWidestInvalidRange(@NotNull UserMode mode,
                                                    @NotNull BMIParam param) {
-        return withinRange(widestHealthyRange(mode, param), param);
+        return withinRange(widestInvalidRange(mode, param), param);
     }
 
     /**
-     * Get healthy BMI range for {@link Ethnicity#isAsian()}.
+     * Antithesis of {@link #withinWidestInvalidRange(UserMode, BMIParam)}.
+     * @param mode {@link UserMode} instance.
+     * @param param {@link BMIParam} instance.
+     * @return {@link Boolean} value.
+     * @see #withinWidestInvalidRange(UserMode, BMIParam)
+     */
+    public static boolean outOfWidestInvalidRange(@NotNull UserMode mode,
+                                                  @NotNull BMIParam param) {
+        return !withinWidestInvalidRange(mode, param);
+    }
+
+    /**
+     * Get unacceptable BMI range for {@link Ethnicity#isAsian()}.
      * @param param {@link BMIParam} instance.
      * @return {@link Zip} instance.
      * @see BMIParam#age()
      * @see BMIParam#gender()
+     * @see Zip#of(Object, Object)
      * @see Gender#MALE
      * @see Gender#FEMALE
-     * @see Zip#of(Object, Object)
      */
     @NotNull
-    private static Zip<Double,Double> asianHealthyRange(@NotNull BMIParam param) {
+    @SuppressWarnings({"unused", "UnusedAssignment"})
+    private static Zip<Double,Double> asianInvalidRange(@NotNull BMIParam param) {
         Gender gender = param.gender();
         int age = param.age();
+        double lower = 18d, upper = 23d;
 
         switch (age) {
             case 4:
             case 5:
             case 6:
             case 7:
-                return Zip.of(14d, 17d);
+                lower = 14d;
+                upper = 17d;
+                break;
 
             case 16:
                 switch (gender) {
                     case MALE:
-                        return Zip.of(17d, 24d);
+                        lower = 17d;
+                        upper = 24d;
+                        break;
 
                     case FEMALE:
-                        return Zip.of(17d, 25d);
+                        lower = 17d;
+                        upper = 25d;
+                        break;
 
                     default:
                         break;
@@ -247,10 +242,14 @@ public final class BMIUtil {
             case 17:
                 switch (gender) {
                     case MALE:
-                        return Zip.of(18d, 25d);
+                        lower = 18d;
+                        upper = 25d;
+                        break;
 
                     case FEMALE:
-                        return Zip.of(17d, 25d);
+                        lower = 17d;
+                        upper = 25d;
+                        break;
 
                     default:
                         break;
@@ -259,10 +258,14 @@ public final class BMIUtil {
             case 18:
                 switch (gender) {
                     case MALE:
-                        return Zip.of(19d, 25d);
+                        lower = 19d;
+                        upper = 25d;
+                        break;
 
                     case FEMALE:
-                        return Zip.of(18d, 26d);
+                        lower = 18d;
+                        upper = 26d;
+                        break;
 
                     default:
                         break;
@@ -272,7 +275,8 @@ public final class BMIUtil {
                 break;
         }
 
-        return Zip.of(18d, 23d);
+        /* The lower bound is 0 because we do not accept underweight kids */
+        return Zip.of(0d, upper);
     }
 
     /**
@@ -282,8 +286,10 @@ public final class BMIUtil {
      * @see Zip#of(Object, Object)
      */
     @NotNull
-    private static Zip<Double,Double> otherHealthyRange(@NotNull BMIParam param) {
-        return Zip.of(18.5d, 25d);
+    @SuppressWarnings("unused")
+    private static Zip<Double,Double> otherInvalidRange(@NotNull BMIParam param) {
+        double lower = 18.5, upper = 25;
+        return Zip.of(0d, upper);
     }
 
     private BMIUtil() {}

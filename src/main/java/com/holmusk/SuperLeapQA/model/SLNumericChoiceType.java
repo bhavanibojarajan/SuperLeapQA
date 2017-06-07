@@ -42,7 +42,7 @@ public interface SLNumericChoiceType extends HMNumericChoiceType {
      */
     @NotNull
     default Optional<Integer> numericRangeLimit() {
-        return Optional.of(20);
+        return Optional.of(50);
     }
 
     /**
@@ -71,8 +71,8 @@ public interface SLNumericChoiceType extends HMNumericChoiceType {
     /**
      * Get a random numeric value from {@link #selectableRange(UserMode)}.
      * @return {@link Integer} value.
-     * @see #selectableRange(UserMode)
      * @see CollectionUtil#randomElement(List)
+     * @see #selectableRange(UserMode)
      */
     default int randomValue(@NotNull UserMode mode) {
         List<Integer> selectableRange = selectableRange(mode);

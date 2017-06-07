@@ -3,15 +3,17 @@ package com.holmusk.SuperLeapQA.model;
 import com.holmusk.HMUITestKit.model.HMTextType;
 import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.log.LogUtil;
-import org.swiften.javautilities.string.StringTestUtil;
+import org.swiften.javautilities.number.NumberUtil;
+import org.swiften.javautilities.string.StringUtil;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.base.model.TextInputType;
-import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
@@ -21,21 +23,22 @@ import org.swiften.xtestkitcomponents.xpath.XPath;
  * Created by haipham on 5/10/17.
  */
 public enum TextInput implements BaseErrorType, HMTextType {
-    NAME,
-    EMAIL,
-    PHONE,
     CHILD_NAME,
-    CHILD_ID,
-    MOBILE,
-    PASSWORD,
+    CHILD_NRIC,
+    EMAIL,
     HOME,
-    POSTAL_CODE,
-    UNIT_NUMBER,
-    PARENT_NAME,
+    MEAL_COMMENT,
+    MEAL_DESCRIPTION,
+    MOBILE,
+    NAME,
+    NRIC,
     PARENT_EMAIL,
     PARENT_MOBILE,
-    MEAL_DESCRIPTION,
-    MEAL_COMMENT;
+    PARENT_NAME,
+    PASSWORD,
+    PHONE,
+    POSTAL_CODE,
+    UNIT_NUMBER;
 
     /**
      * @param platform {@link PlatformType} instance.
@@ -94,7 +97,8 @@ public enum TextInput implements BaseErrorType, HMTextType {
                 ID = "et_childname";
                 break;
 
-            case CHILD_ID:
+            case CHILD_NRIC:
+            case NRIC:
                 ID = "et_childnric";
                 break;
 
@@ -109,6 +113,14 @@ public enum TextInput implements BaseErrorType, HMTextType {
 
             case HOME:
                 ID = "et_home";
+                break;
+
+            case UNIT_NUMBER:
+                ID = "et_unitnumber";
+                break;
+
+            case POSTAL_CODE:
+                ID = "et_postalcode";
                 break;
 
             case MEAL_DESCRIPTION:
@@ -131,12 +143,13 @@ public enum TextInput implements BaseErrorType, HMTextType {
      * @see Attributes#of(PlatformType)
      * @see BaseViewType#className()
      * @see CompoundAttribute#forClass(String)
-     * @see IOSView.ViewType#UI_TEXT_FIELD
-     * @see IOSView.ViewType#UI_SECURE_TEXT_FIELD
-     * @see Platform#IOS
+     * @see Config#TEST_KIT
      * @see org.swiften.xtestkit.kit.TestKit#localize(String)
      * @see XPath.Builder#addAttribute(Attribute)
      * @see XPath.Builder#addAttribute(CompoundAttribute)
+     * @see IOSView.ViewType#UI_TEXT_FIELD
+     * @see IOSView.ViewType#UI_SECURE_TEXT_FIELD
+     * @see Platform#IOS
      * @see #iOSShortDescription()
      */
     @NotNull
@@ -177,15 +190,19 @@ public enum TextInput implements BaseErrorType, HMTextType {
             case PARENT_MOBILE:
                 return "user_title_abbv_mobile";
 
-            case HOME:
-                return "user_title_abbv_home";
-
             case EMAIL:
             case PARENT_EMAIL:
                 return "user_title_abbv_email";
 
+            case CHILD_NRIC:
+            case NRIC:
+                return "user_title_abbv_nric";
+
             case PASSWORD:
                 return "user_title_abbv_password";
+
+            case HOME:
+                return "user_title_abbv_home";
 
             case POSTAL_CODE:
                 return "user_title_abbv_postal";
@@ -208,41 +225,60 @@ public enum TextInput implements BaseErrorType, HMTextType {
     /**
      * Get a random text input.
      * @return {@link String} value.
+     * @see CollectionUtil#randomElement(Object[])
      * @see TextInputType#randomInput()
-     * @see StringTestUtil#randomDigitString(int)
-     * @see StringTestUtil#randomString(int)
+     * @see StringUtil#randomDigitString(int)
+     * @see StringUtil#randomString(int)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
     public String randomInput() {
         switch (this) {
-            case NAME:
             case CHILD_NAME:
+            case NAME:
             case PARENT_NAME:
             case PASSWORD:
-            case HOME:
-            case UNIT_NUMBER:
-                return "testQA-" + StringTestUtil.randomString(10);
+                return "testQA-" + StringUtil.randomString(10);
 
-            case CHILD_ID:
-                return "G1235695F";
+            case CHILD_NRIC:
+            case NRIC:
+                String suffix = CollectionUtil.randomElement(
+                    "A",
+                    "B",
+                    "C",
+                    "D",
+                    "E",
+                    "F",
+                    "G",
+                    "H",
+                    "I",
+                    "Z",
+                    "J");
 
-            case PHONE:
+                String digits  = StringUtil.randomDigitString(7);
+                return "S" + digits + suffix;
+
             case MOBILE:
             case PARENT_MOBILE:
-                return StringTestUtil.randomDigitString(8);
+            case PHONE:
+                return StringUtil.randomDigitString(8);
 
             case POSTAL_CODE:
                 return "139951"; // Blk 71 Ayer Rajah Crescent
 
             case EMAIL:
             case PARENT_EMAIL:
-                return "testQA-" + StringTestUtil.randomString(10) + "@gmail.com";
+                return "testQA-" + StringUtil.randomString(10) + "@gmail.com";
 
-            case MEAL_DESCRIPTION:
+            case UNIT_NUMBER:
+                int floor = NumberUtil.randomBetween(1, 9);
+                int unit = NumberUtil.randomBetween(1, 9);
+                return String.format("#%02d-%02d", floor, unit);
+
             case MEAL_COMMENT:
-                return StringTestUtil.randomString(20);
+            case MEAL_DESCRIPTION:
+                return StringUtil.randomString(20);
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);

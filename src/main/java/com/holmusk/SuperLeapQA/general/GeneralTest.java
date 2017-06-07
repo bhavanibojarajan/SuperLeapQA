@@ -43,13 +43,11 @@ public final class GeneralTest {
 
     @Test
     public void test_randomTextInput_shouldWork() {
-        // Setup & When
-        String name = TextInput.NAME.randomInput();
-        String phone = TextInput.PHONE.randomInput();
-        String email = TextInput.EMAIL.randomInput();
-
-        // Then
-        LogUtil.println(name, phone, email);
+        // Setup & When & Then
+        LogUtil.println(TextInput.NAME.randomInput());
+        LogUtil.println(TextInput.PHONE.randomInput());
+        LogUtil.println(TextInput.EMAIL.randomInput());
+        LogUtil.println(TextInput.UNIT_NUMBER.randomInput());
     }
 
     @Test
@@ -132,6 +130,7 @@ public final class GeneralTest {
 
         /* Personal info tests */
         LogUtil.println(manager.multiNodes(mode, Screen.SPLASH, Screen.PERSONAL_INFO));
+        LogUtil.println(manager.multiNodes(mode, Screen.SPLASH, Screen.GUARANTOR_INFO));
 
         /* Dashboard tests */
         LogUtil.println(manager.multiNodes(mode, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD));
@@ -152,7 +151,7 @@ public final class GeneralTest {
     public void test_bmiRanges_shouldWork() {
         // Setup
         Ethnicity asian = Ethnicity.ASIAN_OTHER;
-        Gender male = Gender.MALE;
+        Gender male = Gender.FEMALE;
         UserMode userMode = UserMode.TEEN_U18;
 
         List<Zip<Height,String>> height = Height.random(
@@ -174,10 +173,19 @@ public final class GeneralTest {
             .build();
 
         // When & Then
-        LogUtil.println(BMIUtil.tightestHealthyRange(userMode, param1));
-        LogUtil.println(BMIUtil.widestHealthyRange(userMode, param1));
-        LogUtil.println(BMIUtil.withinTightestHealthyRange(userMode, param1));
+        LogUtil.println(BMIUtil.tightestInvalidRange(userMode, param1));
+        LogUtil.println(BMIUtil.widestInvalidRange(userMode, param1));
+        LogUtil.println(BMIUtil.withinTightestInvalidRange(userMode, param1));
         LogUtil.println(param1.heightM());
         LogUtil.println(param1.weightKG());
+        LogUtil.println(param1.bmi());
+    }
+
+    @Test
+    public void test_validAgeRange_shouldWork() {
+        // Setup & When & Then
+        LogUtil.println(UserMode.TEEN_U18.validAgeRange());
+        LogUtil.println(UserMode.TEEN_A18.validAgeRange());
+        LogUtil.println(UserMode.PARENT.validAgeRange());
     }
 }

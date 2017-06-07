@@ -14,7 +14,7 @@ import io.reactivex.subscribers.TestSubscriber;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionUtil;
-import org.swiften.javautilities.number.NumberTestUtil;
+import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
@@ -49,6 +49,7 @@ public interface UILogMealTestType extends
      * @see Engine#rxv_errorWithPageSource()
      * @see Mood#moodTitle()
      * @see Mood#values()
+     * @see NumberUtil#randomBetween(int, int)
      * @see ObjectUtil#nonNull(Object)
      * @see Screen#SPLASH
      * @see Screen#LOGIN
@@ -80,7 +81,7 @@ public interface UILogMealTestType extends
         final UILogMealTestType THIS = this;
         final Engine<?> ENGINE = engine();
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH, -NumberTestUtil.randomBetween(1, 5));
+        calendar.add(Calendar.DAY_OF_MONTH, -NumberUtil.randomBetween(1, 5));
         final Date TIME = calendar.getTime();
         final TextInput DSC_INPUT = TextInput.MEAL_DESCRIPTION;
         final String DESCRIPTION = DSC_INPUT.randomInput();

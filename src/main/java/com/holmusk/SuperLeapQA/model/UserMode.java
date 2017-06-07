@@ -83,6 +83,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     /**
      * Get the default login credentials for the current {@link UserMode}.
      * @return {@link List} of {@link Zip}.
+     * @see Zip#of(Object, Object)
      * @see TextInput#EMAIL
      * @see TextInput#PASSWORD
      * @see #NOT_AVAILABLE
@@ -99,7 +100,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
             case TEEN_A18:
             case TEEN_U18:
                 return Arrays.asList(
-                    Zip.of(TextInput.EMAIL, "haipham@gmail.com"),
+                    Zip.of(TextInput.EMAIL, "haipham-teen@gmail.com"),
                     Zip.of(TextInput.PASSWORD, "12345678")
                 );
 
@@ -117,7 +118,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * @see CollectionUtil#asList(Object[])
      * @see Collections#emptyList()
      * @see TextInput#CHILD_NAME
-     * @see TextInput#CHILD_ID
+     * @see TextInput#CHILD_NRIC
      * @see UserMode#isParent()
      */
     @NotNull
@@ -125,7 +126,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
         if (isParent()) {
             return CollectionUtil.asList(
                 TextInput.CHILD_NAME,
-                TextInput.CHILD_ID
+                TextInput.CHILD_NRIC
             );
         } else {
             return Collections.emptyList();
@@ -160,6 +161,9 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * Get personal info {@link HMInputType} for
      * {@link Platform#ANDROID}.
      * @return {@link List} of {@link HMInputType}.
+     * @see #PARENT
+     * @see #TEEN_A18
+     * @see #TEEN_U18
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -168,21 +172,19 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
             case PARENT:
                 return Arrays.asList(
                     TextInput.NAME,
-                    TextInput.CHILD_NAME,
                     TextInput.MOBILE,
                     TextInput.EMAIL,
-                    TextInput.PASSWORD,
-                    TextInput.HOME
+                    TextInput.PASSWORD
                 );
 
             case TEEN_U18:
             case TEEN_A18:
                 return Arrays.asList(
                     TextInput.NAME,
+                    TextInput.NRIC,
                     TextInput.MOBILE,
                     TextInput.EMAIL,
-                    TextInput.PASSWORD,
-                    TextInput.HOME
+                    TextInput.PASSWORD
                 );
 
             default:
@@ -201,23 +203,19 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
             case PARENT:
                 return Arrays.asList(
                     TextInput.NAME,
-                    TextInput.CHILD_NAME,
                     TextInput.MOBILE,
                     TextInput.EMAIL,
-                    TextInput.PASSWORD,
-                    TextInput.POSTAL_CODE,
-                    TextInput.UNIT_NUMBER
+                    TextInput.PASSWORD
                 );
 
             case TEEN_U18:
             case TEEN_A18:
                 return Arrays.asList(
                     TextInput.NAME,
+                    TextInput.NRIC,
                     TextInput.MOBILE,
                     TextInput.EMAIL,
-                    TextInput.PASSWORD,
-                    TextInput.POSTAL_CODE,
-                    TextInput.UNIT_NUMBER
+                    TextInput.PASSWORD
                 );
 
             default:
@@ -317,7 +315,8 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * the same {@link #minValidAge()} and {@link #maxValidAge()}
      * from the application's perspective.
      * @return {@link Integer} value.
-     * @see #maxValidAge()
+     * @see #minValidAge()
+     * @see #NOT_AVAILABLE
      */
     public int minCategoryValidAge() {
         switch (this) {
@@ -341,6 +340,7 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * from the application's perspective.
      * @return {@link Integer} value.
      * @see #maxValidAge()
+     * @see #NOT_AVAILABLE
      */
     public int maxCategoryValidAge() {
         switch (this) {

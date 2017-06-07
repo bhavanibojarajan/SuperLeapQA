@@ -2,6 +2,7 @@ package com.holmusk.SuperLeapQA.navigation.type;
 
 import com.holmusk.SuperLeapQA.model.CardType;
 import com.holmusk.SuperLeapQA.model.UserMode;
+import com.holmusk.SuperLeapQA.test.address.AddressActionType;
 import com.holmusk.SuperLeapQA.test.chat.ChatActionType;
 import com.holmusk.SuperLeapQA.test.dashboard.DashboardActionType;
 import com.holmusk.SuperLeapQA.test.dob.DOBPickerActionType;
@@ -39,6 +40,8 @@ public interface ForwardNavigationType extends
     DOBPickerActionType,
     InvalidAgeActionType,
     ValidAgeActionType,
+    AddressActionType,
+    PersonalInfoActionType,
     DashboardActionType,
     SearchActionType,
     PhotoPickerActionType,
@@ -215,21 +218,31 @@ public interface ForwardNavigationType extends
     }
 
     /**
-     * Navigate from the personal info input screen to the extra info input
-     * screen. Only applicable to {@link UserMode#requiresGuarantor()}.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#PERSONAL_INFO}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#ADDRESS_INFO}
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rxa_completePersonalInfo(Engine, UserMode)
+     */
+    @NotNull
+    default Flowable<?> rxn_personalInfo_addressInfo(@NotNull Engine<?> engine,
+                                                     @NotNull UserMode mode) {
+        return rxa_completePersonalInfo(engine, mode);
+    }
+
+    /**
+     * Only applicable to {@link UserMode#requiresGuarantor()}.
      * If {@link UserMode#requiresGuarantor()} is {@link Boolean#FALSE},
      * this method will go directly to the dashboard.
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#PERSONAL_INFO}
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#GUARANTOR_INFO}
      * @param engine {@link Engine} instance.
-     * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see #rxa_completePersonalInfo(Engine, UserMode)
+     * @see #rxa_completeAddressInfo(Engine)
      */
     @NotNull
-    default Flowable<?> rxn_personalInfo_guarantorInfo(@NotNull Engine<?> engine,
-                                                       @NotNull UserMode mode) {
-        return rxa_completePersonalInfo(engine, mode);
+    default Flowable<?> rxn_addressInfo_guarantorInfo(@NotNull Engine<?> engine) {
+        return rxa_completeAddressInfo(engine);
     }
 
     /**

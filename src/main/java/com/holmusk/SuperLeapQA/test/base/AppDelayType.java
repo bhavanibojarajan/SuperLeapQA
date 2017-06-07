@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
-import org.swiften.xtestkit.ios.IOSEngine;
 
 /**
  * Created by haipham on 5/7/17.
@@ -19,10 +18,8 @@ public interface AppDelayType extends BaseErrorType {
     default long generalDelay(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             return 1000;
-        } else if (engine instanceof IOSEngine) {
-            return 2000;
         } else {
-            throw new RuntimeException(NOT_AVAILABLE);
+            return 2000;
         }
     }
 
@@ -31,15 +28,12 @@ public interface AppDelayType extends BaseErrorType {
      * tutorial screen appears.
      * @param engine {@link Engine} instance.
      * @return {@link Long} value.
-     * @see #NOT_AVAILABLE
      */
     default long loginProgressDelay(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             return 8000;
-        } else if (engine instanceof IOSEngine) {
-            return 5000;
         } else {
-            throw new RuntimeException(NOT_AVAILABLE);
+            return 5000;
         }
     }
 
@@ -51,7 +45,11 @@ public interface AppDelayType extends BaseErrorType {
      * @return {@link Long} value.
      */
     default long registerProgressDelay(@NotNull Engine<?> engine) {
-        return 5000;
+        if (engine instanceof AndroidEngine) {
+            return 10000;
+        } else {
+            return 5000;
+        }
     }
 
     /**
@@ -80,7 +78,7 @@ public interface AppDelayType extends BaseErrorType {
      * @return {@link Long} value.
      */
     default long invalidAgeInputProgressDelay(@NotNull Engine<?> engine) {
-        return 5000;
+        return 3000;
     }
 
     /**
@@ -90,6 +88,16 @@ public interface AppDelayType extends BaseErrorType {
      * @return {@link Long} value.
      */
     default long validAgeInputProgressDelay(@NotNull Engine<?> engine) {
+        return 3000;
+    }
+
+    /**
+     * Delay between the time the user submits address info, and the time
+     * the app redirects to the next page.
+     * @param engine {@link Engine} instance.
+     * @return {@link Long} value.
+     */
+    default long addressInfoProgressDelay(@NotNull Engine<?> engine) {
         return 2000;
     }
 

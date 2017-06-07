@@ -183,8 +183,17 @@ public final class ScreenHolder implements
             case PERSONAL_INFO:
                 return CollectionUtil.asList(
                     new Direction(
+                        ScreenHolder.of(ENGINE, Screen.ADDRESS_INFO, MODE),
+                        a -> THIS.rxn_personalInfo_addressInfo(ENGINE, MODE),
+                        platform
+                    )
+                );
+
+            case ADDRESS_INFO:
+                return CollectionUtil.asList(
+                    new Direction(
                         ScreenHolder.of(ENGINE, Screen.GUARANTOR_INFO, MODE),
-                        a -> THIS.rxn_personalInfo_guarantorInfo(ENGINE, MODE),
+                        a -> THIS.rxn_addressInfo_guarantorInfo(ENGINE),
                         platform
                     )
                 );
@@ -357,11 +366,14 @@ public final class ScreenHolder implements
                     )
                 );
 
+            case ADDRESS_INFO:
+                return CollectionUtil.asList();
+
             case GUARANTOR_INFO:
                 return CollectionUtil.asList(
                     new Direction(
-                        ScreenHolder.of(ENGINE, Screen.PERSONAL_INFO, MODE),
-                        a -> THIS.rxn_guarantorInfo_personalInfo(ENGINE, MODE),
+                        ScreenHolder.of(ENGINE, Screen.ADDRESS_INFO, MODE),
+                        a -> THIS.rxn_guarantorInfo_addressInfo(ENGINE, MODE),
                         platform
                     )
                 );
