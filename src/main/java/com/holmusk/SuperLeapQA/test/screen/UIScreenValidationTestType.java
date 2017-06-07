@@ -399,32 +399,24 @@ public interface UIScreenValidationTestType extends
             /* Select metric unit system for height selection */
             .flatMap(a -> THIS.rxa_randomInputs(E, INPUTS))
             .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_HEIGHT, Height.CM))
-
-            /* Select height in metric */
             .flatMap(a -> THIS.rxa_selectChoice(E, HEIGHT_M))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
             .flatMap(a -> THIS.rxv_hasValue(E, C_HEIGHT, HEIGHT_M_STR))
 
             /* Select imperial unit system for height selection */
             .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_HEIGHT, Height.FT))
-
-            /* Select height in imperial */
             .flatMap(a -> THIS.rxa_selectChoice(E, HEIGHT_I))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
             .flatMap(a -> THIS.rxv_hasValue(E, C_HEIGHT, HEIGHT_I_STR))
 
             /* Select metric unit system for weight selection */
             .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_WEIGHT, Weight.KG))
-
-            /* Select weight in metric */
             .flatMap(a -> THIS.rxa_selectChoice(E, WEIGHT_M))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
             .flatMap(a -> THIS.rxv_hasValue(E, C_WEIGHT, WEIGHT_M_STR))
 
             /* Select imperial unit system for weight selection */
             .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_WEIGHT, Weight.LB))
-
-            /* Select weight in imperial */
             .flatMap(a -> THIS.rxa_selectChoice(E, WEIGHT_I))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
             .flatMap(a -> THIS.rxv_hasValue(E, C_WEIGHT, WEIGHT_I_STR))

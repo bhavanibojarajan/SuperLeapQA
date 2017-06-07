@@ -143,8 +143,8 @@ public enum TextInput implements BaseErrorType, HMTextType {
      * @see Attributes#of(PlatformType)
      * @see BaseViewType#className()
      * @see CompoundAttribute#forClass(String)
-     * @see Config#TEST_KIT
-     * @see org.swiften.xtestkit.kit.TestKit#localize(String)
+     * @see Config#LOCALIZER
+     * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
      * @see XPath.Builder#addAttribute(Attribute)
      * @see XPath.Builder#addAttribute(CompoundAttribute)
      * @see IOSView.ViewType#UI_TEXT_FIELD
@@ -164,7 +164,7 @@ public enum TextInput implements BaseErrorType, HMTextType {
 
             default:
                 String shortDsc = iOSShortDescription();
-                String localized = Config.TEST_KIT.localize(shortDsc);
+                String localized = Config.LOCALIZER.localize(shortDsc);
                 Attribute a2 = attrs.containsText(localized);
                 return XPath.builder().addAttribute(a2).build();
         }

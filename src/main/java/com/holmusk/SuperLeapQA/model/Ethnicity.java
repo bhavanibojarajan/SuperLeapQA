@@ -2,6 +2,7 @@ package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.HMUITestKit.model.HMTextChoiceType;
+import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.mobile.Platform;
@@ -77,13 +78,15 @@ public enum Ethnicity implements
     /**
      * Override this method to provide default implementation.
      * @return {@link String} value.
+     * @see Config#LOCALIZER
      * @see HMTextChoiceType.Item#stringValue()
+     * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
      * @see #value()
      */
     @NotNull
     @Override
     public String stringValue() {
-        return value();
+        return Config.LOCALIZER.localize(value());
     }
 
     /**

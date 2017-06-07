@@ -31,7 +31,7 @@ public interface AppDelayType extends BaseErrorType {
      */
     default long loginProgressDelay(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
-            return 15000;
+            return 20000;
         } else {
             return 5000;
         }

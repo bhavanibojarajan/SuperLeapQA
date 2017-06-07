@@ -316,8 +316,8 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * @param ENGINE {@link Engine} instance.
      * @param inputs {@link List} of {@link Zip} instances.
      * @return {@link Flowable} instance.
-     * @see #rxa_selectChoice(Engine, HMChoiceType, String)
      * @see BooleanUtil#isTrue(boolean)
+     * @see #rxa_selectChoice(Engine, HMChoiceType, String)
      */
     @NotNull
     @SuppressWarnings("ConstantConditions")
@@ -327,8 +327,7 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
     ) {
         final BaseActionType THIS = this;
 
-        return Flowable
-            .fromIterable(inputs)
+        return Flowable.fromIterable(inputs)
             .concatMap(a -> THIS.rxa_selectChoice(ENGINE, a.A, a.B))
             .all(ObjectUtil::nonNull)
             .toFlowable();

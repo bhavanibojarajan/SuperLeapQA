@@ -52,13 +52,15 @@ public enum Gender implements
     /**
      * Override this method to provide default implementation.
      * @return {@link String} value.
-     * @see com.holmusk.HMUITestKit.model.HMTextChoiceType.Item#stringValue()
+     * @see Config#LOCALIZER
+     * @see HMTextChoiceType.Item#stringValue()
+     * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
      * @see #value()
      */
     @NotNull
     @Override
     public String stringValue() {
-        return value();
+        return Config.LOCALIZER.localize(value());
     }
 
     /**
@@ -123,7 +125,7 @@ public enum Gender implements
      * @see Attributes#of(PlatformType)
      * @see BaseViewType#className()
      * @see CompoundAttribute#withClass(String)
-     * @see Config#TEST_KIT
+     * @see Config#LOCALIZER
      * @see Platform#IOS
      * @see IOSView.ViewType#UI_BUTTON
      * @see XPath.Builder#addAttribute(Attribute)
@@ -148,7 +150,7 @@ public enum Gender implements
                 throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        String localized = Config.TEST_KIT.localize(text);
+        String localized = Config.LOCALIZER.localize(text);
         Attribute attr = attrs.containsText(localized);
 
         CompoundAttribute cAttr = CompoundAttribute.single(attr)

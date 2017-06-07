@@ -127,7 +127,7 @@ public enum ChoiceInput implements HMTextChoiceType {
      * @see CompoundAttribute#followingSibling(CompoundAttribute, CompoundAttribute)
      * @see CompoundAttribute#forClass(String)
      * @see CompoundAttribute#withIndex(Integer)
-     * @see Config#TEST_KIT
+     * @see Config#LOCALIZER
      * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
      * @see Platform#IOS
      * @see IOSView.ViewType#UI_STATIC_TEXT
@@ -140,7 +140,7 @@ public enum ChoiceInput implements HMTextChoiceType {
     private XPath iOSInputViewXP() {
         Platform platform = Platform.IOS;
         String title = iOSTitleDescription();
-        String localized = Config.TEST_KIT.localize(title);
+        String localized = Config.LOCALIZER.localize(title);
         String st = IOSView.ViewType.UI_STATIC_TEXT.className();
         String tf = IOSView.ViewType.UI_TEXT_FIELD.className();
         Attributes attrs = Attributes.of(platform);
