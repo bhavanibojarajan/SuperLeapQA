@@ -29,6 +29,38 @@ import java.util.concurrent.TimeUnit;
  */
 public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationType {
     /**
+     * Select a {@link Gender}. We need a separate method for this action
+     * because the flow differs between {@link Platform#ANDROID} and
+     * {@link Platform#IOS}.
+     * @param ENGINE {@link Engine} instance.
+     * @param gender {@link Gender} instance.
+     * @return {@link Flowable} instance.
+     * @see ChoiceInput#GENDER
+     * @see Gender#stringValue()
+     * @see #rxa_clickInput(Engine, HMInputType)
+     * @see #rxa_selectChoice(Engine, HMChoiceType, String)
+     * @see #rxa_confirmTextChoice(Engine)
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    default Flowable<?> rxa_selectGender(@NotNull final Engine<?> ENGINE,
+                                         @NotNull Gender gender) {
+        if (ENGINE instanceof AndroidEngine) {
+            return rxa_clickInput(ENGINE, gender);
+        } else if (ENGINE instanceof IOSEngine) {
+            final ValidAgeActionType THIS = this;
+            final HMChoiceType CHOICE = ChoiceInput.GENDER;
+            final String STR = gender.stringValue();
+
+            return rxa_clickInput(ENGINE, CHOICE)
+                .flatMap(a -> THIS.rxa_selectChoice(ENGINE, CHOICE, STR))
+                .flatMap(a -> THIS.rxa_confirmTextChoice(ENGINE));
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+
+    /**
      * Confirm numeric choice input (e.g. for {@link Height} and {@link Weight}).
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
@@ -135,6 +167,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @see UserMode#validAgeInfo(PlatformType)
      * @see Weight#randomValue(UserMode)
      * @see Zip#A
+     * @see #rxa_selectGender(Engine, Gender)
      * @see #rxa_clickInput(Engine, HMInputType)
      * @see #rxa_selectChoice(Engine, HMChoiceType, String)
      * @see #rxa_selectUnitSystemPicker(Engine, HMChoiceType, SLNumericChoiceType)
@@ -175,12 +208,12 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
                 .withWeight(weight)
                 .build();
 
-            LogUtil.printfThread("Current BMI: %.2f", param.bmi());
+            LogUtil.printft("Current BMI: %.2f", param.bmi());
         } while (validBMI
             ? BMIUtil.withinTightestInvalidRange(mode, param)
             : BMIUtil.outOfWidestInvalidRange(mode, param));
 
-        LogUtil.printfThread(
+        LogUtil.printft(
             "Selecting height: %s, weight: %s, BMI: %.2f",
             height,
             weight,
@@ -195,7 +228,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
         return rxa_randomInputs(E, mode.validAgeInfo(platform))
 
             /* Select gender */
-            .flatMap(a -> THIS.rxa_clickInput(E, GENDER))
+            .flatMap(a -> THIS.rxa_selectGender(E, GENDER))
 
             /* Select unit system and height */
             .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_HEIGHT, H_MODE))

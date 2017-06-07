@@ -75,7 +75,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
     @NotNull
     default Flowable<?> rxa_selectMood(@NotNull final Engine<?> ENGINE,
                                        @NotNull Mood mood) {
-        LogUtil.printfThread("Selecting mood %s", mood);
+        LogUtil.printft("Selecting mood %s", mood);
         return rxe_mood(ENGINE, mood).flatMap(ENGINE::rxa_click);
     }
 

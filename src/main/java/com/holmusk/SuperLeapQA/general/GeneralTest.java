@@ -51,6 +51,12 @@ public final class GeneralTest {
     }
 
     @Test
+    public void test_choiceInputXP_shouldWork() {
+        // Setup & When & Then
+        LogUtil.println(ChoiceInput.WEIGHT.inputViewXP(Platform.IOS));
+    }
+
+    @Test
     public void test_birthDayCalculation_shouldBeCorrect() {
         // Setup
         LocalDate date1 = LocalDate.of(2017, 6, 5);
@@ -179,13 +185,5 @@ public final class GeneralTest {
         LogUtil.println(param1.heightM());
         LogUtil.println(param1.weightKG());
         LogUtil.println(param1.bmi());
-    }
-
-    @Test
-    public void test_validAgeRange_shouldWork() {
-        // Setup & When & Then
-        LogUtil.println(UserMode.TEEN_U18.validAgeRange());
-        LogUtil.println(UserMode.TEEN_A18.validAgeRange());
-        LogUtil.println(UserMode.PARENT.validAgeRange());
     }
 }

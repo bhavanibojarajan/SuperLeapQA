@@ -1,24 +1,26 @@
 package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.HMUITestKit.model.HMTextChoiceType;
+import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.xtestkit.base.model.InputType;
-import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by haipham on 5/13/17.
  */
 public enum ChoiceInput implements HMTextChoiceType {
+    GENDER,
     HEIGHT,
     WEIGHT,
     ETHNICITY,
@@ -27,19 +29,25 @@ public enum ChoiceInput implements HMTextChoiceType {
     /**
      * @return {@link List} of {@link HMTextChoiceType}.
      * @see HMTextChoiceType#allTextChoices()
-     * @see Ethnicity#values()
+     * @see CollectionUtil#asList(Object[])
      * @see CoachPref#values()
+     * @see CollectionUtil#asList(Object[])
+     * @see Ethnicity#values()
+     * @see Gender#values()
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
     public List<? extends HMTextChoiceType.Item> allTextChoices() {
         switch (this) {
+            case GENDER:
+                return CollectionUtil.asList(Gender.values());
+
             case ETHNICITY:
-                return Arrays.asList(Ethnicity.values());
+                return CollectionUtil.asList(Ethnicity.values());
 
             case COACH_PREF:
-                return Arrays.asList(CoachPref.values());
+                return CollectionUtil.asList(CoachPref.values());
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -47,6 +55,7 @@ public enum ChoiceInput implements HMTextChoiceType {
     }
 
     /**
+     * Override this method to provide default implementation.
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
      * @see InputType#inputViewXP(PlatformType)
@@ -112,34 +121,68 @@ public enum ChoiceInput implements HMTextChoiceType {
     /**
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
      * @return {@link XPath} instance.
+     * @see Attributes#containsText(String)
+     * @see Attributes#of(PlatformType)
      * @see BaseViewType#className()
+     * @see CompoundAttribute#followingSibling(CompoundAttribute, CompoundAttribute)
      * @see CompoundAttribute#forClass(String)
      * @see CompoundAttribute#withIndex(Integer)
+     * @see Config#TEST_KIT
+     * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
      * @see Platform#IOS
+     * @see IOSView.ViewType#UI_STATIC_TEXT
      * @see IOSView.ViewType#UI_TEXT_FIELD
-     * @see IOSView.ViewType#UI_TABLE_VIEW_CELL
-     * @see IOSView.ViewType#UI_TABLE_VIEW
      * @see XPath.Builder#addAttribute(Attribute)
+     * @see #iOSTitleDescription()
      * @see #values()
      */
     @NotNull
     private XPath iOSInputViewXP() {
         Platform platform = Platform.IOS;
-
-        /* We need to add 2 to the index because the first cell is the Gender
-         * picker, which is also a UITableViewCell. We want to skip this cell.
-         * And also, the XPath index is 1-based */
-        int index = Arrays.asList(values()).indexOf(this) + 2;
+        String title = iOSTitleDescription();
+        String localized = Config.TEST_KIT.localize(title);
+        String st = IOSView.ViewType.UI_STATIC_TEXT.className();
         String tf = IOSView.ViewType.UI_TEXT_FIELD.className();
-        String tblCell = IOSView.ViewType.UI_TABLE_VIEW_CELL.className();
-        String tblView = IOSView.ViewType.UI_TABLE_VIEW.className();
+        Attributes attrs = Attributes.of(platform);
+        Attribute stAttr = attrs.containsText(localized);
 
         return XPath.builder()
-            .addAttribute(CompoundAttribute.forClass(tblView).withIndex(index))
-            .addAttribute(CompoundAttribute.forClass(tblCell))
-            .addAttribute(CompoundAttribute.forClass(tf))
+            .addAttribute(CompoundAttribute.followingSibling(
+                CompoundAttribute.forClass(tf),
+                CompoundAttribute.forClass(st).addAttributes(stAttr)
+            ))
             .build();
     }
 
+    /**
+     * Get the title description to be used with {@link #iOSInputViewXP()}.
+     * @return {@link String} value.
+     * @see #COACH_PREF
+     * @see #ETHNICITY
+     * @see #GENDER
+     * @see #HEIGHT
+     * @see #WEIGHT
+     */
+    @NotNull
+    private String iOSTitleDescription() {
+        switch (this) {
+            case GENDER:
+                return "user_title_gender";
 
+            case HEIGHT:
+                return "user_title_height";
+
+            case WEIGHT:
+                return "user_title_weight";
+
+            case ETHNICITY:
+                return "user_title_ethnicity";
+
+            case COACH_PREF:
+                return "user_title_coachPref";
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
 }

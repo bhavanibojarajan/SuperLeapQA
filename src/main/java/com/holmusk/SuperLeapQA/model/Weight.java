@@ -78,8 +78,8 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @param MODE {@link UserMode} instance.
      * @param unit {@link UnitSystem} instance.
      * @return {@link List} of {@link Zip}.
-     * @see #instances(PlatformType, UnitSystem)
      * @see SLNumericChoiceType#randomValue(UserMode)
+     * @see #instances(PlatformType, UnitSystem)
      */
     @NotNull
     public static List<Zip<Weight,String>> random(@NotNull PlatformType platform,
@@ -193,7 +193,8 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
      * @see InputType#inputViewXP(PlatformType)
-     * @see #androidInputViewXPath()
+     * @see #androidInputViewXP()
+     * @see #iOSInputViewXP()
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -201,10 +202,10 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
     public XPath inputViewXP(@NotNull PlatformType platform) {
         switch ((Platform)platform) {
             case ANDROID:
-                return androidInputViewXPath();
+                return androidInputViewXP();
 
             case IOS:
-                return iOSInputViewXPath();
+                return iOSInputViewXP();
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -216,12 +217,12 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @return {@link XPath} instance.
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformType)
-     * @see Platform#ANDROID
      * @see XPath.Builder#addAttribute(Attribute)
+     * @see Platform#ANDROID
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    private XPath androidInputViewXPath() {
+    private XPath androidInputViewXP() {
         Attributes attrs = Attributes.of(Platform.ANDROID);
 
         final String ID;
@@ -258,7 +259,7 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    private XPath iOSInputViewXPath() {
+    private XPath iOSInputViewXP() {
         Attributes attrs = Attributes.of(Platform.IOS);
 
         String text;

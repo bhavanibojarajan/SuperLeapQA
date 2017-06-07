@@ -2,11 +2,10 @@ package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.HMUITestKit.model.HMTextChoiceType;
-import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.model.InputType;
-import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.property.base.AttributeType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
@@ -27,6 +26,12 @@ public enum CoachPref implements
     FEMALE,
     NO_PREFERENCE;
 
+    /**
+     * Override this method to provide default implementation.
+     * @return {@link String} value.
+     * @see AttributeType#value()
+     * @see #NOT_AVAILABLE
+     */
     @NotNull
     @Override
     public String value() {
@@ -46,14 +51,15 @@ public enum CoachPref implements
     }
 
     /**
+     * Override this method to provide default implementation.
      * @return {@link String} value.
      * @see HMTextChoiceType.Item#stringValue()
-     * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
+     * @see #value()
      */
     @NotNull
     @Override
     public String stringValue() {
-        return Config.TEST_KIT.localize(value());
+        return value();
     }
 
     /**

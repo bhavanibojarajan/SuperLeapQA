@@ -24,7 +24,7 @@ public class UIBaseTest implements UIBaseTestType {
     private final int INDEX;
 
     public UIBaseTest(int index) {
-        LogUtil.printfThread("Init new test with index %d", index);
+        LogUtil.printft("Init new test with index %d", index);
         FORWARD_NODES = new LinkedList<>();
         BACKWARD_NODES = new LinkedList<>();
         INDEX = index;

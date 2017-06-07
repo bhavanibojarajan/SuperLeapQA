@@ -285,19 +285,24 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * @see ChoiceParam.Builder#withGeneralMode()
      * @see ChoiceParam.Builder#withInput(ChoiceInputType)
      * @see ChoiceParam.Builder#withSelectedChoice(String)
+     * @see Engine#localizer()
      * @see Engine#rxa_selectChoice(ChoiceType)
+     * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_selectChoice(@NotNull Engine<?> engine,
                                          @NotNull HMChoiceType input,
                                          @NotNull String selected) {
-        LogUtil.printfThread("Selecting %s for %s", selected, input);
+        LogUtil.printft("Selecting %s for %s", selected, input);
+
+        /* Localize the selected choice just in case */
+        String localized = engine.localizer().localize(selected);
 
         return engine.rxa_selectChoice(ChoiceParam.builder()
             .withGeneralMode()
             .withInput(input)
-            .withSelectedChoice(selected)
+            .withSelectedChoice(localized)
             .build());
     }
 

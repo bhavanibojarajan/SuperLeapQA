@@ -1,14 +1,16 @@
 package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.HMUITestKit.model.HMInputType;
+import com.holmusk.HMUITestKit.model.HMTextChoiceType;
 import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.model.InputType;
-import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.property.base.AttributeType;
+import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
@@ -17,9 +19,47 @@ import org.swiften.xtestkitcomponents.xpath.XPath;
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Gender implements BaseErrorType, HMInputType {
+public enum Gender implements
+    AttributeType<String>,
+    BaseErrorType,
+    HMInputType,
+    HMTextChoiceType.Item
+{
     MALE,
     FEMALE;
+
+    /**
+     * Override this method to provide default implementation.
+     * @return {@link String} value.
+     * @see AttributeType#value()
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    @Override
+    public String value() {
+        switch (this) {
+            case MALE:
+                return "user_title_gender_male";
+
+            case FEMALE:
+                return "user_title_gender_female";
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+
+    /**
+     * Override this method to provide default implementation.
+     * @return {@link String} value.
+     * @see com.holmusk.HMUITestKit.model.HMTextChoiceType.Item#stringValue()
+     * @see #value()
+     */
+    @NotNull
+    @Override
+    public String stringValue() {
+        return value();
+    }
 
     /**
      * @param platform {@link PlatformType} instance.

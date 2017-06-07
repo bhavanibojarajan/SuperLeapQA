@@ -14,6 +14,7 @@ import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.base.model.InputType;
+import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
  * Interfaces that extend this should declare methods that assist with app

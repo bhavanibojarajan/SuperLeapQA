@@ -1,10 +1,10 @@
 package com.holmusk.SuperLeapQA.test.validage;
 
+import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.SuperLeapQA.model.ChoiceInput;
 import com.holmusk.SuperLeapQA.model.Gender;
 import com.holmusk.SuperLeapQA.model.Height;
 import com.holmusk.SuperLeapQA.model.Weight;
-import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.SuperLeapQA.test.dob.DOBPickerValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
@@ -13,10 +13,9 @@ import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
-import org.swiften.javautilities.rx.RxUtil;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputType;
-import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.ios.IOSEngine;
 
 /**
@@ -87,12 +86,14 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
 
     /**
      * Check if an editable field has an input.
+     * @param ENGINE {@link Engine} instance.
      * @param INPUT {@link InputType} instance.
      * @param VALUE {@link String} value.
      * @param <P> Generics parameter.
      * @return {@link Flowable} instance.
      * @see BooleanUtil#toTrue(Object)
      * @see Engine#getText(WebElement)
+     * @see Engine#rxv_errorWithPageSource(String)
      * @see #rxe_editField(Engine, HMInputType)
      */
     @NotNull
@@ -103,9 +104,11 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
     ) {
         return rxe_editField(ENGINE, INPUT)
             .map(ENGINE::getText)
-            .doOnNext(a -> LogUtil.printfThread("Current value for %s: %s", INPUT, a))
+            .doOnNext(a -> LogUtil.printft("Value for %s: %s", INPUT, a))
             .filter(a -> a.equals(VALUE))
-            .switchIfEmpty(RxUtil.errorF("Value for %s does not equal %s", INPUT, VALUE))
+            .switchIfEmpty(ENGINE.rxv_errorWithPageSource(
+                String.format("Value for %s does not equal %s", INPUT, VALUE))
+            )
             .map(BooleanUtil::toTrue);
     }
 

@@ -238,6 +238,7 @@ public interface UIScreenValidationTestType extends
      * @see Screen#INVALID_AGE
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
+     * @see #generalDelay(Engine)
      * @see #generalUserModeProvider()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_openDoBPicker(Engine)
@@ -266,7 +267,9 @@ public interface UIScreenValidationTestType extends
             .flatMap(a -> THIS.rxa_openDoBPicker(ENGINE))
             .flatMap(a -> THIS.rxa_selectDoB(ENGINE, DATE))
             .flatMap(a -> THIS.rxa_confirmDoB(ENGINE))
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
             .flatMap(a -> THIS.rxa_clickBackButton(ENGINE))
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
             .flatMap(a -> THIS.rxv_DoBEditFieldHasDate(ENGINE, DATE))
             .subscribe(subscriber);
 
@@ -354,10 +357,12 @@ public interface UIScreenValidationTestType extends
      * @see #engine()
      * @see #generalUserModeProvider()
      * @see #rxa_navigate(UserMode, Screen...)
+     * @see #rxa_selectGender(Engine, Gender)
      * @see #rxa_clickInput(Engine, HMInputType)
      * @see #rxa_selectChoice(Engine, List)
      * @see #rxa_selectUnitSystemPicker(Engine, HMChoiceType, SLNumericChoiceType)
      * @see #rxa_confirmNumericChoice(Engine)
+     * @see #rxa_confirmTextChoice(Engine)
      * @see #rxv_hasValue(Engine, HMInputType, String)
      */
     @SuppressWarnings("unchecked")
@@ -391,6 +396,9 @@ public interface UIScreenValidationTestType extends
 
         // When
         rxa_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE)
+            /* Select gender */
+            .flatMap(a -> THIS.rxa_selectGender(E, Gender.MALE))
+            .flatMap(a -> THIS.rxa_selectGender(E, Gender.FEMALE))
 
             /* Select metric unit system for height selection */
             .flatMap(a -> THIS.rxa_randomInputs(E, INPUTS))
@@ -425,17 +433,16 @@ public interface UIScreenValidationTestType extends
             .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
             .flatMap(a -> THIS.rxv_hasValue(E, C_WEIGHT, WEIGHT_I_STR))
 
-            /* Select gender */
-            .flatMap(a -> THIS.rxa_clickInput(E, Gender.MALE))
-            .flatMap(a -> THIS.rxa_clickInput(E, Gender.FEMALE))
-
             /* Select ethnicity */
             .flatMap(a -> THIS.rxa_clickInput(E, C_ETH))
             .flatMap(a -> THIS.rxa_selectChoice(E, C_ETH, ETH.stringValue()))
+            .flatMap(a -> THIS.rxa_confirmTextChoice(E))
 
             /* Select coach preference */
             .flatMap(a -> THIS.rxa_clickInput(E, C_COACH))
             .flatMap(a -> THIS.rxa_selectChoice(E, C_COACH, CP.stringValue()))
+            .flatMap(a -> THIS.rxa_confirmTextChoice(E))
+
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

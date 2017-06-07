@@ -67,6 +67,7 @@ public final class ScreenHolder implements
      * @param platform {@link PlatformType} instance.
      * @return {@link Long} value.
      * @see ScreenType#animationDelay(PlatformType)
+     * @see Platform#IOS
      */
     @Override
     public long animationDelay(@NotNull PlatformType platform) {

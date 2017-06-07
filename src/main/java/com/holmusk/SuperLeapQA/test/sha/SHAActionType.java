@@ -36,7 +36,14 @@ public interface SHAActionType extends SHAValidationType {
                 THIS.rxe_shaYes(ENGINE) : THIS.rxe_shaNo(ENGINE))
             .flatMap(ENGINE::rxa_click)
             .map(BooleanUtil::toTrue)
-            .defaultIfEmpty(true);
+            .defaultIfEmpty(true)
+
+            /* On iOS, the app's state is saved between different runs, so
+             * if we are using DataProvider, this screen may not appear for
+             * subsequent parameter injection. As a result, an exception may
+             * be thrown - since this screen is not that important, we can
+             * swallow the error and let the tests continue */
+            .onErrorReturnItem(true);
     }
 
     /**
