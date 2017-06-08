@@ -56,6 +56,7 @@ public interface MealPageActionType extends MealPageValidationType {
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
      * @see ObjectUtil#nonNull(Object)
+     * @see #generalDelay(Engine)
      * @see #mealDeleteProgressDelay(Engine)
      * @see #rxe_deleteMeal(Engine)
      * @see #rxe_deleteMealConfirm(Engine)
@@ -65,6 +66,7 @@ public interface MealPageActionType extends MealPageValidationType {
         return Flowable
             .concat(rxe_deleteMeal(ENGINE), rxe_deleteMealConfirm(ENGINE))
             .flatMap(ENGINE::rxa_click)
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
             .all(ObjectUtil::nonNull)
             .toFlowable()
             .delay(mealDeleteProgressDelay(ENGINE), TimeUnit.MILLISECONDS);

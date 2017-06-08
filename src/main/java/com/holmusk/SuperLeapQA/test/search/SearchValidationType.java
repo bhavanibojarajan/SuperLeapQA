@@ -2,8 +2,10 @@ package com.holmusk.SuperLeapQA.test.search;
 
 import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
+import org.apache.tools.ant.taskdefs.condition.And;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
@@ -42,13 +44,19 @@ public interface SearchValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see BaseViewType#className()
+     * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_ofClass(String...)
      * @see IOSView.ViewType#UI_SEARCH_BAR
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_searchBar(@NotNull Engine<?> engine) {
-        if (engine instanceof IOSEngine) {
+        if (engine instanceof AndroidEngine) {
+            return engine
+                .rxe_containsID("search_src_text")
+                .firstElement()
+                .toFlowable();
+        } else if (engine instanceof IOSEngine) {
             return engine
                 .rxe_ofClass(IOSView.ViewType.UI_SEARCH_BAR.className())
                 .firstElement()
@@ -65,6 +73,7 @@ public interface SearchValidationType extends BaseValidationType {
      * @param query {@link String} value.
      * @return {@link Flowable} instance.
      * @see Attributes#of(PlatformType)
+     * @see Attributes#containsID(String)
      * @see Attributes#containsText(String)
      * @see BaseViewType#className()
      * @see CompoundAttribute#forClass(String)
@@ -81,10 +90,17 @@ public interface SearchValidationType extends BaseValidationType {
     default Flowable<WebElement> rxe_searchResult(@NotNull Engine<?> engine,
                                                   @NotNull String query) {
         PlatformType platform = engine.platform();
+        Attributes attrs = Attributes.of(platform);
         XPath xPath;
 
-        if (engine instanceof IOSEngine) {
-            Attributes attrs = Attributes.of(platform);
+        if (engine instanceof AndroidEngine) {
+            CompoundAttribute cAttr = CompoundAttribute.builder()
+                .addAttribute(attrs.containsID("tv_food_name"))
+                .addAttribute(attrs.containsText(query))
+                .build();
+
+            xPath = XPath.builder().addAttribute(cAttr).build();
+        } else if (engine instanceof IOSEngine) {
             String tblView = IOSView.ViewType.UI_TABLE_VIEW.className();
             String tblCell = IOSView.ViewType.UI_TABLE_VIEW_CELL.className();
 

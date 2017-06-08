@@ -151,7 +151,12 @@ public interface DashboardValidationType extends BaseValidationType {
      */
     @NotNull
     default Flowable<WebElement> rxe_dashboardSearch(@NotNull Engine<?> engine) {
-        if (engine instanceof IOSEngine) {
+        if (engine instanceof AndroidEngine) {
+            return engine
+                .rxe_containsID("action_search")
+                .firstElement()
+                .toFlowable();
+        } else if (engine instanceof IOSEngine) {
             return engine
                 .rxe_containsID("button search")
                 .firstElement()

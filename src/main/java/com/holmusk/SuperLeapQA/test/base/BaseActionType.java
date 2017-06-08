@@ -52,10 +52,10 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * Navigate backwards by clicking the back button.
      * @return {@link Flowable} instance.
      * @param ENGINE {@link Engine} instance.
-     * @see #generalDelay(Engine)
-     * @see #rxe_backButton(Engine)
      * @see BooleanUtil#toTrue(Object)
      * @see Engine#rxa_click(WebElement)
+     * @see #generalDelay(Engine)
+     * @see #rxe_backButton(Engine)
      */
     @NotNull
     default Flowable<Boolean> rxa_clickBackButton(@NotNull final Engine<?> ENGINE) {
