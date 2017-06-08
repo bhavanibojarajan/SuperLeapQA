@@ -26,11 +26,14 @@ import org.swiften.xtestkit.base.element.locator.type.BaseLocatorErrorType;
 import org.swiften.xtestkit.base.model.ChoiceInputType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.base.model.TextInputType;
-import org.swiften.xtestkitcomponents.view.BaseViewType;
+import org.swiften.xtestkit.base.param.UnidirectionParam;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.common.DurationType;
+import org.swiften.xtestkitcomponents.direction.Unidirection;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
@@ -331,5 +334,30 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
             .concatMap(a -> THIS.rxa_selectChoice(ENGINE, a.A, a.B))
             .all(ObjectUtil::nonNull)
             .toFlowable();
+    }
+
+    /**
+     * Scroll to the bottom of the screen.
+     * @param E {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_swipeGeneric(WebElement, DurationType)
+     * @see Engine#rxe_window()
+     * @see Unidirection#DOWN_UP
+     * @see UnidirectionParam.Builder#withDirection(Unidirection)
+     * @see UnidirectionParam.Builder#withDuration(int)
+     * @see UnidirectionParam.Builder#withEndRatio(double)
+     * @see UnidirectionParam.Builder#withStartRatio(double)
+     * @see UnidirectionParam.Builder#withTimes(int)
+     */
+    @NotNull
+    default Flowable<?> rxa_scrollToBottom(@NotNull final Engine<?> E) {
+        final UnidirectionParam PARAM = UnidirectionParam.builder()
+            .withDirection(Unidirection.DOWN_UP)
+            .withStartRatio(0.1d)
+            .withEndRatio(0.9d)
+            .withTimes(1)
+            .build();
+
+        return E.rxe_window().flatMap(a -> E.rxa_swipeGeneric(a, PARAM));
     }
 }

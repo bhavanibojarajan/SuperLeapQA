@@ -546,12 +546,14 @@ public interface UIScreenValidationTestType extends
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#DASHBOARD
+     * @see #assertCorrectness(TestSubscriber)
      * @see #generalUserModeProvider()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_scrollToBottom(Engine)
      * @see #rxa_dashboardMode(Engine, DashboardMode)
      * @see #rxv_dashboardBMI(Engine)
      * @see #rxv_dashboardActivity(Engine, UserMode)
+     * @see #rxv_cardListView(Engine)
      */
     @SuppressWarnings("unchecked")
     @Test(

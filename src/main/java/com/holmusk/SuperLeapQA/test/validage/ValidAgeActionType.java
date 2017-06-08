@@ -259,6 +259,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @return {@link Flowable} instance.
      * @see #validAgeInputProgressDelay(Engine)
      * @see #rxa_enterValidAgeInputs(Engine, UserMode, boolean)
+     * @see #rxa_scrollToBottom(Engine)
      * @see #rxa_confirmValidAgeInputs(Engine)
      */
     @NotNull
@@ -268,6 +269,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
         final ValidAgeActionType THIS = this;
 
         return rxa_enterValidAgeInputs(ENGINE, mode, validBMI)
+            .flatMap(a -> THIS.rxa_scrollToBottom(ENGINE))
             .flatMap(a -> THIS.rxa_confirmValidAgeInputs(ENGINE))
             .delay(validAgeInputProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
     }

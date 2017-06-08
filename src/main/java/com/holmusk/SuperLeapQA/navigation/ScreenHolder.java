@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.navigation.NavigationSupplier;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.navigation.ScreenType;

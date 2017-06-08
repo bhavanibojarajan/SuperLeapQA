@@ -2,8 +2,7 @@ package com.holmusk.SuperLeapQA.test.dashboard;
 
 import com.holmusk.SuperLeapQA.model.CardType;
 import com.holmusk.SuperLeapQA.model.DashboardMode;
-import com.holmusk.SuperLeapQA.test.invalidage.InvalidAgeActionType;
-import com.holmusk.SuperLeapQA.test.personalinfo.PersonalInfoActionType;
+import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -11,10 +10,10 @@ import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.param.UnidirectionParam;
-import org.swiften.xtestkitcomponents.common.DurationType;
-import org.swiften.xtestkitcomponents.common.RepeatType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.common.DurationType;
+import org.swiften.xtestkitcomponents.common.RepeatType;
 import org.swiften.xtestkitcomponents.direction.Unidirection;
 
 import java.util.concurrent.TimeUnit;
@@ -22,18 +21,32 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by haipham on 5/16/17.
  */
-public interface DashboardActionType extends
-    PersonalInfoActionType,
-    InvalidAgeActionType,
-    DashboardValidationType
-{
+public interface DashboardActionType extends BaseActionType, DashboardValidationType {
+    /**
+     * Dismiss the tracker change popup. We declare "Not now" by default.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see BooleanUtil#toTrue(Object) 
+     * @see Engine#rxa_click(WebElement)
+     * @see Engine#rxe_containsText(String...)
+     */
+    @NotNull
+    default Flowable<?> rxa_dismissTrackerPopup(@NotNull final Engine<?> ENGINE) {
+        return ENGINE
+            .rxe_containsText("dashboard_title_notNow")
+            .firstElement()
+            .toFlowable()
+            .flatMap(ENGINE::rxa_click)
+            .map(BooleanUtil::toTrue)
+            .onErrorReturnItem(true);
+    }
+
     /**
      * Click the Use App Now button.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rxe_useAppNow(Engine)
      * @see Engine#rxa_click(WebElement)
-     * @see BooleanUtil#toTrue(Object)
+     * @see #rxe_useAppNow(Engine)
      */
     @NotNull
     default Flowable<?> rxa_useAppNow(@NotNull final Engine<?> ENGINE) {
@@ -138,30 +151,5 @@ public interface DashboardActionType extends
 
         return rxe_dashboardModeSwitcher(ENGINE)
             .flatMap(a -> ENGINE.rxa_swipeGeneric(a, PARAM));
-    }
-
-    /**
-     * Scroll to the bottom of the screen to validate cards.
-     * @param E {@link Engine} instance.
-     * @return {@link Flowable} instance.
-     * @see Engine#rxa_swipeGeneric(WebElement, DurationType)
-     * @see Engine#rxe_window()
-     * @see Unidirection#DOWN_UP
-     * @see UnidirectionParam.Builder#withDirection(Unidirection)
-     * @see UnidirectionParam.Builder#withDuration(int)
-     * @see UnidirectionParam.Builder#withEndRatio(double)
-     * @see UnidirectionParam.Builder#withStartRatio(double)
-     * @see UnidirectionParam.Builder#withTimes(int)
-     */
-    @NotNull
-    default Flowable<?> rxa_scrollToBottom(@NotNull final Engine<?> E) {
-        final UnidirectionParam PARAM = UnidirectionParam.builder()
-            .withDirection(Unidirection.DOWN_UP)
-            .withStartRatio(0.1d)
-            .withEndRatio(0.9d)
-            .withTimes(1)
-            .build();
-
-        return E.rxe_window().flatMap(a -> E.rxa_swipeGeneric(a, PARAM));
     }
 }
