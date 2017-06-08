@@ -6,6 +6,7 @@ import com.holmusk.SuperLeapQA.navigation.type.ForwardNavigationType;
 import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.xtestkit.kit.TestKit;
 import org.swiften.xtestkit.test.BaseTestType;
 import org.testng.annotations.DataProvider;
 
@@ -22,14 +23,16 @@ public interface UIBaseTestType extends BaseTestType, ForwardNavigationType, SLS
      * instances for constructor methods.
      * @return {@link Iterator} instance.
      * @see Config#runCount()
+     * @see TestKit#engine(int)
      */
     @NotNull
     @DataProvider(parallel = true)
     static Iterator<Object[]> dataProvider() {
         List<Object[]> data = new LinkedList<>();
+        TestKit kit = Config.TEST_KIT;
 
         for (int i = 0, count = Config.runCount(); i < count; i++) {
-            data.add(new Object[] { i });
+            data.add(new Object[] { kit.engine(i) });
         }
 
         return data.iterator();
@@ -85,6 +88,17 @@ public interface UIBaseTestType extends BaseTestType, ForwardNavigationType, SLS
         }
 
         return data.iterator();
+    }
+
+    /**
+     * Override this method to provide default implementation.
+     * @return {@link TestKit} instance.
+     * @see Config#TEST_KIT
+     */
+    @NotNull
+    @Override
+    default TestKit testKit() {
+        return Config.TEST_KIT;
     }
 
     /**

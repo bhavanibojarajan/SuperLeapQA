@@ -37,6 +37,10 @@ public enum Screen implements ScreenInitializationType {
      * has been fully initialized.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see #DASHBOARD_TUTORIAL
+     * @see #MEAL_PAGE
+     * @see #PHOTO_PICKER
+     * @see #USE_APP_NOW
      * @see #rxn_dashboardTutorialInitialized(Engine)
      * @see #rxn_photoPickerInitialized(Engine)
      */
@@ -50,6 +54,9 @@ public enum Screen implements ScreenInitializationType {
 
             case DASHBOARD_TUTORIAL:
                 return a -> THIS.rxn_dashboardTutorialInitialized(ENGINE);
+
+            case MEAL_PAGE:
+                return a -> THIS.rxn_mealPageInitialized(ENGINE);
 
             case PHOTO_PICKER:
                 return a -> THIS.rxn_photoPickerInitialized(ENGINE);

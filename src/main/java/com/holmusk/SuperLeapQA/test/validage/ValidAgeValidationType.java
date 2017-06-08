@@ -34,32 +34,21 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
     }
 
     /**
-     * Get the back button's title label.
-     * @param engine {@link Engine} instance.
-     * @return {@link Flowable} instance.
-     * @see Engine#rxe_containsText(String...)
-     * @see #NOT_AVAILABLE
-     */
-    @NotNull
-    default Flowable<WebElement> rxe_validAgeInputTitle(@NotNull Engine<?> engine) {
-        if (engine instanceof AndroidEngine) {
-            return engine.rxe_containsText(
-                "parentSignUp_title_enterChildDetails",
-                "teenSignUp_title_enterDetails"
-            ).firstElement().toFlowable();
-        } else {
-            throw new RuntimeException(NOT_AVAILABLE);
-        }
-    }
-
-    /**
      * Validate the screen after the DoB picker whereby the user qualifies
      * for the program.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see ObjectUtil#nonNull(Object)
+     * @see ChoiceInput#COACH_PREF
+     * @see ChoiceInput#ETHNICITY
+     * @see ChoiceInput#HEIGHT
+     * @see ChoiceInput#WEIGHT
+     * @see Gender#MALE
+     * @see Gender#FEMALE
+     * @see Weight#LB
+     * @see Weight#KG
      * @see #rxe_editField(Engine, HMInputType)
      * @see #rxe_validAgeConfirm(Engine)
-     * @see #rxe_validAgeInputTitle(Engine)
      */
     @NotNull
     @Override
@@ -77,8 +66,7 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
                 rxe_editField(engine, Weight.KG),
                 rxe_editField(engine, ChoiceInput.ETHNICITY),
                 rxe_editField(engine, ChoiceInput.COACH_PREF),
-                rxe_validAgeConfirm(engine),
-                rxe_validAgeInputTitle(engine)
+                rxe_validAgeConfirm(engine)
             )
             .all(ObjectUtil::nonNull)
             .toFlowable();

@@ -7,13 +7,11 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.xtestkit.android.AndroidEngine;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.param.UnidirectionParam;
-import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.DurationType;
-import org.swiften.xtestkitcomponents.common.RepeatType;
 import org.swiften.xtestkitcomponents.direction.Unidirection;
 
 import java.util.concurrent.TimeUnit;
@@ -81,16 +79,13 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
 
     /**
      * Dismiss the dashboard tutorial.
-     * On {@link Platform#ANDROID}, this is done
-     * by navigating back once.
-     * On {@link Platform#IOS}, this is done by
+     * On {@link Platform#ANDROID} and {@link Platform#IOS}, this is done by
      * clicking on the add card button twice. If this is not the first time
      * the user is using the app, all this does is simply opening up the menu
      * then closing it.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement, RepeatType)
-     * @see Engine#rxa_navigateBackOnce()
+     * @see Engine#rxa_click(WebElement)
      * @see Platform#ANDROID
      * @see Platform#IOS
      * @see #generalDelay(Engine)
@@ -99,15 +94,14 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      */
     @NotNull
     default Flowable<?> rxa_dismissDashboardTutorial(@NotNull final Engine<?> ENGINE) {
-        if (ENGINE instanceof AndroidEngine) {
-            return ENGINE.rxa_navigateBackOnce();
-        } else if (ENGINE instanceof IOSEngine) {
-            return rxe_addCard(ENGINE)
-                .flatMap(a -> ENGINE.rxa_click(a, () -> 2))
-                .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
-        } else {
-            throw new RuntimeException(NOT_AVAILABLE);
-        }
+        final DashboardActionType THIS = this;
+
+        return Flowable.range(0, 2)
+            .concatMap(a -> THIS.rxe_addCard(ENGINE))
+            .flatMap(ENGINE::rxa_click)
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
     }
 
     /**

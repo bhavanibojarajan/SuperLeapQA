@@ -34,7 +34,6 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
             .mergeArray(
                 ENGINE.rxe_containsText("register_title_weAreOnlyAccepting"),
                 ENGINE.rxe_containsText(MODE.validAgeCategoryRangeString()),
-                ENGINE.rxe_containsText("+65"),
                 rxe_editField(ENGINE, TextInput.NAME),
                 rxe_editField(ENGINE, TextInput.PHONE),
                 rxe_editField(ENGINE, TextInput.EMAIL)

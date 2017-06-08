@@ -1,7 +1,9 @@
 package com.holmusk.SuperLeapQA.test.validage;
 
-import com.holmusk.SuperLeapQA.runner.Runner;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTest;
+import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
+import org.jetbrains.annotations.NotNull;
+import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.Factory;
 
 /**
@@ -9,8 +11,11 @@ import org.testng.annotations.Factory;
  */
 @SuppressWarnings("UndeclaredTests")
 public final class UIValidAgeTest extends UIBaseTest implements UIValidAgeTestType {
-    @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
-    public UIValidAgeTest(int index) {
-        super(index);
+    @Factory(
+        dataProviderClass = UIBaseTestType.class,
+        dataProvider = "dataProvider"
+    )
+    public UIValidAgeTest(@NotNull Engine<?> engine) {
+        super(engine);
     }
 }

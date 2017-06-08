@@ -51,12 +51,12 @@ public interface UILogMealTestType extends
      * @see Mood#values()
      * @see NumberUtil#randomBetween(int, int)
      * @see ObjectUtil#nonNull(Object)
+     * @see TextInput#randomInput()
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#LOG_MEAL
      * @see Screen#SEARCH
      * @see TextInput#MEAL_DESCRIPTION
-     * @see TextInput#randomInput()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #mealLogProgressDelay(Engine)
@@ -69,6 +69,7 @@ public interface UILogMealTestType extends
      * @see #rxa_selectMealTime(Engine, Date)
      * @see #rxa_confirmMealTime(Engine)
      * @see #rxa_submitMeal(Engine)
+     * @see #rxa_dismissMealImageTutorial(Engine)
      * @see #rxa_backToDashboard(Engine)
      * @see #rxa_openEditMeal(Engine)
      * @see #rxa_deleteMeal(Engine)
@@ -109,6 +110,7 @@ public interface UILogMealTestType extends
             .flatMap(a -> THIS.rxa_confirmMealDescription(ENGINE))
             .flatMap(a -> THIS.rxa_submitMeal(ENGINE))
             .delay(mealLogProgressDelay(ENGINE), TimeUnit.MILLISECONDS)
+            .flatMap(a -> THIS.rxa_dismissMealImageTutorial(ENGINE))
             .flatMap(a -> RXV_MEAL_PAGE)
 
             /* Go back to dashboard to access the search menu */

@@ -1,6 +1,5 @@
 package com.holmusk.SuperLeapQA.test.consolidated;
 
-import com.holmusk.SuperLeapQA.runner.Runner;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import com.holmusk.SuperLeapQA.test.dashboard.UIDashboardTestType;
@@ -12,7 +11,9 @@ import com.holmusk.SuperLeapQA.test.personalinfo.UIPersonalInfoTestType;
 import com.holmusk.SuperLeapQA.test.registermode.RegisterModeActionType;
 import com.holmusk.SuperLeapQA.test.screen.UIScreenValidationTestType;
 import com.holmusk.SuperLeapQA.test.validage.UIValidAgeTestType;
-import org.testng.annotations.*;
+import org.jetbrains.annotations.NotNull;
+import org.swiften.xtestkit.base.Engine;
+import org.testng.annotations.Factory;
 
 /**
  * Created by haipham on 4/4/17.
@@ -29,8 +30,11 @@ public final class UIConsolidatedTest extends UIBaseTest implements
     UIDashboardTestType,
     UILogMealTestType, RegisterModeActionType
 {
-    @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
-    public UIConsolidatedTest(int index) {
-        super(index);
+    @Factory(
+        dataProviderClass = UIBaseTestType.class,
+        dataProvider = "dataProvider"
+    )
+    public UIConsolidatedTest(@NotNull Engine<?> engine) {
+        super(engine);
     }
 }

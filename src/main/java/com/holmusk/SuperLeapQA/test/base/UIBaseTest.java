@@ -1,13 +1,8 @@
 package com.holmusk.SuperLeapQA.test.base;
 
-import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.log.LogUtil;
-import org.swiften.xtestkit.kit.TestKit;
-import org.swiften.xtestkit.kit.param.AfterClassParam;
-import org.swiften.xtestkit.kit.param.AfterParam;
-import org.swiften.xtestkit.kit.param.BeforeClassParam;
-import org.swiften.xtestkit.kit.param.BeforeParam;
+import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkitcomponents.common.RetryType;
 import org.testng.annotations.*;
 
 import java.util.LinkedList;
@@ -17,34 +12,23 @@ import java.util.List;
  * Created by haipham on 5/27/17.
  */
 public class UIBaseTest implements UIBaseTestType {
-    @NotNull private final TestKit TEST_KIT;
     @NotNull private final List<Node> FORWARD_NODES;
     @NotNull private final List<Node> BACKWARD_NODES;
 
-    private final int INDEX;
+    @NotNull private final Engine<?> ENGINE;
 
-    public UIBaseTest(int index) {
-        LogUtil.printft("Init new test with index %d", index);
+    public UIBaseTest(@NotNull Engine<?> engine) {
         FORWARD_NODES = new LinkedList<>();
         BACKWARD_NODES = new LinkedList<>();
-        INDEX = index;
-        TEST_KIT = Config.TEST_KIT;
+        ENGINE = engine;
     }
 
-    //region BaseTestType
     @NotNull
     @Override
-    public TestKit testKit() {
-        return TEST_KIT;
+    public Engine<?> engine() {
+        return ENGINE;
     }
 
-    @Override
-    public int currentIndex() {
-        return INDEX;
-    }
-    //endregion
-
-    //region SLScreenManagerType
     @NotNull
     @Override
     public List<Node> registeredForwardNodes() {
@@ -72,41 +56,36 @@ public class UIBaseTest implements UIBaseTestType {
         FORWARD_NODES.clear();
         BACKWARD_NODES.clear();
     }
-    //endregion
 
     @BeforeSuite
     public void beforeSuite() {
-        TEST_KIT.beforeSuite();
+        testKit().beforeSuite();
     }
 
     @AfterSuite
     public void afterSuite() {
-        TEST_KIT.afterSuite();
+        testKit().afterSuite();
     }
 
     @BeforeClass
     public void beforeClass() {
-        BeforeClassParam param = BeforeClassParam.builder().withIndex(INDEX).build();
-        TEST_KIT.beforeClass(param);
+        engine().beforeClass(RetryType.DEFAULT);
     }
 
     @AfterClass
     public void afterClass() {
-        AfterClassParam param = AfterClassParam.builder().withIndex(INDEX).build();
-        TEST_KIT.afterClass(param);
+        engine().afterClass(RetryType.DEFAULT);
     }
 
     @BeforeMethod
     public void beforeMethod() {
         registerScreenHolders();
-        BeforeParam param = BeforeParam.builder().withIndex(INDEX).build();
-        TEST_KIT.beforeMethod(param);
+        engine().beforeMethod(RetryType.DEFAULT);
     }
 
     @AfterMethod
     public void afterMethod() {
         clearAllNodes();
-        AfterParam param = AfterParam.builder().withIndex(INDEX).build();
-        TEST_KIT.afterMethod(param);
+        engine().afterMethod(RetryType.DEFAULT);
     }
 }

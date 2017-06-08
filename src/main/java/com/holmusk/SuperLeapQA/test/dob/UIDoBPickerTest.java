@@ -1,7 +1,9 @@
 package com.holmusk.SuperLeapQA.test.dob;
 
-import com.holmusk.SuperLeapQA.runner.Runner;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTest;
+import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
+import org.jetbrains.annotations.NotNull;
+import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.Factory;
 
 /**
@@ -9,8 +11,11 @@ import org.testng.annotations.Factory;
  */
 @SuppressWarnings("UndeclaredTests")
 public final class UIDoBPickerTest extends UIBaseTest implements UIDoBPickerTestType {
-    @Factory(dataProviderClass = Runner.class, dataProvider = "dataProvider")
-    public UIDoBPickerTest(int index) {
-        super(index);
+    @Factory(
+        dataProviderClass = UIBaseTestType.class,
+        dataProvider = "dataProvider"
+    )
+    public UIDoBPickerTest(@NotNull Engine<?> engine) {
+        super(engine);
     }
 }

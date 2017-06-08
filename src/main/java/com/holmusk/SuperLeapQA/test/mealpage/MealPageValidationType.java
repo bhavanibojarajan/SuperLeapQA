@@ -18,6 +18,20 @@ import java.util.Date;
  */
 public interface MealPageValidationType extends BaseValidationType {
     /**
+     * Get the image tutorial dismiss {@link WebElement}.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxe_containsText(String...)
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_mealImageTutorialDismiss(@NotNull Engine<?> engine) {
+        return engine
+            .rxe_containsText("mealPage_title_gotIt")
+            .firstElement()
+            .toFlowable();
+    }
+
+    /**
      * Get the {@link org.openqa.selenium.WebElement} that is displaying the
      * meal time and check that it is displaying the correct time.
      * @param engine {@link Engine} instance.

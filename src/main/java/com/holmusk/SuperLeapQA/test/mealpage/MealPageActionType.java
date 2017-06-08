@@ -3,6 +3,7 @@ package com.holmusk.SuperLeapQA.test.mealpage;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.direction.Unidirection;
@@ -15,6 +16,24 @@ import java.util.concurrent.TimeUnit;
  * Created by haipham on 31/5/17.
  */
 public interface MealPageActionType extends MealPageValidationType {
+    /**
+     * Dismiss the meal image tutorial. However, if this is not the first time
+     * the user is logging a meal and there is no such tutorial, simply swallow
+     * the error.
+     * @param E {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see BooleanUtil#toTrue(Object)
+     * @see Engine#rxa_click(WebElement)
+     * @see #rxe_mealImageTutorialDismiss(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxa_dismissMealImageTutorial(@NotNull final Engine<?> E) {
+        return rxe_mealImageTutorialDismiss(E)
+            .flatMap(E::rxa_click)
+            .map(BooleanUtil::toTrue)
+            .onErrorReturnItem(true);
+    }
+
     /**
      * Toggle meal edit mode, then delay for a while for the menu to fully
      * appear.

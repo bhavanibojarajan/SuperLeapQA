@@ -1,10 +1,10 @@
 package com.holmusk.SuperLeapQA.test.logmeal;
 
 import com.holmusk.HMUITestKit.android.element.date.EEEMMMddInput;
+import com.holmusk.HMUITestKit.model.HMTextType;
 import com.holmusk.SuperLeapQA.config.Config;
 import com.holmusk.SuperLeapQA.model.Mood;
 import com.holmusk.SuperLeapQA.model.TextInput;
-import com.holmusk.HMUITestKit.model.HMTextType;
 import com.holmusk.SuperLeapQA.test.photopicker.PhotoPickerActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
@@ -195,8 +195,6 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
     @NotNull
     default Flowable<?> rxa_selectMealTime(@NotNull final Engine<?> ENGINE,
                                            @NotNull Date date) {
-        DateParam.Builder builder = DateParam.builder().withDate(date);
-
         if (ENGINE instanceof AndroidEngine) {
             DateType dp = DateParam.builder().withDate(date).build();
             LocalizerType localizer = ENGINE.localizer();
