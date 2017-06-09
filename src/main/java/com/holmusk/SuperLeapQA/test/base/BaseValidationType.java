@@ -5,9 +5,11 @@ package com.holmusk.SuperLeapQA.test.base;
  */
 
 import com.holmusk.HMUITestKit.model.HMInputType;
+import com.holmusk.SuperLeapQA.model.DrawerItem;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputType;
@@ -110,5 +112,65 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
             .rxe_withXPath(input.inputViewXP(platform))
             .firstElement()
             .toFlowable();
+    }
+
+    /**
+     * Get the drawer toggle {@link WebElement}.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Attribute.Builder#addAttribute(String)
+     * @see Attribute.Builder#withValue(Object)
+     * @see Engine#rxe_withAttributes(Attribute[])
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_drawerToggle(@NotNull Engine<?> engine) {
+        if (engine instanceof AndroidEngine) {
+            Attribute attr = Attribute.<String>builder()
+                .addAttribute("content-desc")
+                .withValue("Open navigation drawer")
+                .build();
+
+            return engine.rxe_withAttributes(attr).firstElement().toFlowable();
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+
+    /**
+     * Get the {@link WebElement} that corresponds to {@link DrawerItem}.
+     * @param engine {@link Engine} instance.
+     * @param item {@link DrawerItem} instance.
+     * @return {@link Flowable} instance.
+     * @see DrawerItem#drawerItemXP(PlatformType)
+     * @see Engine#platform()
+     * @see Engine#rxe_withXPath(XPath...)
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_drawerItem(@NotNull Engine<?> engine,
+                                                @NotNull DrawerItem item) {
+        PlatformType platform = engine.platform();
+        XPath xPath = item.drawerItemXP(platform);
+        return engine.rxe_withXPath(xPath);
+    }
+
+    /**
+     * Check if the drawer is open.
+     * @param E {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see DrawerItem#values()
+     * @see ObjectUtil#nonNull(Object)
+     * @see #rxe_drawerItem(Engine, DrawerItem)
+     */
+    @NotNull
+    default Flowable<Boolean> rxv_isDrawerOpen(@NotNull final Engine<?> E) {
+        final BaseValidationType THIS = this;
+
+        return Flowable
+            .fromArray(DrawerItem.values())
+            .flatMap(a -> THIS.rxe_drawerItem(E, a))
+            .all(ObjectUtil::nonNull)
+            .toFlowable()
+            .onErrorReturnItem(false);
     }
 }

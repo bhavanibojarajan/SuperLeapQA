@@ -8,12 +8,10 @@ import com.holmusk.HMUITestKit.model.HMChoiceType;
 import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.HMUITestKit.model.HMTextType;
 import com.holmusk.HMUITestKit.test.datetime.HMDateTimeActionType;
-import com.holmusk.SuperLeapQA.model.Height;
-import com.holmusk.SuperLeapQA.model.SLNumericChoiceType;
-import com.holmusk.SuperLeapQA.model.TextInput;
-import com.holmusk.SuperLeapQA.model.Weight;
+import com.holmusk.SuperLeapQA.model.*;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.Zip;
@@ -359,5 +357,97 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
             .build();
 
         return E.rxe_window().flatMap(a -> E.rxa_swipeGeneric(a, PARAM));
+    }
+
+    /**
+     * Open the drawer.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_click(WebElement)
+     * @see #rxe_drawerToggle(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxa_openDrawer(@NotNull final Engine<?> ENGINE) {
+        return rxe_drawerToggle(ENGINE).flatMap(ENGINE::rxa_click);
+    }
+
+    /**
+     * Close the drawer.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#topRightCoordinate(WebElement)
+     * @see Engine#rxa_tap(Point)
+     * @see Engine#rxe_window()
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    default Flowable<?> rxa_closeDrawer(@NotNull final Engine<?> ENGINE) {
+        if (ENGINE instanceof AndroidEngine) {
+            return ENGINE.rxe_window()
+                .map(ENGINE::topRightCoordinate)
+                .flatMap(ENGINE::rxa_tap);
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+
+    /**
+     * Toggle the drawer open/closed, but first check whether it is already
+     * in the specified state.
+     * @param ENGINE {@link Engine} instance.
+     * @param OPEN {@link Boolean} value.
+     * @return {@link Flowable} instance.
+     * @see #generalDelay(Engine)
+     * @see #rxa_closeDrawer(Engine)
+     * @see #rxa_openDrawer(Engine)
+     * @see #rxv_isDrawerOpen(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxa_toggleDrawer(@NotNull final Engine<?> ENGINE,
+                                         final boolean OPEN) {
+        final BaseActionType THIS = this;
+
+        return rxv_isDrawerOpen(ENGINE)
+            .filter(a -> a != OPEN)
+            .flatMap(a -> {
+                if (OPEN) {
+                    return THIS.rxa_openDrawer(ENGINE);
+                } else {
+                    return THIS.rxa_closeDrawer(ENGINE);
+                }
+            })
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
+            .defaultIfEmpty(true);
+    }
+
+    /**
+     * Select {@link DrawerItem}.
+     * @param ENGINE {@link Engine} instance.
+     * @param item {@link DrawerItem} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_click(WebElement)
+     * @see #rxe_drawerItem(Engine, DrawerItem)
+     */
+    @NotNull
+    default Flowable<?> rxa_selectDrawerItem(@NotNull final Engine<?> ENGINE,
+                                             @NotNull DrawerItem item) {
+        return rxe_drawerItem(ENGINE, item).flatMap(ENGINE::rxa_click);
+    }
+
+    /**
+     * Open the drawer and select {@link DrawerItem}.
+     * @param E {@link Engine} instance.
+     * @param DI {@link DrawerItem} instance.
+     * @return {@link Flowable} instance.
+     * @see #rxa_selectDrawerItem(Engine, DrawerItem)
+     * @see #rxa_toggleDrawer(Engine, boolean)
+     */
+    @NotNull
+    default Flowable<?> rxa_openDrawerAndSelect(@NotNull final Engine<?> E,
+                                                @NotNull final DrawerItem DI) {
+        final BaseActionType THIS = this;
+
+        return rxa_toggleDrawer(E, true)
+            .flatMap(a -> THIS.rxa_selectDrawerItem(E, DI));
     }
 }

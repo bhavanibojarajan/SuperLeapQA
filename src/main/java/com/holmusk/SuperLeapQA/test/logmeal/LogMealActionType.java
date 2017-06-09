@@ -28,7 +28,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @param ENGINE {@link Engine} instance.
      * @param mood {@link Mood} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#getMiddleCoordinate(WebElement)
+     * @see Engine#middleCoordinate(WebElement)
      * @see Engine#rxa_click(WebElement)
      * @see #rxe_mood(Engine, Mood)
      */
