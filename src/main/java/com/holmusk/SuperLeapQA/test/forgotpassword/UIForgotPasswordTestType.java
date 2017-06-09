@@ -20,6 +20,7 @@ public interface UIForgotPasswordTestType extends UIBaseTestType, ForgotPassword
      * @see Screen#SPLASH
      * @see Screen#FORGOT_PASSWORD
      * @see #assertCorrectness(TestSubscriber)
+     * @see #defaultUserMode()
      * @see #engine()
      * @see #forgotPasswordProgressDelay(Engine)
      * @see #generalDelay(Engine)
@@ -35,8 +36,8 @@ public interface UIForgotPasswordTestType extends UIBaseTestType, ForgotPassword
         // Setup
         final UIForgotPasswordTestType THIS = this;
         final Engine<?> ENGINE = engine();
+        UserMode mode = defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
-        UserMode mode = UserMode.PARENT;
 
         // When
         rxa_navigate(mode, Screen.SPLASH, Screen.FORGOT_PASSWORD)

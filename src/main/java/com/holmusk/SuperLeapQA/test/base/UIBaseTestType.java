@@ -114,4 +114,14 @@ public interface UIBaseTestType extends BaseTestType, ForwardNavigationType, SLS
         subscriber.assertComplete();
         LogUtil.printft("Test results: %s", RxTestUtil.nextEvents(subscriber));
     }
+
+    /**
+     * Get a default {@link UserMode}.
+     * @return {@link UserMode} instance.
+     * @see UserMode#PARENT
+     */
+    @NotNull
+    default UserMode defaultUserMode() {
+        return UserMode.PARENT;
+    }
 }

@@ -42,6 +42,7 @@ public interface UIScreenValidationTestType extends
      * @see Screen#SPLASH
      * @see Screen#WELCOME
      * @see #assertCorrectness(TestSubscriber)
+     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxv_welcomeScreen(Engine)
@@ -52,10 +53,11 @@ public interface UIScreenValidationTestType extends
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
+        UserMode mode = defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(UserMode.PARENT, Screen.SPLASH, Screen.WELCOME)
+        rxa_navigate(mode, Screen.SPLASH, Screen.WELCOME)
             .flatMap(a -> THIS.rxv_welcomeScreen(ENGINE))
             .subscribe(subscriber);
 
@@ -72,6 +74,7 @@ public interface UIScreenValidationTestType extends
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see #assertCorrectness(TestSubscriber)
+     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxv_loginScreen(Engine)
@@ -82,7 +85,7 @@ public interface UIScreenValidationTestType extends
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        UserMode mode = UserMode.PARENT;
+        UserMode mode = defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
@@ -103,6 +106,7 @@ public interface UIScreenValidationTestType extends
      * @see Screen#SPLASH
      * @see Screen#FORGOT_PASSWORD
      * @see #assertCorrectness(TestSubscriber)
+     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxv_forgotPassword(Engine)
@@ -113,7 +117,7 @@ public interface UIScreenValidationTestType extends
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        UserMode mode = UserMode.PARENT;
+        UserMode mode = defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
@@ -135,6 +139,7 @@ public interface UIScreenValidationTestType extends
      * @see Screen#REGISTER
      * @see Screen#WELCOME
      * @see #assertCorrectness(TestSubscriber)
+     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_clickBackButton(Engine)
@@ -147,7 +152,7 @@ public interface UIScreenValidationTestType extends
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        UserMode mode = UserMode.PARENT;
+        UserMode mode = defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
@@ -589,6 +594,7 @@ public interface UIScreenValidationTestType extends
      * @see Screen#LOGIN
      * @see Screen#LOG_MEAL
      * @see #assertCorrectness(TestSubscriber)
+     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxv_mealLog(Engine)
      */
@@ -598,7 +604,7 @@ public interface UIScreenValidationTestType extends
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        UserMode mode = UserMode.PARENT;
+        UserMode mode = defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
@@ -619,6 +625,7 @@ public interface UIScreenValidationTestType extends
      * @see Screen#LOGIN
      * @see Screen#LOG_WEIGHT
      * @see #assertCorrectness(TestSubscriber)
+     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_completeWeightValue(Engine)
@@ -631,7 +638,7 @@ public interface UIScreenValidationTestType extends
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        UserMode mode = UserMode.PARENT;
+        UserMode mode = defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When

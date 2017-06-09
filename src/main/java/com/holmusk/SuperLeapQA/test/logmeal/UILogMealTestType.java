@@ -58,9 +58,10 @@ public interface UILogMealTestType extends
      * @see Screen#SEARCH
      * @see TextInput#MEAL_DESCRIPTION
      * @see #assertCorrectness(TestSubscriber)
+     * @see #defaultUserMode()
      * @see #engine()
      * @see #mealLogProgressDelay(Engine)
-     * @see #randomMealTime()
+     * @see #randomSelectableTime()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_selectMealPhotos(Engine)
      * @see #rxa_input(Engine, HMInputType, String)
@@ -83,11 +84,11 @@ public interface UILogMealTestType extends
         // Setup
         final UILogMealTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        final Date TIME = randomMealTime();
+        final Date TIME = randomSelectableTime();
         final TextInput DSC_INPUT = TextInput.MEAL_DESCRIPTION;
         final String DESCRIPTION = DSC_INPUT.randomInput();
         final Mood MOOD = CollectionUtil.randomElement(Mood.values());
-        UserMode mode = UserMode.PARENT;
+        UserMode mode = defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         final Flowable<?> RXV_MEAL_PAGE = Flowable
@@ -164,6 +165,7 @@ public interface UILogMealTestType extends
      * @see Screen#SEARCH
      * @see TextInput#MEAL_COMMENT
      * @see #assertCorrectness(TestSubscriber)
+     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_postChat(Engine, String)
@@ -199,7 +201,7 @@ public interface UILogMealTestType extends
             .map(a -> INPUT.randomInput())
             .collect(Collectors.toList());
 
-        UserMode mode = UserMode.PARENT;
+        UserMode mode = defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When

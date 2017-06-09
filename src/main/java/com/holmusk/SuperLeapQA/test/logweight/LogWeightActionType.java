@@ -26,7 +26,7 @@ public interface LogWeightActionType extends
      * @see #rxe_weightSubmit(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_submitWeight(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_submitWeightValue(@NotNull final Engine<?> ENGINE) {
         return rxe_weightSubmit(ENGINE).flatMap(ENGINE::rxa_click);
     }
 
@@ -49,14 +49,14 @@ public interface LogWeightActionType extends
      * @return {@link Flowable} instance.
      * @see #weightLogProgressDelay(Engine)
      * @see #rxa_swipeCSSViewRandomly(Engine)
-     * @see #rxa_submitWeight(Engine)
+     * @see #rxa_submitWeightValue(Engine)
      */
     @NotNull
     default Flowable<?> rxa_completeWeightValue(@NotNull final Engine<?> ENGINE) {
         final LogWeightActionType THIS = this;
 
         return rxa_swipeCSSViewRandomly(ENGINE)
-            .flatMap(a -> THIS.rxa_submitWeight(ENGINE))
+            .flatMap(a -> THIS.rxa_submitWeightValue(ENGINE))
             .delay(weightLogProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
@@ -86,12 +86,26 @@ public interface LogWeightActionType extends
     }
 
     /**
+     * Confirm weight time.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_click(WebElement)
+     * @see #rxe_weightTime(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxa_confirmWeightTime(@NotNull final Engine<?> ENGINE) {
+        return rxe_weightTime(ENGINE).flatMap(ENGINE::rxa_click);
+    }
+
+    /**
      * Complete the weight detail entry.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #weightLogProgressDelay(Engine)
      * @see #randomSelectableTime()
+     * @see #rxa_openWeightTimePicker(Engine)
      * @see #rxa_selectWeightTime(Engine, Date)
+     * @see #rxa_confirmWeightTime(Engine)
      * @see #rxa_submitWeightEntry(Engine)
      */
     @NotNull
@@ -99,7 +113,9 @@ public interface LogWeightActionType extends
         final LogWeightActionType THIS = this;
         final Date TIME = randomSelectableTime();
 
-        return rxa_selectWeightTime(ENGINE, TIME)
+        return rxa_openWeightTimePicker(ENGINE)
+            .flatMap(a -> THIS.rxa_selectWeightTime(ENGINE, TIME))
+            .flatMap(a -> THIS.rxa_confirmWeightTime(ENGINE))
             .flatMap(a -> THIS.rxa_submitWeightEntry(ENGINE))
             .delay(weightLogProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
     }

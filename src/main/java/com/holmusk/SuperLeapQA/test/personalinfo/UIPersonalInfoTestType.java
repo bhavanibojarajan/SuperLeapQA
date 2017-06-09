@@ -61,6 +61,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * @see Screen#SPLASH
      * @see Screen#PERSONAL_INFO
      * @see #assertCorrectness(TestSubscriber)
+     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_randomInput(Engine, HMTextType)
@@ -78,7 +79,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
         }
 
         final UIPersonalInfoTestType THIS = this;
-        final UserMode MODE = UserMode.PARENT;
+        final UserMode MODE = defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
@@ -109,6 +110,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * @see Screen#PERSONAL_INFO
      * @see UserMode#personalInfo(PlatformType)
      * @see #assertCorrectness(TestSubscriber)
+     * @see #defaultUserMode()
      * @see #engine()
      * @see #generalDelay(Engine)
      * @see #webViewDelay(Engine)
@@ -131,7 +133,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
 
         final UIPersonalInfoTestType THIS = this;
         final PlatformType PLATFORM = ENGINE.platform();
-        final UserMode MODE = UserMode.PARENT;
+        final UserMode MODE = defaultUserMode();
         final Map<String,String> INPUTS = new HashMap<>();
         List<HMTextType> info = MODE.personalInfo(PLATFORM);
 

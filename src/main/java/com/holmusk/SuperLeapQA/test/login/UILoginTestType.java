@@ -3,7 +3,6 @@ package com.holmusk.SuperLeapQA.test.login;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
-import com.holmusk.SuperLeapQA.test.registermode.RegisterModeActionType;
 import io.reactivex.subscribers.TestSubscriber;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
@@ -20,9 +19,10 @@ public interface UILoginTestType extends UIBaseTestType, LoginActionType {
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see UserMode#loginCredentials()
-     * @see #rxa_login(Engine, List)
      * @see #assertCorrectness(TestSubscriber)
+     * @see #defaultUserMode()
      * @see #engine()
+     * @see #rxa_login(Engine, List)
      */
     @Test
     @SuppressWarnings("unchecked")
@@ -30,7 +30,7 @@ public interface UILoginTestType extends UIBaseTestType, LoginActionType {
         // Setup
         final UILoginTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        final UserMode MODE = UserMode.PARENT;
+        final UserMode MODE = defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
@@ -49,9 +49,10 @@ public interface UILoginTestType extends UIBaseTestType, LoginActionType {
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#REGISTER
+     * @see #assertCorrectness(TestSubscriber)
+     * @see #defaultUserMode()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxv_registerScreen(Engine)
-     * @see #assertCorrectness(TestSubscriber)
      */
     @Test
     @SuppressWarnings("unchecked")
@@ -59,8 +60,8 @@ public interface UILoginTestType extends UIBaseTestType, LoginActionType {
         // Setup
         final UILoginTestType THIS = this;
         final Engine<?> ENGINE = engine();
+        UserMode mode = defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
-        UserMode mode = UserMode.PARENT;
 
         // When
         rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.REGISTER)
