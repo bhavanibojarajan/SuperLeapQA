@@ -158,4 +158,14 @@ public interface AppDelayType extends BaseErrorType {
     default long mealDeleteProgressDelay(@NotNull Engine<?> engine) {
         return 2000;
     }
+
+    /**
+     * Delay between the time the user searches for a query and that when
+     * the results (if any) appear.
+     * @param engine {@link Engine} instance.
+     * @return {@link Long} value.
+     */
+    default long mealSearchProgressDelay(@NotNull Engine<?> engine) {
+        return 2000;
+    }
 }

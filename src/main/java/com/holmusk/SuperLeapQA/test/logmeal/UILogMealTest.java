@@ -12,7 +12,7 @@ import org.testng.annotations.Factory;
 public final class UILogMealTest extends UIBaseTest implements UILogMealTestType {
     @Factory(
         dataProviderClass = UIBaseTestType.class,
-        dataProvider = "dataProvider"
+        dataProvider = "engineProvider"
     )
     public UILogMealTest(@NotNull Engine<?> engine) {
         super(engine);

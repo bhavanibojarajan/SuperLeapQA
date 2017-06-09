@@ -13,7 +13,7 @@ import org.testng.annotations.Factory;
 public final class UIDoBPickerTest extends UIBaseTest implements UIDoBPickerTestType {
     @Factory(
         dataProviderClass = UIBaseTestType.class,
-        dataProvider = "dataProvider"
+        dataProvider = "engineProvider"
     )
     public UIDoBPickerTest(@NotNull Engine<?> engine) {
         super(engine);

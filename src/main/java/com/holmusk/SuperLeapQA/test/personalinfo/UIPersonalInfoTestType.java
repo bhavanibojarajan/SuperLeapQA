@@ -1,12 +1,11 @@
 package com.holmusk.SuperLeapQA.test.personalinfo;
 
-import com.holmusk.SuperLeapQA.model.TextInput;
-import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.HMUITestKit.model.HMTextType;
+import com.holmusk.SuperLeapQA.model.TextInput;
+import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
-import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -16,10 +15,10 @@ import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.base.model.TextInputType;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -54,10 +53,8 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
 
     /**
      * This test validates that the password mask, when clicks, reveals the
-     * password. It is only applicable to
-     * {@link Platform#ANDROID} since on
-     * {@link Platform#IOS} there is no way to
-     * reveal the password content.
+     * password. It is only applicable to {@link Platform#ANDROID} since on
+     * {@link Platform#IOS} there is no way to reveal the password content.
      * @see Engine#isShowingPassword(WebElement)
      * @see Engine#rxa_togglePasswordMask(WebElement)
      * @see Engine#rxv_errorWithPageSource()
@@ -73,15 +70,19 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
     @SuppressWarnings("unchecked")
     default void test_togglePasswordMask_shouldWork() {
         // Setup
-        final UIPersonalInfoTestType THIS = this;
         final Engine<?> ENGINE = engine();
+
+        /* If not testing on Android, skip this test */
+        if (!(ENGINE instanceof AndroidEngine)) {
+            return;
+        }
+
+        final UIPersonalInfoTestType THIS = this;
         final UserMode MODE = UserMode.PARENT;
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        Flowable.just(ENGINE)
-            .filter(a -> a instanceof AndroidEngine)
-            .flatMap(a -> THIS.rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO))
+        rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
             .flatMap(a -> THIS.rxa_randomInput(ENGINE, TextInput.PASSWORD))
             .flatMap(a -> THIS.rxa_confirmTextInput(ENGINE)
                 .flatMap(b -> ENGINE.rxa_togglePasswordMask(a))
@@ -97,7 +98,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
     }
 
     /**
-     * This test confirms that when the user clicks on the TOC and opens up
+     * This test confirms that when the user clicks on the TC and opens up
      * the Web browser, {@link Screen#PERSONAL_INFO} inputs are saved and then
      * restored when the user gets back to the app. This is more relevant for
      * {@link Platform#ANDROID}.
@@ -121,8 +122,14 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
     @SuppressWarnings("unchecked")
     default void test_leavePersonalInfo_shouldSaveState() {
         // Setup
-        final UIPersonalInfoTestType THIS = this;
         final Engine<?> ENGINE = engine();
+
+        /* If not testing on Android, skip this test */
+        if (!(ENGINE instanceof AndroidEngine)) {
+            return;
+        }
+
+        final UIPersonalInfoTestType THIS = this;
         final PlatformType PLATFORM = ENGINE.platform();
         final UserMode MODE = UserMode.PARENT;
         final Map<String,String> INPUTS = new HashMap<>();
@@ -137,9 +144,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        Flowable.just(ENGINE)
-            .filter(a -> a instanceof AndroidEngine)
-            .flatMap(a -> THIS.rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO))
+        THIS.rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
             .concatMapIterable(a -> TEXT_INFO)
             .concatMap(a -> THIS.rxa_input(ENGINE, a, INPUTS.get(a.toString())))
             .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))

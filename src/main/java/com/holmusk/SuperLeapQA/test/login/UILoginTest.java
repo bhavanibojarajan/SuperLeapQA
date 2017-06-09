@@ -13,7 +13,7 @@ import org.testng.annotations.Factory;
 public final class UILoginTest extends UIBaseTest implements UILoginTestType {
     @Factory(
         dataProviderClass = UIBaseTestType.class,
-        dataProvider = "dataProvider"
+        dataProvider = "engineProvider"
     )
     public UILoginTest(@NotNull Engine<?> engine) {
         super(engine);

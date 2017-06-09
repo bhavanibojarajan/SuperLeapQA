@@ -6,6 +6,8 @@ import com.holmusk.SuperLeapQA.navigation.type.ForwardNavigationType;
 import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.log.LogUtil;
+import org.swiften.javautilities.rx.RxTestUtil;
 import org.swiften.xtestkit.kit.TestKit;
 import org.swiften.xtestkit.test.BaseTestType;
 import org.testng.annotations.DataProvider;
@@ -27,7 +29,7 @@ public interface UIBaseTestType extends BaseTestType, ForwardNavigationType, SLS
      */
     @NotNull
     @DataProvider(parallel = true)
-    static Iterator<Object[]> dataProvider() {
+    static Iterator<Object[]> engineProvider() {
         List<Object[]> data = new LinkedList<>();
         TestKit kit = Config.TEST_KIT;
 
@@ -110,5 +112,6 @@ public interface UIBaseTestType extends BaseTestType, ForwardNavigationType, SLS
         subscriber.assertSubscribed();
         subscriber.assertNoErrors();
         subscriber.assertComplete();
+        LogUtil.printft("Test results: %s", RxTestUtil.nextEvents(subscriber));
     }
 }

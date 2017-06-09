@@ -1,21 +1,28 @@
 package com.holmusk.SuperLeapQA.test.mealpage;
 
+import com.holmusk.SuperLeapQA.test.base.BaseActionType;
+import com.holmusk.SuperLeapQA.test.search.SearchActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkitcomponents.direction.Unidirection;
 import org.swiften.xtestkit.base.param.UnidirectionParam;
 import org.swiften.xtestkitcomponents.common.DurationType;
+import org.swiften.xtestkitcomponents.direction.Unidirection;
 
 import java.util.concurrent.TimeUnit;
 
 /**
  * Created by haipham on 31/5/17.
  */
-public interface MealPageActionType extends MealPageValidationType {
+public interface MealPageActionType extends
+    BaseActionType,
+    MealPageValidationType,
+    SearchActionType
+{
     /**
      * Dismiss the meal image tutorial. However, if this is not the first time
      * the user is logging a meal and there is no such tutorial, simply swallow
@@ -113,5 +120,27 @@ public interface MealPageActionType extends MealPageValidationType {
             .build();
 
         return ENGINE.rxe_window().flatMap(a -> ENGINE.rxa_swipeGeneric(a, PARAM));
+    }
+
+    /**
+     * Navigate back to
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD} after
+     * searching for and deleting a meal.
+     * This is only applicable to
+     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID} whereby
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#SEARCH} is still
+     * visible after {@link com.holmusk.SuperLeapQA.navigation.Screen#MEAL_PAGE}
+     * is dismissed.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rxa_cancelSearch(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxa_dashboardAfterSearchAndDelete(@NotNull Engine<?> engine) {
+        if (engine instanceof AndroidEngine) {
+            return rxa_cancelSearch(engine);
+        } else {
+            return Flowable.just(true);
+        }
     }
 }

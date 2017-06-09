@@ -79,13 +79,13 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
 
     /**
      * Dismiss the dashboard tutorial.
-     * On {@link Platform#ANDROID} and {@link Platform#IOS}, this is done by
-     * clicking on the add card button twice. If this is not the first time
-     * the user is using the app, all this does is simply opening up the menu
-     * then closing it.
+     * On {@link Platform#IOS}, this is done by clicking on the add card button
+     * twice. If this is not the first time the user is using the app, all
+     * this does is simply opening up the menu then closing it.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see Engine#rxa_navigateBackOnce()
      * @see Platform#ANDROID
      * @see Platform#IOS
      * @see #generalDelay(Engine)

@@ -13,7 +13,7 @@ import org.testng.annotations.Factory;
 public final class UIDashboardTest extends UIBaseTest implements UIDashboardTestType {
     @Factory(
         dataProviderClass = UIBaseTestType.class,
-        dataProvider = "dataProvider"
+        dataProvider = "engineProvider"
     )
     public UIDashboardTest(@NotNull Engine<?> engine) {
         super(engine);

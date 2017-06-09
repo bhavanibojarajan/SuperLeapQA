@@ -13,7 +13,7 @@ import org.testng.annotations.Factory;
 public final class UIValidAgeTest extends UIBaseTest implements UIValidAgeTestType {
     @Factory(
         dataProviderClass = UIBaseTestType.class,
-        dataProvider = "dataProvider"
+        dataProvider = "engineProvider"
     )
     public UIValidAgeTest(@NotNull Engine<?> engine) {
         super(engine);

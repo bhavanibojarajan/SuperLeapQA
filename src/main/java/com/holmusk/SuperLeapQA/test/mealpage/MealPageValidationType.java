@@ -10,11 +10,10 @@ import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
+import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
-import org.swiften.xtestkitcomponents.xpath.Attributes;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
 import java.text.SimpleDateFormat;
@@ -155,25 +154,18 @@ public interface MealPageValidationType extends BaseValidationType {
      * @see Attribute.Builder#withFormatible(Attribute.Formatible)
      * @see BaseViewType#className()
      * @see Engine#rxe_ofClass(String...)
-     * @see Engine#rxe_withXPath(XPath...)
      * @see Point#getX()
      * @see XPath.Builder#addAttribute(Attribute)
      * @see WebElement#getLocation()
      * @see IOSView.ViewType#UI_BUTTON
      * @see com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD
+     * @see #rxe_backButton(Engine)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_dashboardBack(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
-            Attribute attribute = Attribute.<String>builder()
-                .addAttribute("content-desc")
-                .withValue("Navigate up")
-                .withFormatible(new Attributes.ContainsString() {})
-                .build();
-
-            XPath xPath = XPath.builder().addAttribute(attribute).build();
-            return engine.rxe_withXPath(xPath).firstElement().toFlowable();
+            return rxe_backButton(engine);
         } else if (engine instanceof IOSEngine) {
             return engine
                 .rxe_ofClass(IOSView.ViewType.UI_BUTTON.className())

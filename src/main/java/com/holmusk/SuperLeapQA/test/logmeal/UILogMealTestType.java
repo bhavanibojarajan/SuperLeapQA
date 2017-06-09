@@ -1,9 +1,9 @@
 package com.holmusk.SuperLeapQA.test.logmeal;
 
+import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.SuperLeapQA.model.Mood;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import com.holmusk.SuperLeapQA.test.dashboard.DashboardActionType;
@@ -18,9 +18,9 @@ import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.ios.IOSEngine;
 import org.testng.annotations.Test;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -60,6 +60,7 @@ public interface UILogMealTestType extends
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #mealLogProgressDelay(Engine)
+     * @see #randomMealTime()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_selectMealPhotos(Engine)
      * @see #rxa_input(Engine, HMInputType, String)
@@ -73,6 +74,7 @@ public interface UILogMealTestType extends
      * @see #rxa_backToDashboard(Engine)
      * @see #rxa_openEditMeal(Engine)
      * @see #rxa_deleteMeal(Engine)
+     * @see #rxa_dashboardAfterSearchAndDelete(Engine)
      * @see #rxv_hasMealTime(Engine, Date)
      */
     @Test
@@ -81,9 +83,7 @@ public interface UILogMealTestType extends
         // Setup
         final UILogMealTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH, -NumberUtil.randomBetween(1, 5));
-        final Date TIME = calendar.getTime();
+        final Date TIME = randomMealTime();
         final TextInput DSC_INPUT = TextInput.MEAL_DESCRIPTION;
         final String DESCRIPTION = DSC_INPUT.randomInput();
         final Mood MOOD = CollectionUtil.randomElement(Mood.values());
@@ -125,7 +125,7 @@ public interface UILogMealTestType extends
             /* Delete the meal and verify that it is no longer searchable */
             .flatMap(a -> THIS.rxa_openEditMeal(ENGINE))
             .flatMap(a -> THIS.rxa_deleteMeal(ENGINE))
-            .flatMap(a -> THIS.rxa_backToDashboard(ENGINE))
+            .flatMap(a -> THIS.rxa_dashboardAfterSearchAndDelete(ENGINE))
             .flatMap(a -> THIS.rxa_toggleDashboardSearch(ENGINE))
             .flatMap(a -> THIS.rxa_search(ENGINE, DESCRIPTION))
 
@@ -156,13 +156,13 @@ public interface UILogMealTestType extends
      * @see Engine#rxa_click(WebElement)
      * @see Engine#rxv_errorWithPageSource()
      * @see ObjectUtil#nonNull(Object)
+     * @see TextInput#randomInput()
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#MEAL_PAGE
      * @see Screen#CHAT
      * @see Screen#SEARCH
      * @see TextInput#MEAL_COMMENT
-     * @see TextInput#randomInput()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
@@ -174,6 +174,7 @@ public interface UILogMealTestType extends
      * @see #rxa_openSearchResult(Engine, String)
      * @see #rxa_openEditMeal(Engine)
      * @see #rxa_deleteMeal(Engine)
+     * @see #rxa_dashboardAfterSearchAndDelete(Engine)
      * @see #rxe_chatMessage(Engine, String)
      * @see #rxe_searchResult(Engine, String)
      */
@@ -181,8 +182,16 @@ public interface UILogMealTestType extends
     @SuppressWarnings("unchecked")
     default void test_logMealWithComments_shouldWork() {
         // Setup
-        final UILogMealTestType THIS = this;
         final Engine<?> ENGINE = engine();
+
+        /* If we are not testing on iOS, there is no need to test this method
+         * since we cannot search for comments from the search bar on other
+         * platforms */
+        if (!(ENGINE instanceof IOSEngine)) {
+            return;
+        }
+
+        final UILogMealTestType THIS = this;
         final TextInput INPUT = TextInput.MEAL_COMMENT;
 
         final List<String> COMMENTS = IntStream
@@ -220,7 +229,7 @@ public interface UILogMealTestType extends
             .flatMap(a -> THIS.rxa_makeEditButtonVisible(ENGINE))
             .flatMap(a -> THIS.rxa_openEditMeal(ENGINE))
             .flatMap(a -> THIS.rxa_deleteMeal(ENGINE))
-            .flatMap(a -> THIS.rxa_backToDashboard(ENGINE))
+            .flatMap(a -> THIS.rxa_dashboardAfterSearchAndDelete(ENGINE))
             .flatMap(a -> THIS.rxa_toggleDashboardSearch(ENGINE))
             .flatMap(a -> Flowable.fromIterable(COMMENTS))
             .concatMap(a -> THIS.rxa_search(ENGINE, a)

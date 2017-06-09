@@ -4,6 +4,7 @@ import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
@@ -41,7 +42,12 @@ public interface ChatValidationType extends BaseValidationType {
      */
     @NotNull
     default Flowable<WebElement> rxe_chatSend(@NotNull Engine<?> engine) {
-        if (engine instanceof IOSEngine) {
+        if (engine instanceof AndroidEngine) {
+            return engine
+                .rxe_containsID("iv_send")
+                .firstElement()
+                .toFlowable();
+        } else if (engine instanceof IOSEngine) {
             return engine
                 .rxe_containsID("chat send btn")
                 .firstElement()
@@ -56,13 +62,19 @@ public interface ChatValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see BaseViewType#className()
+     * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_ofClass(String...)
      * @see IOSView.ViewType#UI_TABLE_VIEW
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_chatListView(@NotNull Engine<?> engine) {
-        if (engine instanceof IOSEngine) {
+        if (engine instanceof AndroidEngine) {
+            return engine
+                .rxe_containsID("rv_activity_food_detail")
+                .firstElement()
+                .toFlowable();
+        } else if (engine instanceof IOSEngine) {
             return engine
                 .rxe_ofClass(IOSView.ViewType.UI_TABLE_VIEW.className())
                 .firstElement()

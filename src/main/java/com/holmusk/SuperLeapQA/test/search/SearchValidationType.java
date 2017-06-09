@@ -2,15 +2,14 @@ package com.holmusk.SuperLeapQA.test.search;
 
 import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
-import org.apache.tools.ant.taskdefs.condition.And;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
@@ -25,11 +24,14 @@ public interface SearchValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsText(String...)
+     * @see #rxe_backButton(Engine)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_searchCancel(@NotNull Engine<?> engine) {
-        if (engine instanceof IOSEngine) {
+        if (engine instanceof AndroidEngine) {
+            return rxe_backButton(engine);
+        } if (engine instanceof IOSEngine) {
             return engine
                 .rxe_containsText("search_title_cancel")
                 .firstElement()

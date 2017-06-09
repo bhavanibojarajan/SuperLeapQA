@@ -13,7 +13,7 @@ import org.testng.annotations.Factory;
 public final class UIPersonalInfoTest extends UIBaseTest implements UIPersonalInfoTestType {
     @Factory(
         dataProviderClass = UIBaseTestType.class,
-        dataProvider = "dataProvider"
+        dataProvider = "engineProvider"
     )
     public UIPersonalInfoTest(@NotNull Engine<?> engine) {
         super(engine);

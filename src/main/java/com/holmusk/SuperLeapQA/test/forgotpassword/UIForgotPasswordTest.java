@@ -13,7 +13,7 @@ import org.testng.annotations.Factory;
 public final class UIForgotPasswordTest extends UIBaseTest implements UIForgotPasswordTestType {
     @Factory(
         dataProviderClass = UIBaseTestType.class,
-        dataProvider = "dataProvider"
+        dataProvider = "engineProvider"
     )
     public UIForgotPasswordTest(@NotNull Engine<?> engine) {
         super(engine);

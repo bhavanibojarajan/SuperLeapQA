@@ -13,6 +13,7 @@ import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.javautilities.log.LogUtil;
+import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.element.date.AndroidDatePickerType;
@@ -26,6 +27,7 @@ import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.element.date.IOSDatePickerType;
 import org.swiften.xtestkit.mobile.Platform;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -261,6 +263,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see TextInput#MEAL_DESCRIPTION
+     * @see #randomMealTime()
      * @see #rxa_selectMealPhotos(Engine)
      * @see #rxa_selectRandomMood(Engine)
      * @see #rxa_randomInput(Engine, HMTextType)
@@ -273,14 +276,28 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
     @NotNull
     default Flowable<?> rxa_logNewMeal(@NotNull final Engine<?> ENGINE) {
         final LogMealActionType THIS = this;
+        final Date TIME = randomMealTime();
 
         return rxa_selectRandomMood(ENGINE)
             .flatMap(a -> THIS.rxa_selectMealPhotos(ENGINE))
             .flatMap(a -> THIS.rxa_openMealTimePicker(ENGINE))
-            .flatMap(a -> THIS.rxa_selectMealTime(ENGINE, new Date()))
+            .flatMap(a -> THIS.rxa_selectMealTime(ENGINE, TIME))
             .flatMap(a -> THIS.rxa_confirmMealTime(ENGINE))
             .flatMap(a -> THIS.rxa_randomInput(ENGINE, TextInput.MEAL_DESCRIPTION))
             .flatMap(a -> THIS.rxa_confirmMealDescription(ENGINE))
             .flatMap(a -> THIS.rxa_submitMeal(ENGINE));
+    }
+
+    /**
+     * Get a random {@link Date} to be used a meal time.
+     * @return {@link Date} instance.
+     * @see NumberUtil#randomBetween(int, int)
+     * @see Calendar#DAY_OF_MONTH
+     */
+    @NotNull
+    default Date randomMealTime() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -NumberUtil.randomBetween(1, 5));
+        return calendar.getTime();
     }
 }

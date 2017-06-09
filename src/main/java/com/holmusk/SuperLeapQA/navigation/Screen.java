@@ -42,7 +42,9 @@ public enum Screen implements ScreenInitializationType {
      * @see #PHOTO_PICKER
      * @see #USE_APP_NOW
      * @see #rxn_dashboardTutorialInitialized(Engine)
+     * @see #rxn_mealPageInitialized(Engine)
      * @see #rxn_photoPickerInitialized(Engine)
+     * @see #rxn_useAppNowInitialized(Engine)
      */
     @NotNull
     public NavigationSupplier rxa_onInitialized(@NotNull final Engine<?> ENGINE) {

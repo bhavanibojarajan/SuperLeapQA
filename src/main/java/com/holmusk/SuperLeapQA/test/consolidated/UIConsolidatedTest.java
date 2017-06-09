@@ -32,7 +32,7 @@ public final class UIConsolidatedTest extends UIBaseTest implements
 {
     @Factory(
         dataProviderClass = UIBaseTestType.class,
-        dataProvider = "dataProvider"
+        dataProvider = "engineProvider"
     )
     public UIConsolidatedTest(@NotNull Engine<?> engine) {
         super(engine);

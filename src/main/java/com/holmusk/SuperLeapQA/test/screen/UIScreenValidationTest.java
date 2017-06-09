@@ -15,7 +15,7 @@ public final class UIScreenValidationTest extends UIBaseTest implements
 {
     @Factory(
         dataProviderClass = UIBaseTestType.class,
-        dataProvider = "dataProvider"
+        dataProvider = "engineProvider"
     )
     public UIScreenValidationTest(@NotNull Engine<?> engine) {
         super(engine);

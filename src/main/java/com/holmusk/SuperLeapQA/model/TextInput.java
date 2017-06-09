@@ -127,6 +127,10 @@ public enum TextInput implements BaseErrorType, HMTextType {
                 ID = "ac_logfood_desc";
                 break;
 
+            case MEAL_COMMENT:
+                ID = "et_comment";
+                break;
+
             default:
                 LogUtil.println(this);
                 throw new RuntimeException(NOT_AVAILABLE);

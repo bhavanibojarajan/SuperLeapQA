@@ -4,7 +4,6 @@ import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
 
@@ -44,10 +43,9 @@ public interface WelcomeValidationType extends BaseValidationType {
      * Validate that all views are present in splash screen.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see ObjectUtil#nonNull(Object)
      * @see #rxe_welcomeLogin(Engine)
      * @see #rxe_welcomeRegister(Engine)
-     * @see ObjectUtil#nonNull(Object)
-     * @see BooleanUtil#toTrue(Object)
      */
     @SuppressWarnings("unchecked")
     default Flowable<?> rxv_welcomeScreen(@NotNull Engine<?> engine) {
