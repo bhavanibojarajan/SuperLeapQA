@@ -11,6 +11,7 @@ import com.holmusk.SuperLeapQA.test.guarantorinfo.GuarantorInfoActionType;
 import com.holmusk.SuperLeapQA.test.invalidage.InvalidAgeActionType;
 import com.holmusk.SuperLeapQA.test.login.LoginActionType;
 import com.holmusk.SuperLeapQA.test.logmeal.LogMealActionType;
+import com.holmusk.SuperLeapQA.test.logweight.LogWeightActionType;
 import com.holmusk.SuperLeapQA.test.mealpage.MealPageActionType;
 import com.holmusk.SuperLeapQA.test.personalinfo.PersonalInfoActionType;
 import com.holmusk.SuperLeapQA.test.photopicker.PhotoPickerActionType;
@@ -22,7 +23,6 @@ import com.holmusk.SuperLeapQA.test.welcome.WelcomeActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.xtestkit.base.Engine;
 
@@ -49,7 +49,8 @@ public interface ForwardNavigationType extends
     PhotoPickerActionType,
     LogMealActionType,
     MealPageActionType,
-    ChatActionType
+    ChatActionType,
+    LogWeightActionType
 {
     /**
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#SPLASH}
@@ -368,5 +369,18 @@ public interface ForwardNavigationType extends
     @NotNull
     default Flowable<?> rxn_mealPage_chat(@NotNull Engine<?> engine) {
         return rxa_openChatWindow(engine);
+    }
+
+    /**
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#ADD_CARD}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_WEIGHT}
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see CardType#WEIGHT
+     * @see #rxa_addCard(Engine, CardType)
+     */
+    @NotNull
+    default Flowable<?> rxn_addCard_logWeight(@NotNull Engine<?> engine) {
+        return rxa_addCard(engine, CardType.WEIGHT);
     }
 }

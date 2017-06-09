@@ -131,7 +131,7 @@ public interface LogMealValidationType extends BaseValidationType {
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<WebElement> rxe_locationSwitch(@NotNull Engine<?> engine) {
+    default Flowable<WebElement> rxe_mealLocSwitch(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             return engine
                 .rxe_ofClass(AndroidView.ViewType.SWITCH.className())
@@ -223,7 +223,7 @@ public interface LogMealValidationType extends BaseValidationType {
      * @see #rxe_editField(Engine, HMInputType)
      * @see #rxe_mealCancel(Engine)
      * @see #rxe_mealConfirm(Engine)
-     * @see #rxe_locationSwitch(Engine)
+     * @see #rxe_mealLocSwitch(Engine)
      * @see #rxe_photoPicker(Engine, int)
      * @see #rxe_mood(Engine, Mood)
      */
@@ -236,7 +236,7 @@ public interface LogMealValidationType extends BaseValidationType {
             .mergeArray(
                 rxe_mealCancel(ENGINE),
                 rxe_mealConfirm(ENGINE),
-                rxe_locationSwitch(ENGINE),
+                rxe_mealLocSwitch(ENGINE),
                 rxe_editField(ENGINE, TextInput.MEAL_DESCRIPTION),
 
                 Flowable.fromArray(Mood.values())

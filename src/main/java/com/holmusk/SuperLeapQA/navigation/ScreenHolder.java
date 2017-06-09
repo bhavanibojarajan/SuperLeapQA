@@ -250,6 +250,11 @@ public final class ScreenHolder implements
                         ScreenHolder.of(ENGINE, Screen.PHOTO_PICKER, MODE),
                         a -> THIS.rxn_addCard_photoPicker(ENGINE),
                         platform
+                    ),
+                    new Direction(
+                        ScreenHolder.of(ENGINE, Screen.LOG_WEIGHT, MODE),
+                        a -> THIS.rxn_addCard_logWeight(ENGINE),
+                        platform
                     )
                 );
 
@@ -281,6 +286,9 @@ public final class ScreenHolder implements
                 );
 
             case CHAT:
+                return CollectionUtil.asList();
+
+            case LOG_WEIGHT:
                 return CollectionUtil.asList();
 
             default:
@@ -418,6 +426,9 @@ public final class ScreenHolder implements
                         platform
                     )
                 );
+
+            case LOG_WEIGHT:
+                return CollectionUtil.asList();
 
             default:
                 LogUtil.println(this);

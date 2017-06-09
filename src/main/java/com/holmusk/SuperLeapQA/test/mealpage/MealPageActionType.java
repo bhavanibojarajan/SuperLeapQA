@@ -9,9 +9,9 @@ import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.param.UnidirectionParam;
+import org.swiften.xtestkit.base.param.DirectionParam;
 import org.swiften.xtestkitcomponents.common.DurationType;
-import org.swiften.xtestkitcomponents.direction.Unidirection;
+import org.swiften.xtestkitcomponents.direction.Direction;
 
 import java.util.concurrent.TimeUnit;
 
@@ -105,16 +105,16 @@ public interface MealPageActionType extends
      * @see Engine#rxe_window()
      * @see com.holmusk.SuperLeapQA.navigation.Screen#MEAL_PAGE
      * @see com.holmusk.SuperLeapQA.navigation.Screen#SEARCH
-     * @see Unidirection#UP_DOWN
-     * @see UnidirectionParam.Builder#withDirection(Unidirection)
-     * @see UnidirectionParam.Builder#withStartRatio(double)
-     * @see UnidirectionParam.Builder#withEndRatio(double)
+     * @see Direction#UP_DOWN
+     * @see DirectionParam.Builder#withDirection(Direction)
+     * @see DirectionParam.Builder#withStartRatio(double)
+     * @see DirectionParam.Builder#withEndRatio(double)
      * @see #rxe_mealImage(Engine)
      */
     @NotNull
     default Flowable<?> rxa_makeEditButtonVisible(@NotNull final Engine<?> ENGINE) {
-        final UnidirectionParam PARAM = UnidirectionParam.builder()
-            .withDirection(Unidirection.UP_DOWN)
+        final DirectionParam PARAM = DirectionParam.builder()
+            .withDirection(Direction.UP_DOWN)
             .withStartRatio(0.3d)
             .withEndRatio(0.7d)
             .build();

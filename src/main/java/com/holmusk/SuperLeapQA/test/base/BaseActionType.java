@@ -7,6 +7,7 @@ package com.holmusk.SuperLeapQA.test.base;
 import com.holmusk.HMUITestKit.model.HMChoiceType;
 import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.HMUITestKit.model.HMTextType;
+import com.holmusk.HMUITestKit.test.datetime.HMDateTimeActionType;
 import com.holmusk.SuperLeapQA.model.Height;
 import com.holmusk.SuperLeapQA.model.SLNumericChoiceType;
 import com.holmusk.SuperLeapQA.model.TextInput;
@@ -22,16 +23,15 @@ import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.choice.ChoiceParam;
 import org.swiften.xtestkit.base.element.choice.ChoiceType;
-import org.swiften.xtestkit.base.element.locator.type.BaseLocatorErrorType;
 import org.swiften.xtestkit.base.model.ChoiceInputType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.base.model.TextInputType;
-import org.swiften.xtestkit.base.param.UnidirectionParam;
+import org.swiften.xtestkit.base.param.DirectionParam;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkitcomponents.common.DurationType;
-import org.swiften.xtestkitcomponents.direction.Unidirection;
+import org.swiften.xtestkitcomponents.direction.Direction;
+import org.swiften.xtestkitcomponents.direction.DirectionContainerType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
@@ -47,7 +47,7 @@ import java.util.concurrent.TimeUnit;
  * Interfaces that extend this should declare methods that assist with app
  * navigation.
  */
-public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType {
+public interface BaseActionType extends BaseValidationType, HMDateTimeActionType {
     /**
      * Navigate backwards by clicking the back button.
      * @return {@link Flowable} instance.
@@ -340,19 +340,19 @@ public interface BaseActionType extends BaseValidationType, BaseLocatorErrorType
      * Scroll to the bottom of the screen.
      * @param E {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_swipeGeneric(WebElement, DurationType)
+     * @see Engine#rxa_swipeGeneric(WebElement, DirectionContainerType)
      * @see Engine#rxe_window()
-     * @see Unidirection#DOWN_UP
-     * @see UnidirectionParam.Builder#withDirection(Unidirection)
-     * @see UnidirectionParam.Builder#withDuration(int)
-     * @see UnidirectionParam.Builder#withEndRatio(double)
-     * @see UnidirectionParam.Builder#withStartRatio(double)
-     * @see UnidirectionParam.Builder#withTimes(int)
+     * @see Direction#DOWN_UP
+     * @see DirectionParam.Builder#withDirection(Direction)
+     * @see DirectionParam.Builder#withDuration(int)
+     * @see DirectionParam.Builder#withEndRatio(double)
+     * @see DirectionParam.Builder#withStartRatio(double)
+     * @see DirectionParam.Builder#withTimes(int)
      */
     @NotNull
     default Flowable<?> rxa_scrollToBottom(@NotNull final Engine<?> E) {
-        final UnidirectionParam PARAM = UnidirectionParam.builder()
-            .withDirection(Unidirection.DOWN_UP)
+        final DirectionParam PARAM = DirectionParam.builder()
+            .withDirection(Direction.DOWN_UP)
             .withStartRatio(0.1d)
             .withEndRatio(0.9d)
             .withTimes(1)

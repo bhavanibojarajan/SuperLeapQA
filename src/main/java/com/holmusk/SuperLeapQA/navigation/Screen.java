@@ -30,7 +30,8 @@ public enum Screen implements ScreenInitializationType {
     PHOTO_PICKER,
     LOG_MEAL,
     MEAL_PAGE,
-    CHAT;
+    CHAT,
+    LOG_WEIGHT;
 
     /**
      * Get the {@link Flowable} to perform work once the current {@link Screen}

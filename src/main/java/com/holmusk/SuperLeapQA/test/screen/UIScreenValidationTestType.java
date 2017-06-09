@@ -583,8 +583,8 @@ public interface UIScreenValidationTestType extends
     }
 
     /**
-     * Validate {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_MEAL}
-     * and confirm that all {@link org.openqa.selenium.WebElement} are present.
+     * Validate {@link Screen#LOG_MEAL} and confirm that all
+     * {@link org.openqa.selenium.WebElement} are present.
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#LOG_MEAL
@@ -604,6 +604,41 @@ public interface UIScreenValidationTestType extends
         // When
         rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_MEAL)
             .flatMap(a -> THIS.rxv_mealLog(ENGINE))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * Validate {@link Screen#LOG_WEIGHT} and confirms that all
+     * {@link WebElement} are present.
+     * @see Screen#SPLASH
+     * @see Screen#LOGIN
+     * @see Screen#LOG_WEIGHT
+     * @see #assertCorrectness(TestSubscriber)
+     * @see #engine()
+     * @see #rxa_navigate(UserMode, Screen...)
+     * @see #rxa_completeWeightValue(Engine)
+     * @see #rxv_logWeightValue(Engine)
+     * @see #rxv_logWeightEntry(Engine)
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    default void test_logWeight_isValidScreen() {
+        // Setup
+        final UIScreenValidationTestType THIS = this;
+        final Engine<?> ENGINE = engine();
+        UserMode mode = UserMode.PARENT;
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_WEIGHT)
+            .flatMap(a -> THIS.rxv_logWeightValue(ENGINE))
+            .flatMap(a -> THIS.rxa_completeWeightValue(ENGINE))
+            .flatMap(a -> THIS.rxv_logWeightEntry(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

@@ -168,4 +168,14 @@ public interface AppDelayType extends BaseErrorType {
     default long mealSearchProgressDelay(@NotNull Engine<?> engine) {
         return 2000;
     }
+
+    /**
+     * Delay between the time the user clicks submit weight and that when
+     * the next screen appears.
+     * @param engine {@link Engine} instance.
+     * @return {@link Long} value.
+     */
+    default long weightLogProgressDelay(@NotNull Engine<?> engine) {
+        return 500;
+    }
 }
