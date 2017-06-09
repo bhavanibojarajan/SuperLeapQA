@@ -13,8 +13,8 @@ import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.param.DirectionParam;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkitcomponents.common.DurationType;
 import org.swiften.xtestkitcomponents.direction.Direction;
+import org.swiften.xtestkitcomponents.direction.DirectionContainerType;
 
 import java.util.concurrent.TimeUnit;
 
@@ -142,7 +142,7 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      * @param mode {@link DashboardMode} instance.
      * @return {@link Flowable} instance.
      * @see DashboardMode#swipeDirection()
-     * @see Engine#rxa_swipeGeneric(WebElement, DurationType)
+     * @see Engine#rxa_swipeGeneric(WebElement, DirectionContainerType)
      * @see DirectionParam.Builder#withDirection(Direction)
      * @see DirectionParam.Builder#withDuration(int)
      * @see DirectionParam.Builder#withEndRatio(double)

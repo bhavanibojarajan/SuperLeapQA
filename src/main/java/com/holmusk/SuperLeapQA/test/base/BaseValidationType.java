@@ -70,7 +70,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
     }
 
     /**
-     * Get the common probress bar.
+     * Get the common progress bar.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsID(String...)

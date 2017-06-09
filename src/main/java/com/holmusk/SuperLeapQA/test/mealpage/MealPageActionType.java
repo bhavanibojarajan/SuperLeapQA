@@ -10,8 +10,8 @@ import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.param.DirectionParam;
-import org.swiften.xtestkitcomponents.common.DurationType;
 import org.swiften.xtestkitcomponents.direction.Direction;
+import org.swiften.xtestkitcomponents.direction.DirectionContainerType;
 
 import java.util.concurrent.TimeUnit;
 
@@ -101,7 +101,7 @@ public interface MealPageActionType extends
      * from {@link #rxe_editMeal(Engine)} can be clicked.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_swipeGeneric(WebElement, DurationType)
+     * @see Engine#rxa_swipeGeneric(WebElement, DirectionContainerType)
      * @see Engine#rxe_window()
      * @see com.holmusk.SuperLeapQA.navigation.Screen#MEAL_PAGE
      * @see com.holmusk.SuperLeapQA.navigation.Screen#SEARCH
