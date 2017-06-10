@@ -5,6 +5,7 @@ import com.holmusk.SuperLeapQA.bmi.BMIParam;
 import com.holmusk.SuperLeapQA.bmi.BMIUtil;
 import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.SuperLeapQA.navigation.Screen;
+import com.holmusk.SuperLeapQA.navigation.ScreenHolder;
 import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +22,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
@@ -34,7 +36,13 @@ public final class GeneralTest {
     public Iterator<Object[]> userModeProvider() {
         List<Object[]> data = new LinkedList<>();
 
-        for (UserMode mode : UserMode.values()) {
+        UserMode[] modes = new UserMode[] {
+            UserMode.PARENT,
+            UserMode.TEEN_A18,
+            UserMode.TEEN_U18
+        };
+
+        for (UserMode mode : modes) {
             data.add(new Object[] { mode });
         }
 
@@ -126,24 +134,17 @@ public final class GeneralTest {
         };
 
         manager.registerScreenHolders();
+        Screen start = Screen.SPLASH;
+        Screen[] screens = Screen.values();
 
         // When & Then
-
-        /* DoB tests */
-        LogUtil.println(manager.multiNodes(mode, Screen.SPLASH, Screen.DOB));
-        LogUtil.println(manager.multiNodes(mode, Screen.DOB, Screen.INVALID_AGE));
-        LogUtil.println(manager.multiNodes(mode, Screen.INVALID_AGE, Screen.DOB));
-
-        /* Personal info tests */
-        LogUtil.println(manager.multiNodes(mode, Screen.SPLASH, Screen.PERSONAL_INFO));
-        LogUtil.println(manager.multiNodes(mode, Screen.SPLASH, Screen.GUARANTOR_INFO));
-
-        /* Dashboard tests */
-        LogUtil.println(manager.multiNodes(mode, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD));
-
-        /* Log meal tests */
-        LogUtil.println(manager.multiNodes(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_MEAL));
-        LogUtil.println(manager.multiNodes(mode, Screen.SPLASH, Screen.LOGIN, Screen.MEAL_PAGE, Screen.CHAT));
+        for (Screen screen : screens) {
+            List<ScreenManagerType.Node> nodes = manager.multiNodes(mode, start, screen);
+            ScreenManagerType.Node first = nodes.get(0);
+            ScreenManagerType.Node last = nodes.get(nodes.size() - 1);
+            assertEquals(((ScreenHolder)first.S1).SCREEN, start);
+            assertEquals(((ScreenHolder)last.S2).SCREEN, screen);
+        }
     }
 
     @Test

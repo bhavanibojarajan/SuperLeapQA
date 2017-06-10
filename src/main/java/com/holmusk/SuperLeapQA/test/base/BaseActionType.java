@@ -377,7 +377,9 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#coordinate(WebElement, RLPositionType, RLPositionType)
+     * @see Engine#rxa_click(WebElement)
      * @see Engine#rxa_tap(Point)
+     * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_window()
      * @see Point#moveBy(int, int)
      * @see RLPosition#MAX
@@ -388,9 +390,17 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
     default Flowable<?> rxa_closeDrawer(@NotNull final Engine<?> ENGINE) {
         if (ENGINE instanceof AndroidEngine) {
             return ENGINE.rxe_window()
+                .firstElement()
+                .toFlowable()
                 .map(a -> ENGINE.coordinate(a, RLPosition.MAX, RLPosition.MID))
-                .map(a -> a.moveBy(-20, 0))
+                .map(a -> a.moveBy(-20, -20))
                 .flatMap(ENGINE::rxa_tap);
+        } else if (ENGINE instanceof IOSEngine) {
+            return ENGINE
+                .rxe_containsID("reward close")
+                .firstElement()
+                .toFlowable()
+                .flatMap(ENGINE::rxa_click);
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

@@ -53,13 +53,13 @@ public final class Config {
 //            .withTestMode(TestMode.SIMULATED)
 //            .build());
 
-        ENGINES.add(HMAndroidEngine.builder()
-            .withSDK(AndroidVersion.SDK_22)
-            .withAppActivity(ANDROID_APP_ACTIVITY)
-            .withAppPackage(ANDROID_APP_PACKAGE)
-            .withDeviceName("Nexus_4_API_22")
-            .withTestMode(TestMode.SIMULATED)
-            .build());
+//        ENGINES.add(HMAndroidEngine.builder()
+//            .withSDK(AndroidVersion.SDK_22)
+//            .withAppActivity(ANDROID_APP_ACTIVITY)
+//            .withAppPackage(ANDROID_APP_PACKAGE)
+//            .withDeviceName("Nexus_4_API_22")
+//            .withTestMode(TestMode.SIMULATED)
+//            .build());
 
         ENGINES.add(HMIOSEngine.builder()
             .withDeviceUID("771F28EC-C5FC-45B8-8C2A-AF346B219936")

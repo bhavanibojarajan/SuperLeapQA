@@ -151,7 +151,7 @@ public interface UIScreenValidationTestType extends
      */
     @Test
     @SuppressWarnings("unchecked")
-    default void test_registerScreen_isValidScreen() {
+    default void test_register_isValidScreen() {
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
@@ -234,6 +234,7 @@ public interface UIScreenValidationTestType extends
      * picker.
      * @param MODE {@link UserMode} instance.
      * @see NumberUtil#randomBetween(int, int)
+     * @see UserMode#maxCategoryValidAge()
      * @see Calendar#DAY_OF_MONTH
      * @see Calendar#MONTH
      * @see Calendar#YEAR
@@ -262,7 +263,13 @@ public interface UIScreenValidationTestType extends
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, NumberUtil.randomBetween(1, 28));
         calendar.set(Calendar.MONTH, NumberUtil.randomBetween(0, 11));
-        calendar.set(Calendar.YEAR, NumberUtil.randomBetween(1970, 2000));
+
+        /* If we select a year that is too far away from present, the year
+         * picker will snap back to the earliest applicable year */
+        int cYear = calendar.get(Calendar.YEAR);
+        int mYear = cYear - MODE.maxCategoryValidAge();
+        calendar.set(Calendar.YEAR, NumberUtil.randomBetween(mYear, cYear));
+
         final Date DATE = calendar.getTime();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
@@ -561,7 +568,6 @@ public interface UIScreenValidationTestType extends
      * @see #rxa_dashboardMode(Engine, DashboardMode)
      * @see #rxv_dashboardBMI(Engine)
      * @see #rxv_dashboardActivity(Engine, UserMode)
-     * @see #rxv_cardListView(Engine)
      */
     @SuppressWarnings("unchecked")
     @Test(
@@ -580,8 +586,6 @@ public interface UIScreenValidationTestType extends
             .flatMap(a -> THIS.rxv_dashboardBMI(ENGINE))
             .flatMap(a -> THIS.rxa_dashboardMode(ENGINE, DashboardMode.ACTIVITY))
             .flatMap(a -> THIS.rxv_dashboardActivity(ENGINE, MODE))
-            .flatMap(a -> THIS.rxa_scrollToBottom(ENGINE))
-            .flatMap(a -> THIS.rxv_cardListView(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

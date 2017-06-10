@@ -35,6 +35,7 @@ public interface ScreenInitializationType extends
             return rxa_dismissTrackerPopup(ENGINE);
         } else if (ENGINE instanceof IOSEngine) {
             final ScreenInitializationType THIS = this;
+
             return ENGINE.rxa_acceptAlert()
                 .flatMap(a -> THIS.rxa_dismissTrackerPopup(ENGINE));
         } else {
@@ -49,11 +50,11 @@ public interface ScreenInitializationType extends
      * the dialog here.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_acceptAlert()
+     * @see #rxn_useAppNowInitialized(Engine)
      */
     @NotNull
     default Flowable<?> rxn_dashboardTutorialInitialized(@NotNull Engine<?> engine) {
-        return engine.rxa_acceptAlert();
+        return rxn_useAppNowInitialized(engine);
     }
 
     /**

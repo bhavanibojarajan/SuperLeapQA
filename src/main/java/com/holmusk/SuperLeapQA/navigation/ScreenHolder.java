@@ -18,14 +18,15 @@ import java.util.List;
 /**
  * Created by haipham on 5/21/17.
  */
+@SuppressWarnings("WeakerAccess")
 public final class ScreenHolder implements
     ScreenType,
     ForwardNavigationType,
     BackwardNavigationType
 {
-    @NotNull private final Screen SCREEN;
-    @NotNull private final UserMode MODE;
-    @NotNull private final NavigationSupplier INITIALIZATION;
+    @NotNull public final Screen SCREEN;
+    @NotNull public final UserMode MODE;
+    @NotNull public final NavigationSupplier INITIALIZATION;
 
     @NotNull
     public static ScreenHolder of(@NotNull Engine<?> engine,
