@@ -25,6 +25,7 @@ import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -698,12 +699,16 @@ public interface UIScreenValidationTestType extends
     /**
      * Validate {@link Screen#SETTINGS} and confirm that all {@link WebElement}
      * are present.
+     * @see ObjectUtil#nonNull(Object)
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#SETTINGS
+     * @see Setting#UNITS
      * @see #assertCorrectness(TestSubscriber)
      * @see #defaultUserMode()
      * @see #engine()
+     * @see #rxa_toggleSetting(Engine, Setting)
+     * @see #rxa_changeUnitSystem(Engine, UnitSystem)
      * @see #rxv_settings(Engine)
      */
     @Test
@@ -712,12 +717,18 @@ public interface UIScreenValidationTestType extends
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
+        final List<UnitSystem> UNITS = Arrays.asList(UnitSystem.values());
         UserMode mode = defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.SETTINGS)
             .flatMap(a -> THIS.rxv_settings(ENGINE))
+            .flatMap(a -> Flowable.concatArray(
+                rxa_toggleSetting(ENGINE, Setting.UNITS)
+                    .concatMapIterable(b -> UNITS)
+                    .flatMap(b -> THIS.rxa_changeUnitSystem(ENGINE, b))
+            ).all(ObjectUtil::nonNull).toFlowable())
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

@@ -168,4 +168,15 @@ public interface AppDelayType extends BaseErrorType {
     default long weightLogProgressDelay(@NotNull Engine<?> engine) {
         return 500;
     }
+
+    /**
+     * Delay between the time the user changes
+     * {@link com.holmusk.HMUITestKit.model.UnitSystem} and the time the
+     * effect is in place.
+     * @param engine {@link Engine} instance.
+     * @return {@link Long} value.
+     */
+    default long unitSystemChangeDelay(@NotNull Engine<?> engine) {
+        return 1000;
+    }
 }

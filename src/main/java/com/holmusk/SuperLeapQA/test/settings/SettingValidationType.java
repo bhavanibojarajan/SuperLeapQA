@@ -1,12 +1,15 @@
 package com.holmusk.SuperLeapQA.test.settings;
 
+import com.holmusk.HMUITestKit.model.UnitSystem;
 import com.holmusk.SuperLeapQA.model.Setting;
 import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
@@ -54,5 +57,36 @@ public interface SettingValidationType extends BaseValidationType {
             )
             .all(ObjectUtil::nonNull)
             .toFlowable();
+    }
+
+    /**
+     * Get {@link Integer} index for {@link Setting#UNITS}.
+     * @param engine {@link Engine} instance.
+     * @param unit {@link UnitSystem} instance.
+     * @return {@link Integer} value.
+     * @see UnitSystem#IMPERIAL
+     * @see UnitSystem#METRIC
+     * @see #NOT_AVAILABLE
+     */
+    default int unitSystemSettingIndex(@NotNull Engine<?> engine,
+                                       @NotNull UnitSystem unit) {
+        switch (unit) {
+            case IMPERIAL:
+                if (engine instanceof AndroidEngine) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+
+            case METRIC:
+                if (engine instanceof IOSEngine) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 }
