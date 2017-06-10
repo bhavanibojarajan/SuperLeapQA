@@ -69,13 +69,13 @@ public interface LogMealValidationType extends BaseValidationType {
      * @param mood {@link Mood} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsText(String...)
-     * @see Mood#moodTitle()
+     * @see Mood#title()
      */
     @NotNull
     default Flowable<WebElement> rxe_mood(@NotNull Engine<?> engine,
                                           @NotNull Mood mood) {
         return engine
-            .rxe_containsText(mood.moodTitle())
+            .rxe_containsText(mood.title())
             .firstElement()
             .toFlowable();
     }

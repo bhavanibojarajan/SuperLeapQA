@@ -16,9 +16,15 @@ public enum Mood implements BaseErrorType {
     /**
      * The title of the current {@link Mood}.
      * @return {@link String} value.
+     * @see #EXCITED
+     * @see #RELAXED
+     * @see #SICK
+     * @see #STRESSED
+     * @see #TIRED
+     * @see #NOT_AVAILABLE
      */
     @NotNull
-    public String moodTitle() {
+    public String title() {
         switch (this) {
             case EXCITED:
                 return "mood_title_excited";

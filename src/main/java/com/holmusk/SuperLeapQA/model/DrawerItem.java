@@ -1,11 +1,13 @@
 package com.holmusk.SuperLeapQA.model;
 
+import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.xtestkit.android.AndroidView;
+import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.property.base.AttributeType;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
@@ -15,32 +17,33 @@ import org.swiften.xtestkitcomponents.xpath.XPath;
 /**
  * Created by haipham on 6/10/17.
  */
-public enum DrawerItem implements AttributeType<String>, BaseErrorType {
+public enum DrawerItem implements BaseErrorType {
     SETTINGS,
-    DIETICIAN_PROFILES,
+    DIETITIAN_PROFILES,
     ABOUT,
     FEEDBACK,
     SIGN_OUT;
 
     /**
-     * Override this method to provide default implementation.
+     * Get {@link String} value as displayed by the
+     * {@link org.openqa.selenium.WebElement} corresponding to the current
+     * {@link DrawerItem}.
      * @return {@link String} value.
-     * @see AttributeType#value()
      * @see #ABOUT
-     * @see #DIETICIAN_PROFILES
+     * @see #DIETITIAN_PROFILES
      * @see #FEEDBACK
      * @see #SETTINGS
      * @see #SIGN_OUT
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    public String value() {
+    public String title() {
         switch (this) {
             case SETTINGS:
                 return "drawer_title_settings";
 
-            case DIETICIAN_PROFILES:
-                return "drawer_title_dieticianProfile";
+            case DIETITIAN_PROFILES:
+                return "drawer_title_dietitianProfile";
 
             case ABOUT:
                 return "drawer_title_about";
@@ -67,16 +70,24 @@ public enum DrawerItem implements AttributeType<String>, BaseErrorType {
      * @see Attributes#ofClass(String)
      * @see BaseViewType#className()
      * @see CompoundAttribute.Builder#addAttribute(Attribute)
+     * @see LocalizerType#localize(String)
      * @see AndroidView.ViewType#CHECKED_TEXT_VIEW
+     * @see Config#LOCALIZER
+     * @see IOSView.ViewType#UI_STATIC_TEXT
      * @see Platform#ANDROID
+     * @see #title()
      * @see #NOT_AVAILABLE
      */
     @NotNull
     public XPath drawerItemXP(@NotNull PlatformType platform) {
+        LocalizerType localizer = Config.LOCALIZER;
         String clsName;
+        String localized = localizer.localize(title());
 
         if (platform.equals(Platform.ANDROID)) {
             clsName = AndroidView.ViewType.CHECKED_TEXT_VIEW.className();
+        } else if (platform.equals(Platform.IOS)) {
+            clsName = IOSView.ViewType.UI_STATIC_TEXT.className();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -85,7 +96,7 @@ public enum DrawerItem implements AttributeType<String>, BaseErrorType {
 
         CompoundAttribute cAttr = CompoundAttribute.builder()
             .addAttribute(attrs.ofClass(clsName))
-            .addAttribute(attrs.containsText(value()))
+            .addAttribute(attrs.containsText(localized))
             .build();
 
         return XPath.builder().addAttribute(cAttr).build();

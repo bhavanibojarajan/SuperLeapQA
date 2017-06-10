@@ -14,10 +14,13 @@ public enum PhotoPickerMode implements BaseErrorType {
     /**
      * Get the title {@link String} to locate the picker mode switcher.
      * @return {@link String} value.
+     * @see #CAMERA
+     * @see #LIBRARY
+     * @see #RECENT
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    public String pickerTitle() {
+    public String title() {
         switch (this) {
             case CAMERA:
                 return "photo_picker_title_camera";

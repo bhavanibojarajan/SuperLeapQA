@@ -28,6 +28,8 @@ import org.swiften.xtestkit.base.param.DirectionParam;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.coordinate.RLPosition;
+import org.swiften.xtestkitcomponents.coordinate.RLPositionType;
 import org.swiften.xtestkitcomponents.direction.Direction;
 import org.swiften.xtestkitcomponents.direction.DirectionContainerType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
@@ -50,15 +52,14 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * Navigate backwards by clicking the back button.
      * @return {@link Flowable} instance.
      * @param ENGINE {@link Engine} instance.
-     * @see BooleanUtil#toTrue(Object)
      * @see Engine#rxa_click(WebElement)
      * @see #generalDelay(Engine)
      * @see #rxe_backButton(Engine)
      */
     @NotNull
-    default Flowable<Boolean> rxa_clickBackButton(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_clickBackButton(@NotNull final Engine<?> ENGINE) {
         return rxe_backButton(ENGINE)
-            .flatMap(ENGINE::rxa_click).map(BooleanUtil::toTrue)
+            .flatMap(ENGINE::rxa_click)
             .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
@@ -70,7 +71,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @see #rxe_progressBar(Engine)
      */
     @NotNull
-    default Flowable<Boolean> rxa_watchProgressBar(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_watchProgressBar(@NotNull final Engine<?> ENGINE) {
         return rxe_progressBar(ENGINE)
             .flatMap(ENGINE::rxa_watchUntilHidden)
             .onErrorReturnItem(true);
@@ -173,8 +174,8 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @see Engine#rxa_click(WebElement)
      */
     @NotNull
-    default Flowable<?> rxa_clickInput(@NotNull final Engine<?> ENGINE,
-                                       @NotNull HMInputType input) {
+    default Flowable<WebElement> rxa_clickInput(@NotNull final Engine<?> ENGINE,
+                                                @NotNull HMInputType input) {
         return rxe_editField(ENGINE, input).flatMap(ENGINE::rxa_click);
     }
 
@@ -375,16 +376,20 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * Close the drawer.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#topRightCoordinate(WebElement)
+     * @see Engine#coordinate(WebElement, RLPositionType, RLPositionType)
      * @see Engine#rxa_tap(Point)
      * @see Engine#rxe_window()
+     * @see Point#moveBy(int, int)
+     * @see RLPosition#MAX
+     * @see RLPosition#MID
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_closeDrawer(@NotNull final Engine<?> ENGINE) {
         if (ENGINE instanceof AndroidEngine) {
             return ENGINE.rxe_window()
-                .map(ENGINE::topRightCoordinate)
+                .map(a -> ENGINE.coordinate(a, RLPosition.MAX, RLPosition.MID))
+                .map(a -> a.moveBy(-20, 0))
                 .flatMap(ENGINE::rxa_tap);
         } else {
             throw new RuntimeException(NOT_AVAILABLE);

@@ -75,7 +75,7 @@ public final class ScreenHolder implements
         if (platform.equals(Platform.IOS)) {
             return 1500;
         } else {
-            return 0;
+            return 1000;
         }
     }
 
@@ -238,6 +238,11 @@ public final class ScreenHolder implements
                         ScreenHolder.of(ENGINE, Screen.SEARCH, MODE),
                         a -> THIS.rxn_dashboard_search(ENGINE),
                         platform
+                    ),
+                    new Direction(
+                        ScreenHolder.of(ENGINE, Screen.SETTINGS, MODE),
+                        a -> THIS.rxn_dashboard_settings(ENGINE),
+                        platform
                     )
                 );
 
@@ -289,6 +294,9 @@ public final class ScreenHolder implements
                 return CollectionUtil.asList();
 
             case LOG_WEIGHT:
+                return CollectionUtil.asList();
+
+            case SETTINGS:
                 return CollectionUtil.asList();
 
             default:
@@ -428,6 +436,9 @@ public final class ScreenHolder implements
                 );
 
             case LOG_WEIGHT:
+                return CollectionUtil.asList();
+
+            case SETTINGS:
                 return CollectionUtil.asList();
 
             default:

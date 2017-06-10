@@ -1,6 +1,7 @@
 package com.holmusk.SuperLeapQA.navigation.type;
 
 import com.holmusk.SuperLeapQA.model.CardType;
+import com.holmusk.SuperLeapQA.model.DrawerItem;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.test.address.AddressActionType;
 import com.holmusk.SuperLeapQA.test.chat.ChatActionType;
@@ -17,6 +18,7 @@ import com.holmusk.SuperLeapQA.test.personalinfo.PersonalInfoActionType;
 import com.holmusk.SuperLeapQA.test.photopicker.PhotoPickerActionType;
 import com.holmusk.SuperLeapQA.test.registermode.RegisterModeActionType;
 import com.holmusk.SuperLeapQA.test.search.SearchActionType;
+import com.holmusk.SuperLeapQA.test.settings.SettingActionType;
 import com.holmusk.SuperLeapQA.test.sha.SHAActionType;
 import com.holmusk.SuperLeapQA.test.validage.ValidAgeActionType;
 import com.holmusk.SuperLeapQA.test.welcome.WelcomeActionType;
@@ -50,7 +52,8 @@ public interface ForwardNavigationType extends
     LogMealActionType,
     MealPageActionType,
     ChatActionType,
-    LogWeightActionType
+    LogWeightActionType,
+    SettingActionType
 {
     /**
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#SPLASH}
@@ -382,5 +385,18 @@ public interface ForwardNavigationType extends
     @NotNull
     default Flowable<?> rxn_addCard_logWeight(@NotNull Engine<?> engine) {
         return rxa_addCard(engine, CardType.WEIGHT);
+    }
+
+    /**
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#SETTINGS}
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see DrawerItem#SETTINGS
+     * @see #rxa_openDrawerAndSelect(Engine, DrawerItem)
+     */
+    @NotNull
+    default Flowable<?> rxn_dashboard_settings(@NotNull Engine<?> engine) {
+        return rxa_openDrawerAndSelect(engine, DrawerItem.SETTINGS);
     }
 }

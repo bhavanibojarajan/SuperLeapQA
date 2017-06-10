@@ -9,6 +9,7 @@ import com.holmusk.SuperLeapQA.model.DrawerItem;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
@@ -65,7 +66,10 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
                 .firstElement()
                 .toFlowable();
         } else if (engine instanceof IOSEngine) {
-            return engine.rxe_containsID("ob back").firstElement().toFlowable();
+            return engine
+                .rxe_containsID("ob back", "button back")
+                .firstElement()
+                .toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -121,6 +125,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @see Attribute.Builder#addAttribute(String)
      * @see Attribute.Builder#withValue(Object)
      * @see Engine#rxe_withAttributes(Attribute[])
+     * @see Engine#rxe_containsID(String...)
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -132,6 +137,11 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
                 .build();
 
             return engine.rxe_withAttributes(attr).firstElement().toFlowable();
+        } else if (engine instanceof IOSEngine) {
+            return engine
+                .rxe_containsID("button hamburger menu")
+                .firstElement()
+                .toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -155,22 +165,34 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
     }
 
     /**
-     * Check if the drawer is open.
-     * @param E {@link Engine} instance.
+     * Validate the drawer in the
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}.
+     * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see DrawerItem#values()
      * @see ObjectUtil#nonNull(Object)
      * @see #rxe_drawerItem(Engine, DrawerItem)
      */
     @NotNull
-    default Flowable<Boolean> rxv_isDrawerOpen(@NotNull final Engine<?> E) {
+    default Flowable<?> rxv_drawer(@NotNull final Engine<?> ENGINE) {
         final BaseValidationType THIS = this;
 
         return Flowable
             .fromArray(DrawerItem.values())
-            .flatMap(a -> THIS.rxe_drawerItem(E, a))
+            .flatMap(a -> THIS.rxe_drawerItem(ENGINE, a))
             .all(ObjectUtil::nonNull)
-            .toFlowable()
-            .onErrorReturnItem(false);
+            .toFlowable();
+    }
+
+    /**
+     * Check if the drawer is open.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see BooleanUtil#isTrue(boolean)
+     * @see #rxv_drawer(Engine)
+     */
+    @NotNull
+    default Flowable<Boolean> rxv_isDrawerOpen(@NotNull Engine<?> engine) {
+        return rxv_drawer(engine).map(BooleanUtil::isTrue).onErrorReturnItem(false);
     }
 }

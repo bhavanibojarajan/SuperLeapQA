@@ -148,7 +148,6 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      * @see DirectionParam.Builder#withEndRatio(double)
      * @see DirectionParam.Builder#withStartRatio(double)
      * @see DirectionParam.Builder#withTimes(int)
-     * @see #dashboardModeSwitcherDuration(Engine)
      * @see #rxe_dashboardModeSwitcher(Engine)
      */
     @NotNull
@@ -156,7 +155,6 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
                                           @NotNull DashboardMode mode) {
         final DirectionParam PARAM = DirectionParam.builder()
             .withDirection(mode.swipeDirection())
-            .withDuration(dashboardModeSwitcherDuration(ENGINE))
             .withStartRatio(0.1d)
             .withEndRatio(0.9d)
             .withTimes(1)

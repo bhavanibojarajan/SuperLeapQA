@@ -14,8 +14,10 @@ import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zip;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
@@ -588,6 +590,45 @@ public interface UIScreenValidationTestType extends
     }
 
     /**
+     * This test validates the drawer found in {@link Screen#DASHBOARD}.
+     * @see BooleanUtil#isFalse(boolean)
+     * @see Engine#rxv_errorWithPageSource()
+     * @see Screen#SPLASH
+     * @see Screen#LOGIN
+     * @see Screen#DASHBOARD
+     * @see #assertCorrectness(TestSubscriber)
+     * @see #defaultUserMode()
+     * @see #engine()
+     * @see #rxa_toggleDrawer(Engine, boolean)
+     * @see #rxv_drawer(Engine)
+     * @see #rxv_isDrawerOpen(Engine)
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    default void test_dashboardDrawer_isValidScreen() {
+        // Setup
+        final UIScreenValidationTestType THIS = this;
+        final Engine<?> ENGINE = engine();
+        UserMode mode = defaultUserMode();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD)
+            .flatMap(a -> THIS.rxa_toggleDrawer(ENGINE, true))
+            .flatMap(a -> THIS.rxv_drawer(ENGINE))
+            .flatMap(a -> THIS.rxa_toggleDrawer(ENGINE, false))
+            .flatMap(a -> THIS.rxv_isDrawerOpen(ENGINE))
+            .filter(BooleanUtil::isFalse)
+            .switchIfEmpty(ENGINE.rxv_errorWithPageSource())
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
      * Validate {@link Screen#LOG_MEAL} and confirm that all
      * {@link org.openqa.selenium.WebElement} are present.
      * @see Screen#SPLASH
@@ -646,6 +687,37 @@ public interface UIScreenValidationTestType extends
             .flatMap(a -> THIS.rxv_logWeightValue(ENGINE))
             .flatMap(a -> THIS.rxa_completeWeightValue(ENGINE))
             .flatMap(a -> THIS.rxv_logWeightEntry(ENGINE))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * Validate {@link Screen#SETTINGS} and confirm that all {@link WebElement}
+     * are present.
+     * @see Screen#SPLASH
+     * @see Screen#LOGIN
+     * @see Screen#SETTINGS
+     * @see #assertCorrectness(TestSubscriber)
+     * @see #defaultUserMode()
+     * @see #engine()
+     * @see #rxv_settings(Engine)
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    default void test_settings_isValidScreen() {
+        // Setup
+        final UIScreenValidationTestType THIS = this;
+        final Engine<?> ENGINE = engine();
+        UserMode mode = defaultUserMode();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.SETTINGS)
+            .flatMap(a -> THIS.rxv_settings(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

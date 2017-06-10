@@ -44,6 +44,8 @@ public enum TextInput implements BaseErrorType, HMTextType {
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
      * @see InputType#inputViewXP(PlatformType)
+     * @see Platform#ANDROID
+     * @see Platform#IOS
      * @see #androidInputViewXP()
      * @see #iOSInputViewXP()
      * @see #NOT_AVAILABLE

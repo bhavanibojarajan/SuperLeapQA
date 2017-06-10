@@ -19,24 +19,22 @@ import org.swiften.xtestkitcomponents.xpath.XPath;
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Gender implements
-    AttributeType<String>,
-    BaseErrorType,
-    HMInputType,
-    HMTextChoiceType.Item
-{
+public enum Gender implements BaseErrorType, HMInputType, HMTextChoiceType.Item {
     MALE,
     FEMALE;
 
     /**
-     * Override this method to provide default implementation.
+     * Get {@link String} value as displayed by the
+     * {@link org.openqa.selenium.WebElement} corresponding to the current
+     * {@link Gender}.
      * @return {@link String} value.
      * @see AttributeType#value()
+     * @see #FEMALE
+     * @see #MALE
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    @Override
-    public String value() {
+    public String title() {
         switch (this) {
             case MALE:
                 return "user_title_gender_male";
@@ -55,18 +53,20 @@ public enum Gender implements
      * @see Config#LOCALIZER
      * @see HMTextChoiceType.Item#stringValue()
      * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
-     * @see #value()
+     * @see #title()
      */
     @NotNull
     @Override
     public String stringValue() {
-        return Config.LOCALIZER.localize(value());
+        return Config.LOCALIZER.localize(title());
     }
 
     /**
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
      * @see InputType#inputViewXP(PlatformType)
+     * @see Platform#ANDROID
+     * @see Platform#IOS
      * @see #androidInputViewXP()
      * @see #iOSInputViewXP()
      * @see #NOT_AVAILABLE
@@ -93,6 +93,8 @@ public enum Gender implements
      * @see Attributes#of(PlatformType)
      * @see Platform#ANDROID
      * @see XPath.Builder#addAttribute(Attribute)
+     * @see #FEMALE
+     * @see #MALE
      * @see #NOT_AVAILABLE
      */
     @NotNull

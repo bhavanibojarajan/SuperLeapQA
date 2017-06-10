@@ -31,7 +31,8 @@ public enum Screen implements ScreenInitializationType {
     LOG_MEAL,
     MEAL_PAGE,
     CHAT,
-    LOG_WEIGHT;
+    LOG_WEIGHT,
+    SETTINGS;
 
     /**
      * Get the {@link Flowable} to perform work once the current {@link Screen}

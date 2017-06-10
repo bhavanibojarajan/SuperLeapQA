@@ -8,7 +8,6 @@ import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.property.base.AttributeType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
@@ -17,25 +16,23 @@ import org.swiften.xtestkitcomponents.xpath.XPath;
 /**
  * Created by haipham on 5/12/17.
  */
-public enum CoachPref implements
-    AttributeType<String>,
-    BaseErrorType,
-    HMInputType,
-    HMTextChoiceType.Item
-{
+public enum CoachPref implements BaseErrorType, HMInputType, HMTextChoiceType.Item {
     MALE,
     FEMALE,
     NO_PREFERENCE;
 
     /**
-     * Override this method to provide default implementation.
+     * Get the {@link String} value displayed by the
+     * {@link org.openqa.selenium.WebElement} corresponding to the current
+     * {@link CoachPref}.
      * @return {@link String} value.
-     * @see AttributeType#value()
+     * @see #FEMALE
+     * @see #MALE
+     * @see #NO_PREFERENCE
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    @Override
-    public String value() {
+    public String title() {
         switch (this) {
             case MALE:
                 return "user_title_coachPref_male";
@@ -57,12 +54,12 @@ public enum CoachPref implements
      * @see Config#LOCALIZER
      * @see HMTextChoiceType.Item#stringValue()
      * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
-     * @see #value()
+     * @see #title()
      */
     @NotNull
     @Override
     public String stringValue() {
-        return Config.LOCALIZER.localize(value());
+        return Config.LOCALIZER.localize(title());
     }
 
     /**
@@ -70,6 +67,9 @@ public enum CoachPref implements
      * @return {@link XPath} value.
      * @see InputType#inputViewXP(PlatformType)
      * @see #androidInputViewXP()
+     * @see #iOSInputViewXP()
+     * @see Platform#ANDROID
+     * @see Platform#IOS
      * @see #NOT_AVAILABLE
      */
     @NotNull

@@ -33,7 +33,7 @@ public interface AppDelayType extends BaseErrorType {
         if (engine instanceof AndroidEngine) {
             return 10000;
         } else {
-            return 5000;
+            return 3000;
         }
     }
 
@@ -48,7 +48,7 @@ public interface AppDelayType extends BaseErrorType {
         if (engine instanceof AndroidEngine) {
             return 10000;
         } else {
-            return 5000;
+            return 3000;
         }
     }
 
@@ -118,16 +118,6 @@ public interface AppDelayType extends BaseErrorType {
      */
     default long webViewDelay(@NotNull Engine<?> engine) {
         return 3000;
-    }
-
-    /**
-     * Duration for {@link com.holmusk.SuperLeapQA.model.DashboardMode}
-     * switcher swipe.
-     * @param engine {@link Engine} instance.
-     * @return {@link Integer} value.
-     */
-    default int dashboardModeSwitcherDuration(@NotNull Engine<?> engine) {
-        return 0;
     }
 
     /**

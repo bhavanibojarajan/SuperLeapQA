@@ -147,10 +147,14 @@ public final class GeneralTest {
     }
 
     @Test
-    public void test_xPathCreation_shouldWork() {
+    public void test_XPathCreation_shouldWork() {
         // Setup && When && Then
         LogUtil.println(ChoiceInput.COACH_PREF.inputViewXP(Platform.IOS));
         LogUtil.println(Height.CM.choicePickerItemXP(Platform.ANDROID));
+        LogUtil.println(Setting.LOCATION.settingXP(Platform.ANDROID));
+        LogUtil.println(Setting.LOCATION.settingXP(Platform.IOS));
+        LogUtil.println(Setting.UNITS.settingXP(Platform.ANDROID));
+        LogUtil.println(Setting.UNITS.settingXP(Platform.IOS));
     }
 
     @Test

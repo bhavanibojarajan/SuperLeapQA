@@ -51,12 +51,13 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * Get the {@link Height} instances for {@link UnitSystem#IMPERIAL}.
      * @param platform {@link PlatformType} instance.
      * @return {@link List} of {@link Height}.
+     * @see CollectionUtil#asList(Object[])
      * @see #FT
      * @see #INCH
      */
     @NotNull
     public static List<Height> imperial(@NotNull PlatformType platform) {
-        return Arrays.asList(FT, INCH);
+        return CollectionUtil.asList(FT, INCH);
     }
 
     /**

@@ -13,8 +13,6 @@ import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
-import org.swiften.xtestkitcomponents.xpath.Attribute;
-import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
  * Created by haipham on 5/16/17.
@@ -66,7 +64,7 @@ public interface DashboardValidationType extends BaseValidationType {
      * @return {@link Flowable} instance.
      * @see com.holmusk.SuperLeapQA.navigation.Screen#ADD_CARD
      * @see CardType#androidViewId()
-     * @see CardType#cardSelectorText()
+     * @see CardType#title()
      * @see Engine#rxe_withText(String...)
      */
     @NotNull
@@ -79,7 +77,7 @@ public interface DashboardValidationType extends BaseValidationType {
                 .toFlowable();
         } else if (engine instanceof IOSEngine) {
             return engine
-                .rxe_withText(card.cardSelectorText())
+                .rxe_withText(card.title())
                 .firstElement()
                 .toFlowable();
         } else {

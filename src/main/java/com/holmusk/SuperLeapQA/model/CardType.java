@@ -15,19 +15,22 @@ public enum CardType implements BaseErrorType {
     /**
      * Get the displayed text on a {@link CardType} selector button.
      * @return {@link String} value.
+     * @see #ACTIVITY
+     * @see #MEAL
+     * @see #WEIGHT
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    public String cardSelectorText() {
+    public String title() {
         switch (this) {
+            case ACTIVITY:
+                return "addCard_title_activity";
+
             case MEAL:
                 return "addCard_title_food";
 
             case WEIGHT:
                 return "addCard_title_weight";
-
-            case ACTIVITY:
-                return "addCard_title_activity";
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -35,23 +38,25 @@ public enum CardType implements BaseErrorType {
     }
 
     /**
-     * Get the view id for each FAB button for
-     * {@link Platform#ANDROID}.
+     * Get the view id for each FAB button for {@link Platform#ANDROID}.
      * @return {@link String} value.
      * @see Platform#ANDROID
+     * @see #ACTIVITY
+     * @see #MEAL
+     * @see #WEIGHT
      * @see #NOT_AVAILABLE
      */
     @NotNull
     public String androidViewId() {
         switch (this) {
+            case ACTIVITY:
+                return "fab_activity";
+
             case MEAL:
                 return "fab_food";
 
             case WEIGHT:
                 return "fab_weight";
-
-            case ACTIVITY:
-                return "fab_activity";
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);

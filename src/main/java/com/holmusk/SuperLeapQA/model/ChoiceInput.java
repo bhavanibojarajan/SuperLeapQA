@@ -59,6 +59,8 @@ public enum ChoiceInput implements HMTextChoiceType {
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
      * @see InputType#inputViewXP(PlatformType)
+     * @see Platform#ANDROID
+     * @see Platform#IOS
      * @see #androidInputViewXP()
      * @see #iOSInputViewXP()
      * @see #NOT_AVAILABLE
@@ -85,6 +87,10 @@ public enum ChoiceInput implements HMTextChoiceType {
      * @see Attributes#of(PlatformType)
      * @see Platform#ANDROID
      * @see XPath.Builder#addAttribute(Attribute)
+     * @see #ETHNICITY
+     * @see #ETHNICITY
+     * @see #HEIGHT
+     * @see #WEIGHT
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -124,7 +130,6 @@ public enum ChoiceInput implements HMTextChoiceType {
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
      * @see BaseViewType#className()
-     * @see CompoundAttribute#followingSibling(CompoundAttribute, CompoundAttribute)
      * @see CompoundAttribute#forClass(String)
      * @see CompoundAttribute#withIndex(Integer)
      * @see Config#LOCALIZER
@@ -132,7 +137,7 @@ public enum ChoiceInput implements HMTextChoiceType {
      * @see Platform#IOS
      * @see IOSView.ViewType#UI_STATIC_TEXT
      * @see IOSView.ViewType#UI_TEXT_FIELD
-     * @see XPath.Builder#addAttribute(Attribute)
+     * @see XPath.Builder#followingSibling(CompoundAttribute, CompoundAttribute)
      * @see #iOSTitleDescription()
      * @see #values()
      */
@@ -145,13 +150,9 @@ public enum ChoiceInput implements HMTextChoiceType {
         String tf = IOSView.ViewType.UI_TEXT_FIELD.className();
         Attributes attrs = Attributes.of(platform);
         Attribute stAttr = attrs.containsText(localized);
-
-        return XPath.builder()
-            .addAttribute(CompoundAttribute.followingSibling(
-                CompoundAttribute.forClass(tf),
-                CompoundAttribute.forClass(st).addAttributes(stAttr)
-            ))
-            .build();
+        CompoundAttribute tAttr = CompoundAttribute.forClass(tf);
+        CompoundAttribute sAttr = CompoundAttribute.forClass(st).addAttributes(stAttr);
+        return XPath.builder().followingSibling(tAttr, sAttr).build();
     }
 
     /**

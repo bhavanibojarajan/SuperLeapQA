@@ -17,13 +17,13 @@ public interface PhotoPickerValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @param mode {@link PhotoPickerMode} instance.
      * @return {@link Flowable} instance.
-     * @see PhotoPickerMode#pickerTitle()
+     * @see PhotoPickerMode#title()
      * @see Engine#rxe_containsText(String...)
      */
     @NotNull
     default Flowable<WebElement> rxe_pickerMode(@NotNull Engine<?> engine,
                                                 @NotNull PhotoPickerMode mode) {
-        return engine.rxe_containsText(mode.pickerTitle()).firstElement().toFlowable();
+        return engine.rxe_containsText(mode.title()).firstElement().toFlowable();
     }
 
     /**

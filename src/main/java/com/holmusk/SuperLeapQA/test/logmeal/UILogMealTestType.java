@@ -47,7 +47,7 @@ public interface UILogMealTestType extends
      * @see CollectionUtil#randomElement(Object[])
      * @see Engine#rxe_containsText(String...)
      * @see Engine#rxv_errorWithPageSource()
-     * @see Mood#moodTitle()
+     * @see Mood#title()
      * @see Mood#values()
      * @see NumberUtil#randomBetween(int, int)
      * @see ObjectUtil#nonNull(Object)
@@ -93,7 +93,7 @@ public interface UILogMealTestType extends
 
         final Flowable<?> RXV_MEAL_PAGE = Flowable
             .mergeArray(
-                ENGINE.rxe_containsText(MOOD.moodTitle()),
+                ENGINE.rxe_containsText(MOOD.title()),
                 ENGINE.rxe_containsText(DESCRIPTION),
                 rxv_hasMealTime(ENGINE, TIME)
             )

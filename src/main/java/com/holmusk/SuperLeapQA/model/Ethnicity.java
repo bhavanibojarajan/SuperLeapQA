@@ -8,7 +8,6 @@ import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.property.base.AttributeType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
@@ -17,12 +16,7 @@ import org.swiften.xtestkitcomponents.xpath.XPath;
 /**
  * Created by haipham on 5/12/17.
  */
-public enum Ethnicity implements
-    AttributeType<String>,
-    BaseErrorType,
-    HMInputType,
-    HMTextChoiceType.Item
-{
+public enum Ethnicity implements BaseErrorType, HMInputType, HMTextChoiceType.Item {
     CHINESE,
     MALAY,
     INDIAN,
@@ -34,41 +28,49 @@ public enum Ethnicity implements
     OTHERS;
 
     /**
-     * Override this method to provide default implementation.
+     * Get {@link String} value as displayed by the
+     * {@link org.openqa.selenium.WebElement} corresponding to the current
+     * {@link Ethnicity}.
      * @return {@link String} value.
-     * @see AttributeType#value()
+     * @see #AFRICAN
+     * @see #ASIAN_OTHER
+     * @see #CHINESE
+     * @see #INDIAN
+     * @see #JAPANESE
+     * @see #MALAY
+     * @see #OTHERS
+     * @see #WHITE_NON_HISPANIC
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    @Override
-    public String value() {
+    public String title() {
         switch (this) {
-            case CHINESE:
-                return "user_title_ethnicity_chinese";
-
-            case MALAY:
-                return "user_title_ethnicity_malay";
-
-            case INDIAN:
-                return "user_title_ethnicity_indian";
-
-            case JAPANESE:
-                return "user_title_ethnicity_japanese";
+            case AFRICAN:
+                return "user_title_ethnicity_african";
 
             case ASIAN_OTHER:
                 return "user_title_ethnicity_asianOther";
 
-            case WHITE_NON_HISPANIC:
-                return "user_title_ethnicity_whiteNonHispanic";
+            case CHINESE:
+                return "user_title_ethnicity_chinese";
 
-            case AFRICAN:
-                return "user_title_ethnicity_african";
+            case INDIAN:
+                return "user_title_ethnicity_indian";
 
             case LATINO_HISPANIC:
                 return "user_title_ethnicity_latinoHispanic";
 
+            case JAPANESE:
+                return "user_title_ethnicity_japanese";
+
+            case MALAY:
+                return "user_title_ethnicity_malay";
+
             case OTHERS:
                 return "user_title_ethnicity_others";
+
+            case WHITE_NON_HISPANIC:
+                return "user_title_ethnicity_whiteNonHispanic";
 
             default:
                 return "";
@@ -81,19 +83,22 @@ public enum Ethnicity implements
      * @see Config#LOCALIZER
      * @see HMTextChoiceType.Item#stringValue()
      * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
-     * @see #value()
+     * @see #title()
      */
     @NotNull
     @Override
     public String stringValue() {
-        return Config.LOCALIZER.localize(value());
+        return Config.LOCALIZER.localize(title());
     }
 
     /**
      * @param platform {@link PlatformType} instance.
      * @return {@link XPath} value.
      * @see InputType#inputViewXP(PlatformType)
+     * @see Platform#ANDROID
+     * @see Platform#IOS
      * @see #androidInputViewXP()
+     * @see #iOSInputViewXP()
      * @see #NOT_AVAILABLE
      */
     @NotNull
