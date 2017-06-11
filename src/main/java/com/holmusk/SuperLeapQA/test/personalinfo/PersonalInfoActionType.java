@@ -58,11 +58,14 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see #personalInfoProgressDelay(Engine)
      * @see #rxe_personalInfoSubmit(Engine)
      */
     @NotNull
     default Flowable<?> rxa_confirmPersonalInfo(@NotNull final Engine<?> ENGINE) {
-        return rxe_personalInfoSubmit(ENGINE).flatMap(ENGINE::rxa_click);
+        return rxe_personalInfoSubmit(ENGINE)
+            .flatMap(ENGINE::rxa_click)
+            .delay(personalInfoProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -80,8 +83,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
         final PersonalInfoActionType THIS = this;
 
         return rxa_enterPersonalInfo(ENGINE, mode)
-            .flatMap(a -> THIS.rxa_confirmPersonalInfo(ENGINE))
-            .delay(personalInfoProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+            .flatMap(a -> THIS.rxa_confirmPersonalInfo(ENGINE));
     }
 
     /**
@@ -94,6 +96,14 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * browser.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see Engine#rxa_tap(Point)
+     * @see #webViewDelay(Engine)
+     * @see #rxe_TCAcceptanceLabel(Engine)
+     * @see Dimension#getHeight()
+     * @see Point#getX()
+     * @see Point#getY()
+     * @see WebElement#getLocation()
+     * @see WebElement#getSize()
      */
     @NotNull
     default Flowable<?> rxa_openTC(@NotNull final Engine<?> ENGINE) {
@@ -104,6 +114,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
                 int x = point.getX(), y = point.getY(), h = size.getHeight();
                 return new Point(x + 10, y + h - 3);
             })
-            .flatMap(a -> ENGINE.rxa_tap(a.getX(), a.getY()));
+            .flatMap(ENGINE::rxa_tap)
+            .delay(webViewDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 }

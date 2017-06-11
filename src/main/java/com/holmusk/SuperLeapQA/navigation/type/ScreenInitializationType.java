@@ -3,6 +3,7 @@ package com.holmusk.SuperLeapQA.navigation.type;
 import com.holmusk.SuperLeapQA.test.dashboard.DashboardActionType;
 import com.holmusk.SuperLeapQA.test.mealpage.MealPageActionType;
 import io.reactivex.Flowable;
+import org.intellij.lang.annotations.Flow;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
@@ -92,5 +93,18 @@ public interface ScreenInitializationType extends
     @NotNull
     default Flowable<?> rxn_mealPageInitialized(@NotNull Engine<?> engine) {
         return rxa_dismissMealImageTutorial(engine);
+    }
+
+    /**
+     * When the app navigates to
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_WEIGHT_ENTRY}, it
+     * may prompt the user for location access.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_acceptAlert()
+     */
+    @NotNull
+    default Flowable<?> rxn_weightEntryInitialized(@NotNull Engine<?> engine) {
+        return engine.rxa_acceptAlert();
     }
 }

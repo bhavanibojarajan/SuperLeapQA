@@ -48,11 +48,14 @@ public interface LoginActionType extends BaseActionType, LoginValidationType {
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see #loginProgressDelay(Engine)
      * @see #rxe_submit(Engine)
      */
     @NotNull
     default Flowable<?> rxa_confirmLogin(@NotNull final Engine<?> ENGINE) {
-        return rxe_submit(ENGINE).flatMap(ENGINE::rxa_click);
+        return rxe_submit(ENGINE)
+            .flatMap(ENGINE::rxa_click)
+            .delay(loginProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -70,21 +73,17 @@ public interface LoginActionType extends BaseActionType, LoginValidationType {
 
     /**
      * Enter and confirm login credentials.
-     * @param ENGINE {@link Engine} instance.
+     * @param E {@link Engine} instance.
      * @param inputs {@link List} of {@link Zip}.
      * @return {@link Flowable} instance.
-     * @see #loginProgressDelay(Engine)
      * @see #rxa_inputs(Engine, List)
      * @see #rxa_confirmLogin(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_login(@NotNull final Engine<?> ENGINE,
+    default Flowable<?> rxa_login(@NotNull final Engine<?> E,
                                   @NotNull List<Zip<HMTextType,String>> inputs) {
         final LoginActionType THIS = this;
-
-        return rxa_inputs(ENGINE, inputs)
-            .flatMap(a -> THIS.rxa_confirmLogin(ENGINE))
-            .delay(loginProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+        return rxa_inputs(E, inputs).flatMap(a -> THIS.rxa_confirmLogin(E));
     }
 
     /**

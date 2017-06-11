@@ -48,11 +48,11 @@ public interface MealPageActionType extends
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
      * @see #generalDelay(Engine)
-     * @see #rxe_editMeal(Engine)
+     * @see #rxe_edit(Engine)
      */
     @NotNull
     default Flowable<?> rxa_openEditMeal(@NotNull final Engine<?> ENGINE) {
-        return rxe_editMeal(ENGINE)
+        return rxe_edit(ENGINE)
             .flatMap(ENGINE::rxa_click)
             .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
@@ -98,7 +98,7 @@ public interface MealPageActionType extends
      * from {@link com.holmusk.SuperLeapQA.navigation.Screen#SEARCH} by
      * searching for a comment, the scroll view will scroll to bottom. We need
      * to scroll up to reveal the edit button so that the {@link WebElement}
-     * from {@link #rxe_editMeal(Engine)} can be clicked.
+     * from {@link #rxe_edit(Engine)} can be clicked.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_swipeGeneric(WebElement, DirectionContainerType)

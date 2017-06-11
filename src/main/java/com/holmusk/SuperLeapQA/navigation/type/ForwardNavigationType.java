@@ -353,13 +353,11 @@ public interface ForwardNavigationType extends
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#MEAL_PAGE}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #mealLogProgressDelay(Engine)
      * @see #rxa_logNewMeal(Engine)
      */
     @NotNull
     default Flowable<?> rxn_logMeal_mealPage(@NotNull Engine<?> engine) {
-        long delay = mealLogProgressDelay(engine);
-        return rxa_logNewMeal(engine).delay(delay, TimeUnit.MILLISECONDS);
+        return rxa_logNewMeal(engine);
     }
 
     /**
@@ -376,15 +374,27 @@ public interface ForwardNavigationType extends
 
     /**
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#ADD_CARD}
-     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_WEIGHT}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_WEIGHT_VALUE}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see CardType#WEIGHT
      * @see #rxa_addCard(Engine, CardType)
      */
     @NotNull
-    default Flowable<?> rxn_addCard_logWeight(@NotNull Engine<?> engine) {
+    default Flowable<?> rxn_addCard_weightValue(@NotNull Engine<?> engine) {
         return rxa_addCard(engine, CardType.WEIGHT);
+    }
+
+    /**
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_WEIGHT_VALUE}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_WEIGHT_ENTRY}
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rxa_completeWeightValue(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxn_weightValue_weightEntry(@NotNull Engine<?> engine) {
+        return rxa_completeWeightValue(engine);
     }
 
     /**

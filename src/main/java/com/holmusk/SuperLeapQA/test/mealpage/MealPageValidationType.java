@@ -82,30 +82,6 @@ public interface MealPageValidationType extends BaseValidationType {
     }
 
     /**
-     * Get the edit meal button.
-     * @param engine {@link Engine} instance.
-     * @return {@link Flowable} instance.
-     * @see Engine#rxe_containsID(String...)
-     * @see #NOT_AVAILABLE
-     */
-    @NotNull
-    default Flowable<WebElement> rxe_editMeal(@NotNull Engine<?> engine) {
-        if (engine instanceof AndroidEngine) {
-            return engine
-                .rxe_containsID("action_menu")
-                .firstElement()
-                .toFlowable();
-        } else if (engine instanceof IOSEngine) {
-            return engine
-                .rxe_containsID("button edit")
-                .firstElement()
-                .toFlowable();
-        } else {
-            throw new RuntimeException(NOT_AVAILABLE);
-        }
-    }
-
-    /**
      * Get the meal delete button.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.

@@ -23,13 +23,16 @@ public interface GuarantorInfoActionType extends BaseActionType, GuarantorInfoVa
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
      * @see UserMode#requiresGuarantor()
+     * @see #registerProgressDelay(Engine)
      * @see #rxe_guarantorInfoSubmit(Engine)
      */
     @NotNull
     default Flowable<?> rxa_confirmGuarantorInfo(@NotNull final Engine<?> ENGINE,
                                                  @NotNull UserMode mode) {
         if (mode.requiresGuarantor()) {
-            return rxe_guarantorInfoSubmit(ENGINE).flatMap(ENGINE::rxa_click);
+            return rxe_guarantorInfoSubmit(ENGINE)
+                .flatMap(ENGINE::rxa_click)
+                .delay(registerProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
         } else {
             return Flowable.just(true);
         }
@@ -62,7 +65,6 @@ public interface GuarantorInfoActionType extends BaseActionType, GuarantorInfoVa
      * @param ENGINE {@link Engine} instance.
      * @param MODE {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see #registerProgressDelay(Engine)
      * @see #rxa_enterGuarantorInfo(Engine, UserMode)
      * @see #rxa_confirmGuarantorInfo(Engine, UserMode)
      */
@@ -72,7 +74,6 @@ public interface GuarantorInfoActionType extends BaseActionType, GuarantorInfoVa
         final GuarantorInfoActionType THIS = this;
 
         return rxa_enterGuarantorInfo(ENGINE, MODE)
-            .flatMap(a -> THIS.rxa_confirmGuarantorInfo(ENGINE, MODE))
-            .delay(registerProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+            .flatMap(a -> THIS.rxa_confirmGuarantorInfo(ENGINE, MODE));
     }
 }

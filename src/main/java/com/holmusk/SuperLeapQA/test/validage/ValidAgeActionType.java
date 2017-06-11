@@ -130,11 +130,14 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * the user is already in the acceptable age input screen.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see #validAgeInputProgressDelay(Engine)
      * @see #rxe_validAgeConfirm(Engine)
      */
     @NotNull
     default Flowable<?> rxa_confirmValidAgeInputs(@NotNull final Engine<?> ENGINE) {
-        return rxe_validAgeConfirm(ENGINE).flatMap(ENGINE::rxa_click);
+        return rxe_validAgeConfirm(ENGINE)
+            .flatMap(ENGINE::rxa_click)
+            .delay(validAgeInputProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -257,7 +260,6 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @param mode {@link UserMode} instance.
      * @param validBMI {@link Boolean} value.
      * @return {@link Flowable} instance.
-     * @see #validAgeInputProgressDelay(Engine)
      * @see #rxa_enterValidAgeInputs(Engine, UserMode, boolean)
      * @see #rxa_scrollToBottom(Engine)
      * @see #rxa_confirmValidAgeInputs(Engine)
@@ -270,8 +272,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
 
         return rxa_enterValidAgeInputs(ENGINE, mode, validBMI)
             .flatMap(a -> THIS.rxa_scrollToBottom(ENGINE))
-            .flatMap(a -> THIS.rxa_confirmValidAgeInputs(ENGINE))
-            .delay(validAgeInputProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+            .flatMap(a -> THIS.rxa_confirmValidAgeInputs(ENGINE));
     }
 
     /**

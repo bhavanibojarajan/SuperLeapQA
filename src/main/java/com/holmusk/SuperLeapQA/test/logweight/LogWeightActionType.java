@@ -5,7 +5,10 @@ import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.ios.IOSEngine;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -23,11 +26,14 @@ public interface LogWeightActionType extends
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
-     * @see #rxe_weightSubmit(Engine)
+     * @see #weightLogProgressDelay(Engine)
+     * @see #rxe_weightValueSubmit(Engine)
      */
     @NotNull
     default Flowable<?> rxa_submitWeightValue(@NotNull final Engine<?> ENGINE) {
-        return rxe_weightSubmit(ENGINE).flatMap(ENGINE::rxa_click);
+        return rxe_weightValueSubmit(ENGINE)
+            .flatMap(ENGINE::rxa_click)
+            .delay(weightLogProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -36,18 +42,20 @@ public interface LogWeightActionType extends
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see #weightLogProgressDelay(Engine)
      * @see #rxe_weightEntrySubmit(Engine)
      */
     @NotNull
     default Flowable<?> rxa_submitWeightEntry(@NotNull final Engine<?> ENGINE) {
-        return rxe_weightEntrySubmit(ENGINE).flatMap(ENGINE::rxa_click);
+        return rxe_weightEntrySubmit(ENGINE)
+            .flatMap(ENGINE::rxa_click)
+            .delay(weightLogProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**
      * Log a new weight value, without completing the weight entry.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #weightLogProgressDelay(Engine)
      * @see #rxa_swipeCSSViewRandomly(Engine)
      * @see #rxa_submitWeightValue(Engine)
      */
@@ -56,20 +64,39 @@ public interface LogWeightActionType extends
         final LogWeightActionType THIS = this;
 
         return rxa_swipeCSSViewRandomly(ENGINE)
-            .flatMap(a -> THIS.rxa_submitWeightValue(ENGINE))
-            .delay(weightLogProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+            .flatMap(a -> THIS.rxa_submitWeightValue(ENGINE));
     }
 
     /**
      * Open the weight time picker.
+     * On {@link org.swiften.xtestkit.mobile.Platform#IOS}, the time picker
+     * is open by default, so if we click on the {@link WebElement} emitted by
+     * {@link #rxe_weightTime(Engine)}, it will close. Therefore, we need to
+     * check if it is visible first.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see BooleanUtil#isFalse(boolean)
      * @see Engine#rxa_click(WebElement)
      * @see #rxe_weightTime(Engine)
+     * @see #rxv_weightTimePickerOpen(Engine)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_openWeightTimePicker(@NotNull final Engine<?> ENGINE) {
-        return rxe_weightTime(ENGINE).flatMap(ENGINE::rxa_click);
+        if (ENGINE instanceof AndroidEngine) {
+            return rxe_weightTime(ENGINE).flatMap(ENGINE::rxa_click);
+        } else if (ENGINE instanceof IOSEngine) {
+            final LogWeightActionType THIS = this;
+
+            return rxv_weightTimePickerOpen(ENGINE)
+                .filter(BooleanUtil::isFalse)
+                .flatMap(a -> THIS.rxe_weightTime(ENGINE))
+                .flatMap(ENGINE::rxa_click)
+                .map(BooleanUtil::toTrue)
+                .defaultIfEmpty(false);
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 
     /**
@@ -116,8 +143,7 @@ public interface LogWeightActionType extends
         return rxa_openWeightTimePicker(ENGINE)
             .flatMap(a -> THIS.rxa_selectWeightTime(ENGINE, TIME))
             .flatMap(a -> THIS.rxa_confirmWeightTime(ENGINE))
-            .flatMap(a -> THIS.rxa_submitWeightEntry(ENGINE))
-            .delay(weightLogProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+            .flatMap(a -> THIS.rxa_submitWeightEntry(ENGINE));
     }
 
     /**

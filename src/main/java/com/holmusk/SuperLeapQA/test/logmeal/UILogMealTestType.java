@@ -60,7 +60,6 @@ public interface UILogMealTestType extends
      * @see #assertCorrectness(TestSubscriber)
      * @see #defaultUserMode()
      * @see #engine()
-     * @see #mealLogProgressDelay(Engine)
      * @see #randomSelectableTime()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_selectMealPhotos(Engine)
@@ -110,7 +109,6 @@ public interface UILogMealTestType extends
             .flatMap(a -> THIS.rxa_input(ENGINE, DSC_INPUT, DESCRIPTION))
             .flatMap(a -> THIS.rxa_confirmMealDescription(ENGINE))
             .flatMap(a -> THIS.rxa_submitMeal(ENGINE))
-            .delay(mealLogProgressDelay(ENGINE), TimeUnit.MILLISECONDS)
             .flatMap(a -> THIS.rxa_dismissMealImageTutorial(ENGINE))
             .flatMap(a -> RXV_MEAL_PAGE)
 

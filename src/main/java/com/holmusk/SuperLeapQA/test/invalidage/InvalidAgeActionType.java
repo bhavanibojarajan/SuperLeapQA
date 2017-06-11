@@ -34,12 +34,15 @@ public interface InvalidAgeActionType extends BaseActionType, InvalidAgeValidati
      * Confirm email subscription for future program expansion.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rxe_invalidAgeSubmit(Engine)
      * @see Engine#rxa_click(WebElement)
+     * @see #invalidAgeInputProgressDelay(Engine)
+     * @see #rxe_invalidAgeSubmit(Engine)
      */
     @NotNull
     default Flowable<?> rxa_confirmInvalidAgeInputs(@NotNull final Engine<?> ENGINE) {
-        return rxe_invalidAgeSubmit(ENGINE).flatMap(ENGINE::rxa_click);
+        return rxe_invalidAgeSubmit(ENGINE)
+            .flatMap(ENGINE::rxa_click)
+            .delay(invalidAgeInputProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -48,15 +51,13 @@ public interface InvalidAgeActionType extends BaseActionType, InvalidAgeValidati
      * @return {@link Flowable} instance.
      * @see #rxa_enterInvalidAgeInputs(Engine)
      * @see #rxa_confirmInvalidAgeInputs(Engine)
-     * @see #invalidAgeInputProgressDelay(Engine)
      */
     @NotNull
     default Flowable<?> rxa_completeInvalidAgeInputs(@NotNull final Engine<?> ENGINE) {
         final InvalidAgeActionType THIS = this;
 
         return rxa_enterInvalidAgeInputs(ENGINE)
-            .flatMap(a -> THIS.rxa_confirmInvalidAgeInputs(ENGINE))
-            .delay(invalidAgeInputProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+            .flatMap(a -> THIS.rxa_confirmInvalidAgeInputs(ENGINE));
 
     }
 

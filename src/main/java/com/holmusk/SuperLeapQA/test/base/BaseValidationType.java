@@ -195,4 +195,28 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
     default Flowable<Boolean> rxv_isDrawerOpen(@NotNull Engine<?> engine) {
         return rxv_drawer(engine).map(BooleanUtil::isTrue).onErrorReturnItem(false);
     }
+
+    /**
+     * Get the edit {@link WebElement} that can be used to alter/delete content.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxe_containsID(String...)
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_edit(@NotNull Engine<?> engine) {
+        if (engine instanceof AndroidEngine) {
+            return engine
+                .rxe_containsID("action_menu")
+                .firstElement()
+                .toFlowable();
+        } else if (engine instanceof IOSEngine) {
+            return engine
+                .rxe_containsID("button edit")
+                .firstElement()
+                .toFlowable();
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
 }

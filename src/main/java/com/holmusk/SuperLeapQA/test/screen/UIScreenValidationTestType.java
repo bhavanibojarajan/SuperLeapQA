@@ -17,7 +17,6 @@ import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zip;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
@@ -665,11 +664,11 @@ public interface UIScreenValidationTestType extends
     }
 
     /**
-     * Validate {@link Screen#LOG_WEIGHT} and confirms that all
+     * Validate {@link Screen#LOG_WEIGHT_VALUE} and confirm that all
      * {@link WebElement} are present.
      * @see Screen#SPLASH
      * @see Screen#LOGIN
-     * @see Screen#LOG_WEIGHT
+     * @see Screen#LOG_WEIGHT_VALUE
      * @see #assertCorrectness(TestSubscriber)
      * @see #defaultUserMode()
      * @see #engine()
@@ -680,7 +679,7 @@ public interface UIScreenValidationTestType extends
      */
     @Test
     @SuppressWarnings("unchecked")
-    default void test_logWeight_isValidScreen() {
+    default void test_logWeightValue_isValidScreen() {
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
@@ -688,9 +687,38 @@ public interface UIScreenValidationTestType extends
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_WEIGHT)
+        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_WEIGHT_VALUE)
             .flatMap(a -> THIS.rxv_logWeightValue(ENGINE))
-            .flatMap(a -> THIS.rxa_completeWeightValue(ENGINE))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * Validate {@link Screen#LOG_WEIGHT_ENTRY} and confirm that all
+     * {@link WebElement} are present.
+     * @see Screen#SPLASH
+     * @see Screen#LOGIN
+     * @see Screen#LOG_WEIGHT_ENTRY
+     * @see #assertCorrectness(TestSubscriber)
+     * @see #defaultUserMode()
+     * @see #engine()
+     * @see #rxv_logWeightEntry(Engine)
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    default void test_logWeightEntry_isValidScreen() {
+        // Setup
+        final UIScreenValidationTestType THIS = this;
+        final Engine<?> ENGINE = engine();
+        UserMode mode = defaultUserMode();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_WEIGHT_ENTRY)
             .flatMap(a -> THIS.rxv_logWeightEntry(ENGINE))
             .subscribe(subscriber);
 

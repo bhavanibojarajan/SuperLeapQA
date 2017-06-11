@@ -164,7 +164,6 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
             .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
 
             .flatMap(a -> THIS.rxa_openTC(ENGINE))
-            .delay(webViewDelay(ENGINE), TimeUnit.MILLISECONDS)
             .flatMap(a -> ENGINE.rxa_navigateBackOnce())
             .flatMapIterable(a -> TEXT_INFO)
             .flatMap(a -> THIS.rxv_hasValue(ENGINE, a, INPUTS.get(a.toString())))

@@ -31,7 +31,8 @@ public enum Screen implements ScreenInitializationType {
     LOG_MEAL,
     MEAL_PAGE,
     CHAT,
-    LOG_WEIGHT,
+    LOG_WEIGHT_VALUE,
+    LOG_WEIGHT_ENTRY,
     SETTINGS;
 
     /**
@@ -43,19 +44,18 @@ public enum Screen implements ScreenInitializationType {
      * @see #MEAL_PAGE
      * @see #PHOTO_PICKER
      * @see #USE_APP_NOW
+     * @see #LOG_WEIGHT_ENTRY
      * @see #rxn_dashboardTutorialInitialized(Engine)
      * @see #rxn_mealPageInitialized(Engine)
      * @see #rxn_photoPickerInitialized(Engine)
      * @see #rxn_useAppNowInitialized(Engine)
+     * @see #rxn_weightEntryInitialized(Engine)
      */
     @NotNull
     public NavigationSupplier rxa_onInitialized(@NotNull final Engine<?> ENGINE) {
         final Screen THIS = this;
 
         switch (this) {
-            case USE_APP_NOW:
-                return a -> THIS.rxn_useAppNowInitialized(ENGINE);
-
             case DASHBOARD_TUTORIAL:
                 return a -> THIS.rxn_dashboardTutorialInitialized(ENGINE);
 
@@ -64,6 +64,12 @@ public enum Screen implements ScreenInitializationType {
 
             case PHOTO_PICKER:
                 return a -> THIS.rxn_photoPickerInitialized(ENGINE);
+
+            case LOG_WEIGHT_ENTRY:
+                return a -> THIS.rxn_weightEntryInitialized(ENGINE);
+
+            case USE_APP_NOW:
+                return a -> THIS.rxn_useAppNowInitialized(ENGINE);
 
             default:
                 return a -> Flowable.just(true);

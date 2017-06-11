@@ -18,12 +18,11 @@ public interface UILogWeightTestType extends UIBaseTestType, LogWeightActionType
      * Validate that weight logging works by posting a new weight card.
      * @see Screen#SPLASH
      * @see Screen#LOGIN
-     * @see Screen#LOG_WEIGHT
+     * @see Screen#LOG_WEIGHT_ENTRY
      * @see #assertCorrectness(TestSubscriber)
      * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rxa_completeWeightValue(Engine)
      * @see #rxa_openWeightTimePicker(Engine)
      * @see #rxa_selectWeightTime(Engine, Date)
      * @see #rxa_confirmWeightTime(Engine)
@@ -40,8 +39,7 @@ public interface UILogWeightTestType extends UIBaseTestType, LogWeightActionType
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_WEIGHT)
-            .flatMap(a -> THIS.rxa_completeWeightValue(ENGINE))
+        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_WEIGHT_ENTRY)
             .flatMap(a -> THIS.rxa_openWeightTimePicker(ENGINE))
             .flatMap(a -> THIS.rxa_selectWeightTime(ENGINE, TIME))
             .flatMap(a -> THIS.rxa_confirmWeightTime(ENGINE))

@@ -21,11 +21,14 @@ public interface AddressActionType extends BaseActionType, AddressValidationType
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see #addressInfoProgressDelay(Engine)
      * @see #rxe_addressSubmit(Engine)
      */
     @NotNull
     default Flowable<?> rxa_submitAddress(@NotNull final Engine<?> ENGINE) {
-        return rxe_addressSubmit(ENGINE).flatMap(ENGINE::rxa_click);
+        return rxe_addressSubmit(ENGINE)
+            .flatMap(ENGINE::rxa_click)
+            .delay(addressInfoProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -49,18 +52,15 @@ public interface AddressActionType extends BaseActionType, AddressValidationType
 
     /**
      * Enter and submit address information.
-     * @param ENGINE {@link Engine} instance.
+     * @param E {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #addressInfoProgressDelay(Engine)
      * @see #rxa_enterAddressInfo(Engine)
      * @see #rxa_submitAddress(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_completeAddressInfo(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_completeAddressInfo(@NotNull final Engine<?> E) {
         final AddressActionType THIS = this;
-
-        return rxa_enterAddressInfo(ENGINE)
-            .flatMap(a -> THIS.rxa_submitAddress(ENGINE))
-            .delay(addressInfoProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+        return rxa_enterAddressInfo(E).flatMap(a -> THIS.rxa_submitAddress(E));
     }
 }

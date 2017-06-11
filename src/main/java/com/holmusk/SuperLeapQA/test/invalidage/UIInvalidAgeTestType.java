@@ -84,7 +84,6 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
             .all(ObjectUtil::nonNull)
             .toFlowable()
             .flatMap(a -> THIS.rxa_confirmInvalidAgeInputs(ENGINE))
-            .delay(invalidAgeInputProgressDelay(ENGINE), TimeUnit.MILLISECONDS)
             .flatMap(a -> THIS.rxv_invalidAgeInputConfirmed(ENGINE))
             .flatMap(a -> THIS.rxa_completeInvalidAgeInput(ENGINE))
             .subscribe(subscriber);

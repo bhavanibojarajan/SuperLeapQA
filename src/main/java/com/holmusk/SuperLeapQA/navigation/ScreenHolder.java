@@ -258,8 +258,8 @@ public final class ScreenHolder implements
                         platform
                     ),
                     new Direction(
-                        ScreenHolder.of(ENGINE, Screen.LOG_WEIGHT, MODE),
-                        a -> THIS.rxn_addCard_logWeight(ENGINE),
+                        ScreenHolder.of(ENGINE, Screen.LOG_WEIGHT_VALUE, MODE),
+                        a -> THIS.rxn_addCard_weightValue(ENGINE),
                         platform
                     )
                 );
@@ -294,7 +294,16 @@ public final class ScreenHolder implements
             case CHAT:
                 return CollectionUtil.asList();
 
-            case LOG_WEIGHT:
+            case LOG_WEIGHT_VALUE:
+                return CollectionUtil.asList(
+                    new Direction(
+                        ScreenHolder.of(ENGINE, Screen.LOG_WEIGHT_ENTRY, MODE),
+                        a -> THIS.rxn_weightValue_weightEntry(ENGINE),
+                        platform
+                    )
+                );
+
+            case LOG_WEIGHT_ENTRY:
                 return CollectionUtil.asList();
 
             case SETTINGS:
@@ -436,7 +445,10 @@ public final class ScreenHolder implements
                     )
                 );
 
-            case LOG_WEIGHT:
+            case LOG_WEIGHT_VALUE:
+                return CollectionUtil.asList();
+
+            case LOG_WEIGHT_ENTRY:
                 return CollectionUtil.asList();
 
             case SETTINGS:
