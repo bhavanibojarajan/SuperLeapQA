@@ -5,6 +5,7 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 
@@ -25,24 +26,20 @@ public interface WeightPageValidationType extends BaseValidationType {
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<Boolean> rxv_weightHasDate(@NotNull Engine<?> engine,
-                                                @NotNull Date date) {
+    default Flowable<?> rxv_hasWeightTime(@NotNull Engine<?> engine,
+                                          @NotNull Date date) {
         String format;
 
-        if (engine instanceof IOSEngine) {
-            format = "m/dd/YY h:mm a";
+        if (engine instanceof AndroidEngine) {
+            format = "dd/MM/YYYY h:mm a";
+        } else if (engine instanceof IOSEngine) {
+            format = "M/dd/YY, h:mm a";
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
 
         SimpleDateFormat formatter = new SimpleDateFormat(format);
         String dateString = formatter.format(date);
-
-        return engine
-            .rxe_containsText(dateString)
-            .firstElement()
-            .toFlowable()
-            .map(BooleanUtil::toTrue)
-            .onErrorReturnItem(false);
+        return engine.rxe_containsText(dateString).firstElement().toFlowable();
     }
 }

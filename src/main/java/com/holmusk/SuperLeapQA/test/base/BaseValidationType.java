@@ -15,11 +15,14 @@ import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.ios.IOSEngine;
+import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
+import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
@@ -215,6 +218,59 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
                 .rxe_containsID("button edit")
                 .firstElement()
                 .toFlowable();
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+
+    /**
+     * Get the menu delete button.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxe_containsText(String...)
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_menuDelete(@NotNull Engine<?> engine) {
+        return engine
+            .rxe_containsText("edit_title_delete")
+            .firstElement()
+            .toFlowable();
+    }
+
+    /**
+     * Get the edit menu delete confirm button.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Attributes#containsText(String)
+     * @see Attributes#of(PlatformType)
+     * @see BaseViewType#className()
+     * @see CompoundAttribute.Builder#addAttribute(Attribute)
+     * @see CompoundAttribute.Builder#withClass(String)
+     * @see Engine#rxe_containsID(String...)
+     * @see Engine#rxe_containsText(String...)
+     * @see Engine#rxe_withXPath(XPath...)
+     * @see XPath.Builder#addAttribute(CompoundAttribute)
+     * @see IOSView.ViewType#UI_BUTTON
+     * @see Platform#IOS
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_menuDeleteConfirm(@NotNull Engine<?> engine) {
+        if (engine instanceof AndroidEngine) {
+            return engine
+                .rxe_containsID("btn_dialog_alert_promopt_positive")
+                .firstElement()
+                .toFlowable();
+        } else if (engine instanceof IOSEngine) {
+            Attributes attrs = Attributes.of(Platform.IOS);
+
+            CompoundAttribute cAttr = CompoundAttribute.builder()
+                .withClass(IOSView.ViewType.UI_BUTTON.className())
+                .addAttribute(attrs.containsText("edit_title_delete"))
+                .build();
+
+            XPath xPath = XPath.builder().addAttribute(cAttr).build();
+            return engine.rxe_withXPath(xPath).firstElement().toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

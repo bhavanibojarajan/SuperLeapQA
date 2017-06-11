@@ -82,45 +82,6 @@ public interface MealPageValidationType extends BaseValidationType {
     }
 
     /**
-     * Get the meal delete button.
-     * @param engine {@link Engine} instance.
-     * @return {@link Flowable} instance.
-     * @see Engine#rxe_containsText(String...)
-     */
-    @NotNull
-    default Flowable<WebElement> rxe_deleteMeal(@NotNull Engine<?> engine) {
-        return engine
-            .rxe_containsText("mealPage_title_delete")
-            .firstElement()
-            .toFlowable();
-    }
-
-    /**
-     * Get the meal delete confirm button.
-     * @param engine {@link Engine} instance.
-     * @return {@link Flowable} instance.
-     * @see Engine#rxe_containsID(String...)
-     * @see Engine#rxe_containsText(String...)
-     * @see #NOT_AVAILABLE
-     */
-    @NotNull
-    default Flowable<WebElement> rxe_deleteMealConfirm(@NotNull Engine<?> engine) {
-        if (engine instanceof AndroidEngine) {
-            return engine
-                .rxe_containsID("btn_dialog_alert_promopt_positive")
-                .firstElement()
-                .toFlowable();
-        } else if (engine instanceof IOSEngine) {
-            return engine
-                .rxe_containsText("mealPage_title_delete")
-                .firstElement()
-                .toFlowable();
-        } else {
-            throw new RuntimeException(NOT_AVAILABLE);
-        }
-    }
-
-    /**
      * Get the button that we can click to get back to
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}.
      * @param engine {@link Engine} instance.

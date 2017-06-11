@@ -140,26 +140,6 @@ public interface AppDelayType extends BaseErrorType {
     }
 
     /**
-     * Delay between the time the user deletes a meal, and that when the
-     * action succeeds.
-     * @param engine {@link Engine} instance.
-     * @return {@link Long} value.
-     */
-    default long mealDeleteProgressDelay(@NotNull Engine<?> engine) {
-        return 2000;
-    }
-
-    /**
-     * Delay between the time the user searches for a query and that when
-     * the results (if any) appear.
-     * @param engine {@link Engine} instance.
-     * @return {@link Long} value.
-     */
-    default long mealSearchProgressDelay(@NotNull Engine<?> engine) {
-        return 2000;
-    }
-
-    /**
      * Delay between the time the user clicks submit weight and that when
      * the next screen appears.
      * @param engine {@link Engine} instance.
@@ -178,5 +158,25 @@ public interface AppDelayType extends BaseErrorType {
      */
     default long unitSystemChangeDelay(@NotNull Engine<?> engine) {
         return 1000;
+    }
+
+    /**
+     * Delay between the time the user deletes a meal, and that when the
+     * action succeeds.
+     * @param engine {@link Engine} instance.
+     * @return {@link Long} value.
+     */
+    default long contentDeleteProgressDelay(@NotNull Engine<?> engine) {
+        return 2000;
+    }
+
+    /**
+     * Delay between the time the user searches for a query and that when
+     * the results (if any) appear.
+     * @param engine {@link Engine} instance.
+     * @return {@link Long} value.
+     */
+    default long searchProgressDelay(@NotNull Engine<?> engine) {
+        return 2000;
     }
 }

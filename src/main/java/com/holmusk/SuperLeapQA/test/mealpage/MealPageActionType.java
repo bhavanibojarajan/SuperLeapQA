@@ -42,44 +42,6 @@ public interface MealPageActionType extends
     }
 
     /**
-     * Toggle meal edit mode, then delay for a while for the menu to fully
-     * appear.
-     * @param ENGINE {@link Engine} instance.
-     * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
-     * @see #generalDelay(Engine)
-     * @see #rxe_edit(Engine)
-     */
-    @NotNull
-    default Flowable<?> rxa_openEditMeal(@NotNull final Engine<?> ENGINE) {
-        return rxe_edit(ENGINE)
-            .flatMap(ENGINE::rxa_click)
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
-    }
-
-    /**
-     * Delete the current meal.
-     * @param ENGINE {@link Engine} instance.
-     * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
-     * @see ObjectUtil#nonNull(Object)
-     * @see #generalDelay(Engine)
-     * @see #mealDeleteProgressDelay(Engine)
-     * @see #rxe_deleteMeal(Engine)
-     * @see #rxe_deleteMealConfirm(Engine)
-     */
-    @NotNull
-    default Flowable<?> rxa_deleteMeal(@NotNull final Engine<?> ENGINE) {
-        return Flowable
-            .concat(rxe_deleteMeal(ENGINE), rxe_deleteMealConfirm(ENGINE))
-            .flatMap(ENGINE::rxa_click)
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
-            .all(ObjectUtil::nonNull)
-            .toFlowable()
-            .delay(mealDeleteProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
-    }
-
-    /**
      * Navigate back to
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}
      * @param ENGINE {@link Engine} instance.

@@ -465,4 +465,41 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
         return rxa_toggleDrawer(E, true)
             .flatMap(a -> THIS.rxa_selectDrawerItem(E, DI));
     }
+
+    /**
+     * Toggle edit mode, then delay for a while for the menu to fully appear.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_click(WebElement)
+     * @see #generalDelay(Engine)
+     * @see #rxe_edit(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxa_openEditMenu(@NotNull final Engine<?> ENGINE) {
+        return rxe_edit(ENGINE)
+            .flatMap(ENGINE::rxa_click)
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * Delete some content from the item menu.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_click(WebElement)
+     * @see ObjectUtil#nonNull(Object)
+     * @see #generalDelay(Engine)
+     * @see #contentDeleteProgressDelay(Engine)
+     * @see #rxe_menuDelete(Engine)
+     * @see #rxe_menuDeleteConfirm(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxa_deleteFromMenu(@NotNull final Engine<?> ENGINE) {
+        return Flowable
+            .concat(rxe_menuDelete(ENGINE), rxe_menuDeleteConfirm(ENGINE))
+            .concatMap(ENGINE::rxa_click)
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
+            .all(ObjectUtil::nonNull)
+            .toFlowable()
+            .delay(contentDeleteProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+    }
 }

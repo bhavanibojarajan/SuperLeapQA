@@ -277,4 +277,16 @@ public interface LogWeightValidationType extends HMCircleScrollValidationType {
             throw new RuntimeException(NOT_AVAILABLE);
         }
     }
+
+    /**
+     * Get the currently displayed weight.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#getText(WebElement)
+     * @see #rxe_weightDisplay(Engine)
+     */
+    @NotNull
+    default Flowable<String> rxe_selectedWeight(@NotNull final Engine<?> ENGINE) {
+        return rxe_weightDisplay(ENGINE).map(ENGINE::getText);
+    }
 }

@@ -139,6 +139,7 @@ public final class GeneralTest {
 
         // When & Then
         for (Screen screen : screens) {
+            LogUtil.printf("Checking screen %s", screen);
             List<ScreenManagerType.Node> nodes = manager.multiNodes(mode, start, screen);
             ScreenManagerType.Node first = nodes.get(0);
             ScreenManagerType.Node last = nodes.get(nodes.size() - 1);

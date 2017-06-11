@@ -31,7 +31,7 @@ public interface SearchActionType extends BaseActionType, SearchValidationType {
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
      * @see Engine#rxa_type(WebElement, String...)
-     * @see #mealSearchProgressDelay(Engine)
+     * @see #searchProgressDelay(Engine)
      * @see #rxe_searchBar(Engine)
      */
     @NotNull
@@ -40,7 +40,7 @@ public interface SearchActionType extends BaseActionType, SearchValidationType {
         return rxe_searchBar(ENGINE)
             .flatMap(ENGINE::rxa_click)
             .flatMap(a -> ENGINE.rxa_type(a, QUERY))
-            .delay(mealSearchProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+            .delay(searchProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**

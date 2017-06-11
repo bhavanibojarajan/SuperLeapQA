@@ -23,7 +23,6 @@ import org.testng.annotations.Test;
 
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -72,8 +71,8 @@ public interface UILogMealTestType extends
      * @see #rxa_submitMeal(Engine)
      * @see #rxa_dismissMealImageTutorial(Engine)
      * @see #rxa_backToDashboard(Engine)
-     * @see #rxa_openEditMeal(Engine)
-     * @see #rxa_deleteMeal(Engine)
+     * @see #rxa_openEditMenu(Engine)
+     * @see #rxa_deleteFromMenu(Engine)
      * @see #rxa_dashboardAfterSearchAndDelete(Engine)
      * @see #rxv_hasMealTime(Engine, Date)
      */
@@ -122,8 +121,8 @@ public interface UILogMealTestType extends
             .flatMap(a -> RXV_MEAL_PAGE)
 
             /* Delete the meal and verify that it is no longer searchable */
-            .flatMap(a -> THIS.rxa_openEditMeal(ENGINE))
-            .flatMap(a -> THIS.rxa_deleteMeal(ENGINE))
+            .flatMap(a -> THIS.rxa_openEditMenu(ENGINE))
+            .flatMap(a -> THIS.rxa_deleteFromMenu(ENGINE))
             .flatMap(a -> THIS.rxa_dashboardAfterSearchAndDelete(ENGINE))
             .flatMap(a -> THIS.rxa_toggleDashboardSearch(ENGINE))
             .flatMap(a -> THIS.rxa_search(ENGINE, DESCRIPTION))
@@ -172,8 +171,8 @@ public interface UILogMealTestType extends
      * @see #rxa_toggleDashboardSearch(Engine)
      * @see #rxa_search(Engine, String)
      * @see #rxa_openSearchResult(Engine, String)
-     * @see #rxa_openEditMeal(Engine)
-     * @see #rxa_deleteMeal(Engine)
+     * @see #rxa_openEditMenu(Engine)
+     * @see #rxa_deleteFromMenu(Engine)
      * @see #rxa_dashboardAfterSearchAndDelete(Engine)
      * @see #rxe_chatMessage(Engine, String)
      * @see #rxe_searchResult(Engine, String)
@@ -227,8 +226,8 @@ public interface UILogMealTestType extends
              * scroll view will show the bottom of the page. We need to scroll
              * up to show the edit button */
             .flatMap(a -> THIS.rxa_makeEditButtonVisible(ENGINE))
-            .flatMap(a -> THIS.rxa_openEditMeal(ENGINE))
-            .flatMap(a -> THIS.rxa_deleteMeal(ENGINE))
+            .flatMap(a -> THIS.rxa_openEditMenu(ENGINE))
+            .flatMap(a -> THIS.rxa_deleteFromMenu(ENGINE))
             .flatMap(a -> THIS.rxa_dashboardAfterSearchAndDelete(ENGINE))
             .flatMap(a -> THIS.rxa_toggleDashboardSearch(ENGINE))
             .flatMap(a -> Flowable.fromIterable(COMMENTS))
