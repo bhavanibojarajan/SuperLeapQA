@@ -1,9 +1,9 @@
 package com.holmusk.SuperLeapQA.model;
 
-import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.xtestkit.android.AndroidView;
+import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
@@ -58,18 +58,18 @@ public enum Setting implements BaseErrorType {
      * Get {@link XPath} query to locate the
      * {@link org.openqa.selenium.WebElement} corresponding to the current
      * {@link Setting}.
-     * @param platform {@link PlatformType} instance.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
-     * @see #isToggleSettings(PlatformType)
-     * @see #switchSettingXP(PlatformType)
-     * @see #textSettingXP(PlatformType)
+     * @see #isToggleSettings(InputHelperType)
+     * @see #switchSettingXP(InputHelperType)
+     * @see #textSettingXP(InputHelperType)
      */
     @NotNull
-    public XPath settingXP(@NotNull PlatformType platform) {
-        if (isToggleSettings(platform)) {
-            return switchSettingXP(platform);
+    public XPath settingXP(@NotNull InputHelperType helper) {
+        if (isToggleSettings(helper)) {
+            return switchSettingXP(helper);
         } else {
-            return textSettingXP(platform);
+            return textSettingXP(helper);
         }
     }
 
@@ -77,13 +77,16 @@ public enum Setting implements BaseErrorType {
      * Check if the current {@link Setting} requires flipping a switch on
      * or off. If so, we need to locate the corresponding
      * {@link org.openqa.selenium.WebElement} differently.
-     * @param platform {@link PlatformType} instance.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link Boolean} value.
+     * @see InputHelperType#platform()
      * @see Platform#ANDROID
      * @see #FOOD
      * @see #LOCATION
      */
-    private boolean isToggleSettings(@NotNull PlatformType platform) {
+    private boolean isToggleSettings(@NotNull InputHelperType helper) {
+        PlatformType platform = helper.platform();
+
         switch (this) {
             case FOOD:
                 return true;
@@ -105,24 +108,26 @@ public enum Setting implements BaseErrorType {
     }
 
     /**
-     * Get {@link CompoundAttribute} when {@link #isToggleSettings(PlatformType)}
-     * is false.
-     * @param platform {@link PlatformType} instance.
+     * Get {@link CompoundAttribute} when
+     * {@link #isToggleSettings(InputHelperType)} is false.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link CompoundAttribute} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
      * @see BaseViewType#className()
      * @see CompoundAttribute.Builder#addAttribute(Attribute)
      * @see CompoundAttribute.Builder#withClass(String)
+     * @see InputHelperType#localizer()
+     * @see InputHelperType#platform()
      * @see LocalizerType#localize(String)
      * @see AndroidView.ViewType#TEXT_VIEW
-     * @see Config#LOCALIZER
      * @see IOSView.ViewType#UI_STATIC_TEXT
      * @see Platform#ANDROID
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    private CompoundAttribute textSettingAttr(@NotNull PlatformType platform) {
+    private CompoundAttribute textSettingAttribute(@NotNull InputHelperType helper) {
+        PlatformType platform = helper.platform();
         String clsName;
 
         if (platform.equals(Platform.ANDROID)) {
@@ -133,7 +138,7 @@ public enum Setting implements BaseErrorType {
             throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        LocalizerType localizer = Config.LOCALIZER;
+        LocalizerType localizer = helper.localizer();
         Attributes attrs = Attributes.of(platform);
         String localized = localizer.localize(title());
 
@@ -144,36 +149,39 @@ public enum Setting implements BaseErrorType {
     }
 
     /**
-     * Get {@link XPath} query when {@link #isToggleSettings(PlatformType)}
+     * Get {@link XPath} query when {@link #isToggleSettings(InputHelperType)}
      * is false.
-     * @param platform {@link PlatformType} instance.
+     * @param helper {@link PlatformType} instance.
      * @return {@link XPath} instance.
      * @see XPath.Builder#addAttribute(Attribute)
-     * @see #textSettingAttr(PlatformType)
+     * @see #textSettingAttribute(InputHelperType)
      */
     @NotNull
-    private XPath textSettingXP(@NotNull PlatformType platform) {
-        CompoundAttribute cAttr = textSettingAttr(platform);
+    private XPath textSettingXP(@NotNull InputHelperType helper) {
+        CompoundAttribute cAttr = textSettingAttribute(helper);
         return XPath.builder().addAttribute(cAttr).build();
     }
 
     /**
-     * Get {@link XPath} query when {@link #isToggleSettings(PlatformType)}
+     * Get {@link XPath} query when {@link #isToggleSettings(InputHelperType)}
      * is true.
-     * @param platform {@link PlatformType} instance.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see BaseViewType#className()
      * @see CompoundAttribute#forClass(String)
+     * @see InputHelperType#platform()
      * @see XPath.Builder#followingSibling(CompoundAttribute, CompoundAttribute)
      * @see AndroidView.ViewType#SWITCH
      * @see IOSView.ViewType#UI_SWITCH
      * @see Platform#ANDROID
      * @see Platform#IOS
-     * @see #textSettingAttr(PlatformType)
+     * @see #textSettingAttribute(InputHelperType)
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    private XPath switchSettingXP(@NotNull PlatformType platform) {
+    private XPath switchSettingXP(@NotNull InputHelperType helper) {
+        PlatformType platform = helper.platform();
+
         String clsName;
 
         if (platform.equals(Platform.ANDROID)) {
@@ -185,7 +193,7 @@ public enum Setting implements BaseErrorType {
         }
 
         CompoundAttribute sAttr = CompoundAttribute.forClass(clsName);
-        CompoundAttribute tAttr = textSettingAttr(platform);
+        CompoundAttribute tAttr = textSettingAttribute(helper);
         return XPath.builder().followingSibling(sAttr, tAttr).build();
     }
 }

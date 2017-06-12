@@ -16,6 +16,7 @@ import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.android.AndroidEngine;
@@ -36,7 +37,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @param gender {@link Gender} instance.
      * @return {@link Flowable} instance.
      * @see ChoiceInput#GENDER
-     * @see Gender#stringValue()
+     * @see Gender#stringValue(InputHelperType)
      * @see #rxa_clickInput(Engine, HMInputType)
      * @see #rxa_selectChoice(Engine, HMChoiceType, String)
      * @see #rxa_confirmTextChoice(Engine)
@@ -50,7 +51,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
         } else if (ENGINE instanceof IOSEngine) {
             final ValidAgeActionType THIS = this;
             final HMChoiceType CHOICE = ChoiceInput.GENDER;
-            final String STR = gender.stringValue();
+            final String STR = gender.stringValue(ENGINE);
 
             return rxa_clickInput(ENGINE, CHOICE)
                 .flatMap(a -> THIS.rxa_selectChoice(ENGINE, CHOICE, STR))
@@ -164,7 +165,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @see Ethnicity#values()
      * @see Gender#values()
      * @see Height#randomValue(UserMode)
-     * @see HMTextChoiceType.Item#stringValue()
+     * @see HMTextChoiceType.Item#stringValue(InputHelperType, double)
      * @see com.holmusk.SuperLeapQA.navigation.Screen#PERSONAL_INFO
      * @see UnitSystem#values()
      * @see UserMode#validAgeInfo(PlatformType)
@@ -245,12 +246,12 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
 
             /* Select ethnicity */
             .flatMap(a -> THIS.rxa_clickInput(E, C_ETH))
-            .flatMap(a -> THIS.rxa_selectChoice(E, C_ETH, ETH.stringValue()))
+            .flatMap(a -> THIS.rxa_selectChoice(E, C_ETH, ETH.stringValue(E)))
             .flatMap(a -> THIS.rxa_confirmTextChoice(E))
 
             /* Select coach preference */
             .flatMap(a -> THIS.rxa_clickInput(E, C_COACH))
-            .flatMap(a -> THIS.rxa_selectChoice(E, C_COACH, CP.stringValue()))
+            .flatMap(a -> THIS.rxa_selectChoice(E, C_COACH, CP.stringValue(E)))
             .flatMap(a -> THIS.rxa_confirmTextChoice(E));
     }
 

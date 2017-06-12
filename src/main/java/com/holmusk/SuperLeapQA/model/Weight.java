@@ -4,6 +4,7 @@ import com.holmusk.HMUITestKit.model.HMUnitSystemConvertibleType;
 import com.holmusk.HMUITestKit.model.UnitSystem;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
+import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
@@ -146,12 +147,18 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
 
     //region Picker Index
     /**
+     * Override this method to provide default implementation.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link Integer} value.
-     * @see SLNumericChoiceType#androidScrollablePickerIndex()
+     * @see SLNumericChoiceType#androidScrollablePickerIndex(InputHelperType)
+     * @see #KG
+     * @see #KG_DEC
+     * @see #LB
+     * @see #LB_DEC
      * @see #NOT_AVAILABLE
      */
     @Override
-    public int androidScrollablePickerIndex() {
+    public int androidScrollablePickerIndex(@NotNull InputHelperType helper) {
         switch (this) {
             case KG:
             case LB:
@@ -167,12 +174,18 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
     }
 
     /**
+     * Override this method to provide default implementation.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link Integer} value.
-     * @see SLNumericChoiceType#iOSScrollablePickerIndex()
+     * @see SLNumericChoiceType#iOSScrollablePickerIndex(InputHelperType)
+     * @see #KG
+     * @see #KG_DEC
+     * @see #LB
+     * @see #LB_DEC
      * @see #NOT_AVAILABLE
      */
     @Override
-    public int iOSScrollablePickerIndex() {
+    public int iOSScrollablePickerIndex(@NotNull InputHelperType helper) {
         switch (this) {
             case KG:
             case LB:
@@ -190,22 +203,26 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
 
     //region Input View XPath
     /**
-     * @param platform {@link PlatformType} instance.
+     * Override this method to provide default implementation.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} value.
-     * @see InputType#inputViewXP(PlatformType)
-     * @see #androidInputViewXP()
-     * @see #iOSInputViewXP()
+     * @see InputHelperType#platform()
+     * @see InputType#inputViewXP(InputHelperType)
+     * @see #androidInputViewXP(InputHelperType)
+     * @see #iOSInputViewXP(InputHelperType)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    public XPath inputViewXP(@NotNull PlatformType platform) {
+    public XPath inputViewXP(@NotNull InputHelperType helper) {
+        PlatformType platform = helper.platform();
+
         switch ((Platform)platform) {
             case ANDROID:
-                return androidInputViewXP();
+                return androidInputViewXP(helper);
 
             case IOS:
-                return iOSInputViewXP();
+                return iOSInputViewXP(helper);
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -214,15 +231,20 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#ANDROID}.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformType)
      * @see XPath.Builder#addAttribute(Attribute)
      * @see Platform#ANDROID
+     * @see #KG
+     * @see #KG_DEC
+     * @see #LB
+     * @see #LB_DEC
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    private XPath androidInputViewXP() {
+    private XPath androidInputViewXP(@NotNull InputHelperType helper) {
         Attributes attrs = Attributes.of(Platform.ANDROID);
 
         final String ID;
@@ -248,6 +270,7 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
@@ -256,10 +279,12 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @see Platform#IOS
      * @see IOSView.ViewType#UI_BUTTON
      * @see XPath.Builder#addAttribute(CompoundAttribute)
+     * @see #KG
+     * @see #LB
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    private XPath iOSInputViewXP() {
+    private XPath iOSInputViewXP(@NotNull InputHelperType helper) {
         Attributes attrs = Attributes.of(Platform.IOS);
 
         String text;
@@ -290,13 +315,14 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
     /**
      * Get the appropriately formatted weight {@link String}, depending on
      * the type of {@link Weight}.
+     * @param helper {@link InputHelperType} instance.
      * @param value {@link Integer} value.
      * @return {@link String} value.
-     * @see SLNumericChoiceType#stringValue(double)
+     * @see SLNumericChoiceType#stringValue(InputHelperType, double)
      */
     @NotNull
     @Override
-    public String stringValue(double value) {
+    public String stringValue(@NotNull InputHelperType helper, double value) {
         return String.valueOf((int)value);
     }
 
@@ -305,6 +331,10 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @return {@link Integer} value.
      * @see SLNumericChoiceType#minSelectableValue(UserMode)
      * @see UserMode#isParent()
+     * @see #KG
+     * @see #KG_DEC
+     * @see #LB
+     * @see #LB_DEC
      * @see #NOT_AVAILABLE
      */
     @Override
@@ -332,6 +362,10 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @return {@link Integer} value.
      * @see SLNumericChoiceType#maxSelectableValue(UserMode)
      * @see UserMode#isParent()
+     * @see #KG
+     * @see #KG_DEC
+     * @see #LB
+     * @see #LB_DEC
      * @see #NOT_AVAILABLE
      */
     @Override

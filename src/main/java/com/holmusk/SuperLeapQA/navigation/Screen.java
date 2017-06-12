@@ -34,6 +34,8 @@ public enum Screen implements ScreenInitializationType {
     LOG_WEIGHT_VALUE,
     LOG_WEIGHT_ENTRY,
     WEIGHT_PAGE,
+    LOG_ACTIVITY_VALUE,
+    LOG_ACTIVITY_ENTRY,
     SETTINGS;
 
     /**

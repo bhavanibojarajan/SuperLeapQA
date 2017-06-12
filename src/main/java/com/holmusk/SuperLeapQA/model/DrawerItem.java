@@ -1,9 +1,11 @@
 package com.holmusk.SuperLeapQA.model;
 
-import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LocalizerType;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
+import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
@@ -63,36 +65,37 @@ public enum DrawerItem implements BaseErrorType {
      * Get the {@link XPath} query that can be used to locate the
      * {@link org.openqa.selenium.WebElement} corresponding to the current
      * {@link DrawerItem}.
-     * @param platform {@link PlatformType} instance.
+     * @param engine {@link PlatformType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
      * @see Attributes#ofClass(String)
      * @see BaseViewType#className()
      * @see CompoundAttribute.Builder#addAttribute(Attribute)
+     * @see Engine#localizer()
      * @see LocalizerType#localize(String)
      * @see AndroidView.ViewType#CHECKED_TEXT_VIEW
-     * @see Config#LOCALIZER
      * @see IOSView.ViewType#UI_STATIC_TEXT
      * @see Platform#ANDROID
      * @see #title()
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    public XPath drawerItemXP(@NotNull PlatformType platform) {
-        LocalizerType localizer = Config.LOCALIZER;
+    public XPath drawerItemXP(@NotNull Engine<?> engine) {
+        LocalizerType localizer = engine.localizer();
         String clsName;
-        String localized = localizer.localize(title());
 
-        if (platform.equals(Platform.ANDROID)) {
+        if (engine instanceof AndroidEngine) {
             clsName = AndroidView.ViewType.CHECKED_TEXT_VIEW.className();
-        } else if (platform.equals(Platform.IOS)) {
+        } else if (engine instanceof IOSEngine) {
             clsName = IOSView.ViewType.UI_STATIC_TEXT.className();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
 
+        PlatformType platform = engine.platform();
         Attributes attrs = Attributes.of(platform);
+        String localized = localizer.localize(title());
 
         CompoundAttribute cAttr = CompoundAttribute.builder()
             .addAttribute(attrs.ofClass(clsName))

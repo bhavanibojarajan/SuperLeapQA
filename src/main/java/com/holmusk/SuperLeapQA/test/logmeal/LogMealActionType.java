@@ -28,7 +28,6 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @param ENGINE {@link Engine} instance.
      * @param mood {@link Mood} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#middleCoordinate(WebElement)
      * @see Engine#rxa_click(WebElement)
      * @see #rxe_mood(Engine, Mood)
      */
@@ -188,14 +187,14 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
-     * @see #mealLogProgressDelay(Engine)
+     * @see #CSSLogProgressDelay(Engine)
      * @see #rxe_mealConfirm(Engine)
      */
     @NotNull
     default Flowable<?> rxa_submitMeal(@NotNull final Engine<?> ENGINE) {
         return rxe_mealConfirm(ENGINE)
             .flatMap(ENGINE::rxa_click)
-            .delay(mealLogProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+            .delay(CSSLogProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**

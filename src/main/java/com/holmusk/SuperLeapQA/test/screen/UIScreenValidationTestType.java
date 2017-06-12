@@ -1,9 +1,6 @@
 package com.holmusk.SuperLeapQA.test.screen;
 
-import com.holmusk.HMUITestKit.model.HMChoiceType;
-import com.holmusk.HMUITestKit.model.HMInputType;
-import com.holmusk.HMUITestKit.model.HMTextType;
-import com.holmusk.HMUITestKit.model.UnitSystem;
+import com.holmusk.HMUITestKit.model.*;
 import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.navigation.type.BackwardNavigationType;
@@ -437,12 +434,12 @@ public interface UIScreenValidationTestType extends
 
             /* Select ethnicity */
             .flatMap(a -> THIS.rxa_clickInput(E, C_ETH))
-            .flatMap(a -> THIS.rxa_selectChoice(E, C_ETH, ETH.stringValue()))
+            .flatMap(a -> THIS.rxa_selectChoice(E, C_ETH, ETH.stringValue(E)))
             .flatMap(a -> THIS.rxa_confirmTextChoice(E))
 
             /* Select coach preference */
             .flatMap(a -> THIS.rxa_clickInput(E, C_COACH))
-            .flatMap(a -> THIS.rxa_selectChoice(E, C_COACH, CP.stringValue()))
+            .flatMap(a -> THIS.rxa_selectChoice(E, C_COACH, CP.stringValue(E)))
             .flatMap(a -> THIS.rxa_confirmTextChoice(E))
 
             .subscribe(subscriber);
@@ -666,6 +663,7 @@ public interface UIScreenValidationTestType extends
     /**
      * Validate {@link Screen#LOG_WEIGHT_VALUE} and confirm that all
      * {@link WebElement} are present.
+     * @see CSSInput#WEIGHT
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#LOG_WEIGHT_VALUE
@@ -673,8 +671,7 @@ public interface UIScreenValidationTestType extends
      * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rxa_completeWeightValue(Engine)
-     * @see #rxv_logWeightValue(Engine)
+     * @see #rxv_CSSValue(Engine, HMCSSInputType)
      * @see #rxv_logWeightEntry(Engine)
      */
     @Test
@@ -683,12 +680,13 @@ public interface UIScreenValidationTestType extends
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
+        final HMCSSInputType INPUT = CSSInput.WEIGHT;
         UserMode mode = defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_WEIGHT_VALUE)
-            .flatMap(a -> THIS.rxv_logWeightValue(ENGINE))
+            .flatMap(a -> THIS.rxv_CSSValue(ENGINE, INPUT))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -720,6 +718,40 @@ public interface UIScreenValidationTestType extends
         // When
         rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_WEIGHT_ENTRY)
             .flatMap(a -> THIS.rxv_logWeightEntry(ENGINE))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * Validate {@link Screen#LOG_ACTIVITY_ENTRY} and confirm that all
+     * {@link WebElement} are present.
+     * @param mode {@link UserMode} instance.
+     * @see Screen#SPLASH
+     * @see Screen#LOGIN
+     * @see Screen#LOG_ACTIVITY_VALUE
+     * @see #assertCorrectness(TestSubscriber)
+     * @see #engine()
+     * @see #generalUserModeProvider()
+     * @see #rxv_activityWeightEntry(Engine)
+     */
+    @SuppressWarnings("unchecked")
+    @Test(
+        dataProviderClass = UIBaseTestType.class,
+        dataProvider = "generalUserModeProvider"
+    )
+    default void test_logActivityValue_isValidScreen(@NotNull UserMode mode) {
+        // Setup
+        final UIScreenValidationTestType THIS = this;
+        final Engine<?> ENGINE = engine();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_ACTIVITY_VALUE)
+            .flatMap(a -> THIS.rxv_activityWeightEntry(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

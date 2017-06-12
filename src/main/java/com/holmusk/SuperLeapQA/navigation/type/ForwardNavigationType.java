@@ -1,5 +1,7 @@
 package com.holmusk.SuperLeapQA.navigation.type;
 
+import com.holmusk.HMUITestKit.model.HMCSSInputType;
+import com.holmusk.SuperLeapQA.model.CSSInput;
 import com.holmusk.SuperLeapQA.model.CardType;
 import com.holmusk.SuperLeapQA.model.DrawerItem;
 import com.holmusk.SuperLeapQA.model.UserMode;
@@ -10,9 +12,10 @@ import com.holmusk.SuperLeapQA.test.dob.DOBPickerActionType;
 import com.holmusk.SuperLeapQA.test.forgotpassword.ForgotPasswordActionType;
 import com.holmusk.SuperLeapQA.test.guarantorinfo.GuarantorInfoActionType;
 import com.holmusk.SuperLeapQA.test.invalidage.InvalidAgeActionType;
+import com.holmusk.SuperLeapQA.test.css.LogActivityActionType;
 import com.holmusk.SuperLeapQA.test.login.LoginActionType;
 import com.holmusk.SuperLeapQA.test.logmeal.LogMealActionType;
-import com.holmusk.SuperLeapQA.test.logweight.LogWeightActionType;
+import com.holmusk.SuperLeapQA.test.css.LogWeightActionType;
 import com.holmusk.SuperLeapQA.test.mealpage.MealPageActionType;
 import com.holmusk.SuperLeapQA.test.personalinfo.PersonalInfoActionType;
 import com.holmusk.SuperLeapQA.test.photopicker.PhotoPickerActionType;
@@ -53,6 +56,7 @@ public interface ForwardNavigationType extends
     MealPageActionType,
     ChatActionType,
     LogWeightActionType,
+    LogActivityActionType,
     SettingActionType
 {
     /**
@@ -390,11 +394,13 @@ public interface ForwardNavigationType extends
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_WEIGHT_ENTRY}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rxa_completeWeightValue(Engine)
+     * @see CSSInput#WEIGHT
+     * @see #rxa_completeCSSValue(Engine, HMCSSInputType)
      */
     @NotNull
     default Flowable<?> rxn_weightValue_weightEntry(@NotNull Engine<?> engine) {
-        return rxa_completeWeightValue(engine);
+        HMCSSInputType input = CSSInput.WEIGHT;
+        return rxa_completeCSSValue(engine, input);
     }
 
     /**
@@ -402,11 +408,39 @@ public interface ForwardNavigationType extends
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#WEIGHT_PAGE}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rxa_completeWeightEntry(Engine)
+     * @see CSSInput#WEIGHT
+     * @see #rxa_completeCSSEntry(Engine, HMCSSInputType)
      */
     @NotNull
     default Flowable<?> rxn_weightEntry_weightPage(@NotNull Engine<?> engine) {
-        return rxa_completeWeightEntry(engine);
+        HMCSSInputType input = CSSInput.WEIGHT;
+        return rxa_completeCSSEntry(engine, input);
+    }
+
+    /**
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#ADD_CARD}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_ACTIVITY_VALUE}
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rxa_addCard(Engine, CardType)
+     * @see CardType#ACTIVITY
+     */
+    @NotNull
+    default Flowable<?> rxn_addCard_activityValue(@NotNull Engine<?> engine) {
+        return rxa_addCard(engine, CardType.ACTIVITY);
+    }
+
+    /**
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_ACTIVITY_VALUE}.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see CSSInput#ACTIVITY
+     * @see #rxa_completeCSSEntry(Engine, HMCSSInputType)
+     */
+    @NotNull
+    default Flowable<?> rxn_activityValue_activityEntry(@NotNull Engine<?> engine) {
+        HMCSSInputType input = CSSInput.ACTIVITY;
+        return rxa_completeCSSEntry(engine, input);
     }
 
     /**

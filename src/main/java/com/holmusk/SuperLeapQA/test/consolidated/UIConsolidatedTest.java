@@ -7,7 +7,7 @@ import com.holmusk.SuperLeapQA.test.dob.UIDoBPickerTestType;
 import com.holmusk.SuperLeapQA.test.invalidage.UIInvalidAgeTestType;
 import com.holmusk.SuperLeapQA.test.login.UILoginTestType;
 import com.holmusk.SuperLeapQA.test.logmeal.UILogMealTestType;
-import com.holmusk.SuperLeapQA.test.logweight.UILogWeightTestType;
+import com.holmusk.SuperLeapQA.test.css.UILogWeightTestType;
 import com.holmusk.SuperLeapQA.test.personalinfo.UIPersonalInfoTestType;
 import com.holmusk.SuperLeapQA.test.screen.UIScreenValidationTestType;
 import com.holmusk.SuperLeapQA.test.validage.UIValidAgeTestType;

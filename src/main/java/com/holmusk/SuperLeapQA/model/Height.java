@@ -5,17 +5,17 @@ import com.holmusk.HMUITestKit.model.UnitSystem;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zip;
+import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
-import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -186,8 +186,9 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
     //region Picker Index
     /**
      * Override this method to provide default implementation.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link Integer} value.
-     * @see SLNumericChoiceType#androidScrollablePickerIndex()
+     * @see SLNumericChoiceType#androidScrollablePickerIndex(InputHelperType)
      * @see #CM
      * @see #CM_DEC
      * @see #FT
@@ -195,7 +196,7 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @see #NOT_AVAILABLE
      */
     @Override
-    public int androidScrollablePickerIndex() {
+    public int androidScrollablePickerIndex(@NotNull InputHelperType helper) {
         switch (this) {
             case FT:
             case CM:
@@ -212,8 +213,9 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
 
     /**
      * Override this method to provide default implementation.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link Integer} value.
-     * @see SLNumericChoiceType#iOSScrollablePickerIndex()
+     * @see SLNumericChoiceType#iOSScrollablePickerIndex(InputHelperType)
      * @see #CM
      * @see #CM_DEC
      * @see #FT
@@ -221,7 +223,7 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @see #NOT_AVAILABLE
      */
     @Override
-    public int iOSScrollablePickerIndex() {
+    public int iOSScrollablePickerIndex(@NotNull InputHelperType helper) {
         switch (this) {
             case FT:
             case CM:
@@ -240,9 +242,10 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
     //region Input View XPath
     /**
      * Override this method to provide default implementation.
-     * @param platform {@link PlatformType} instance.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} value.
-     * @see InputType#inputViewXP(PlatformType)
+     * @see InputHelperType#platform()
+     * @see InputType#inputViewXP(InputHelperType)
      * @see Platform#ANDROID
      * @see Platform#IOS
      * @see #androidInputViewXPath()
@@ -250,7 +253,9 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      */
     @NotNull
     @Override
-    public XPath inputViewXP(@NotNull PlatformType platform) {
+    public XPath inputViewXP(@NotNull InputHelperType helper) {
+        PlatformType platform = helper.platform();
+
         switch ((Platform)platform) {
             case ANDROID:
                 return androidInputViewXPath();
@@ -348,13 +353,14 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
     /**
      * Get the appropriately formatted height {@link String}, depending on
      * the type of {@link Height}.
+     * @param helper {@link InputHelperType} instance.
      * @param value {@link Integer} value.
      * @return {@link String} value.
-     * @see SLNumericChoiceType#stringValue(double)
+     * @see SLNumericChoiceType#stringValue(InputHelperType, double)
      */
     @NotNull
     @Override
-    public String stringValue(double value) {
+    public String stringValue(@NotNull InputHelperType helper, double value) {
         return String.valueOf((int)value);
     }
 

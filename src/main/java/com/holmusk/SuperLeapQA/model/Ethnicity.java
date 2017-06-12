@@ -2,8 +2,9 @@ package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.HMUITestKit.model.HMTextChoiceType;
-import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.localizer.LocalizerType;
+import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
@@ -79,37 +80,43 @@ public enum Ethnicity implements BaseErrorType, HMInputType, HMTextChoiceType.It
 
     /**
      * Override this method to provide default implementation.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link String} value.
-     * @see Config#LOCALIZER
-     * @see HMTextChoiceType.Item#stringValue()
-     * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
+     * @see HMTextChoiceType.Item#stringValue(InputHelperType, double)
+     * @see InputHelperType#localizer()
+     * @see LocalizerType#localize(String)
      * @see #title()
      */
     @NotNull
     @Override
-    public String stringValue() {
-        return Config.LOCALIZER.localize(title());
+    public String stringValue(@NotNull InputHelperType helper) {
+        LocalizerType localizer = helper.localizer();
+        return localizer.localize(title());
     }
 
     /**
-     * @param platform {@link PlatformType} instance.
+     * Override this method to provide default implementation.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} value.
-     * @see InputType#inputViewXP(PlatformType)
+     * @see InputHelperType#platform()
+     * @see InputType#inputViewXP(InputHelperType)
      * @see Platform#ANDROID
      * @see Platform#IOS
-     * @see #androidInputViewXP()
-     * @see #iOSInputViewXP()
+     * @see #androidInputViewXP(InputHelperType)
+     * @see #iOSInputViewXP(InputHelperType)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    public XPath inputViewXP(@NotNull PlatformType platform) {
+    public XPath inputViewXP(@NotNull InputHelperType helper) {
+        PlatformType platform = helper.platform();
+
         switch ((Platform)platform) {
             case ANDROID:
-                return androidInputViewXP();
+                return androidInputViewXP(helper);
 
             case IOS:
-                return iOSInputViewXP();
+                return iOSInputViewXP(helper);
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -118,6 +125,7 @@ public enum Ethnicity implements BaseErrorType, HMInputType, HMTextChoiceType.It
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#ANDROID}.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformType)
@@ -125,7 +133,7 @@ public enum Ethnicity implements BaseErrorType, HMInputType, HMTextChoiceType.It
      * @see XPath.Builder#addAttribute(Attribute)
      */
     @NotNull
-    private XPath androidInputViewXP() {
+    private XPath androidInputViewXP(@NotNull InputHelperType helper) {
         Attributes attrs = Attributes.of(Platform.ANDROID);
         Attribute attribute = attrs.containsID("text1");
         return XPath.builder().addAttribute(attribute).build();
@@ -133,12 +141,13 @@ public enum Ethnicity implements BaseErrorType, HMInputType, HMTextChoiceType.It
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see CompoundAttribute#empty()
      * @see XPath.Builder#addAttribute(CompoundAttribute)
      */
     @NotNull
-    private XPath iOSInputViewXP() {
+    private XPath iOSInputViewXP(@NotNull InputHelperType helper) {
         return XPath.builder().addAttribute(CompoundAttribute.empty()).build();
     }
 

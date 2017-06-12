@@ -1,28 +1,14 @@
 package com.holmusk.SuperLeapQA.test.base;
 
+import com.holmusk.HMUITestKit.test.base.HMDelayType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkitcomponents.common.BaseErrorType;
 
 /**
  * Created by haipham on 5/7/17.
  */
-public interface AppDelayType extends BaseErrorType {
-    /**
-     * Catch-all delay.
-     * @param engine {@link Engine} instance.
-     * @return {@link Long} value.
-     * @see #NOT_AVAILABLE
-     */
-    default long generalDelay(@NotNull Engine<?> engine) {
-        if (engine instanceof AndroidEngine) {
-            return 1000;
-        } else {
-            return 2000;
-        }
-    }
-
+public interface AppDelayType extends HMDelayType {
     /**
      * Delay between the time the user logs in and that when the dashboard
      * tutorial screen appears.
@@ -127,26 +113,6 @@ public interface AppDelayType extends BaseErrorType {
      */
     default long photoPickerScreenDelay(@NotNull Engine<?> engine) {
         return 3000;
-    }
-
-    /**
-     * Delay between the time the user submits a meal, and that when the
-     * meal page appears.
-     * @param engine {@link Engine} instance.
-     * @return {@link Long} value.
-     */
-    default long mealLogProgressDelay(@NotNull Engine<?> engine) {
-        return 2000;
-    }
-
-    /**
-     * Delay between the time the user clicks submit weight and that when
-     * the next screen appears.
-     * @param engine {@link Engine} instance.
-     * @return {@link Long} value.
-     */
-    default long weightLogProgressDelay(@NotNull Engine<?> engine) {
-        return 500;
     }
 
     /**

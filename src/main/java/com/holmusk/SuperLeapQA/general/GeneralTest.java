@@ -59,12 +59,6 @@ public final class GeneralTest {
     }
 
     @Test
-    public void test_choiceInputXP_shouldWork() {
-        // Setup & When & Then
-        LogUtil.println(ChoiceInput.WEIGHT.inputViewXP(Platform.IOS));
-    }
-
-    @Test
     public void test_birthDayCalculation_shouldBeCorrect() {
         // Setup
         LocalDate date1 = LocalDate.of(2017, 6, 5);
@@ -146,17 +140,6 @@ public final class GeneralTest {
             assertEquals(((ScreenHolder)first.S1).SCREEN, start);
             assertEquals(((ScreenHolder)last.S2).SCREEN, screen);
         }
-    }
-
-    @Test
-    public void test_XPathCreation_shouldWork() {
-        // Setup && When && Then
-        LogUtil.println(ChoiceInput.COACH_PREF.inputViewXP(Platform.IOS));
-        LogUtil.println(Height.CM.choicePickerItemXP(Platform.ANDROID));
-        LogUtil.println(Setting.LOCATION.settingXP(Platform.ANDROID));
-        LogUtil.println(Setting.LOCATION.settingXP(Platform.IOS));
-        LogUtil.println(Setting.UNITS.settingXP(Platform.ANDROID));
-        LogUtil.println(Setting.UNITS.settingXP(Platform.IOS));
     }
 
     @Test

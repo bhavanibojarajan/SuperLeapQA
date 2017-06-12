@@ -1,5 +1,7 @@
-package com.holmusk.SuperLeapQA.test.logweight;
+package com.holmusk.SuperLeapQA.test.css;
 
+import com.holmusk.HMUITestKit.model.HMCSSInputType;
+import com.holmusk.SuperLeapQA.model.CSSInput;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
@@ -7,7 +9,6 @@ import com.holmusk.SuperLeapQA.test.weightpage.WeightPageActionType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
@@ -29,6 +30,7 @@ public interface UILogWeightTestType extends
      * @see Engine#rxe_containsText(String...)
      * @see Engine#rxv_errorWithPageSource()
      * @see ObjectUtil#nonNull(Object)
+     * @see CSSInput#WEIGHT
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#LOG_WEIGHT_ENTRY
@@ -36,14 +38,14 @@ public interface UILogWeightTestType extends
      * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rxa_openWeightTimePicker(Engine)
-     * @see #rxa_selectWeightTime(Engine, Date)
-     * @see #rxa_confirmWeightTime(Engine)
-     * @see #rxa_submitWeightEntry(Engine)
+     * @see #rxa_openCSSTimePicker(Engine, HMCSSInputType)
+     * @see #rxa_selectCSSTime(Engine, Date)
+     * @see #rxa_confirmCSSTime(Engine, HMCSSInputType)
+     * @see #rxa_submitCSSEntry(Engine, HMCSSInputType)
      * @see #rxa_openEditMenu(Engine)
      * @see #rxa_deleteFromMenu(Engine)
-     * @see #rxe_selectedWeight(Engine)
-     * @see #rxv_hasWeightTime(Engine, Date)
+     * @see #rxe_selectedCSSValue(Engine, HMCSSInputType)
+     * @see #rxv_hasCSSTime(Engine, Date)
      */
     @Test
     @SuppressWarnings("unchecked")
@@ -51,21 +53,22 @@ public interface UILogWeightTestType extends
         // Setup
         final UILogWeightTestType THIS = this;
         final Engine<?> ENGINE = engine();
+        final HMCSSInputType INPUT = CSSInput.WEIGHT;
         final Date TIME = randomSelectableTime();
         UserMode mode = defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_WEIGHT_ENTRY)
-            .flatMap(a -> THIS.rxe_selectedWeight(ENGINE))
+            .flatMap(a -> THIS.rxe_selectedCSSValue(ENGINE, INPUT))
 
             /* Get the weight for later checks */
-            .flatMap(a -> THIS.rxa_openWeightTimePicker(ENGINE)
-                .flatMap(b -> THIS.rxa_selectWeightTime(ENGINE, TIME))
-                .flatMap(b -> THIS.rxa_confirmWeightTime(ENGINE))
-                .flatMap(b -> THIS.rxa_submitWeightEntry(ENGINE))
+            .flatMap(a -> THIS.rxa_openCSSTimePicker(ENGINE, INPUT)
+                .flatMap(b -> THIS.rxa_selectCSSTime(ENGINE, TIME))
+                .flatMap(b -> THIS.rxa_confirmCSSTime(ENGINE, INPUT))
+                .flatMap(b -> THIS.rxa_submitCSSEntry(ENGINE, INPUT))
                 .flatMap(b -> Flowable.mergeArray(
-                    THIS.rxv_hasWeightTime(ENGINE, TIME)
+                    THIS.rxv_hasCSSTime(ENGINE, TIME)
                 ))
                 .all(ObjectUtil::nonNull)
                 .toFlowable()
@@ -91,6 +94,8 @@ public interface UILogWeightTestType extends
      * the next time the user logs another weight.
      * @see Engine#rxe_containsText(String...)
      * @see Engine#rxv_errorWithPageSource()
+     * @see ObjectUtil#nonNull(Object)
+     * @see CSSInput#WEIGHT
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#DASHBOARD
@@ -100,11 +105,11 @@ public interface UILogWeightTestType extends
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_backToDashboard(Engine)
-     * @see #rxa_submitWeightValue(Engine)
-     * @see #rxa_submitWeightEntry(Engine)
+     * @see #rxa_submitCSSValue(Engine, HMCSSInputType)
+     * @see #rxa_submitCSSEntry(Engine, HMCSSInputType)
      * @see #rxa_clickBackButton(Engine)
      * @see #rxa_dashboardFromWeightEntry(Engine)
-     * @see #rxe_selectedWeight(Engine)
+     * @see #rxe_selectedCSSValue(Engine, HMCSSInputType)
      */
     @Test
     @SuppressWarnings("unchecked")
@@ -113,26 +118,26 @@ public interface UILogWeightTestType extends
         final UILogWeightTestType THIS = this;
         final Engine<?> ENGINE = engine();
         final int TRIES = 3;
+        final HMCSSInputType INPUT = CSSInput.WEIGHT;
         final UserMode MODE = defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         rxa_navigate(MODE, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD)
             .concatMap(a -> Flowable.range(0, TRIES))
-            .doOnNext(a -> LogUtil.printft(">>>>>>>> Run %d <<<<<<<<", a))
             .concatMap(a -> THIS
                 .rxa_navigate(MODE, Screen.DASHBOARD, Screen.LOG_WEIGHT_ENTRY)
 
                 /* For cross-platform reusability, we need to get the weight
                  * value from the weight entry screen, since on Android it's
                  * not possible to get it directly from the weight scroll */
-                .concatMap(b -> THIS.rxe_selectedWeight(ENGINE))
-                .concatMap(b -> THIS.rxa_submitWeightEntry(ENGINE)
+                .concatMap(b -> THIS.rxe_selectedCSSValue(ENGINE, INPUT))
+                .concatMap(b -> THIS.rxa_submitCSSEntry(ENGINE, INPUT)
                     .flatMap(c -> THIS.rxa_backToDashboard(ENGINE))
                     .flatMap(c -> THIS.rxa_navigate(MODE,
                         Screen.DASHBOARD, Screen.LOG_WEIGHT_VALUE)
                     )
-                    .flatMap(c -> THIS.rxa_submitWeightValue(ENGINE))
+                    .flatMap(c -> THIS.rxa_submitCSSValue(ENGINE, INPUT))
 
                     /* The weight value should have been saved from the previous
                      * log */

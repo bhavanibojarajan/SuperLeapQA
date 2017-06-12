@@ -1,12 +1,13 @@
 package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.HMUITestKit.model.HMTextType;
-import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionUtil;
+import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.string.StringUtil;
+import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.base.model.TextInputType;
 import org.swiften.xtestkit.ios.IOSView;
@@ -41,24 +42,27 @@ public enum TextInput implements BaseErrorType, HMTextType {
     UNIT_NUMBER;
 
     /**
-     * @param platform {@link PlatformType} instance.
+     * Override this method to provide default implementation.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} value.
-     * @see InputType#inputViewXP(PlatformType)
+     * @see InputType#inputViewXP(InputHelperType)
      * @see Platform#ANDROID
      * @see Platform#IOS
-     * @see #androidInputViewXP()
-     * @see #iOSInputViewXP()
+     * @see #androidInputViewXP(InputHelperType)
+     * @see #iOSInputViewXP(InputHelperType)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    public XPath inputViewXP(@NotNull PlatformType platform) {
+    public XPath inputViewXP(@NotNull InputHelperType helper) {
+        PlatformType platform = helper.platform();
+
         switch ((Platform)platform) {
             case ANDROID:
-                return androidInputViewXP();
+                return androidInputViewXP(helper);
 
             case IOS:
-                return iOSInputViewXP();
+                return iOSInputViewXP(helper);
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -67,6 +71,7 @@ public enum TextInput implements BaseErrorType, HMTextType {
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#ANDROID}.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformType)
@@ -75,7 +80,7 @@ public enum TextInput implements BaseErrorType, HMTextType {
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    private XPath androidInputViewXP() {
+    private XPath androidInputViewXP(@NotNull InputHelperType helper) {
         Attributes attrs = Attributes.of(Platform.ANDROID);
 
         final String ID;
@@ -144,13 +149,14 @@ public enum TextInput implements BaseErrorType, HMTextType {
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
      * @see BaseViewType#className()
      * @see CompoundAttribute#forClass(String)
-     * @see Config#LOCALIZER
-     * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
+     * @see InputHelperType#localizer()
+     * @see LocalizerType#localize(String)
      * @see XPath.Builder#addAttribute(Attribute)
      * @see XPath.Builder#addAttribute(CompoundAttribute)
      * @see IOSView.ViewType#UI_TEXT_FIELD
@@ -159,8 +165,9 @@ public enum TextInput implements BaseErrorType, HMTextType {
      * @see #iOSShortDescription()
      */
     @NotNull
-    private XPath iOSInputViewXP() {
+    private XPath iOSInputViewXP(@NotNull InputHelperType helper) {
         Attributes attrs = Attributes.of(Platform.IOS);
+        LocalizerType localizer = helper.localizer();
 
         switch (this) {
             case PASSWORD:
@@ -170,7 +177,7 @@ public enum TextInput implements BaseErrorType, HMTextType {
 
             default:
                 String shortDsc = iOSShortDescription();
-                String localized = Config.LOCALIZER.localize(shortDsc);
+                String localized = localizer.localize(shortDsc);
                 Attribute a2 = attrs.containsText(localized);
                 return XPath.builder().addAttribute(a2).build();
         }
@@ -178,8 +185,8 @@ public enum TextInput implements BaseErrorType, HMTextType {
 
     /**
      * Get a short description of the input field, to use with
-     * {@link #iOSInputViewXP()}. This is done so we do not have to search
-     * for the input fields by their indexes.
+     * {@link #iOSInputViewXP(InputHelperType)}. This is done so we do not
+     * have to search for the input fields by their indexes.
      * @return {@link String} value.
      * @see #NOT_AVAILABLE
      */

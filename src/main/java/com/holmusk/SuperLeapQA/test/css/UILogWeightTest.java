@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.test.logweight;
+package com.holmusk.SuperLeapQA.test.css;
 
 import com.holmusk.SuperLeapQA.test.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;

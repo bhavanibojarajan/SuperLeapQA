@@ -9,8 +9,8 @@ import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.ios.IOSEngine;
-import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
@@ -22,15 +22,13 @@ public interface SettingValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @param setting {@link Setting} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#platform()
      * @see Engine#rxe_withXPath(XPath...)
-     * @see Setting#settingXP(PlatformType)
+     * @see Setting#settingXP(InputHelperType)
      */
     @NotNull
     default Flowable<WebElement> rxe_setting(@NotNull Engine<?> engine,
                                              @NotNull Setting setting) {
-        PlatformType platform = engine.platform();
-        XPath xPath = setting.settingXP(platform);
+        XPath xPath = setting.settingXP(engine);
         return engine.rxe_withXPath(xPath).firstElement().toFlowable();
     }
 

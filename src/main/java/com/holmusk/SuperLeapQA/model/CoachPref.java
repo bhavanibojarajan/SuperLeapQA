@@ -2,8 +2,9 @@ package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.HMUITestKit.model.HMTextChoiceType;
-import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.localizer.LocalizerType;
+import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
@@ -51,21 +52,24 @@ public enum CoachPref implements BaseErrorType, HMInputType, HMTextChoiceType.It
     /**
      * Override this method to provide default implementation.
      * @return {@link String} value.
-     * @see Config#LOCALIZER
-     * @see HMTextChoiceType.Item#stringValue()
-     * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
+     * @see HMTextChoiceType.Item#stringValue(InputHelperType, double)
+     * @see LocalizerType#localize(String)
+     * @see InputHelperType#localizer()
      * @see #title()
      */
     @NotNull
     @Override
-    public String stringValue() {
-        return Config.LOCALIZER.localize(title());
+    public String stringValue(@NotNull InputHelperType helper) {
+        LocalizerType localizer = helper.localizer();
+        return localizer.localize(title());
     }
 
     /**
-     * @param platform {@link PlatformType} instance.
+     * Override this method to provide default implementation.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} value.
-     * @see InputType#inputViewXP(PlatformType)
+     * @see InputHelperType#platform()
+     * @see InputType#inputViewXP(InputHelperType)
      * @see #androidInputViewXP()
      * @see #iOSInputViewXP()
      * @see Platform#ANDROID
@@ -74,7 +78,9 @@ public enum CoachPref implements BaseErrorType, HMInputType, HMTextChoiceType.It
      */
     @NotNull
     @Override
-    public XPath inputViewXP(@NotNull PlatformType platform) {
+    public XPath inputViewXP(@NotNull InputHelperType helper) {
+        PlatformType platform = helper.platform();
+
         switch ((Platform)platform) {
             case ANDROID:
                 return androidInputViewXP();

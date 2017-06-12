@@ -315,6 +315,18 @@ public final class ScreenHolder implements
             case WEIGHT_PAGE:
                 return CollectionUtil.asList();
 
+            case LOG_ACTIVITY_VALUE:
+                return CollectionUtil.asList(
+                    new Direction(
+                        ScreenHolder.of(ENGINE, Screen.LOG_ACTIVITY_VALUE, MODE),
+                        a -> THIS.rxn_addCard_activityValue(ENGINE),
+                        platform
+                    )
+                );
+
+            case LOG_ACTIVITY_ENTRY:
+                return CollectionUtil.asList();
+
             case SETTINGS:
                 return CollectionUtil.asList();
 
@@ -461,6 +473,12 @@ public final class ScreenHolder implements
                 return CollectionUtil.asList();
 
             case WEIGHT_PAGE:
+                return CollectionUtil.asList();
+
+            case LOG_ACTIVITY_VALUE:
+                return CollectionUtil.asList();
+
+            case LOG_ACTIVITY_ENTRY:
                 return CollectionUtil.asList();
 
             case SETTINGS:

@@ -1,10 +1,14 @@
 package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.HMUITestKit.model.HMTextChoiceType;
-import com.holmusk.SuperLeapQA.config.Config;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionUtil;
+import org.swiften.javautilities.localizer.LocalizerType;
+import org.swiften.xtestkit.android.AndroidEngine;
+import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
+import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
@@ -56,32 +60,30 @@ public enum ChoiceInput implements HMTextChoiceType {
 
     /**
      * Override this method to provide default implementation.
-     * @param platform {@link PlatformType} instance.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} value.
-     * @see InputType#inputViewXP(PlatformType)
+     * @see InputType#inputViewXP(InputHelperType)
      * @see Platform#ANDROID
      * @see Platform#IOS
-     * @see #androidInputViewXP()
-     * @see #iOSInputViewXP()
+     * @see #androidInputViewXP(InputHelperType)
+     * @see #iOSInputViewXP(InputHelperType)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    public XPath inputViewXP(@NotNull PlatformType platform) {
-        switch ((Platform)platform) {
-            case ANDROID:
-                return androidInputViewXP();
-
-            case IOS:
-                return iOSInputViewXP();
-
-            default:
-                throw new RuntimeException(NOT_AVAILABLE);
+    public XPath inputViewXP(@NotNull InputHelperType helper) {
+        if (helper instanceof AndroidEngine) {
+            return androidInputViewXP(helper);
+        } else if (helper instanceof IOSEngine) {
+            return iOSInputViewXP(helper);
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#ANDROID}.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformType)
@@ -94,7 +96,7 @@ public enum ChoiceInput implements HMTextChoiceType {
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    private XPath androidInputViewXP() {
+    private XPath androidInputViewXP(@NotNull InputHelperType helper) {
         Attributes attrs = Attributes.of(Platform.ANDROID);
 
         final String ID;
@@ -126,14 +128,15 @@ public enum ChoiceInput implements HMTextChoiceType {
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
      * @see BaseViewType#className()
      * @see CompoundAttribute#forClass(String)
      * @see CompoundAttribute#withIndex(Integer)
-     * @see Config#LOCALIZER
-     * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
+     * @see Engine#localizer()
+     * @see LocalizerType#localize(String)
      * @see Platform#IOS
      * @see IOSView.ViewType#UI_STATIC_TEXT
      * @see IOSView.ViewType#UI_TEXT_FIELD
@@ -142,10 +145,11 @@ public enum ChoiceInput implements HMTextChoiceType {
      * @see #values()
      */
     @NotNull
-    private XPath iOSInputViewXP() {
+    private XPath iOSInputViewXP(@NotNull InputHelperType helper) {
+        LocalizerType localizer = helper.localizer();
         Platform platform = Platform.IOS;
         String title = iOSTitleDescription();
-        String localized = Config.LOCALIZER.localize(title);
+        String localized = localizer.localize(title);
         String st = IOSView.ViewType.UI_STATIC_TEXT.className();
         String tf = IOSView.ViewType.UI_TEXT_FIELD.className();
         Attributes attrs = Attributes.of(platform);
@@ -156,7 +160,8 @@ public enum ChoiceInput implements HMTextChoiceType {
     }
 
     /**
-     * Get the title description to be used with {@link #iOSInputViewXP()}.
+     * Get the title description to be used with
+     * {@link #iOSInputViewXP(InputHelperType)}.
      * @return {@link String} value.
      * @see #COACH_PREF
      * @see #ETHNICITY

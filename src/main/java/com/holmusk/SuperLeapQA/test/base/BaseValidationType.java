@@ -11,15 +11,20 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
+import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
+import org.swiften.xtestkit.ios.element.locator.AndroidXMLAttribute;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
+import org.swiften.xtestkitcomponents.platform.XMLAttributeType;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
@@ -43,6 +48,8 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @see Engine#platform()
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_withAttributes(Attribute[])
+     * @see XMLAttributeType#value()
+     * @see AndroidXMLAttribute#CONTENT_DESC
      * @see Platform#ANDROID
      * @see #NOT_AVAILABLE
      */
@@ -52,13 +59,13 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
             Attributes attrs = Attributes.of(Platform.ANDROID);
 
             Attribute navUp = Attribute.<String>builder()
-                .addAttribute("content-desc")
+                .addAttribute(AndroidXMLAttribute.CONTENT_DESC.value())
                 .withValue("Navigate up")
                 .withFormatible(new Attributes.ContainsString() {})
                 .build();
 
             Attribute collapse = Attribute.<String>builder()
-                .addAttribute("content-desc")
+                .addAttribute(AndroidXMLAttribute.CONTENT_DESC.value())
                 .withValue("Collapse")
                 .withFormatible(new Attributes.ContainsString() {})
                 .build();
@@ -103,21 +110,18 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
 
     /**
      * Get the editable {@link WebElement} that corresponds to a
-     * {@link InputType}.
+     * {@link HMInputType}.
      * @param engine {@link Engine} instance.
      * @param input {@link InputType} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#platform()
      * @see Engine#rxe_withXPath(XPath...)
-     * @see HMInputType#inputViewXP(PlatformType)
+     * @see HMInputType#inputViewXP(InputHelperType)
      */
     @NotNull
     default Flowable<WebElement> rxe_editField(@NotNull Engine<?> engine,
                                                @NotNull HMInputType input) {
-        PlatformType platform = engine.platform();
-
         return engine
-            .rxe_withXPath(input.inputViewXP(platform))
+            .rxe_withXPath(input.inputViewXP(engine))
             .firstElement()
             .toFlowable();
     }
@@ -130,13 +134,15 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @see Attribute.Builder#withValue(Object)
      * @see Engine#rxe_withAttributes(Attribute[])
      * @see Engine#rxe_containsID(String...)
+     * @see XMLAttributeType#value()
+     * @see AndroidXMLAttribute#CONTENT_DESC
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_drawerToggle(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             Attribute attr = Attribute.<String>builder()
-                .addAttribute("content-desc")
+                .addAttribute(AndroidXMLAttribute.CONTENT_DESC.value())
                 .withValue("Open navigation drawer")
                 .build();
 
@@ -156,15 +162,13 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @param engine {@link Engine} instance.
      * @param item {@link DrawerItem} instance.
      * @return {@link Flowable} instance.
-     * @see DrawerItem#drawerItemXP(PlatformType)
-     * @see Engine#platform()
+     * @see DrawerItem#drawerItemXP(Engine)
      * @see Engine#rxe_withXPath(XPath...)
      */
     @NotNull
     default Flowable<WebElement> rxe_drawerItem(@NotNull Engine<?> engine,
                                                 @NotNull DrawerItem item) {
-        PlatformType platform = engine.platform();
-        XPath xPath = item.drawerItemXP(platform);
+        XPath xPath = item.drawerItemXP(engine);
         return engine.rxe_withXPath(xPath);
     }
 
@@ -278,37 +282,46 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Attributes#containsText(String)
+     * @see Attributes#hasText(String)
      * @see Attributes#of(PlatformType)
      * @see BaseViewType#className()
      * @see CompoundAttribute.Builder#addAttribute(Attribute)
      * @see CompoundAttribute.Builder#withClass(String)
+     * @see Engine#localizer()
+     * @see Engine#platform()
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_containsText(String...)
      * @see Engine#rxe_withXPath(XPath...)
+     * @see LocalizerType#localize(String)
      * @see XPath.Builder#addAttribute(CompoundAttribute)
+     * @see AndroidView.ViewType#BUTTON
      * @see IOSView.ViewType#UI_BUTTON
      * @see Platform#IOS
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_menuDeleteConfirm(@NotNull Engine<?> engine) {
+        PlatformType platform = engine.platform();
+        Attributes attrs = Attributes.of(platform);
+        LocalizerType localizer = engine.localizer();
+        String localized = localizer.localize("edit_title_delete");
+
+        String btnCls;
+
         if (engine instanceof AndroidEngine) {
-            return engine
-                .rxe_containsID("btn_dialog_alert_promopt_positive")
-                .firstElement()
-                .toFlowable();
+            btnCls = AndroidView.ViewType.BUTTON.className();
         } else if (engine instanceof IOSEngine) {
-            Attributes attrs = Attributes.of(Platform.IOS);
-
-            CompoundAttribute cAttr = CompoundAttribute.builder()
-                .withClass(IOSView.ViewType.UI_BUTTON.className())
-                .addAttribute(attrs.containsText("edit_title_delete"))
-                .build();
-
-            XPath xPath = XPath.builder().addAttribute(cAttr).build();
-            return engine.rxe_withXPath(xPath).firstElement().toFlowable();
+            btnCls = IOSView.ViewType.UI_BUTTON.className();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
+
+        CompoundAttribute cAttr = CompoundAttribute.builder()
+            .withClass(btnCls)
+            .addAttribute(attrs.hasText(localized))
+            .build();
+
+        XPath xPath = XPath.builder().addAttribute(cAttr).build();
+        return engine.rxe_withXPath(xPath).firstElement().toFlowable();
     }
 }
