@@ -2,8 +2,7 @@ package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.HMUITestKit.model.HMCSSInputType;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.xtestkit.android.AndroidEngine;
-import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
@@ -19,49 +18,55 @@ public enum CSSInput implements HMCSSInputType {
 
     /**
      * Override this method to provide default implementation.
-     * @param engine {@link Engine} instance.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
-     * @see HMCSSInputType#CSSXP(Engine)
+     * @see HMCSSInputType#CSSXP(InputHelperType)
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformType)
+     * @see InputHelperType#platform()
      * @see XPath.Builder#addAttribute(Attribute)
      * @see Platform#ANDROID
      * @see #androidCSSId()
      */
     @NotNull
     @Override
-    public XPath CSSXP(@NotNull Engine<?> engine) {
-        if (engine instanceof AndroidEngine) {
-            Attributes attrs = Attributes.of(Platform.ANDROID);
+    public XPath CSSXP(@NotNull InputHelperType helper) {
+        PlatformType platform = helper.platform();
+
+        if (platform.equals(Platform.ANDROID)) {
+            Attributes attrs = Attributes.of(platform);
             String id = androidCSSId();
             Attribute attr = attrs.containsID(id);
             return XPath.builder().addAttribute(attr).build();
         } else {
-            return HMCSSInputType.super.CSSXP(engine);
+            return HMCSSInputType.super.CSSXP(helper);
         }
     }
 
     /**
      * Override this method to provide default implementation.
-     * @param engine {@link Engine} instance.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
-     * @see HMCSSInputType#CSSValueDisplayXP(Engine)
+     * @see HMCSSInputType#CSSValueDisplayXP(InputHelperType)
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformType)
+     * @see InputHelperType#platform()
      * @see XPath.Builder#addAttribute(Attribute)
      * @see Platform#ANDROID
      * @see #androidCSSValueDisplayId()
      */
     @NotNull
     @Override
-    public XPath CSSValueDisplayXP(@NotNull Engine<?> engine) {
-        if (engine instanceof AndroidEngine) {
-            Attributes attrs = Attributes.of(Platform.ANDROID);
+    public XPath CSSValueDisplayXP(@NotNull InputHelperType helper) {
+        PlatformType platform = helper.platform();
+
+        if (platform.equals(Platform.ANDROID)) {
+            Attributes attrs = Attributes.of(platform);
             String id = androidCSSValueDisplayId();
             Attribute attr = attrs.containsID(id);
             return XPath.builder().addAttribute(attr).build();
         } else {
-            return HMCSSInputType.super.CSSValueDisplayXP(engine);
+            return HMCSSInputType.super.CSSValueDisplayXP(helper);
         }
     }
 
