@@ -6,14 +6,11 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.param.DirectionParam;
 import org.swiften.xtestkitcomponents.direction.Direction;
 import org.swiften.xtestkitcomponents.direction.DirectionContainerType;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by haipham on 31/5/17.
@@ -39,20 +36,6 @@ public interface MealPageActionType extends
             .flatMap(E::rxa_click)
             .map(BooleanUtil::toTrue)
             .onErrorReturnItem(true);
-    }
-
-    /**
-     * Navigate back to
-     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}
-     * @param ENGINE {@link Engine} instance.
-     * @return {@link Flowable} instance.
-     * @see com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD
-     * @see Engine#rxa_click(WebElement)
-     * @see #rxe_dashboardBack(Engine)
-     */
-    @NotNull
-    default Flowable<?> rxa_backToDashboard(@NotNull final Engine<?> ENGINE) {
-        return rxe_dashboardBack(ENGINE).flatMap(ENGINE::rxa_click);
     }
 
     /**

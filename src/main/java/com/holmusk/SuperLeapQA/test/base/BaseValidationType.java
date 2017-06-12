@@ -8,6 +8,7 @@ import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.SuperLeapQA.model.DrawerItem;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
@@ -197,6 +198,41 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
     @NotNull
     default Flowable<Boolean> rxv_isDrawerOpen(@NotNull Engine<?> engine) {
         return rxv_drawer(engine).map(BooleanUtil::isTrue).onErrorReturnItem(false);
+    }
+
+    /**
+     * Get the button that we can click to get back to
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}. This is
+     * usually used when we are in
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#MEAL_PAGE}, for e.g.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Attribute.Builder#addAttribute(String)
+     * @see Attribute.Builder#withValue(Object)
+     * @see Attribute.Builder#withFormatible(Attribute.Formatible)
+     * @see BaseViewType#className()
+     * @see Engine#rxe_ofClass(String...)
+     * @see Point#getX()
+     * @see XPath.Builder#addAttribute(Attribute)
+     * @see WebElement#getLocation()
+     * @see IOSView.ViewType#UI_BUTTON
+     * @see com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD
+     * @see #rxe_backButton(Engine)
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_dashboardBack(@NotNull Engine<?> engine) {
+        if (engine instanceof AndroidEngine) {
+            return rxe_backButton(engine);
+        } else if (engine instanceof IOSEngine) {
+            return engine
+                .rxe_ofClass(IOSView.ViewType.UI_BUTTON.className())
+                .filter(a -> a.getLocation().getX() == 0)
+                .firstElement()
+                .toFlowable();
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 
     /**

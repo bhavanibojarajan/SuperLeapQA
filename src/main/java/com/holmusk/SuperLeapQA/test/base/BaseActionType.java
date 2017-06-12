@@ -467,6 +467,20 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
     }
 
     /**
+     * Navigate back to
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_click(WebElement)
+     * @see #rxe_dashboardBack(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxa_backToDashboard(@NotNull final Engine<?> ENGINE) {
+        LogUtil.println("Going back to dashboard");
+        return rxe_dashboardBack(ENGINE).flatMap(ENGINE::rxa_click);
+    }
+
+    /**
      * Toggle edit mode, then delay for a while for the menu to fully appear.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.

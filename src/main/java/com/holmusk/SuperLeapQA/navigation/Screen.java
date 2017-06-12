@@ -33,6 +33,7 @@ public enum Screen implements ScreenInitializationType {
     CHAT,
     LOG_WEIGHT_VALUE,
     LOG_WEIGHT_ENTRY,
+    WEIGHT_PAGE,
     SETTINGS;
 
     /**

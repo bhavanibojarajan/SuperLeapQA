@@ -1,20 +1,10 @@
 package com.holmusk.SuperLeapQA.navigation.type;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
+import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import com.holmusk.SuperLeapQA.test.chat.ChatActionType;
-import com.holmusk.SuperLeapQA.test.dashboard.DashboardActionType;
-import com.holmusk.SuperLeapQA.test.dob.DOBPickerActionType;
-import com.holmusk.SuperLeapQA.test.forgotpassword.ForgotPasswordActionType;
 import com.holmusk.SuperLeapQA.test.invalidage.InvalidAgeActionType;
-import com.holmusk.SuperLeapQA.test.login.LoginActionType;
-import com.holmusk.SuperLeapQA.test.logmeal.LogMealActionType;
-import com.holmusk.SuperLeapQA.test.mealpage.MealPageActionType;
-import com.holmusk.SuperLeapQA.test.photopicker.PhotoPickerActionType;
-import com.holmusk.SuperLeapQA.test.registermode.RegisterModeActionType;
 import com.holmusk.SuperLeapQA.test.search.SearchActionType;
-import com.holmusk.SuperLeapQA.test.sha.SHAActionType;
-import com.holmusk.SuperLeapQA.test.validage.ValidAgeActionType;
-import com.holmusk.SuperLeapQA.test.welcome.WelcomeActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.Engine;
@@ -23,20 +13,10 @@ import org.swiften.xtestkit.base.Engine;
  * Created by haipham on 6/3/17.
  */
 public interface BackwardNavigationType extends
-    WelcomeActionType,
-    LoginActionType,
-    ForgotPasswordActionType,
-    RegisterModeActionType,
-    SHAActionType,
-    DOBPickerActionType,
+    BaseActionType,
+    ChatActionType,
     InvalidAgeActionType,
-    ValidAgeActionType,
-    DashboardActionType,
-    SearchActionType,
-    PhotoPickerActionType,
-    LogMealActionType,
-    MealPageActionType,
-    ChatActionType
+    SearchActionType
 {
     /**
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOGIN}

@@ -398,6 +398,18 @@ public interface ForwardNavigationType extends
     }
 
     /**
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_WEIGHT_ENTRY}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#WEIGHT_PAGE}
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rxa_completeWeightEntry(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxn_weightEntry_weightPage(@NotNull Engine<?> engine) {
+        return rxa_completeWeightEntry(engine);
+    }
+
+    /**
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#SETTINGS}
      * @param engine {@link Engine} instance.

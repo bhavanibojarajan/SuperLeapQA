@@ -304,6 +304,15 @@ public final class ScreenHolder implements
                 );
 
             case LOG_WEIGHT_ENTRY:
+                return CollectionUtil.asList(
+                    new Direction(
+                        ScreenHolder.of(ENGINE, Screen.WEIGHT_PAGE, MODE),
+                        a -> THIS.rxn_weightEntry_weightPage(ENGINE),
+                        platform
+                    )
+                );
+
+            case WEIGHT_PAGE:
                 return CollectionUtil.asList();
 
             case SETTINGS:
@@ -449,6 +458,9 @@ public final class ScreenHolder implements
                 return CollectionUtil.asList();
 
             case LOG_WEIGHT_ENTRY:
+                return CollectionUtil.asList();
+
+            case WEIGHT_PAGE:
                 return CollectionUtil.asList();
 
             case SETTINGS:

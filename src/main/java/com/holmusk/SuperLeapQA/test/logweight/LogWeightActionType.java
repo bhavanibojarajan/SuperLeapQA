@@ -6,9 +6,11 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
+import org.swiften.xtestkit.navigation.ScreenType;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +33,8 @@ public interface LogWeightActionType extends
      */
     @NotNull
     default Flowable<?> rxa_submitWeightValue(@NotNull final Engine<?> ENGINE) {
+        LogUtil.println("Submitting weight value");
+
         return rxe_weightValueSubmit(ENGINE)
             .flatMap(ENGINE::rxa_click)
             .delay(weightLogProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
@@ -47,6 +51,8 @@ public interface LogWeightActionType extends
      */
     @NotNull
     default Flowable<?> rxa_submitWeightEntry(@NotNull final Engine<?> ENGINE) {
+        LogUtil.println("Submitting weight entry");
+
         return rxe_weightEntrySubmit(ENGINE)
             .flatMap(ENGINE::rxa_click)
             .delay(weightLogProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
@@ -171,5 +177,33 @@ public interface LogWeightActionType extends
     default Flowable<?> rxa_toggleWeightLocation(@NotNull final Engine<?> E,
                                                  final boolean ON) {
         return rxe_weightLocSwitch(E).flatMap(a -> E.rxa_toggleSwitch(a, ON));
+    }
+
+    /**
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_WEIGHT_ENTRY}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}. We do not
+     * use this with {@link com.holmusk.SuperLeapQA.navigation.ScreenHolder}
+     * because the flows for both platforms are different in such a way that
+     * it causes {@link StackOverflowError} when we use
+     * {@link org.swiften.xtestkit.navigation.ScreenManagerType#multiNodes(ScreenType...)}
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #generalDelay(Engine)
+     * @see #rxa_clickBackButton(Engine)
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    default Flowable<?> rxa_dashboardFromWeightEntry(@NotNull Engine<?> engine) {
+        if (engine instanceof AndroidEngine) {
+            return rxa_clickBackButton(engine);
+        } else if (engine instanceof IOSEngine) {
+            final LogWeightActionType THIS = this;
+
+            return Flowable.range(0, 2)
+                .concatMap(a -> THIS.rxa_clickBackButton(engine))
+                .delay(generalDelay(engine), TimeUnit.MILLISECONDS);
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 }

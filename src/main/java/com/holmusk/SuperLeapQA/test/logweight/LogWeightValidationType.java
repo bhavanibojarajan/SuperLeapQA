@@ -4,8 +4,8 @@ import com.holmusk.HMUITestKit.test.circlescrollselector.HMCircleScrollValidatio
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.localizer.LocalizerType;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
@@ -287,6 +287,8 @@ public interface LogWeightValidationType extends HMCircleScrollValidationType {
      */
     @NotNull
     default Flowable<String> rxe_selectedWeight(@NotNull final Engine<?> ENGINE) {
-        return rxe_weightDisplay(ENGINE).map(ENGINE::getText);
+        return rxe_weightDisplay(ENGINE)
+            .map(ENGINE::getText)
+            .doOnNext(a -> LogUtil.printft("Selected weight: %s", a));
     }
 }

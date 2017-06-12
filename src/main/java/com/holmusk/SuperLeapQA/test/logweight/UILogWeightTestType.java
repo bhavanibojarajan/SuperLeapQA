@@ -7,6 +7,7 @@ import com.holmusk.SuperLeapQA.test.weightpage.WeightPageActionType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
@@ -77,6 +78,70 @@ public interface UILogWeightTestType extends
                     .map(BooleanUtil::toTrue)
                     .flatMap(c -> ENGINE.rxv_errorWithPageSource())
                     .onErrorReturnItem(true)))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * Log some weight cards and verify that the previous weights are saved
+     * the next time the user logs another weight.
+     * @see Engine#rxe_containsText(String...)
+     * @see Engine#rxv_errorWithPageSource()
+     * @see Screen#SPLASH
+     * @see Screen#LOGIN
+     * @see Screen#DASHBOARD
+     * @see Screen#LOG_WEIGHT_VALUE
+     * @see Screen#LOG_WEIGHT_ENTRY
+     * @see #defaultUserMode()
+     * @see #engine()
+     * @see #rxa_navigate(UserMode, Screen...)
+     * @see #rxa_backToDashboard(Engine)
+     * @see #rxa_submitWeightValue(Engine)
+     * @see #rxa_submitWeightEntry(Engine)
+     * @see #rxa_clickBackButton(Engine)
+     * @see #rxa_dashboardFromWeightEntry(Engine)
+     * @see #rxe_selectedWeight(Engine)
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    default void test_logWeight_shouldStartFromPreviousWeight() {
+        // Setup
+        final UILogWeightTestType THIS = this;
+        final Engine<?> ENGINE = engine();
+        final int TRIES = 3;
+        final UserMode MODE = defaultUserMode();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rxa_navigate(MODE, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD)
+            .concatMap(a -> Flowable.range(0, TRIES))
+            .doOnNext(a -> LogUtil.printft(">>>>>>>> Run %d <<<<<<<<", a))
+            .concatMap(a -> THIS
+                .rxa_navigate(MODE, Screen.DASHBOARD, Screen.LOG_WEIGHT_ENTRY)
+
+                /* For cross-platform reusability, we need to get the weight
+                 * value from the weight entry screen, since on Android it's
+                 * not possible to get it directly from the weight scroll */
+                .concatMap(b -> THIS.rxe_selectedWeight(ENGINE))
+                .concatMap(b -> THIS.rxa_submitWeightEntry(ENGINE)
+                    .flatMap(c -> THIS.rxa_backToDashboard(ENGINE))
+                    .flatMap(c -> THIS.rxa_navigate(MODE,
+                        Screen.DASHBOARD, Screen.LOG_WEIGHT_VALUE)
+                    )
+                    .flatMap(c -> THIS.rxa_submitWeightValue(ENGINE))
+
+                    /* The weight value should have been saved from the previous
+                     * log */
+                    .flatMap(c -> ENGINE.rxe_containsText(b)
+                        .firstElement().toFlowable()
+                        .switchIfEmpty(ENGINE.rxv_errorWithPageSource()))
+                    .flatMap(c -> THIS.rxa_dashboardFromWeightEntry(ENGINE))))
+            .all(ObjectUtil::nonNull)
+            .toFlowable()
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
