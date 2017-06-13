@@ -9,10 +9,7 @@ import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.xpath.Attribute;
-import org.swiften.xtestkitcomponents.xpath.Attributes;
-import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
-import org.swiften.xtestkitcomponents.xpath.XPath;
+import org.swiften.xtestkitcomponents.xpath.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -274,7 +271,7 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @return {@link XPath} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
-     * @see CompoundAttribute#single(Attribute)
+     * @see CompoundAttribute#single(AttributeType)
      * @see CompoundAttribute#withClass(String)
      * @see Platform#IOS
      * @see IOSView.ViewType#UI_BUTTON
@@ -327,6 +324,7 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
     }
 
     /**
+     * Override this method to provide default implementation.
      * @param mode {@link UserMode} instance.
      * @return {@link Integer} value.
      * @see SLNumericChoiceType#minSelectableValue(UserMode)

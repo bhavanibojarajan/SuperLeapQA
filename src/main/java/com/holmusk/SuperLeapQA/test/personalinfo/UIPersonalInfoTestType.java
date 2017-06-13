@@ -15,6 +15,7 @@ import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.base.model.TextInputType;
 import org.swiften.xtestkit.mobile.Platform;
@@ -104,11 +105,11 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * restored when the user gets back to the app. This is more relevant for
      * {@link Platform#ANDROID}.
      * @see BooleanUtil#isTrue(boolean)
-     * @see HMTextType#randomInput()
+     * @see HMTextType#randomInput(InputHelperType)
      * @see ObjectUtil#nonNull(Object)
+     * @see UserMode#personalInfo(PlatformType)
      * @see Screen#SPLASH
      * @see Screen#PERSONAL_INFO
-     * @see UserMode#personalInfo(PlatformType)
      * @see #assertCorrectness(TestSubscriber)
      * @see #defaultUserMode()
      * @see #engine()
@@ -142,7 +143,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
             .map(HMTextType.class::cast)
             .collect(Collectors.toList());
 
-        TEXT_INFO.forEach(a -> INPUTS.put(a.toString(), a.randomInput()));
+        TEXT_INFO.forEach(a -> INPUTS.put(a.toString(), a.randomInput(ENGINE)));
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When

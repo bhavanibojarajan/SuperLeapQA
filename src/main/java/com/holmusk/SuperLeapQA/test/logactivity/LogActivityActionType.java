@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.test.css;
+package com.holmusk.SuperLeapQA.test.logactivity;
 
 import com.holmusk.HMUITestKit.test.circlescrollselector.HMCircleScrollActionType;
 import com.holmusk.SuperLeapQA.test.base.BaseActionType;

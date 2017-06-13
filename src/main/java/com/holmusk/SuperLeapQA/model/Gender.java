@@ -10,7 +10,7 @@ import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.property.base.AttributeType;
+import org.swiften.xtestkitcomponents.property.base.ValueType;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
@@ -29,7 +29,7 @@ public enum Gender implements BaseErrorType, HMInputType, HMTextChoiceType.Item 
      * {@link org.openqa.selenium.WebElement} corresponding to the current
      * {@link Gender}.
      * @return {@link String} value.
-     * @see AttributeType#value()
+     * @see ValueType#value()
      * @see #FEMALE
      * @see #MALE
      * @see #NOT_AVAILABLE
@@ -50,6 +50,7 @@ public enum Gender implements BaseErrorType, HMInputType, HMTextChoiceType.Item 
 
     /**
      * Override this method to provide default implementation.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link String} value.
      * @see HMTextChoiceType.Item#stringValue(InputHelperType, double)
      * @see InputHelperType#localizer()

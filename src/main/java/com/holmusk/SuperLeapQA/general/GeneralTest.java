@@ -10,8 +10,10 @@ import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
+import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.navigation.ScreenManagerType;
@@ -51,11 +53,32 @@ public final class GeneralTest {
 
     @Test
     public void test_randomTextInput_shouldWork() {
-        // Setup & When & Then
-        LogUtil.println(TextInput.NAME.randomInput());
-        LogUtil.println(TextInput.PHONE.randomInput());
-        LogUtil.println(TextInput.EMAIL.randomInput());
-        LogUtil.println(TextInput.UNIT_NUMBER.randomInput());
+        // Setup
+        InputHelperType helper = new InputHelperType() {
+            @NotNull
+            @Override
+            public LocalizerType localizer() {
+                return mock(LocalizerType.class);
+            }
+
+            @NotNull
+            @Override
+            public PlatformType platform() {
+                return mock(PlatformType.class);
+            }
+
+            @NotNull
+            @Override
+            public String platformName() {
+                return mock(String.class);
+            }
+        };
+
+        // When & Then
+        LogUtil.println(TextInput.NAME.randomInput(helper));
+        LogUtil.println(TextInput.PHONE.randomInput(helper));
+        LogUtil.println(TextInput.EMAIL.randomInput(helper));
+        LogUtil.println(TextInput.UNIT_NUMBER.randomInput(helper));
     }
 
     @Test
@@ -139,6 +162,7 @@ public final class GeneralTest {
             ScreenManagerType.Node last = nodes.get(nodes.size() - 1);
             assertEquals(((ScreenHolder)first.S1).SCREEN, start);
             assertEquals(((ScreenHolder)last.S2).SCREEN, screen);
+            LogUtil.printf("Start: %s, end: %s. Route: %s", start, screen, nodes);
         }
     }
 

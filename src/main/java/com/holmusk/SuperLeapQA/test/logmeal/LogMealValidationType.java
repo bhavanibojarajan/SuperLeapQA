@@ -213,7 +213,7 @@ public interface LogMealValidationType extends BaseValidationType {
     }
 
     /**
-     * Validate {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_MEAL}.
+     * Validate {@link com.holmusk.SuperLeapQA.navigation.Screen#MEAL_ENTRY}.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Config#MAX_PHOTO_COUNT

@@ -258,8 +258,13 @@ public final class ScreenHolder implements
                         platform
                     ),
                     new Direction(
-                        ScreenHolder.of(ENGINE, Screen.LOG_WEIGHT_VALUE, MODE),
+                        ScreenHolder.of(ENGINE, Screen.WEIGHT_VALUE, MODE),
                         a -> THIS.rxn_addCard_weightValue(ENGINE),
+                        platform
+                    ),
+                    new Direction(
+                        ScreenHolder.of(ENGINE, Screen.ACTIVITY_VALUE, MODE),
+                        a -> THIS.rxn_addCard_activityValue(ENGINE),
                         platform
                     )
                 );
@@ -267,13 +272,13 @@ public final class ScreenHolder implements
             case PHOTO_PICKER:
                 return CollectionUtil.asList(
                     new Direction(
-                        ScreenHolder.of(ENGINE, Screen.LOG_MEAL, MODE),
+                        ScreenHolder.of(ENGINE, Screen.MEAL_ENTRY, MODE),
                         a -> THIS.rxn_photoPicker_logMeal(ENGINE),
                         platform
                     )
                 );
 
-            case LOG_MEAL:
+            case MEAL_ENTRY:
                 return CollectionUtil.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.MEAL_PAGE, MODE),
@@ -294,16 +299,16 @@ public final class ScreenHolder implements
             case CHAT:
                 return CollectionUtil.asList();
 
-            case LOG_WEIGHT_VALUE:
+            case WEIGHT_VALUE:
                 return CollectionUtil.asList(
                     new Direction(
-                        ScreenHolder.of(ENGINE, Screen.LOG_WEIGHT_ENTRY, MODE),
+                        ScreenHolder.of(ENGINE, Screen.WEIGHT_ENTRY, MODE),
                         a -> THIS.rxn_weightValue_weightEntry(ENGINE),
                         platform
                     )
                 );
 
-            case LOG_WEIGHT_ENTRY:
+            case WEIGHT_ENTRY:
                 return CollectionUtil.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.WEIGHT_PAGE, MODE),
@@ -315,16 +320,16 @@ public final class ScreenHolder implements
             case WEIGHT_PAGE:
                 return CollectionUtil.asList();
 
-            case LOG_ACTIVITY_VALUE:
+            case ACTIVITY_VALUE:
                 return CollectionUtil.asList(
                     new Direction(
-                        ScreenHolder.of(ENGINE, Screen.LOG_ACTIVITY_VALUE, MODE),
-                        a -> THIS.rxn_addCard_activityValue(ENGINE),
+                        ScreenHolder.of(ENGINE, Screen.ACTIVITY_ENTRY, MODE),
+                        a -> THIS.rxn_activityValue_activityEntry(ENGINE),
                         platform
                     )
                 );
 
-            case LOG_ACTIVITY_ENTRY:
+            case ACTIVITY_ENTRY:
                 return CollectionUtil.asList();
 
             case SETTINGS:
@@ -451,7 +456,7 @@ public final class ScreenHolder implements
             case PHOTO_PICKER:
                 return CollectionUtil.asList();
 
-            case LOG_MEAL:
+            case MEAL_ENTRY:
                 return CollectionUtil.asList();
 
             case MEAL_PAGE:
@@ -466,19 +471,19 @@ public final class ScreenHolder implements
                     )
                 );
 
-            case LOG_WEIGHT_VALUE:
+            case WEIGHT_VALUE:
                 return CollectionUtil.asList();
 
-            case LOG_WEIGHT_ENTRY:
+            case WEIGHT_ENTRY:
                 return CollectionUtil.asList();
 
             case WEIGHT_PAGE:
                 return CollectionUtil.asList();
 
-            case LOG_ACTIVITY_VALUE:
+            case ACTIVITY_VALUE:
                 return CollectionUtil.asList();
 
-            case LOG_ACTIVITY_ENTRY:
+            case ACTIVITY_ENTRY:
                 return CollectionUtil.asList();
 
             case SETTINGS:

@@ -51,6 +51,7 @@ public enum CoachPref implements BaseErrorType, HMInputType, HMTextChoiceType.It
 
     /**
      * Override this method to provide default implementation.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link String} value.
      * @see HMTextChoiceType.Item#stringValue(InputHelperType, double)
      * @see LocalizerType#localize(String)
@@ -70,8 +71,8 @@ public enum CoachPref implements BaseErrorType, HMInputType, HMTextChoiceType.It
      * @return {@link XPath} value.
      * @see InputHelperType#platform()
      * @see InputType#inputViewXP(InputHelperType)
-     * @see #androidInputViewXP()
-     * @see #iOSInputViewXP()
+     * @see #androidInputViewXP(InputHelperType)
+     * @see #iOSInputViewXP(InputHelperType)
      * @see Platform#ANDROID
      * @see Platform#IOS
      * @see #NOT_AVAILABLE
@@ -83,10 +84,10 @@ public enum CoachPref implements BaseErrorType, HMInputType, HMTextChoiceType.It
 
         switch ((Platform)platform) {
             case ANDROID:
-                return androidInputViewXP();
+                return androidInputViewXP(helper);
 
             case IOS:
-                return iOSInputViewXP();
+                return iOSInputViewXP(helper);
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -95,6 +96,7 @@ public enum CoachPref implements BaseErrorType, HMInputType, HMTextChoiceType.It
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#ANDROID}.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformType)
@@ -102,7 +104,7 @@ public enum CoachPref implements BaseErrorType, HMInputType, HMTextChoiceType.It
      * @see XPath.Builder#addAttribute(Attribute)
      */
     @NotNull
-    private XPath androidInputViewXP() {
+    private XPath androidInputViewXP(@NotNull InputHelperType helper) {
         Attributes attrs = Attributes.of(Platform.ANDROID);
         Attribute attribute = attrs.containsID("text1");
         return XPath.builder().addAttribute(attribute).build();
@@ -110,12 +112,13 @@ public enum CoachPref implements BaseErrorType, HMInputType, HMTextChoiceType.It
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see CompoundAttribute#empty()
      * @see XPath.Builder#addAttribute(CompoundAttribute)
      */
     @NotNull
-    private XPath iOSInputViewXP() {
+    private XPath iOSInputViewXP(@NotNull InputHelperType helper) {
         return XPath.builder().addAttribute(CompoundAttribute.empty()).build();
     }
 }

@@ -18,6 +18,7 @@ import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.testng.annotations.Test;
 
@@ -50,10 +51,10 @@ public interface UILogMealTestType extends
      * @see Mood#values()
      * @see NumberUtil#randomBetween(int, int)
      * @see ObjectUtil#nonNull(Object)
-     * @see TextInput#randomInput()
+     * @see TextInput#randomInput(InputHelperType)
      * @see Screen#SPLASH
      * @see Screen#LOGIN
-     * @see Screen#LOG_MEAL
+     * @see Screen#MEAL_ENTRY
      * @see Screen#SEARCH
      * @see TextInput#MEAL_DESCRIPTION
      * @see #assertCorrectness(TestSubscriber)
@@ -84,7 +85,7 @@ public interface UILogMealTestType extends
         final Engine<?> ENGINE = engine();
         final Date TIME = randomSelectableTime();
         final TextInput DSC_INPUT = TextInput.MEAL_DESCRIPTION;
-        final String DESCRIPTION = DSC_INPUT.randomInput();
+        final String DESCRIPTION = DSC_INPUT.randomInput(ENGINE);
         final Mood MOOD = CollectionUtil.randomElement(Mood.values());
         UserMode mode = defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
@@ -99,7 +100,7 @@ public interface UILogMealTestType extends
             .toFlowable();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_MEAL)
+        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.MEAL_ENTRY)
             .flatMap(a -> THIS.rxa_selectMood(ENGINE, MOOD))
             .flatMap(a -> THIS.rxa_selectMealPhotos(ENGINE))
             .flatMap(a -> THIS.rxa_openMealTimePicker(ENGINE))
@@ -154,7 +155,7 @@ public interface UILogMealTestType extends
      * @see Engine#rxa_click(WebElement)
      * @see Engine#rxv_errorWithPageSource()
      * @see ObjectUtil#nonNull(Object)
-     * @see TextInput#randomInput()
+     * @see TextInput#randomInput(InputHelperType)
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#MEAL_PAGE
@@ -195,7 +196,7 @@ public interface UILogMealTestType extends
 
         final List<String> COMMENTS = IntStream
             .range(0, 3).boxed()
-            .map(a -> INPUT.randomInput())
+            .map(a -> INPUT.randomInput(ENGINE))
             .collect(Collectors.toList());
 
         UserMode mode = defaultUserMode();

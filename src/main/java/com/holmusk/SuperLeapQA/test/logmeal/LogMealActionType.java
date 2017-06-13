@@ -54,7 +54,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
 
     /**
      * Open {@link com.holmusk.SuperLeapQA.navigation.Screen#PHOTO_PICKER}
-     * from {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_MEAL}.
+     * from {@link com.holmusk.SuperLeapQA.navigation.Screen#MEAL_ENTRY}.
      * @param ENGINE {@link Engine} instance.
      * @param index {@link Integer} value representing the pick index.
      * @return {@link Flowable} instance.

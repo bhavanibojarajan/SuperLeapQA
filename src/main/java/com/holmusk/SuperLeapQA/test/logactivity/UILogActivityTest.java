@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.test.css;
+package com.holmusk.SuperLeapQA.test.logactivity;
 
 import com.holmusk.SuperLeapQA.test.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
@@ -7,14 +7,14 @@ import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.Factory;
 
 /**
- * Created by haipham on 9/6/17.
+ * Created by haipham on 13/6/17.
  */
-public final class UILogWeightTest extends UIBaseTest implements UILogWeightTestType {
+public final class UILogActivityTest extends UIBaseTest implements UILogActivityTestType {
     @Factory(
         dataProviderClass = UIBaseTestType.class,
         dataProvider = "engineProvider"
     )
-    public UILogWeightTest(@NotNull Engine<?> engine) {
+    public UILogActivityTest(@NotNull Engine<?> engine) {
         super(engine);
     }
 }

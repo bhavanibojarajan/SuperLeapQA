@@ -28,14 +28,14 @@ public enum Screen implements ScreenInitializationType {
     SEARCH,
     ADD_CARD,
     PHOTO_PICKER,
-    LOG_MEAL,
+    MEAL_ENTRY,
     MEAL_PAGE,
     CHAT,
-    LOG_WEIGHT_VALUE,
-    LOG_WEIGHT_ENTRY,
+    WEIGHT_VALUE,
+    WEIGHT_ENTRY,
     WEIGHT_PAGE,
-    LOG_ACTIVITY_VALUE,
-    LOG_ACTIVITY_ENTRY,
+    ACTIVITY_VALUE,
+    ACTIVITY_ENTRY,
     SETTINGS;
 
     /**
@@ -47,7 +47,7 @@ public enum Screen implements ScreenInitializationType {
      * @see #MEAL_PAGE
      * @see #PHOTO_PICKER
      * @see #USE_APP_NOW
-     * @see #LOG_WEIGHT_ENTRY
+     * @see #WEIGHT_ENTRY
      * @see #rxn_dashboardTutorialInitialized(Engine)
      * @see #rxn_mealPageInitialized(Engine)
      * @see #rxn_photoPickerInitialized(Engine)
@@ -68,7 +68,7 @@ public enum Screen implements ScreenInitializationType {
             case PHOTO_PICKER:
                 return a -> THIS.rxn_photoPickerInitialized(ENGINE);
 
-            case LOG_WEIGHT_ENTRY:
+            case WEIGHT_ENTRY:
                 return a -> THIS.rxn_weightEntryInitialized(ENGINE);
 
             case USE_APP_NOW:

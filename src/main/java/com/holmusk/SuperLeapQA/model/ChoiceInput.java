@@ -31,6 +31,7 @@ public enum ChoiceInput implements HMTextChoiceType {
     COACH_PREF;
 
     /**
+     * Override this method to provide default implementation.
      * @return {@link List} of {@link HMTextChoiceType}.
      * @see HMTextChoiceType#allTextChoices()
      * @see CollectionUtil#asList(Object[])
@@ -155,7 +156,7 @@ public enum ChoiceInput implements HMTextChoiceType {
         Attributes attrs = Attributes.of(platform);
         Attribute stAttr = attrs.containsText(localized);
         CompoundAttribute tAttr = CompoundAttribute.forClass(tf);
-        CompoundAttribute sAttr = CompoundAttribute.forClass(st).addAttributes(stAttr);
+        CompoundAttribute sAttr = CompoundAttribute.forClass(st).addAttribute(stAttr);
         return XPath.builder().followingSibling(tAttr, sAttr).build();
     }
 

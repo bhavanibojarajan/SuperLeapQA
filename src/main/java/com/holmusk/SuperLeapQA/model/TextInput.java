@@ -9,7 +9,6 @@ import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.string.StringUtil;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
-import org.swiften.xtestkit.base.model.TextInputType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
@@ -237,16 +236,17 @@ public enum TextInput implements BaseErrorType, HMTextType {
 
     /**
      * Get a random text input.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link String} value.
+     * @see org.swiften.xtestkit.base.model.TextInputType#randomInput(InputHelperType)
      * @see CollectionUtil#randomElement(Object[])
-     * @see TextInputType#randomInput()
      * @see StringUtil#randomDigitString(int)
      * @see StringUtil#randomString(int)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
-    public String randomInput() {
+    public String randomInput(@NotNull InputHelperType helper) {
         switch (this) {
             case CHILD_NAME:
             case NAME:

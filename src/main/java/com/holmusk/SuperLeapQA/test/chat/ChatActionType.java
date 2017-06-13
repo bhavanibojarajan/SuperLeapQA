@@ -8,6 +8,7 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.model.InputHelperType;
 
 /**
  * Created by haipham on 1/6/17.
@@ -73,12 +74,12 @@ public interface ChatActionType extends BaseActionType, ChatValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see TextInput#MEAL_COMMENT
-     * @see TextInput#randomInput()
+     * @see TextInput#randomInput(InputHelperType)
      * @see #rxa_postChat(Engine, String)
      */
     @NotNull
     default Flowable<?> rxa_postRandomChat(@NotNull Engine<?> engine) {
-        String message = TextInput.MEAL_COMMENT.randomInput();
+        String message = TextInput.MEAL_COMMENT.randomInput(engine);
         return rxa_postChat(engine, message);
     }
 }

@@ -630,11 +630,11 @@ public interface UIScreenValidationTestType extends
     }
 
     /**
-     * Validate {@link Screen#LOG_MEAL} and confirm that all
+     * Validate {@link Screen#MEAL_ENTRY} and confirm that all
      * {@link org.openqa.selenium.WebElement} are present.
      * @see Screen#SPLASH
      * @see Screen#LOGIN
-     * @see Screen#LOG_MEAL
+     * @see Screen#MEAL_ENTRY
      * @see #assertCorrectness(TestSubscriber)
      * @see #defaultUserMode()
      * @see #engine()
@@ -650,7 +650,7 @@ public interface UIScreenValidationTestType extends
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_MEAL)
+        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.MEAL_ENTRY)
             .flatMap(a -> THIS.rxv_mealLog(ENGINE))
             .subscribe(subscriber);
 
@@ -661,12 +661,12 @@ public interface UIScreenValidationTestType extends
     }
 
     /**
-     * Validate {@link Screen#LOG_WEIGHT_VALUE} and confirm that all
+     * Validate {@link Screen#WEIGHT_VALUE} and confirm that all
      * {@link WebElement} are present.
      * @see CSSInput#WEIGHT
      * @see Screen#SPLASH
      * @see Screen#LOGIN
-     * @see Screen#LOG_WEIGHT_VALUE
+     * @see Screen#WEIGHT_VALUE
      * @see #assertCorrectness(TestSubscriber)
      * @see #defaultUserMode()
      * @see #engine()
@@ -685,7 +685,7 @@ public interface UIScreenValidationTestType extends
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_WEIGHT_VALUE)
+        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.WEIGHT_VALUE)
             .flatMap(a -> THIS.rxv_CSSValue(ENGINE, INPUT))
             .subscribe(subscriber);
 
@@ -696,11 +696,11 @@ public interface UIScreenValidationTestType extends
     }
 
     /**
-     * Validate {@link Screen#LOG_WEIGHT_ENTRY} and confirm that all
+     * Validate {@link Screen#WEIGHT_ENTRY} and confirm that all
      * {@link WebElement} are present.
      * @see Screen#SPLASH
      * @see Screen#LOGIN
-     * @see Screen#LOG_WEIGHT_ENTRY
+     * @see Screen#WEIGHT_ENTRY
      * @see #assertCorrectness(TestSubscriber)
      * @see #defaultUserMode()
      * @see #engine()
@@ -716,7 +716,7 @@ public interface UIScreenValidationTestType extends
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_WEIGHT_ENTRY)
+        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.WEIGHT_ENTRY)
             .flatMap(a -> THIS.rxv_logWeightEntry(ENGINE))
             .subscribe(subscriber);
 
@@ -727,12 +727,12 @@ public interface UIScreenValidationTestType extends
     }
 
     /**
-     * Validate {@link Screen#LOG_ACTIVITY_ENTRY} and confirm that all
+     * Validate {@link Screen#ACTIVITY_ENTRY} and confirm that all
      * {@link WebElement} are present.
      * @param mode {@link UserMode} instance.
      * @see Screen#SPLASH
      * @see Screen#LOGIN
-     * @see Screen#LOG_ACTIVITY_VALUE
+     * @see Screen#ACTIVITY_VALUE
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #generalUserModeProvider()
@@ -750,7 +750,7 @@ public interface UIScreenValidationTestType extends
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.LOG_ACTIVITY_VALUE)
+        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.ACTIVITY_VALUE)
             .flatMap(a -> THIS.rxv_activityWeightEntry(ENGINE))
             .subscribe(subscriber);
 

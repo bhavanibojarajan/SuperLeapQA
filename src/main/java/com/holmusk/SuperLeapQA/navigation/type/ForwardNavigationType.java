@@ -12,10 +12,10 @@ import com.holmusk.SuperLeapQA.test.dob.DOBPickerActionType;
 import com.holmusk.SuperLeapQA.test.forgotpassword.ForgotPasswordActionType;
 import com.holmusk.SuperLeapQA.test.guarantorinfo.GuarantorInfoActionType;
 import com.holmusk.SuperLeapQA.test.invalidage.InvalidAgeActionType;
-import com.holmusk.SuperLeapQA.test.css.LogActivityActionType;
+import com.holmusk.SuperLeapQA.test.logactivity.LogActivityActionType;
 import com.holmusk.SuperLeapQA.test.login.LoginActionType;
 import com.holmusk.SuperLeapQA.test.logmeal.LogMealActionType;
-import com.holmusk.SuperLeapQA.test.css.LogWeightActionType;
+import com.holmusk.SuperLeapQA.test.logweight.LogWeightActionType;
 import com.holmusk.SuperLeapQA.test.mealpage.MealPageActionType;
 import com.holmusk.SuperLeapQA.test.personalinfo.PersonalInfoActionType;
 import com.holmusk.SuperLeapQA.test.photopicker.PhotoPickerActionType;
@@ -341,7 +341,7 @@ public interface ForwardNavigationType extends
     /**
      * We skip photo selection by default.
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#PHOTO_PICKER}
-     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_MEAL}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#MEAL_ENTRY}
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
@@ -353,7 +353,7 @@ public interface ForwardNavigationType extends
     }
 
     /**
-     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_MEAL}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#MEAL_ENTRY}
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#MEAL_PAGE}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
@@ -378,7 +378,7 @@ public interface ForwardNavigationType extends
 
     /**
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#ADD_CARD}
-     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_WEIGHT_VALUE}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#WEIGHT_VALUE}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see CardType#WEIGHT
@@ -390,8 +390,8 @@ public interface ForwardNavigationType extends
     }
 
     /**
-     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_WEIGHT_VALUE}
-     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_WEIGHT_ENTRY}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#WEIGHT_VALUE}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#WEIGHT_ENTRY}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see CSSInput#WEIGHT
@@ -404,7 +404,7 @@ public interface ForwardNavigationType extends
     }
 
     /**
-     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_WEIGHT_ENTRY}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#WEIGHT_ENTRY}
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#WEIGHT_PAGE}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
@@ -419,7 +419,7 @@ public interface ForwardNavigationType extends
 
     /**
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#ADD_CARD}
-     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_ACTIVITY_VALUE}
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#ACTIVITY_VALUE}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxa_addCard(Engine, CardType)
@@ -431,16 +431,16 @@ public interface ForwardNavigationType extends
     }
 
     /**
-     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_ACTIVITY_VALUE}.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#ACTIVITY_VALUE}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see CSSInput#ACTIVITY
-     * @see #rxa_completeCSSEntry(Engine, HMCSSInputType)
+     * @see #rxa_completeCSSValue(Engine, HMCSSInputType)
      */
     @NotNull
     default Flowable<?> rxn_activityValue_activityEntry(@NotNull Engine<?> engine) {
         HMCSSInputType input = CSSInput.ACTIVITY;
-        return rxa_completeCSSEntry(engine, input);
+        return rxa_completeCSSValue(engine, input);
     }
 
     /**

@@ -11,10 +11,7 @@ import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
-import org.swiften.xtestkitcomponents.xpath.Attribute;
-import org.swiften.xtestkitcomponents.xpath.Attributes;
-import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
-import org.swiften.xtestkitcomponents.xpath.XPath;
+import org.swiften.xtestkitcomponents.xpath.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -246,9 +243,10 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @return {@link XPath} value.
      * @see InputHelperType#platform()
      * @see InputType#inputViewXP(InputHelperType)
+     * @see #androidInputViewXP(InputHelperType)
+     * @see #iOSInputViewXP(InputHelperType)
      * @see Platform#ANDROID
      * @see Platform#IOS
-     * @see #androidInputViewXPath()
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -258,10 +256,10 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
 
         switch ((Platform)platform) {
             case ANDROID:
-                return androidInputViewXPath();
+                return androidInputViewXP(helper);
 
             case IOS:
-                return iOSInputViewXPath();
+                return iOSInputViewXP(helper);
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -270,6 +268,7 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#ANDROID}.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformType)
@@ -282,7 +281,7 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    private XPath androidInputViewXPath() {
+    private XPath androidInputViewXP(@NotNull InputHelperType helper) {
         Attributes attrs = Attributes.of(Platform.ANDROID);
 
         final String ID;
@@ -308,11 +307,12 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
+     * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
      * @see BaseViewType#className()
-     * @see CompoundAttribute#single(Attribute)
+     * @see CompoundAttribute#single(AttributeType)
      * @see CompoundAttribute#withClass(String)
      * @see Platform#IOS
      * @see IOSView.ViewType#UI_BUTTON
@@ -322,7 +322,7 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    private XPath iOSInputViewXPath() {
+    private XPath iOSInputViewXP(@NotNull InputHelperType helper) {
         Attributes attrs = Attributes.of(Platform.IOS);
 
         String text;

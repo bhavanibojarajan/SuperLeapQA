@@ -106,7 +106,7 @@ public final class BMIParam {
         /**
          * Set {@link #ethnicity} instance.
          * @param ethnicity {@link Ethnicity} instance.
-         * @return The current {@link Builder} instance.
+         * @return {@link Builder} instance.
          * @see #ethnicity
          */
         @NotNull
@@ -118,7 +118,7 @@ public final class BMIParam {
         /**
          * Set {@link #gender} instance.
          * @param gender {@link Gender} instance.
-         * @return The current {@link Builder} instance.
+         * @return {@link Builder} instance.
          * @see #gender
          */
         @NotNull
@@ -130,7 +130,7 @@ public final class BMIParam {
         /**
          * Set {@link #age}.
          * @param age {@link Integer} value.
-         * @return The current {@link Builder} instance.
+         * @return {@link Builder} instance.
          * @see #age
          */
         @NotNull
@@ -142,7 +142,7 @@ public final class BMIParam {
         /**
          * Set the {@link #heightM} value.
          * @param heightM {@link Double} value.
-         * @return The current {@link Builder} instance.
+         * @return {@link Builder} instance.
          * @see #heightM
          */
         @NotNull
@@ -154,7 +154,7 @@ public final class BMIParam {
         /**
          * Set the {@link #weightKG} value.
          * @param weightKG {@link Double} value.
-         * @return The current {@link Builder} instance.
+         * @return {@link Builder} instance.
          * @see #weightKG
          */
         @NotNull
@@ -168,7 +168,7 @@ public final class BMIParam {
          * @param unit {@link UnitSystem} instance.
          * @param primary {@link Double} value.
          * @param secondary {@link Double} value.
-         * @return The current {@link Builder} instance.
+         * @return {@link Builder} instance.
          * @see UnitSystem#IMPERIAL
          * @see UnitSystem#METRIC
          * @see #withHeight(UnitSystem, double, double)
@@ -193,7 +193,7 @@ public final class BMIParam {
          * Set {@link #heightM} using inputs acquired via randomization.
          * @param inputs {@link List} of {@link Zip}.
          * @param <T> Generics parameter.
-         * @return The current {@link Builder} instance.
+         * @return {@link Builder} instance.
          * @see HMUnitSystemConvertibleType#unitSystem()
          * @see ObjectUtil#nonNull(Object)
          * @see Zip#A
@@ -233,7 +233,7 @@ public final class BMIParam {
          * @param unit {@link UnitSystem} instance.
          * @param primary {@link Double} value.
          * @param secondary {@link Double} value.
-         * @return The current {@link Builder} instance.
+         * @return {@link Builder} instance.
          * @see UnitSystem#IMPERIAL
          * @see UnitSystem#METRIC
          * @see #withWeight(double)
@@ -258,7 +258,7 @@ public final class BMIParam {
          * Set {@link #weightKG} using inputs acquired via randomization.
          * @param inputs {@link List} of {@link Zip}.
          * @param <T> Generics parameter.
-         * @return The current {@link Builder} instance.
+         * @return {@link Builder} instance.
          * @see HMUnitSystemConvertibleType#unitSystem()
          * @see ObjectUtil#nonNull(Object)
          * @see Zip#A
@@ -296,7 +296,7 @@ public final class BMIParam {
         /**
          * Copy properties from another {@link BMIParam}.
          * @param param {@link BMIParam} instance.
-         * @return The current {@link Builder} instance.
+         * @return {@link Builder} instance.
          * @see BMIParam#age()
          * @see BMIParam#ethnicity()
          * @see BMIParam#gender()

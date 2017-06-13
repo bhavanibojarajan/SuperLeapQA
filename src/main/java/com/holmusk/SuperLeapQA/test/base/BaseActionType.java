@@ -22,6 +22,7 @@ import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.choice.ChoiceParam;
 import org.swiften.xtestkit.base.element.choice.ChoiceType;
 import org.swiften.xtestkit.base.model.ChoiceInputType;
+import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.base.model.TextInputType;
 import org.swiften.xtestkit.base.param.DirectionParam;
@@ -34,10 +35,7 @@ import org.swiften.xtestkitcomponents.direction.Direction;
 import org.swiften.xtestkitcomponents.direction.DirectionContainerType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
-import org.swiften.xtestkitcomponents.xpath.Attribute;
-import org.swiften.xtestkitcomponents.xpath.Attributes;
-import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
-import org.swiften.xtestkitcomponents.xpath.XPath;
+import org.swiften.xtestkitcomponents.xpath.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -116,17 +114,17 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
     }
 
     /**
-     * Enter a random input using {@link TextInputType#randomInput()}.
+     * Enter a random input using {@link TextInputType#randomInput(InputHelperType)}.
      * @param engine {@link Engine} instance.
      * @param input {@link TextInputType} instance.
      * @return {@link Flowable} instance.
+     * @see TextInputType#randomInput(InputHelperType)
      * @see #rxa_input(Engine, HMInputType, String)
-     * @see TextInputType#randomInput()
      */
     @NotNull
     default Flowable<WebElement> rxa_randomInput(@NotNull Engine<?> engine,
                                                  @NotNull HMTextType input) {
-        return rxa_input(engine, input, input.randomInput());
+        return rxa_input(engine, input, input.randomInput(engine));
     }
 
     /**
@@ -186,7 +184,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
      * @see BaseViewType#className()
-     * @see CompoundAttribute#single(Attribute)
+     * @see CompoundAttribute#single(AttributeType)
      * @see CompoundAttribute#withClass(String)
      * @see Engine#localizer()
      * @see Engine#rxa_click(WebElement)

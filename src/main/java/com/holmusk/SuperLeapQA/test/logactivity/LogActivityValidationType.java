@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.test.css;
+package com.holmusk.SuperLeapQA.test.logactivity;
 
 import com.holmusk.HMUITestKit.model.HMCSSInputType;
 import com.holmusk.HMUITestKit.test.circlescrollselector.HMCircleScrollValidationType;
@@ -18,7 +18,7 @@ public interface LogActivityValidationType extends
 {
     /**
      * Validate
-     * {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_ACTIVITY_ENTRY}.
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#ACTIVITY_ENTRY}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see ObjectUtil#nonNull(Object)

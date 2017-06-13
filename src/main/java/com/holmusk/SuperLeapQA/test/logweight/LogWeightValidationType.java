@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.test.css;
+package com.holmusk.SuperLeapQA.test.logweight;
 
 import com.holmusk.HMUITestKit.model.HMCSSInputType;
 import com.holmusk.HMUITestKit.test.circlescrollselector.HMCircleScrollValidationType;
@@ -46,7 +46,7 @@ public interface LogWeightValidationType extends HMCircleScrollValidationType {
     }
 
     /**
-     * Validate {@link com.holmusk.SuperLeapQA.navigation.Screen#LOG_WEIGHT_VALUE}
+     * Validate {@link com.holmusk.SuperLeapQA.navigation.Screen#WEIGHT_VALUE}
      * weight entry screen.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.

@@ -102,7 +102,7 @@ public enum CSSInput implements HMCSSInputType {
     private String androidCSSValueDisplayId() {
         switch (this) {
             case ACTIVITY:
-                return "tv_add_weight_tag_activityvalue";
+                return "tv_add_activity_tag_activityvalue";
 
             case WEIGHT:
                 return "tv_add_weight_tag_weightvalue";
