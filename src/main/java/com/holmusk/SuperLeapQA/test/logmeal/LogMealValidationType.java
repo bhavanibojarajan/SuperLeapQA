@@ -17,6 +17,7 @@ import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
+import org.swiften.xtestkitcomponents.xpath.AttributeType;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
@@ -89,9 +90,9 @@ public interface LogMealValidationType extends BaseValidationType {
      * @see CompoundAttribute#withIndex(Integer)
      * @see Engine#rxe_withXPath(XPath...)
      * @see Engine#rxe_containsID(String...)
+     * @see XPath.Builder#addAttribute(AttributeType)
      * @see IOSView.ViewType#UI_STATIC_TEXT
      * @see IOSView.ViewType#UI_TABLE_VIEW_CELL
-     * @see XPath.Builder#addAttribute(Attribute)
      */
     @NotNull
     default Flowable<WebElement> rxe_mealTime(@NotNull Engine<?> engine) {
@@ -157,10 +158,10 @@ public interface LogMealValidationType extends BaseValidationType {
      * @see CompoundAttribute#withIndex(Integer)
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_withXPath(XPath...)
+     * @see XPath.Builder#addAttribute(AttributeType)
      * @see IOSView.ViewType#UI_BUTTON
      * @see IOSView.ViewType#UI_TABLE_VIEW_CELL
      * @see Platform#IOS
-     * @see XPath.Builder#addAttribute(Attribute)
      * @see #NOT_AVAILABLE
      */
     @NotNull

@@ -13,10 +13,7 @@ import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
-import org.swiften.xtestkitcomponents.xpath.Attribute;
-import org.swiften.xtestkitcomponents.xpath.Attributes;
-import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
-import org.swiften.xtestkitcomponents.xpath.XPath;
+import org.swiften.xtestkitcomponents.xpath.*;
 
 import java.util.List;
 
@@ -89,8 +86,8 @@ public enum ChoiceInput implements HMTextChoiceType {
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformType)
      * @see Platform#ANDROID
-     * @see XPath.Builder#addAttribute(Attribute)
-     * @see #ETHNICITY
+     * @see XPath.Builder#addAttribute(AttributeType)
+     * @see #COACH_PREF
      * @see #ETHNICITY
      * @see #HEIGHT
      * @see #WEIGHT

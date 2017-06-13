@@ -9,10 +9,7 @@ import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
-import org.swiften.xtestkitcomponents.xpath.Attribute;
-import org.swiften.xtestkitcomponents.xpath.Attributes;
-import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
-import org.swiften.xtestkitcomponents.xpath.XPath;
+import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
  * Created by haipham on 6/10/17.
@@ -115,7 +112,7 @@ public enum Setting implements BaseErrorType {
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
      * @see BaseViewType#className()
-     * @see CompoundAttribute.Builder#addAttribute(Attribute)
+     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see CompoundAttribute.Builder#withClass(String)
      * @see InputHelperType#localizer()
      * @see InputHelperType#platform()
@@ -153,7 +150,7 @@ public enum Setting implements BaseErrorType {
      * is false.
      * @param helper {@link PlatformType} instance.
      * @return {@link XPath} instance.
-     * @see XPath.Builder#addAttribute(Attribute)
+     * @see XPath.Builder#addAttribute(AttributeType)
      * @see #textSettingAttribute(InputHelperType)
      */
     @NotNull

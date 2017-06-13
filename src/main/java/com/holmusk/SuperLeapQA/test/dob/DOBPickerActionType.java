@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.element.date.AndroidDatePickerType;
+import org.swiften.xtestkit.android.type.AndroidSDKProviderType;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.date.DateParam;
 import org.swiften.xtestkit.base.element.date.DatePickerType;
@@ -70,7 +71,7 @@ public interface DOBPickerActionType extends BaseActionType, DOBPickerValidation
      * @param engine {@link Engine} instance.
      * @param DATE {@link Date} instance.
      * @return {@link Flowable} instance.
-     * @see AndroidDatePickerType#CALENDAR
+     * @see AndroidDatePickerType#calendar(AndroidSDKProviderType)
      * @see Engine#rxa_selectDate(DateType)
      * @see DateParam.Builder#withDate(Date)
      * @see DateParam.Builder#withDatePickerUnits()
@@ -83,7 +84,7 @@ public interface DOBPickerActionType extends BaseActionType, DOBPickerValidation
         DatePickerType pickerType;
 
         if (engine instanceof AndroidEngine) {
-            pickerType = AndroidDatePickerType.CALENDAR;
+            pickerType = AndroidDatePickerType.calendar((AndroidEngine)engine);
         } else if (engine instanceof IOSEngine) {
             pickerType = IOSDatePickerType.MMMM_d_YYYY;
         } else {

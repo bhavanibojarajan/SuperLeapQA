@@ -232,7 +232,7 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @return {@link XPath} instance.
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformType)
-     * @see XPath.Builder#addAttribute(Attribute)
+     * @see XPath.Builder#addAttribute(AttributeType)
      * @see Platform#ANDROID
      * @see #KG
      * @see #KG_DEC

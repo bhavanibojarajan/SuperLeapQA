@@ -8,12 +8,10 @@ import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
+import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
-import org.swiften.xtestkitcomponents.xpath.Attribute;
-import org.swiften.xtestkitcomponents.xpath.Attributes;
-import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
-import org.swiften.xtestkitcomponents.xpath.XPath;
+import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
  * Created by haipham on 1/6/17.
@@ -74,25 +72,24 @@ public interface SearchValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @param query {@link String} value.
      * @return {@link Flowable} instance.
-     * @see Attributes#of(PlatformType)
+     * @see Attributes#of(PlatformProviderType)
      * @see Attributes#containsID(String)
      * @see Attributes#containsText(String)
      * @see BaseViewType#className()
      * @see CompoundAttribute#forClass(String)
-     * @see CompoundAttribute#single(Attribute)
-     * @see Engine#platform()
+     * @see CompoundAttribute#single(AttributeType)
      * @see Engine#rxe_withXPath(XPath...)
+     * @see XPath.Builder#addAttribute(AttributeType)
      * @see IOSView.ViewType#UI_STATIC_TEXT
      * @see IOSView.ViewType#UI_TABLE_VIEW
      * @see IOSView.ViewType#UI_TABLE_VIEW_CELL
-     * @see XPath.Builder#addAttribute(Attribute)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_searchResult(@NotNull Engine<?> engine,
                                                   @NotNull String query) {
-        PlatformType platform = engine.platform();
-        Attributes attrs = Attributes.of(platform);
+        Attributes attrs = Attributes.of(engine);
+
         XPath xPath;
 
         if (engine instanceof AndroidEngine) {

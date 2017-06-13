@@ -12,10 +12,7 @@ import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.property.base.ValueType;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
-import org.swiften.xtestkitcomponents.xpath.Attribute;
-import org.swiften.xtestkitcomponents.xpath.Attributes;
-import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
-import org.swiften.xtestkitcomponents.xpath.XPath;
+import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
  * Created by haipham on 5/10/17.
@@ -98,8 +95,8 @@ public enum Gender implements BaseErrorType, HMInputType, HMTextChoiceType.Item 
      * @return {@link XPath} instance.
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformType)
+     * @see XPath.Builder#addAttribute(AttributeType)
      * @see Platform#ANDROID
-     * @see XPath.Builder#addAttribute(Attribute)
      * @see #FEMALE
      * @see #MALE
      * @see #NOT_AVAILABLE
@@ -138,7 +135,7 @@ public enum Gender implements BaseErrorType, HMInputType, HMTextChoiceType.Item 
      * @see InputHelperType#localizer()
      * @see InputHelperType#platform()
      * @see LocalizerType#localize(String)
-     * @see XPath.Builder#addAttribute(Attribute)
+     * @see XPath.Builder#addAttribute(AttributeType)
      * @see Platform#IOS
      * @see IOSView.ViewType#UI_BUTTON
      * @see #NOT_AVAILABLE

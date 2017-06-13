@@ -23,13 +23,11 @@ import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.ios.element.locator.AndroidXMLAttribute;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.platform.XMLAttributeType;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
-import org.swiften.xtestkitcomponents.xpath.Attribute;
-import org.swiften.xtestkitcomponents.xpath.Attributes;
-import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
-import org.swiften.xtestkitcomponents.xpath.XPath;
+import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
  * Interfaces that extend this should declare methods that assist with app
@@ -44,19 +42,18 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @see Attribute.Builder#withFormatible(Attribute.Formatible)
      * @see Attribute.Builder#withValue(Object)
      * @see Attributes#containsID(String)
-     * @see Attributes#of(PlatformType)
+     * @see Attributes#of(PlatformProviderType)
      * @see Engine#platform()
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_withAttributes(Attribute[])
      * @see XMLAttributeType#value()
      * @see AndroidXMLAttribute#CONTENT_DESC
-     * @see Platform#ANDROID
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_backButton(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
-            Attributes attrs = Attributes.of(Platform.ANDROID);
+            Attributes attrs = Attributes.of(engine);
 
             Attribute navUp = Attribute.<String>builder()
                 .addAttribute(AndroidXMLAttribute.CONTENT_DESC.value())
@@ -217,7 +214,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @see BaseViewType#className()
      * @see Engine#rxe_ofClass(String...)
      * @see Point#getX()
-     * @see XPath.Builder#addAttribute(Attribute)
+     * @see XPath.Builder#addAttribute(AttributeType)
      * @see WebElement#getLocation()
      * @see IOSView.ViewType#UI_BUTTON
      * @see com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD
@@ -283,9 +280,9 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @return {@link Flowable} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#hasText(String)
-     * @see Attributes#of(PlatformType)
+     * @see Attributes#of(PlatformProviderType)
      * @see BaseViewType#className()
-     * @see CompoundAttribute.Builder#addAttribute(Attribute)
+     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see CompoundAttribute.Builder#withClass(String)
      * @see Engine#localizer()
      * @see Engine#platform()
@@ -301,8 +298,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      */
     @NotNull
     default Flowable<WebElement> rxe_menuDeleteConfirm(@NotNull Engine<?> engine) {
-        PlatformType platform = engine.platform();
-        Attributes attrs = Attributes.of(platform);
+        Attributes attrs = Attributes.of(engine);
         LocalizerType localizer = engine.localizer();
         String localized = localizer.localize("edit_title_delete");
 

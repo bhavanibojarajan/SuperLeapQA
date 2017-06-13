@@ -6,6 +6,7 @@ import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
+import org.swiften.xtestkitcomponents.xpath.AttributeType;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
@@ -24,7 +25,7 @@ public enum CSSInput implements HMCSSInputType {
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformType)
      * @see InputHelperType#platform()
-     * @see XPath.Builder#addAttribute(Attribute)
+     * @see XPath.Builder#addAttribute(AttributeType)
      * @see Platform#ANDROID
      * @see #androidCSSId()
      */
@@ -51,7 +52,7 @@ public enum CSSInput implements HMCSSInputType {
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformType)
      * @see InputHelperType#platform()
-     * @see XPath.Builder#addAttribute(Attribute)
+     * @see XPath.Builder#addAttribute(AttributeType)
      * @see Platform#ANDROID
      * @see #androidCSSValueDisplayId()
      */

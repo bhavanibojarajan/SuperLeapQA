@@ -9,10 +9,7 @@ import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.xpath.Attribute;
-import org.swiften.xtestkitcomponents.xpath.Attributes;
-import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
-import org.swiften.xtestkitcomponents.xpath.XPath;
+import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
  * Created by haipham on 5/12/17.
@@ -100,8 +97,8 @@ public enum CoachPref implements BaseErrorType, HMInputType, HMTextChoiceType.It
      * @return {@link XPath} instance.
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformType)
+     * @see XPath.Builder#addAttribute(AttributeType)
      * @see Platform#ANDROID
-     * @see XPath.Builder#addAttribute(Attribute)
      */
     @NotNull
     private XPath androidInputViewXP(@NotNull InputHelperType helper) {

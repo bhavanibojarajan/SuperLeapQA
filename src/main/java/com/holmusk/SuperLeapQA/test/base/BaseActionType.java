@@ -32,7 +32,8 @@ import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.coordinate.RLPosition;
 import org.swiften.xtestkitcomponents.coordinate.RLPositionType;
 import org.swiften.xtestkitcomponents.direction.Direction;
-import org.swiften.xtestkitcomponents.direction.DirectionContainerType;
+import org.swiften.xtestkitcomponents.direction.DirectionProviderType;
+import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkitcomponents.xpath.*;
@@ -182,7 +183,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Attributes#containsText(String)
-     * @see Attributes#of(PlatformType)
+     * @see Attributes#of(PlatformProviderType)
      * @see BaseViewType#className()
      * @see CompoundAttribute#single(AttributeType)
      * @see CompoundAttribute#withClass(String)
@@ -190,16 +191,16 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @see Engine#rxa_click(WebElement)
      * @see Engine#rxe_withXPath(XPath...)
      * @see IOSView.ViewType#UI_BUTTON
-     * @see Platform#IOS
      * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
-     * @see XPath.Builder#addAttribute(Attribute)
+     * @see XPath.Builder#addAttribute(AttributeType)
+     * @see Platform#IOS
      */
     @NotNull
     default Flowable<?> rxa_confirmTextInput(@NotNull final Engine<?> ENGINE) {
         if (ENGINE instanceof IOSEngine) {
             String done = "input_title_done";
             String localized = ENGINE.localizer().localize(done);
-            Attributes attrs = Attributes.of(Platform.IOS);
+            Attributes attrs = Attributes.of(ENGINE);
 
             Attribute attribute = attrs.containsText(localized);
 
@@ -337,7 +338,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * Scroll to the bottom of the screen.
      * @param E {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_swipeGeneric(WebElement, DirectionContainerType)
+     * @see Engine#rxa_swipeGeneric(WebElement, DirectionProviderType)
      * @see Engine#rxe_window()
      * @see Direction#DOWN_UP
      * @see DirectionParam.Builder#withDirection(Direction)

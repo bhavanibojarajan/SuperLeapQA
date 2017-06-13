@@ -14,10 +14,7 @@ import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
-import org.swiften.xtestkitcomponents.xpath.Attribute;
-import org.swiften.xtestkitcomponents.xpath.Attributes;
-import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
-import org.swiften.xtestkitcomponents.xpath.XPath;
+import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
  * Created by haipham on 5/10/17.
@@ -74,8 +71,8 @@ public enum TextInput implements BaseErrorType, HMTextType {
      * @return {@link XPath} instance.
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformType)
+     * @see XPath.Builder#addAttribute(AttributeType)
      * @see Platform#ANDROID
-     * @see XPath.Builder#addAttribute(Attribute)
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -156,7 +153,7 @@ public enum TextInput implements BaseErrorType, HMTextType {
      * @see CompoundAttribute#forClass(String)
      * @see InputHelperType#localizer()
      * @see LocalizerType#localize(String)
-     * @see XPath.Builder#addAttribute(Attribute)
+     * @see XPath.Builder#addAttribute(AttributeType)
      * @see XPath.Builder#addAttribute(CompoundAttribute)
      * @see IOSView.ViewType#UI_TEXT_FIELD
      * @see IOSView.ViewType#UI_SECURE_TEXT_FIELD

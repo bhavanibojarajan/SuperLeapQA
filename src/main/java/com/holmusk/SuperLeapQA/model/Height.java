@@ -272,8 +272,8 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @return {@link XPath} instance.
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformType)
+     * @see XPath.Builder#addAttribute(AttributeType)
      * @see Platform#ANDROID
-     * @see XPath.Builder#addAttribute(Attribute)
      * @see #CM
      * @see #CM_DEC
      * @see #FT
@@ -314,9 +314,9 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @see BaseViewType#className()
      * @see CompoundAttribute#single(AttributeType)
      * @see CompoundAttribute#withClass(String)
+     * @see XPath.Builder#addAttribute(AttributeType)
      * @see Platform#IOS
      * @see IOSView.ViewType#UI_BUTTON
-     * @see XPath.Builder#addAttribute(Attribute)
      * @see #CM
      * @see #FT
      * @see #NOT_AVAILABLE

@@ -10,7 +10,7 @@ import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.param.DirectionParam;
 import org.swiften.xtestkitcomponents.direction.Direction;
-import org.swiften.xtestkitcomponents.direction.DirectionContainerType;
+import org.swiften.xtestkitcomponents.direction.DirectionProviderType;
 
 /**
  * Created by haipham on 31/5/17.
@@ -46,7 +46,7 @@ public interface MealPageActionType extends
      * from {@link #rxe_edit(Engine)} can be clicked.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_swipeGeneric(WebElement, DirectionContainerType)
+     * @see Engine#rxa_swipeGeneric(WebElement, DirectionProviderType)
      * @see Engine#rxe_window()
      * @see com.holmusk.SuperLeapQA.navigation.Screen#MEAL_PAGE
      * @see com.holmusk.SuperLeapQA.navigation.Screen#SEARCH

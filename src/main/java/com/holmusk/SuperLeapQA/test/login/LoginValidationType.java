@@ -12,15 +12,13 @@ import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.xpath.Attribute;
-import org.swiften.xtestkitcomponents.xpath.Attributes;
-import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
-import org.swiften.xtestkitcomponents.xpath.XPath;
+import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
  * Created by haipham on 5/26/17.
@@ -30,24 +28,23 @@ public interface LoginValidationType extends BaseValidationType {
      * Get the submit button {@link WebElement}.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see AndroidView.ViewType#BUTTON
      * @see Attributes#containsText(String)
-     * @see Attributes#of(PlatformType)
+     * @see Attributes#of(PlatformProviderType)
      * @see BaseViewType#className()
-     * @see CompoundAttribute#single(Attribute)
+     * @see CompoundAttribute#single(AttributeType)
      * @see CompoundAttribute#withClass(String)
      * @see Engine#rxe_withXPath(XPath...)
-     * @see IOSView.ViewType#UI_BUTTON
      * @see LocalizerType#localize(String)
-     * @see XPath.Builder#addAttribute(Attribute)
+     * @see XPath.Builder#addAttribute(AttributeType)
+     * @see AndroidView.ViewType#BUTTON
+     * @see IOSView.ViewType#UI_BUTTON
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_submit(@NotNull final Engine<?> ENGINE) {
         LocalizerType localizer = ENGINE.localizer();
-        PlatformType platform = ENGINE.platform();
         String title, clsName;
-        Attributes attrs = Attributes.of(platform);
+        Attributes attrs = Attributes.of(ENGINE);
 
         if (ENGINE instanceof AndroidEngine) {
             clsName = AndroidView.ViewType.BUTTON.className();
@@ -88,17 +85,16 @@ public interface LoginValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Attributes#containsText(String)
-     * @see Attributes#of(PlatformType)
+     * @see Attributes#of(PlatformProviderType)
      * @see BaseViewType#className()
-     * @see CompoundAttribute#single(Attribute)
+     * @see CompoundAttribute#single(AttributeType)
      * @see CompoundAttribute#withClass(String)
      * @see Engine#localizer()
      * @see Engine#rxe_containsText(LCFormat...)
      * @see Engine#rxe_withXPath(XPath...)
      * @see IOSView.ViewType#UI_LINK
      * @see LocalizerType#localize(String)
-     * @see Platform#IOS
-     * @see XPath.Builder#addAttribute(Attribute)
+     * @see XPath.Builder#addAttribute(AttributeType)
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -111,7 +107,7 @@ public interface LoginValidationType extends BaseValidationType {
         } else if (engine instanceof IOSEngine) {
             LocalizerType localizer = engine.localizer();
             String localized = localizer.localize("login_title_register");
-            Attributes attrs = Attributes.of(Platform.IOS);
+            Attributes attrs = Attributes.of(engine);
 
             Attribute attribute = attrs.containsText(localized);
 
