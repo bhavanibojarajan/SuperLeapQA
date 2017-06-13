@@ -2,6 +2,7 @@ package com.holmusk.SuperLeapQA.test.consolidated;
 
 import com.holmusk.SuperLeapQA.test.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
+import com.holmusk.SuperLeapQA.test.css.UICSSValueTestType;
 import com.holmusk.SuperLeapQA.test.dashboard.UIDashboardTestType;
 import com.holmusk.SuperLeapQA.test.dob.UIDoBPickerTestType;
 import com.holmusk.SuperLeapQA.test.invalidage.UIInvalidAgeTestType;
@@ -31,7 +32,8 @@ public final class UIConsolidatedTest extends UIBaseTest implements
     UIDashboardTestType,
     UILogMealTestType,
     UILogWeightTestType,
-    UILogActivityTestType
+    UILogActivityTestType,
+    UICSSValueTestType
 {
     @Factory(
         dataProviderClass = UIBaseTestType.class,
