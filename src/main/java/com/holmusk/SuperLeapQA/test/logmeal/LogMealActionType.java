@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.log.LogUtil;
+import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
@@ -77,6 +78,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Config#MAX_PHOTO_COUNT
+     * @see NumberUtil#randomBetween(int, int)
      * @see ObjectUtil#nonNull(Object)
      * @see #rxa_openPhotoPicker(Engine, int)
      * @see #rxa_selectLibraryPhotos(Engine, int)
@@ -86,14 +88,14 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
     @NotNull
     default Flowable<?> rxa_selectMealPhotos(@NotNull final Engine<?> ENGINE) {
         final LogMealActionType THIS = this;
-        final int COUNT = Config.MAX_PHOTO_COUNT;
+        final int COUNT = NumberUtil.randomBetween(1, Config.MAX_PHOTO_COUNT);
 
         if (ENGINE instanceof AndroidEngine) {
             return Flowable.range(0, COUNT)
                 .map(a -> a + 1)
-                .concatMap(a -> THIS.rxa_openPhotoPicker(ENGINE, a))
-                .flatMap(a -> THIS.rxa_selectLibraryPhotos(ENGINE, 1))
-                .flatMap(a -> THIS.rxa_confirmPhoto(ENGINE))
+                .concatMap(a -> THIS.rxa_openPhotoPicker(ENGINE, a)
+                    .flatMap(b -> THIS.rxa_selectLibraryPhotos(ENGINE, 1))
+                    .flatMap(b -> THIS.rxa_confirmPhoto(ENGINE)))
                 .all(ObjectUtil::nonNull)
                 .toFlowable();
         } else if (ENGINE instanceof IOSEngine) {
@@ -154,6 +156,19 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
     default Flowable<?> rxa_selectMealTime(@NotNull Engine<?> engine,
                                            @NotNull Date date) {
         return rxa_selectSpinnerDateTime(engine, date);
+    }
+
+    /**
+     * Select a random meal time.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #randomSelectableTime()
+     * @see #rxa_selectMealTime(Engine, Date)
+     */
+    @NotNull
+    default Flowable<?> rxa_selectRandomMealTime(@NotNull Engine<?> engine) {
+        Date time = randomSelectableTime();
+        return rxa_selectMealTime(engine, time);
     }
 
     /**

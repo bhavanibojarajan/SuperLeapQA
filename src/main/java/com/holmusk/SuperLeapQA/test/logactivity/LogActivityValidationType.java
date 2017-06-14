@@ -29,7 +29,7 @@ public interface LogActivityValidationType extends
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<?> rxv_activityWeightEntry(@NotNull Engine<?> engine) {
+    default Flowable<?> rxv_activityEntry(@NotNull Engine<?> engine) {
         HMCSSInputType input = CSSInput.ACTIVITY;
 
         return Flowable

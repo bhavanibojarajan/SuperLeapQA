@@ -4,14 +4,17 @@ import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
-import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
-import org.swiften.xtestkitcomponents.xpath.*;
+import org.swiften.xtestkitcomponents.xpath.AttributeType;
+import org.swiften.xtestkitcomponents.xpath.Attributes;
+import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
+import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
  * Created by haipham on 1/6/17.
@@ -67,27 +70,23 @@ public interface SearchValidationType extends BaseValidationType {
     }
 
     /**
-     * Get the result item based on the query {@link String} used to search
-     * for it.
+     * Get all search results.
      * @param engine {@link Engine} instance.
-     * @param query {@link String} value.
      * @return {@link Flowable} instance.
-     * @see Attributes#of(PlatformProviderType)
      * @see Attributes#containsID(String)
-     * @see Attributes#containsText(String)
+     * @see Attributes#of(PlatformProviderType)
      * @see BaseViewType#className()
      * @see CompoundAttribute#forClass(String)
-     * @see CompoundAttribute#single(AttributeType)
+     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see Engine#rxe_withXPath(XPath...)
-     * @see XPath.Builder#addAttribute(AttributeType)
-     * @see IOSView.ViewType#UI_STATIC_TEXT
+     * @see XPath.Builder#addAttribute(CompoundAttribute)
      * @see IOSView.ViewType#UI_TABLE_VIEW
      * @see IOSView.ViewType#UI_TABLE_VIEW_CELL
+     * @see IOSView.ViewType#UI_STATIC_TEXT
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<WebElement> rxe_searchResult(@NotNull Engine<?> engine,
-                                                  @NotNull String query) {
+    default Flowable<WebElement> rxe_searchResults(@NotNull Engine<?> engine) {
         Attributes attrs = Attributes.of(engine);
 
         XPath xPath;
@@ -95,28 +94,56 @@ public interface SearchValidationType extends BaseValidationType {
         if (engine instanceof AndroidEngine) {
             CompoundAttribute cAttr = CompoundAttribute.builder()
                 .addAttribute(attrs.containsID("tv_food_name"))
-                .addAttribute(attrs.containsText(query))
                 .build();
 
             xPath = XPath.builder().addAttribute(cAttr).build();
         } else if (engine instanceof IOSEngine) {
             String tblView = IOSView.ViewType.UI_TABLE_VIEW.className();
             String tblCell = IOSView.ViewType.UI_TABLE_VIEW_CELL.className();
-
-            Attribute attr = attrs.containsText(query);
-
-            CompoundAttribute cAttr = CompoundAttribute.single(attr)
-                .withClass(IOSView.ViewType.UI_STATIC_TEXT.className());
+            String stText = IOSView.ViewType.UI_STATIC_TEXT.className();
 
             xPath = XPath.builder()
                 .addAttribute(CompoundAttribute.forClass(tblView))
                 .addAttribute(CompoundAttribute.forClass(tblCell))
-                .addAttribute(cAttr)
+                .addAttribute(CompoundAttribute.forClass(stText))
                 .build();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        return engine.rxe_withXPath(xPath).firstElement().toFlowable();
+        return engine.rxe_withXPath(xPath);
+    }
+
+    /**
+     * Get the result item based on the query {@link String} used to search
+     * for it.
+     * @param ENGINE {@link Engine} instance.
+     * @param QUERY {@link String} value.
+     * @return {@link Flowable} instance.
+     * @see Engine#getText(WebElement)
+     * @see #rxe_searchResults(Engine)
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_searchResult(@NotNull final Engine<?> ENGINE,
+                                                  @NotNull final String QUERY) {
+        return rxe_searchResults(ENGINE)
+            .filter(a -> ENGINE.getText(a).equals(QUERY))
+            .firstElement()
+            .toFlowable();
+    }
+    /**
+     * Verify that the search result is empty.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see #rxe_searchResults(Engine)
+     */
+    @NotNull
+    default Flowable<Boolean> rxv_emptySearchResult(@NotNull Engine<?> engine) {
+        return rxe_searchResults(engine)
+            .count()
+            .map(NumberUtil::largerThanZero)
+            .toFlowable()
+            .onErrorReturnItem(false);
     }
 }

@@ -1,6 +1,7 @@
 package com.holmusk.SuperLeapQA.test.logmeal;
 
 import com.holmusk.HMUITestKit.model.HMInputType;
+import com.holmusk.HMUITestKit.model.HMTextType;
 import com.holmusk.SuperLeapQA.model.Mood;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.UserMode;
@@ -17,6 +18,7 @@ import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.ios.IOSEngine;
@@ -136,6 +138,74 @@ public interface UILogMealTestType extends
                 .flatMap(b -> ENGINE.rxv_errorWithPageSource())
                 .onErrorReturnItem(true)
             )
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * Test that after the user deletes a meal log (after navigating to it
+     * from {@link Screen#SEARCH}), when {@link Screen#MEAL_PAGE} dismisses,
+     * the search result view is refreshed to reflect the deletion. Only
+     * applicable to {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
+     * @see TextInput#randomInput(InputHelperType)
+     * @see Screen#SPLASH
+     * @see Screen#LOGIN
+     * @see Screen#MEAL_ENTRY
+     * @see TextInput#MEAL_DESCRIPTION
+     * @see #assertCorrectness(TestSubscriber)
+     * @see #defaultUserMode()
+     * @see #engine()
+     * @see #rxa_navigate(UserMode, Screen...)
+     * @see #rxa_confirmMealTime(Engine)
+     * @see #rxa_submitMeal(Engine)
+     * @see #rxa_dismissMealImageTutorial(Engine)
+     * @see #rxa_backToDashboard(Engine)
+     * @see #rxa_toggleDashboardSearch(Engine)
+     * @see #rxa_search(Engine, String)
+     * @see #rxa_openSearchResult(Engine, String)
+     * @see #rxa_openEditMenu(Engine)
+     * @see #rxa_deleteFromMenu(Engine)
+     * @see #rxv_emptySearchResult(Engine)
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    default void test_logMealThenDelete_shouldRefreshSearchResult() {
+        // Setup
+        final Engine<?> ENGINE = engine();
+
+        if (!(ENGINE instanceof AndroidEngine)) {
+            return;
+        }
+
+        final UILogMealTestType THIS = this;
+        final HMTextType DSC_INPUT = TextInput.MEAL_DESCRIPTION;
+        final String DESCRIPTION = DSC_INPUT.randomInput(ENGINE);
+        UserMode mode = defaultUserMode();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.MEAL_ENTRY)
+            .flatMap(a -> THIS.rxa_input(ENGINE, DSC_INPUT, DESCRIPTION))
+            .flatMap(a -> THIS.rxa_confirmMealDescription(ENGINE))
+            .flatMap(a -> THIS.rxa_submitMeal(ENGINE))
+            .flatMap(a -> THIS.rxa_dismissMealImageTutorial(ENGINE))
+
+            /* Go back to dashboard to access the search menu */
+            .flatMap(a -> THIS.rxa_backToDashboard(ENGINE))
+            .flatMap(a -> THIS.rxa_toggleDashboardSearch(ENGINE))
+
+            /* Search for the meal and verify that it is present */
+            .flatMap(a -> THIS.rxa_search(ENGINE, DESCRIPTION))
+            .flatMap(a -> THIS.rxa_openSearchResult(ENGINE, DESCRIPTION))
+
+            /* Delete the meal and verify that the search result view is empty */
+            .flatMap(a -> THIS.rxa_openEditMenu(ENGINE))
+            .flatMap(a -> THIS.rxa_deleteFromMenu(ENGINE))
+            .flatMap(a -> THIS.rxv_emptySearchResult(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

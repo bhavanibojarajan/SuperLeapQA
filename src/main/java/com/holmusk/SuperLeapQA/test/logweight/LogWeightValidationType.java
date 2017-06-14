@@ -59,7 +59,7 @@ public interface LogWeightValidationType extends HMCircleScrollValidationType {
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<?> rxv_logWeightEntry(@NotNull Engine<?> engine) {
+    default Flowable<?> rxv_weightEntry(@NotNull Engine<?> engine) {
         HMCSSInputType input = CSSInput.WEIGHT;
 
         return Flowable

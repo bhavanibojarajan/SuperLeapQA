@@ -672,7 +672,7 @@ public interface UIScreenValidationTestType extends
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxv_CSSValue(Engine, HMCSSInputType)
-     * @see #rxv_logWeightEntry(Engine)
+     * @see #rxv_weightEntry(Engine)
      */
     @Test
     @SuppressWarnings("unchecked")
@@ -704,7 +704,7 @@ public interface UIScreenValidationTestType extends
      * @see #assertCorrectness(TestSubscriber)
      * @see #defaultUserMode()
      * @see #engine()
-     * @see #rxv_logWeightEntry(Engine)
+     * @see #rxv_weightEntry(Engine)
      */
     @Test
     @SuppressWarnings("unchecked")
@@ -717,7 +717,43 @@ public interface UIScreenValidationTestType extends
 
         // When
         rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.WEIGHT_ENTRY)
-            .flatMap(a -> THIS.rxv_logWeightEntry(ENGINE))
+            .flatMap(a -> THIS.rxv_weightEntry(ENGINE))
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * Validate {@link Screen#ACTIVITY_VALUE} and confirm that all
+     * {@link WebElement} are present.
+     * @param mode {@link UserMode} instance.
+     * @see CSSInput#ACTIVITY
+     * @see Screen#SPLASH
+     * @see Screen#LOGIN
+     * @see Screen#ACTIVITY_VALUE
+     * @see #assertCorrectness(TestSubscriber)
+     * @see #engine()
+     * @see #generalUserModeProvider()
+     * @see #rxv_activityEntry(Engine)
+     */
+    @SuppressWarnings("unchecked")
+    @Test(
+        dataProviderClass = UIBaseTestType.class,
+        dataProvider = "generalUserModeProvider"
+    )
+    default void test_logActivityValue_isValidScreen(@NotNull UserMode mode) {
+        // Setup
+        final UIScreenValidationTestType THIS = this;
+        final Engine<?> ENGINE = engine();
+        final HMCSSInputType INPUT = CSSInput.ACTIVITY;
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.ACTIVITY_VALUE)
+            .flatMap(a -> THIS.rxv_CSSValue(ENGINE, INPUT))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -732,26 +768,26 @@ public interface UIScreenValidationTestType extends
      * @param mode {@link UserMode} instance.
      * @see Screen#SPLASH
      * @see Screen#LOGIN
-     * @see Screen#ACTIVITY_VALUE
+     * @see Screen#ACTIVITY_ENTRY
      * @see #assertCorrectness(TestSubscriber)
-     * @see #engine()
      * @see #generalUserModeProvider()
-     * @see #rxv_activityWeightEntry(Engine)
+     * @see #engine()                          
+     * @see #rxv_activityEntry(Engine)
      */
     @SuppressWarnings("unchecked")
     @Test(
         dataProviderClass = UIBaseTestType.class,
         dataProvider = "generalUserModeProvider"
     )
-    default void test_logActivityValue_isValidScreen(@NotNull UserMode mode) {
+    default void test_logActivityEntry_isValidScreen(@NotNull UserMode mode) {
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.ACTIVITY_VALUE)
-            .flatMap(a -> THIS.rxv_activityWeightEntry(ENGINE))
+        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.ACTIVITY_ENTRY)
+            .flatMap(a -> THIS.rxv_activityEntry(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

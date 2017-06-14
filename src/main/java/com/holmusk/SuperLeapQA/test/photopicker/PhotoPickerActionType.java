@@ -6,7 +6,10 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.xtestkit.android.AndroidEngine;
+import org.swiften.xtestkit.android.type.AndroidSDK;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.ios.IOSEngine;
 
 import java.util.Random;
 
@@ -15,17 +18,38 @@ import java.util.Random;
  */
 public interface PhotoPickerActionType extends BaseActionType, PhotoPickerValidationType {
     /**
-     * Switch to a {@link PhotoPickerMode}.
+     * Switch to a {@link PhotoPickerMode}. We also accept any potential
+     * permission alert just in case.
+     * On {@link org.swiften.xtestkit.mobile.Platform#ANDROID}, specifically
+     * with {@link AndroidSDK#isAtLeastM()}, the first click on the
+     * {@link WebElement} corresponding to the provided {@link PhotoPickerMode}
+     * may not bring the user immediately to the appropriate screen (but
+     * instead the user needs to accept a permission dialog, then click on
+     * that {@link WebElement} again).
      * @param ENGINE {@link Engine} instance.
-     * @param mode {@link PhotoPickerMode} instance.
+     * @param MODE {@link PhotoPickerMode} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see Engine#rxa_acceptAlert()
      * @see #rxe_pickerMode(Engine, PhotoPickerMode)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_selectPickerMode(@NotNull final Engine<?> ENGINE,
-                                             @NotNull PhotoPickerMode mode) {
-        return rxe_pickerMode(ENGINE, mode).flatMap(ENGINE::rxa_click);
+                                             @NotNull final PhotoPickerMode MODE) {
+        if (ENGINE instanceof AndroidEngine) {
+            final PhotoPickerActionType THIS = this;
+
+            return Flowable.range(0, 2)
+                .concatMap(a -> THIS.rxe_pickerMode(ENGINE, MODE)
+                    .flatMap(ENGINE::rxa_click)
+                    .flatMap(b -> ENGINE.rxa_acceptAlert())
+                    .onErrorReturnItem(true));
+        } else if (ENGINE instanceof IOSEngine) {
+            return rxe_pickerMode(ENGINE, MODE).flatMap(ENGINE::rxa_click);
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 
     /**
