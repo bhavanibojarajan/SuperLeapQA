@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.test.screen;
+package com.holmusk.SuperLeapQA.test.consolidated;
 
 import com.holmusk.SuperLeapQA.test.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;

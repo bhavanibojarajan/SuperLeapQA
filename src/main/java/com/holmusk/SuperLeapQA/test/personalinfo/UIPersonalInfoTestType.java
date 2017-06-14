@@ -237,6 +237,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * @see #rxa_randomInputs(Engine, List)
      * @see #rxa_confirmGuarantorInfo(Engine, UserMode)
      * @see #rxe_progressBar(Engine)
+     * @see #rxv_useAppNow(Engine)
      */
     @SuppressWarnings("unchecked")
     @Test(
@@ -254,10 +255,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
         rxa_navigate(MODE, Screen.SPLASH, Screen.GUARANTOR_INFO)
             .flatMap(a -> THIS.rxa_randomInputs(ENGINE, INPUTS))
             .flatMap(a -> THIS.rxa_confirmGuarantorInfo(ENGINE, MODE))
-
-            /* If all inputs are valid, the progress bar should be visible
-             * to indicate data being processed */
-            .flatMap(a -> THIS.rxe_progressBar(ENGINE))
+            .flatMap(a -> THIS.rxv_useAppNow(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

@@ -30,7 +30,10 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
      */
     @NotNull
     default Flowable<WebElement> rxe_validAgeConfirm(@NotNull Engine<?> engine) {
-        return engine.rxe_containsText("register_title_next").firstElement().toFlowable();
+        return engine
+            .rxe_containsText("register_title_next")
+            .firstElement()
+            .toFlowable();
     }
 
     /**
@@ -191,5 +194,28 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
             )
             .all(ObjectUtil::nonNull)
             .toFlowable();
+    }
+
+    /**
+     * Check if there is any dialog blocking the screen. This is because
+     * when we scroll to bottom to review the submit button, the touch action
+     * may accidentally open up a picker dialog.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see BooleanUtil#isFalse(boolean)
+     * @see Engine#rxe_containsID(String...)
+     */
+    @NotNull
+    default Flowable<Boolean> rxv_dialogBlockingScreen(@NotNull Engine<?> engine) {
+        if (engine instanceof AndroidEngine) {
+            return engine
+                .rxe_containsID("select_dialog_listview", "btnDone")
+                .isEmpty()
+                .map(BooleanUtil::isFalse)
+                .onErrorReturnItem(false)
+                .toFlowable();
+        } else {
+            return Flowable.just(false);
+        }
     }
 }

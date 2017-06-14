@@ -11,7 +11,6 @@ import com.holmusk.SuperLeapQA.test.login.UILoginTestType;
 import com.holmusk.SuperLeapQA.test.logmeal.UILogMealTestType;
 import com.holmusk.SuperLeapQA.test.logweight.UILogWeightTestType;
 import com.holmusk.SuperLeapQA.test.personalinfo.UIPersonalInfoTestType;
-import com.holmusk.SuperLeapQA.test.screen.UIScreenValidationTestType;
 import com.holmusk.SuperLeapQA.test.validage.UIValidAgeTestType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.Engine;
@@ -20,10 +19,15 @@ import org.testng.annotations.Factory;
 /**
  * Created by haipham on 4/4/17.
  */
+
+/**
+ * This class takes care of all tests that are not validation-based, i.e.
+ * those not found in
+ * {@link UIScreenValidationTest}.
+ */
 @SuppressWarnings("UndeclaredTests")
-public final class UIConsolidatedTest extends UIBaseTest implements
+public final class UILogicValidationTest extends UIBaseTest implements
     UIBaseTestType,
-    UIScreenValidationTestType,
     UILoginTestType,
     UIDoBPickerTestType,
     UIInvalidAgeTestType,
@@ -39,7 +43,7 @@ public final class UIConsolidatedTest extends UIBaseTest implements
         dataProviderClass = UIBaseTestType.class,
         dataProvider = "engineProvider"
     )
-    public UIConsolidatedTest(@NotNull Engine<?> engine) {
+    public UILogicValidationTest(@NotNull Engine<?> engine) {
         super(engine);
     }
 }

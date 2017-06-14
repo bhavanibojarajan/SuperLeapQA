@@ -6,7 +6,7 @@
 
     <test name="All UI Tests">
         <classes>
-            <class name="com.holmusk.SuperLeapQA.test.screen.UIScreenValidationTest"/>
+            <class name="com.holmusk.SuperLeapQA.test.consolidated.UIScreenValidationTest"/>
             <class name="com.holmusk.SuperLeapQA.test.dob.UIDoBPickerTest"/>
         </classes>
     </test>

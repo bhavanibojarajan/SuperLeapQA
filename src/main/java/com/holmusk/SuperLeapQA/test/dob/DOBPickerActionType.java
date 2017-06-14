@@ -6,15 +6,15 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.element.date.AndroidDatePickerType;
-import org.swiften.xtestkit.android.type.AndroidSDKProviderType;
+import org.swiften.xtestkit.android.type.AndroidSDK;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.date.DateParam;
 import org.swiften.xtestkit.base.element.date.DatePickerType;
 import org.swiften.xtestkit.base.element.date.DateType;
-import org.swiften.xtestkitcomponents.common.DelayType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.element.date.IOSDatePickerType;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.common.DelayType;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -59,7 +59,11 @@ public interface DOBPickerActionType extends BaseActionType, DOBPickerValidation
     @NotNull
     default Flowable<?> rxa_confirmDoB(@NotNull final Engine<?> ENGINE) {
         return ENGINE
-            .rxe_containsText("ok", "register_title_submit")
+            .rxe_containsText(
+                "register_title_ok",
+                "register_title_submit",
+                "register_title_done"
+            )
             .firstElement()
             .toFlowable()
             .flatMap(ENGINE::rxa_click);
@@ -71,11 +75,16 @@ public interface DOBPickerActionType extends BaseActionType, DOBPickerValidation
      * @param engine {@link Engine} instance.
      * @param DATE {@link Date} instance.
      * @return {@link Flowable} instance.
-     * @see AndroidDatePickerType#calendar(AndroidSDKProviderType)
+     * @see AndroidEngine#androidSDK()
+     * @see AndroidSDK#isAtLeastLollipop()
+     * @see AndroidSDK#isAtLeastM()
      * @see Engine#rxa_selectDate(DateType)
      * @see DateParam.Builder#withDate(Date)
      * @see DateParam.Builder#withDatePickerUnits()
-     * @see IOSDatePickerType#MMMM_d_YYYY
+     * @see AndroidDatePickerType#DATE_CALENDAR_PICKER
+     * @see AndroidDatePickerType#DATE_CALENDAR_PICKER_M
+     * @see AndroidDatePickerType#DATE_NUMBER_PICKER_MMM_dd_yyyy
+     * @see IOSDatePickerType#PICKER_WHEEL_MMMM_d_yyyy
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -84,9 +93,18 @@ public interface DOBPickerActionType extends BaseActionType, DOBPickerValidation
         DatePickerType pickerType;
 
         if (engine instanceof AndroidEngine) {
-            pickerType = AndroidDatePickerType.calendar((AndroidEngine)engine);
+            AndroidEngine aEngine = (AndroidEngine)engine;
+            AndroidSDK sdk = aEngine.androidSDK();
+
+            if (sdk.isAtLeastM()) {
+                pickerType = AndroidDatePickerType.DATE_CALENDAR_PICKER_M;
+            } else if (sdk.isAtLeastLollipop()) {
+                pickerType = AndroidDatePickerType.DATE_CALENDAR_PICKER;
+            } else {
+                pickerType = AndroidDatePickerType.DATE_NUMBER_PICKER_MMM_dd_yyyy;
+            }
         } else if (engine instanceof IOSEngine) {
-            pickerType = IOSDatePickerType.MMMM_d_YYYY;
+            pickerType = IOSDatePickerType.PICKER_WHEEL_MMMM_d_yyyy;
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

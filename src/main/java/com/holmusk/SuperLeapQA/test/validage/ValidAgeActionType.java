@@ -261,9 +261,11 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @param mode {@link UserMode} instance.
      * @param validBMI {@link Boolean} value.
      * @return {@link Flowable} instance.
+     * @see Engine#rxa_navigateBackOnce()
      * @see #rxa_enterValidAgeInputs(Engine, UserMode, boolean)
      * @see #rxa_scrollToBottom(Engine)
      * @see #rxa_confirmValidAgeInputs(Engine)
+     * @see #rxv_dialogBlockingScreen(Engine)
      */
     @NotNull
     default Flowable<?> rxa_completeValidAgeInputs(@NotNull final Engine<?> ENGINE,
@@ -273,6 +275,8 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
 
         return rxa_enterValidAgeInputs(ENGINE, mode, validBMI)
             .flatMap(a -> THIS.rxa_scrollToBottom(ENGINE))
+            .flatMap(a -> THIS.rxv_dialogBlockingScreen(ENGINE))
+            .flatMap(a -> a ? ENGINE.rxa_navigateBackOnce() : Flowable.just(true))
             .flatMap(a -> THIS.rxa_confirmValidAgeInputs(ENGINE));
     }
 

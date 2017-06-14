@@ -1,4 +1,4 @@
-package com.holmusk.SuperLeapQA.test.screen;
+package com.holmusk.SuperLeapQA.test.consolidated;
 
 import com.holmusk.HMUITestKit.model.*;
 import com.holmusk.SuperLeapQA.model.*;
@@ -507,19 +507,19 @@ public interface UIScreenValidationTestType extends
      * check {@link Screen#USE_APP_NOW} and {@link Screen#DASHBOARD_TUTORIAL}
      * as well.
      * @param MODE {@link UserMode} instance.
+     * @see DashboardMode#ACTIVITY
+     * @see DashboardMode#BMI
      * @see Screen#SPLASH
      * @see Screen#DOB
-     * @see Screen#USE_APP_NOW
-     * @see Screen#DASHBOARD_TUTORIAL
      * @see Screen#DASHBOARD
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #guarantorSpecificUserModeProvider()
      * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rxa_useAppNow(Engine)
-     * @see #rxa_dismissDashboardTutorial(Engine)
-     * @see #rxv_useAppNow(Engine)
-     * @see #rxv_dashboardTutorial(Engine)
+     * @see #rxa_scrollToBottom(Engine)
+     * @see #rxa_dashboardMode(Engine, DashboardMode)
+     * @see #rxv_dashboardBMI(Engine)
+     * @see #rxv_dashboardActivity(Engine, UserMode)
      */
     @SuppressWarnings("unchecked")
     @Test(
@@ -533,11 +533,11 @@ public interface UIScreenValidationTestType extends
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(MODE, Screen.SPLASH, Screen.DOB, Screen.USE_APP_NOW)
-            .flatMap(a -> THIS.rxv_useAppNow(ENGINE))
-            .flatMap(a -> THIS.rxa_useAppNow(ENGINE))
-            .flatMap(a -> THIS.rxv_dashboardTutorial(ENGINE))
-            .flatMap(a -> THIS.rxa_dismissDashboardTutorial(ENGINE))
+        rxa_navigate(MODE, Screen.SPLASH, Screen.DOB, Screen.DASHBOARD)
+            .flatMap(a -> THIS.rxa_dashboardMode(ENGINE, DashboardMode.BMI))
+            .flatMap(a -> THIS.rxv_dashboardBMI(ENGINE))
+            .flatMap(a -> THIS.rxa_dashboardMode(ENGINE, DashboardMode.ACTIVITY))
+            .flatMap(a -> THIS.rxv_dashboardActivity(ENGINE, MODE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

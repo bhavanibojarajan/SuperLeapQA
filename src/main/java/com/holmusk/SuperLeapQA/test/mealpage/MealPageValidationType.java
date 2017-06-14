@@ -63,7 +63,7 @@ public interface MealPageValidationType extends BaseValidationType {
                 String yesterday = localizer.localize("date_title_yesterday");
                 dateString = String.format("%s %s", yesterday, hma);
             } else {
-                SimpleDateFormat dmyFormatter = new SimpleDateFormat("dd MMM YYYY");
+                SimpleDateFormat dmyFormatter = new SimpleDateFormat("dd MMM yyyy");
                 String dmy = dmyFormatter.format(date);
                 dateString = String.format("%s %s", dmy, hma);
             }

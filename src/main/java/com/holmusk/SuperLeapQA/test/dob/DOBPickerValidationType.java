@@ -68,9 +68,9 @@ public interface DOBPickerValidationType extends WelcomeValidationType {
         String format;
 
         if (engine instanceof AndroidEngine) {
-            format = "dd MMMM YYYY";
+            format = "dd MMMM yyyy";
         } else if (engine instanceof IOSEngine) {
-            format = "MMM d, YYYY";
+            format = "MMM d, yyyy";
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

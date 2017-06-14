@@ -40,15 +40,15 @@ public interface UICSSValueTestType extends UIBaseTestType, CSSValueActionType {
     static Iterator<Object[]> cssDataProvider() {
         List<Object[]> data = new LinkedList<>();
 
-//        data.add(new Object[] {
-//            UserMode.PARENT,
-//            Screen.WEIGHT_VALUE,
-//            Screen.WEIGHT_ENTRY,
-//            CSSInput.WEIGHT
-//        });
+        data.add(new Object[] {
+            UserMode.PARENT,
+            Screen.WEIGHT_VALUE,
+            Screen.WEIGHT_ENTRY,
+            CSSInput.WEIGHT
+        });
 
         UserMode[] modes = new UserMode[] {
-//            UserMode.PARENT,
+            UserMode.PARENT,
             UserMode.TEEN_A18
         };
 

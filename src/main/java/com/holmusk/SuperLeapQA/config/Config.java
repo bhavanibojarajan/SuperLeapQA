@@ -1,7 +1,6 @@
 package com.holmusk.SuperLeapQA.config;
 
 import com.holmusk.HMUITestKit.android.HMAndroidEngine;
-import com.holmusk.HMUITestKit.ios.HMIOSEngine;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.android.type.AndroidSDK;
 import org.swiften.xtestkit.base.Engine;
@@ -43,11 +42,29 @@ public final class Config {
 //            .withTestMode(TestMode.SIMULATED)
 //            .build());
 //
+//        ENGINES.add(HMIOSEngine.builder()
+//            .withDeviceUID("771F28EC-C5FC-45B8-8C2A-AF346B219936")
+//            .withApp(IOS_APP_PATH)
+//            .withAppPackage(IOS_APP_PACKAGE)
+//            .withDeviceName("iPhone 7 Plus")
+//            .withPlatformVersion("10.3")
+//            .withTestMode(TestMode.SIMULATED)
+//            .build());
+
+//        ENGINES.add(HMIOSEngine.builder()
+//            .withDeviceUID("496E8BC3-4DCB-4D48-9350-489174E33426")
+//            .withApp(IOS_APP_PATH)
+//            .withAppPackage(IOS_APP_PACKAGE)
+//            .withDeviceName("iPhone 6 Plus iOS 9.2")
+//            .withPlatformVersion("9.2")
+//            .withTestMode(TestMode.SIMULATED)
+//            .build());
+
         ENGINES.add(HMAndroidEngine.builder()
-            .withSDK(AndroidSDK.SDK_23)
+            .withSDK(AndroidSDK.SDK_18)
             .withAppActivity(ANDROID_APP_ACTIVITY)
             .withAppPackage(ANDROID_APP_PACKAGE)
-            .withDeviceName("Nexus_4_API_23")
+            .withDeviceName("Nexus_4_API_18")
             .withTestMode(TestMode.SIMULATED)
             .build());
 
@@ -58,13 +75,12 @@ public final class Config {
 //            .withDeviceName("Nexus_4_API_22")
 //            .withTestMode(TestMode.SIMULATED)
 //            .build());
-
-//        ENGINES.add(HMIOSEngine.builder()
-//            .withDeviceUID("771F28EC-C5FC-45B8-8C2A-AF346B219936")
-//            .withApp(IOS_APP_PATH)
-//            .withAppPackage(IOS_APP_PACKAGE)
-//            .withDeviceName("iPhone 7 Plus")
-//            .withPlatformVersion("10.3")
+//
+//        ENGINES.add(HMAndroidEngine.builder()
+//            .withSDK(AndroidSDK.SDK_23)
+//            .withAppActivity(ANDROID_APP_ACTIVITY)
+//            .withAppPackage(ANDROID_APP_PACKAGE)
+//            .withDeviceName("Nexus_4_API_23")
 //            .withTestMode(TestMode.SIMULATED)
 //            .build());
 
