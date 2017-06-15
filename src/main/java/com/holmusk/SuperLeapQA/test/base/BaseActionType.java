@@ -107,8 +107,8 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
 
         return Flowable
             .fromIterable(inputs)
-            .concatMap(a -> THIS.rxa_input(ENGINE, a.A, a.B))
-            .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
+            .concatMap(a -> THIS.rxa_input(ENGINE, a.A, a.B)
+                .flatMap(b -> THIS.rxa_makeNextInputVisible(ENGINE, b)))
             .all(ObjectUtil::nonNull)
             .toFlowable();
     }

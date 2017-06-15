@@ -58,6 +58,7 @@ public interface PhotoPickerActionType extends BaseActionType, PhotoPickerValida
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
      * @see Long#intValue()
+     * @see ObjectUtil#eq(Object)
      * @see Random#nextInt(int)
      * @see #rxe_imageViews(Engine)
      */
