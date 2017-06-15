@@ -1,7 +1,10 @@
 package com.holmusk.SuperLeapQA.test.logactivity;
 
 import com.holmusk.HMUITestKit.model.HMCSSInputType;
+import com.holmusk.SuperLeapQA.config.Config;
+import com.holmusk.SuperLeapQA.model.ActivityValue;
 import com.holmusk.SuperLeapQA.model.CSSInput;
+import com.holmusk.SuperLeapQA.model.DashboardMode;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
@@ -60,6 +63,71 @@ public interface UILogActivityTestType extends UIBaseTestType, LogActivityAction
                 .flatMap(b -> Flowable.mergeArray(THIS.rxv_hasCSSTime(ENGINE, TIME)))
                 .all(ObjectUtil::nonNull)
                 .toFlowable())
+            .subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * Log a new activity and confirm that step calculations are correct. This
+     * is only relevant for {@link UserMode#isTeen()}.
+     * @see Double#intValue()
+     * @see Engine#rxv_errorWithPageSource()
+     * @see UserMode#defaultTeenUserMode()
+     * @see ActivityValue#TODAY
+     * @see Config#STEP_PER_MIN
+     * @see CSSInput#ACTIVITY
+     * @see DashboardMode#ACTIVITY
+     * @see Screen#SPLASH
+     * @see Screen#LOGIN
+     * @see Screen#DASHBOARD
+     * @see Screen#ACTIVITY_ENTRY
+     * @see #assertCorrectness(TestSubscriber)
+     * @see #engine()
+     * @see #rxa_navigate(UserMode, Screen...)
+     * @see #rxa_dashboardMode(Engine, DashboardMode)
+     * @see #rxa_submitCSSEntry(Engine, HMCSSInputType)
+     * @see #rxa_backToDashboard(Engine)
+     * @see #rxe_activityValue(Engine, UserMode, ActivityValue)
+     * @see #rxe_selectedCSSNumericValue(Engine, HMCSSInputType)
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    default void test_logActivity_shouldCalculateStepsCorrectly() {
+        // Setup
+        final UILogActivityTestType THIS = this;
+        final Engine<?> ENGINE = engine();
+        final HMCSSInputType INPUT = CSSInput.ACTIVITY;
+        final DashboardMode DB_MODE = DashboardMode.ACTIVITY;
+        final ActivityValue AT_VAL = ActivityValue.TODAY;
+        final int STEP_PER_MIN = Config.STEP_PER_MIN;
+        final UserMode MODE = UserMode.defaultTeenUserMode();
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        rxa_navigate(MODE, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD)
+            .flatMap(a -> THIS.rxa_dashboardMode(ENGINE, DB_MODE))
+            .flatMap(a -> THIS.rxe_activityValue(ENGINE, MODE, AT_VAL))
+            .flatMap(b -> THIS.rxa_navigate(MODE, Screen.DASHBOARD, Screen.ACTIVITY_ENTRY)
+                .flatMap(c -> THIS.rxe_selectedCSSNumericValue(ENGINE, INPUT))
+                .map(c -> c * STEP_PER_MIN)
+                .map(Double::intValue)
+                .flatMap(c -> THIS.rxa_submitCSSEntry(ENGINE, INPUT)
+                    .flatMap(d -> THIS.rxa_backToDashboard(ENGINE))
+                    .flatMap(d -> THIS.rxa_dashboardMode(ENGINE, DB_MODE))
+                    .flatMap(d -> THIS.rxe_activityValue(ENGINE, MODE, AT_VAL))
+
+                    /* Compare the latest today value with the previously
+                     * displayed value. The difference should be equal to
+                     * minutes * steps/minute */
+                    .map(d -> d - b)
+                    .map(Double::intValue)
+                    .filter(d -> d.equals(c))
+                    .switchIfEmpty(ENGINE.rxv_errorWithPageSource()))
+            )
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

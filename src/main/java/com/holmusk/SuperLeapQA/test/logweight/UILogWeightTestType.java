@@ -34,8 +34,8 @@ public interface UILogWeightTestType extends
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#WEIGHT_ENTRY
+     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
-     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_openCSSTimePicker(Engine, HMCSSInputType)
@@ -55,7 +55,7 @@ public interface UILogWeightTestType extends
         final Engine<?> ENGINE = engine();
         final HMCSSInputType INPUT = CSSInput.WEIGHT;
         final Date TIME = randomSelectableTime();
-        UserMode mode = defaultUserMode();
+        UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When

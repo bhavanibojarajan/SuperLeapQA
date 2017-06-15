@@ -2,6 +2,7 @@ package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.HMUITestKit.model.HMCSSInputType;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
@@ -9,6 +10,8 @@ import org.swiften.xtestkitcomponents.xpath.Attribute;
 import org.swiften.xtestkitcomponents.xpath.AttributeType;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
 import org.swiften.xtestkitcomponents.xpath.XPath;
+
+import java.util.Collection;
 
 /**
  * Created by haipham on 12/6/17.
@@ -107,6 +110,25 @@ public enum CSSInput implements HMCSSInputType {
 
             case WEIGHT:
                 return "tv_add_weight_tag_weightvalue";
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+
+    /**
+     * Override this method to provide default implementation.
+     * @param helper {@link InputHelperType} instance.
+     * @return {@link Collection} of {@link String}.
+     * @see HMCSSInputType#unitOfMeasurement(InputHelperType)
+     * @see CollectionUtil#asList(Object[])
+     */
+    @NotNull
+    @Override
+    public Collection<String> unitOfMeasurement(@NotNull InputHelperType helper) {
+        switch (this) {
+            case ACTIVITY:
+                return CollectionUtil.asList("activityLog_title_minutes");
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);

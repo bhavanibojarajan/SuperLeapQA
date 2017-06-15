@@ -23,6 +23,26 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     TEEN_U18,
     TEEN_A18;
 
+    /**
+     * Get the default {@link UserMode}.
+     * @return {@link UserMode} instance.
+     * @see #PARENT
+     */
+    @NotNull
+    public static UserMode defaultUserMode() {
+        return PARENT;
+    }
+
+    /**
+     * Get the default {@link UserMode} that is {@link UserMode#isTeen()}.
+     * @return {@link UserMode} instance.
+     * @see #TEEN_A18
+     */
+    @NotNull
+    public static UserMode defaultTeenUserMode() {
+        return TEEN_A18;
+    }
+
     @NotNull
     @Override
     public Converter<Integer> converter() {

@@ -1,8 +1,7 @@
 package com.holmusk.SuperLeapQA.config;
 
-import com.holmusk.HMUITestKit.android.HMAndroidEngine;
+import com.holmusk.HMUITestKit.ios.HMIOSEngine;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.xtestkit.android.type.AndroidSDK;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.TestMode;
 import org.swiften.xtestkit.kit.TestKit;
@@ -24,6 +23,7 @@ public final class Config {
     @NotNull public static final TestKit TEST_KIT;
 
     public static final int MAX_PHOTO_COUNT = 4;
+    public static final int STEP_PER_MIN = 130;
 
     static {
         ANDROID_APP_PACKAGE = "com.holmusk.superleap";
@@ -42,31 +42,31 @@ public final class Config {
 //            .withTestMode(TestMode.SIMULATED)
 //            .build());
 //
-//        ENGINES.add(HMIOSEngine.builder()
-//            .withDeviceUID("771F28EC-C5FC-45B8-8C2A-AF346B219936")
-//            .withApp(IOS_APP_PATH)
-//            .withAppPackage(IOS_APP_PACKAGE)
-//            .withDeviceName("iPhone 7 Plus")
-//            .withPlatformVersion("10.3")
-//            .withTestMode(TestMode.SIMULATED)
-//            .build());
-
-//        ENGINES.add(HMIOSEngine.builder()
-//            .withDeviceUID("496E8BC3-4DCB-4D48-9350-489174E33426")
-//            .withApp(IOS_APP_PATH)
-//            .withAppPackage(IOS_APP_PACKAGE)
-//            .withDeviceName("iPhone 6 Plus iOS 9.2")
-//            .withPlatformVersion("9.2")
-//            .withTestMode(TestMode.SIMULATED)
-//            .build());
-
-        ENGINES.add(HMAndroidEngine.builder()
-            .withSDK(AndroidSDK.SDK_18)
-            .withAppActivity(ANDROID_APP_ACTIVITY)
-            .withAppPackage(ANDROID_APP_PACKAGE)
-            .withDeviceName("Nexus_4_API_18")
+        ENGINES.add(HMIOSEngine.builder()
+            .withDeviceUID("771F28EC-C5FC-45B8-8C2A-AF346B219936")
+            .withApp(IOS_APP_PATH)
+            .withAppPackage(IOS_APP_PACKAGE)
+            .withDeviceName("iPhone 7 Plus")
+            .withPlatformVersion("10.3")
             .withTestMode(TestMode.SIMULATED)
             .build());
+
+//        ENGINES.add(HMIOSEngine.builder()
+//            .withDeviceUID("346114F4-41D4-455A-B6BD-427BCDB3E11A")
+//            .withApp(IOS_APP_PATH)
+//            .withAppPackage(IOS_APP_PACKAGE)
+//            .withDeviceName("iPhone 6 Plus iOS 9.3")
+//            .withPlatformVersion("9.3")
+//            .withTestMode(TestMode.SIMULATED)
+//            .build());
+
+//        ENGINES.add(HMAndroidEngine.builder()
+//            .withSDK(AndroidSDK.SDK_18)
+//            .withAppActivity(ANDROID_APP_ACTIVITY)
+//            .withAppPackage(ANDROID_APP_PACKAGE)
+//            .withDeviceName("Nexus_4_API_18")
+//            .withTestMode(TestMode.SIMULATED)
+//            .build());
 
 //        ENGINES.add(HMAndroidEngine.builder()
 //            .withSDK(AndroidSDK.SDK_22)

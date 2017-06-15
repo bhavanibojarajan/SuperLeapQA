@@ -19,8 +19,8 @@ public interface UIForgotPasswordTestType extends UIBaseTestType, ForgotPassword
      * and display a notification to the user.
      * @see Screen#SPLASH
      * @see Screen#FORGOT_PASSWORD
+     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
-     * @see #defaultUserMode()
      * @see #engine()
      * @see #forgotPasswordProgressDelay(Engine)
      * @see #generalDelay(Engine)
@@ -36,7 +36,7 @@ public interface UIForgotPasswordTestType extends UIBaseTestType, ForgotPassword
         // Setup
         final UIForgotPasswordTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        UserMode mode = defaultUserMode();
+        UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When

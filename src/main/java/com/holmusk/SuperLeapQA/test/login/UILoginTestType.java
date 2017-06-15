@@ -18,9 +18,9 @@ public interface UILoginTestType extends UIBaseTestType, LoginActionType {
      * Login with predefined credentials and verify that it works correctly.
      * @see Screen#SPLASH
      * @see Screen#LOGIN
+     * @see UserMode#defaultUserMode()
      * @see UserMode#loginCredentials()
      * @see #assertCorrectness(TestSubscriber)
-     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_login(Engine, List)
      */
@@ -30,7 +30,7 @@ public interface UILoginTestType extends UIBaseTestType, LoginActionType {
         // Setup
         final UILoginTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        final UserMode MODE = defaultUserMode();
+        final UserMode MODE = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
@@ -49,8 +49,8 @@ public interface UILoginTestType extends UIBaseTestType, LoginActionType {
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#REGISTER
+     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
-     * @see #defaultUserMode()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxv_registerScreen(Engine)
      */
@@ -60,7 +60,7 @@ public interface UILoginTestType extends UIBaseTestType, LoginActionType {
         // Setup
         final UILoginTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        UserMode mode = defaultUserMode();
+        UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When

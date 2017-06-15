@@ -59,8 +59,8 @@ public interface UILogMealTestType extends
      * @see Screen#MEAL_ENTRY
      * @see Screen#SEARCH
      * @see TextInput#MEAL_DESCRIPTION
+     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
-     * @see #defaultUserMode()
      * @see #engine()
      * @see #randomSelectableTime()
      * @see #rxa_navigate(UserMode, Screen...)
@@ -89,7 +89,7 @@ public interface UILogMealTestType extends
         final TextInput DSC_INPUT = TextInput.MEAL_DESCRIPTION;
         final String DESCRIPTION = DSC_INPUT.randomInput(ENGINE);
         final Mood MOOD = CollectionUtil.randomElement(Mood.values());
-        UserMode mode = defaultUserMode();
+        UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         final Flowable<?> RXV_MEAL_PAGE = Flowable
@@ -156,8 +156,8 @@ public interface UILogMealTestType extends
      * @see Screen#LOGIN
      * @see Screen#MEAL_ENTRY
      * @see TextInput#MEAL_DESCRIPTION
+     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
-     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_confirmMealTime(Engine)
@@ -184,7 +184,7 @@ public interface UILogMealTestType extends
         final UILogMealTestType THIS = this;
         final HMTextType DSC_INPUT = TextInput.MEAL_DESCRIPTION;
         final String DESCRIPTION = DSC_INPUT.randomInput(ENGINE);
-        UserMode mode = defaultUserMode();
+        UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
@@ -232,8 +232,8 @@ public interface UILogMealTestType extends
      * @see Screen#CHAT
      * @see Screen#SEARCH
      * @see TextInput#MEAL_COMMENT
+     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
-     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_postChat(Engine, String)
@@ -269,7 +269,7 @@ public interface UILogMealTestType extends
             .map(a -> INPUT.randomInput(ENGINE))
             .collect(Collectors.toList());
 
-        UserMode mode = defaultUserMode();
+        UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When

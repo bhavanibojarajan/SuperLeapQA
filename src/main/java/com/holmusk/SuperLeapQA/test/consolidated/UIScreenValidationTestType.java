@@ -40,8 +40,8 @@ public interface UIScreenValidationTestType extends
      * {@link org.openqa.selenium.WebElement} are visible.
      * @see Screen#SPLASH
      * @see Screen#WELCOME
+     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
-     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxv_welcomeScreen(Engine)
@@ -52,7 +52,7 @@ public interface UIScreenValidationTestType extends
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        UserMode mode = defaultUserMode();
+        UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
@@ -72,8 +72,8 @@ public interface UIScreenValidationTestType extends
      * and interacting with them.
      * @see Screen#SPLASH
      * @see Screen#LOGIN
+     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
-     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxv_loginScreen(Engine)
@@ -84,7 +84,7 @@ public interface UIScreenValidationTestType extends
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        UserMode mode = defaultUserMode();
+        UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
@@ -104,8 +104,8 @@ public interface UIScreenValidationTestType extends
      * and interacting with them.
      * @see Screen#SPLASH
      * @see Screen#FORGOT_PASSWORD
+     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
-     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxv_forgotPassword(Engine)
@@ -116,7 +116,7 @@ public interface UIScreenValidationTestType extends
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        UserMode mode = defaultUserMode();
+        UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
@@ -137,8 +137,8 @@ public interface UIScreenValidationTestType extends
      * @see Screen#SPLASH
      * @see Screen#REGISTER
      * @see Screen#WELCOME
+     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
-     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_clickBackButton(Engine)
@@ -151,7 +151,7 @@ public interface UIScreenValidationTestType extends
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        UserMode mode = defaultUserMode();
+        UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
@@ -597,8 +597,8 @@ public interface UIScreenValidationTestType extends
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#DASHBOARD
+     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
-     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_toggleDrawer(Engine, boolean)
      * @see #rxv_drawer(Engine)
@@ -610,7 +610,7 @@ public interface UIScreenValidationTestType extends
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        UserMode mode = defaultUserMode();
+        UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
@@ -635,8 +635,8 @@ public interface UIScreenValidationTestType extends
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#MEAL_ENTRY
+     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
-     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxv_mealLog(Engine)
      */
@@ -646,7 +646,7 @@ public interface UIScreenValidationTestType extends
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        UserMode mode = defaultUserMode();
+        UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
@@ -667,8 +667,8 @@ public interface UIScreenValidationTestType extends
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#WEIGHT_VALUE
+     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
-     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxv_CSSValue(Engine, HMCSSInputType)
@@ -681,7 +681,7 @@ public interface UIScreenValidationTestType extends
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
         final HMCSSInputType INPUT = CSSInput.WEIGHT;
-        UserMode mode = defaultUserMode();
+        UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
@@ -701,8 +701,8 @@ public interface UIScreenValidationTestType extends
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#WEIGHT_ENTRY
+     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
-     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxv_weightEntry(Engine)
      */
@@ -712,7 +712,7 @@ public interface UIScreenValidationTestType extends
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        UserMode mode = defaultUserMode();
+        UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
@@ -804,8 +804,8 @@ public interface UIScreenValidationTestType extends
      * @see Screen#LOGIN
      * @see Screen#SETTINGS
      * @see Setting#UNITS
+     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
-     * @see #defaultUserMode()
      * @see #engine()
      * @see #rxa_toggleSetting(Engine, Setting)
      * @see #rxa_changeUnitSystem(Engine, UnitSystem)
@@ -818,7 +818,7 @@ public interface UIScreenValidationTestType extends
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
         final List<UnitSystem> UNITS = Arrays.asList(UnitSystem.values());
-        UserMode mode = defaultUserMode();
+        UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When

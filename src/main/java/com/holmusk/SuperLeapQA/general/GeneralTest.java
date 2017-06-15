@@ -10,19 +10,22 @@ import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
-import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputHelperType;
-import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkit.navigation.ScreenManagerType;
+import org.swiften.xtestkit.util.TestHelper;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.doReturn;
@@ -54,25 +57,7 @@ public final class GeneralTest {
     @Test
     public void test_randomTextInput_shouldWork() {
         // Setup
-        InputHelperType helper = new InputHelperType() {
-            @NotNull
-            @Override
-            public LocalizerType localizer() {
-                return mock(LocalizerType.class);
-            }
-
-            @NotNull
-            @Override
-            public PlatformType platform() {
-                return mock(PlatformType.class);
-            }
-
-            @NotNull
-            @Override
-            public String platformName() {
-                return mock(String.class);
-            }
-        };
+        InputHelperType helper = TestHelper.mockHelper();
 
         // When & Then
         LogUtil.println(TextInput.NAME.randomInput(helper));

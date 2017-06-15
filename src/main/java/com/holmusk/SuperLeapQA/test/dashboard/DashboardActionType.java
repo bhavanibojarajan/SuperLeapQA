@@ -5,6 +5,7 @@ import com.holmusk.SuperLeapQA.model.DashboardMode;
 import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
@@ -54,7 +55,8 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
     }
 
     /**
-     * Click the add card button to open the card-adding menu.
+     * Click the add card button to open
+     * {@link com.holmusk.SuperLeapQA.navigation.Screen#ADD_CARD}.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
@@ -63,6 +65,31 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
     @NotNull
     default Flowable<?> rxa_openCardAddMenu(@NotNull final Engine<?> ENGINE) {
         return rxe_addCard(ENGINE).flatMap(ENGINE::rxa_click);
+    }
+
+    /**
+     * Dismiss {@link com.holmusk.SuperLeapQA.navigation.Screen#ADD_CARD}.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_navigateBackOnce()
+     * @see Engine#rxa_tap(Point)
+     * @see Engine#rxe_window()
+     * @see org.openqa.selenium.Point#moveBy(int, int)
+     * @see WebElement#getLocation()
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    default Flowable<?> rxa_dismissCardAddMenu(@NotNull final Engine<?> ENGINE) {
+        if (ENGINE instanceof AndroidEngine) {
+            return ENGINE.rxa_navigateBackOnce();
+        } else if (ENGINE instanceof IOSEngine) {
+            return ENGINE.rxe_window()
+                .map(WebElement::getLocation)
+                .map(a -> a.moveBy(20, 20))
+                .flatMap(ENGINE::rxa_tap);
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 
     /**
@@ -90,32 +117,28 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      * On {@link Platform#IOS}, this is done by clicking on the add card button
      * twice. If this is not the first time the user is using the app, all
      * this does is simply opening up the menu then closing it.
-     * @param ENGINE {@link Engine} instance.
+     * @param E {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see BooleanUtil#toTrue(Object)
-     * @see Engine#rxa_click(WebElement)
-     * @see Engine#rxa_navigateBackOnce()
-     * @see Platform#ANDROID
-     * @see Platform#IOS
+     * @see ObjectUtil#nonNull(Object)
      * @see #generalDelay(Engine)
+     * @see #rxa_openCardAddMenu(Engine)
+     * @see #rxa_dismissCardAddMenu(Engine)
      * @see #rxe_addCard(Engine)
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<?> rxa_dismissDashboardTutorial(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_dismissDashboardTutorial(@NotNull final Engine<?> E) {
         final DashboardActionType THIS = this;
 
-        if (ENGINE instanceof AndroidEngine) {
-            return ENGINE
-                .rxe_containsText("dashboard_title_tapToMakeFirstEntry")
-                .flatMap(a -> ENGINE.rxa_navigateBackOnce())
+        if (E instanceof AndroidEngine) {
+            return E.rxe_containsText("dashboard_title_tapToMakeFirstEntry")
+                .flatMap(a -> THIS.rxa_dismissCardAddMenu(E))
                 .map(BooleanUtil::toTrue)
                 .onErrorReturnItem(true);
-        } else if (ENGINE instanceof IOSEngine) {
-            return Flowable.range(0, 2)
-                .concatMap(a -> THIS.rxe_addCard(ENGINE))
-                .flatMap(ENGINE::rxa_click)
-                .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
+        } else if (E instanceof IOSEngine) {
+            return Flowable
+                .concat(rxa_openCardAddMenu(E), rxa_dismissCardAddMenu(E))
+                .delay(generalDelay(E), TimeUnit.MILLISECONDS)
                 .all(ObjectUtil::nonNull)
                 .toFlowable();
         } else {
@@ -148,6 +171,7 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      * @see DirectionParam.Builder#withEndRatio(double)
      * @see DirectionParam.Builder#withStartRatio(double)
      * @see DirectionParam.Builder#withTimes(int)
+     * @see #generalDelay(Engine)
      * @see #rxe_dashboardModeSwitcher(Engine)
      */
     @NotNull
@@ -161,6 +185,7 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
             .build();
 
         return rxe_dashboardModeSwitcher(ENGINE)
-            .flatMap(a -> ENGINE.rxa_swipeGeneric(a, PARAM));
+            .flatMap(a -> ENGINE.rxa_swipeGeneric(a, PARAM))
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 }
