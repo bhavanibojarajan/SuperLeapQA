@@ -6,6 +6,7 @@ import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
@@ -67,12 +68,27 @@ public interface DashboardValidationType extends BaseValidationType {
      * @return {@link Flowable} instance.
      * @see CardType#cardIconXP(InputHelperType)
      * @see Engine#rxe_withXPath(XPath...)
+     * @see Point#getY()
+     * @see WebElement#getLocation()
      */
     @NotNull
     default Flowable<WebElement> rxe_cardSelector(@NotNull Engine<?> engine,
                                                   @NotNull CardType card) {
         XPath xPath = card.cardIconXP(engine);
-        return engine.rxe_withXPath(xPath).firstElement().toFlowable();
+
+        if (engine instanceof AndroidEngine) {
+            return engine.rxe_withXPath(xPath).firstElement().toFlowable();
+        } else {
+            return engine
+                .rxe_withXPath(xPath)
+                .sorted((a, b) -> {
+                    Point aPoint = a.getLocation();
+                    Point bPoint = b.getLocation();
+                    return bPoint.getY() - aPoint.getY();
+                })
+                .firstElement()
+                .toFlowable();
+        }
     }
 
     /**

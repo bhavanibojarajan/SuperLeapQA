@@ -11,6 +11,7 @@ import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
@@ -111,21 +112,22 @@ public interface UILogActivityTestType extends UIBaseTestType, LogActivityAction
         rxa_navigate(MODE, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD)
             .flatMap(a -> THIS.rxa_dashboardMode(ENGINE, DB_MODE))
             .flatMap(a -> THIS.rxe_activityValue(ENGINE, MODE, AT_VAL))
-            .flatMap(b -> THIS.rxa_navigate(MODE, Screen.DASHBOARD, Screen.ACTIVITY_ENTRY)
-                .flatMap(c -> THIS.rxe_selectedCSSNumericValue(ENGINE, INPUT))
-                .map(c -> c * STEP_PER_MIN)
+            .flatMap(a -> THIS.rxa_navigate(MODE, Screen.DASHBOARD, Screen.ACTIVITY_ENTRY)
+                .flatMap(b -> THIS.rxe_selectedCSSNumericValue(ENGINE, INPUT))
+                .map(b -> b * STEP_PER_MIN)
                 .map(Double::intValue)
-                .flatMap(c -> THIS.rxa_submitCSSEntry(ENGINE, INPUT)
-                    .flatMap(d -> THIS.rxa_backToDashboard(ENGINE))
-                    .flatMap(d -> THIS.rxa_dashboardMode(ENGINE, DB_MODE))
-                    .flatMap(d -> THIS.rxe_activityValue(ENGINE, MODE, AT_VAL))
+                .flatMap(b -> THIS.rxa_submitCSSEntry(ENGINE, INPUT)
+                    .flatMap(c -> THIS.rxa_backToDashboard(ENGINE))
+                    .flatMap(c -> THIS.rxa_dashboardMode(ENGINE, DB_MODE))
+                    .flatMap(c -> THIS.rxe_activityValue(ENGINE, MODE, AT_VAL))
 
                     /* Compare the latest today value with the previously
                      * displayed value. The difference should be equal to
                      * minutes * steps/minute */
-                    .map(d -> d - b)
+                    .map(c -> c - a)
                     .map(Double::intValue)
-                    .filter(d -> d.equals(c))
+                    .doOnNext(c -> LogUtil.printft("Difference is %d", c))
+                    .filter(c -> c.equals(b))
                     .switchIfEmpty(ENGINE.rxv_errorWithPageSource()))
             )
             .subscribe(subscriber);

@@ -119,6 +119,7 @@ public enum CardType implements BaseErrorType {
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsText(String)
+     * @see Attributes#hasText(String)
      * @see Attributes#of(PlatformProviderType)
      * @see BaseViewType#className()
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)

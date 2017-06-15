@@ -24,7 +24,6 @@ import org.swiften.xtestkit.ios.element.locator.AndroidXMLAttribute;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
-import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.platform.XMLAttributeType;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkitcomponents.xpath.*;
@@ -224,7 +223,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
     @NotNull
     default Flowable<WebElement> rxe_dashboardBack(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
-            return rxe_backButton(engine);
+            return rxe_backButton(engine).firstElement().toFlowable();
         } else if (engine instanceof IOSEngine) {
             return engine
                 .rxe_ofClass(IOSView.ViewType.UI_BUTTON.className())

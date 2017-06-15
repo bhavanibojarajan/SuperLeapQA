@@ -474,7 +474,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      */
     @NotNull
     default Flowable<?> rxa_backToDashboard(@NotNull final Engine<?> ENGINE) {
-        LogUtil.println("Going back to dashboard");
+        LogUtil.printlnt("Going back to dashboard");
         return rxe_dashboardBack(ENGINE).flatMap(ENGINE::rxa_click);
     }
 

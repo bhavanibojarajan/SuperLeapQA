@@ -135,7 +135,7 @@ public enum TextInput implements BaseErrorType, HMTextType {
                 break;
 
             default:
-                LogUtil.println(this);
+                LogUtil.printlnt(this);
                 throw new RuntimeException(NOT_AVAILABLE);
         }
 
