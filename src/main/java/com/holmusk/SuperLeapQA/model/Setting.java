@@ -117,8 +117,8 @@ public enum Setting implements BaseErrorType {
      * @see InputHelperType#localizer()
      * @see InputHelperType#platform()
      * @see LocalizerType#localize(String)
-     * @see AndroidView.ViewType#TEXT_VIEW
-     * @see IOSView.ViewType#UI_STATIC_TEXT
+     * @see AndroidView.Type#TEXT_VIEW
+     * @see IOSView.Type#UI_STATIC_TEXT
      * @see Platform#ANDROID
      * @see #NOT_AVAILABLE
      */
@@ -128,9 +128,9 @@ public enum Setting implements BaseErrorType {
         String clsName;
 
         if (platform.equals(Platform.ANDROID)) {
-            clsName = AndroidView.ViewType.TEXT_VIEW.className();
+            clsName = AndroidView.Type.TEXT_VIEW.className();
         } else if (platform.equals(Platform.IOS)) {
-            clsName = IOSView.ViewType.UI_STATIC_TEXT.className();
+            clsName = IOSView.Type.UI_STATIC_TEXT.className();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -168,8 +168,8 @@ public enum Setting implements BaseErrorType {
      * @see CompoundAttribute#forClass(String)
      * @see InputHelperType#platform()
      * @see XPath.Builder#followingSibling(CompoundAttribute, CompoundAttribute)
-     * @see AndroidView.ViewType#SWITCH
-     * @see IOSView.ViewType#UI_SWITCH
+     * @see AndroidView.Type#SWITCH
+     * @see IOSView.Type#UI_SWITCH
      * @see Platform#ANDROID
      * @see Platform#IOS
      * @see #textSettingAttribute(InputHelperType)
@@ -182,9 +182,9 @@ public enum Setting implements BaseErrorType {
         String clsName;
 
         if (platform.equals(Platform.ANDROID)) {
-            clsName = AndroidView.ViewType.SWITCH.className();
+            clsName = AndroidView.Type.SWITCH.className();
         } else if (platform.equals(Platform.IOS)) {
-            clsName = IOSView.ViewType.UI_SWITCH.className();
+            clsName = IOSView.Type.UI_SWITCH.className();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

@@ -126,7 +126,7 @@ public enum CardType implements BaseErrorType {
      * @see CompoundAttribute.Builder#withClass(String)
      * @see InputHelperType#localizer()
      * @see XPath.Builder#addAttribute(CompoundAttribute)
-     * @see IOSView.ViewType#UI_BUTTON
+     * @see IOSView.Type#UI_BUTTON
      * @see #title()
      */
     @NotNull
@@ -138,7 +138,7 @@ public enum CardType implements BaseErrorType {
         Attribute attribute = attrs.containsText(localized);
 
         CompoundAttribute cAttr = CompoundAttribute.builder()
-            .withClass(IOSView.ViewType.UI_BUTTON.className())
+            .withClass(IOSView.Type.UI_BUTTON.className())
             .addAttribute(attribute)
             .build();
 

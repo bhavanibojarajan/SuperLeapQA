@@ -176,11 +176,14 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see #generalDelay(Engine)
      * @see #rxe_mealTimeConfirm(Engine)
      */
     @NotNull
     default Flowable<?> rxa_confirmMealTime(@NotNull final Engine<?> ENGINE) {
-        return rxe_mealTimeConfirm(ENGINE).flatMap(ENGINE::rxa_click);
+        return rxe_mealTimeConfirm(ENGINE)
+            .flatMap(ENGINE::rxa_click)
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -214,8 +217,9 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
 
     /**
      * Log a new meal with random information.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see ObjectUtil#nonNull(Object)
      * @see TextInput#MEAL_DESCRIPTION
      * @see #randomSelectableTime()
      * @see #rxa_selectMealPhotos(Engine)
@@ -228,17 +232,20 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @see #rxa_submitMeal(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_logNewMeal(@NotNull final Engine<?> ENGINE) {
-        final LogMealActionType THIS = this;
+    default Flowable<?> rxa_logNewMeal(@NotNull Engine<?> engine) {
         final Date TIME = randomSelectableTime();
 
-        return rxa_selectRandomMood(ENGINE)
-            .flatMap(a -> THIS.rxa_selectMealPhotos(ENGINE))
-            .flatMap(a -> THIS.rxa_openMealTimePicker(ENGINE))
-            .flatMap(a -> THIS.rxa_selectMealTime(ENGINE, TIME))
-            .flatMap(a -> THIS.rxa_confirmMealTime(ENGINE))
-            .flatMap(a -> THIS.rxa_randomInput(ENGINE, TextInput.MEAL_DESCRIPTION))
-            .flatMap(a -> THIS.rxa_confirmMealDescription(ENGINE))
-            .flatMap(a -> THIS.rxa_submitMeal(ENGINE));
+        return Flowable
+            .concatArray(
+                rxa_randomInput(engine, TextInput.MEAL_DESCRIPTION),
+                rxa_confirmMealDescription(engine),
+//                rxa_selectMealPhotos(ENGINE),
+//                rxa_openMealTimePicker(ENGINE),
+//                rxa_selectMealTime(ENGINE, TIME),
+//                rxa_confirmMealTime(ENGINE),
+                rxa_submitMeal(engine)
+            )
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
     }
 }

@@ -78,6 +78,7 @@ public interface UILogMealTestType extends
      * @see #rxa_deleteFromMenu(Engine)
      * @see #rxa_dashboardAfterSearchAndDelete(Engine)
      * @see #rxv_hasMealTime(Engine, Date)
+     * @see #rxv_searchResultMustBeEmpty(Engine)
      */
     @Test
     @SuppressWarnings("unchecked")
@@ -169,7 +170,7 @@ public interface UILogMealTestType extends
      * @see #rxa_openSearchResult(Engine, String)
      * @see #rxa_openEditMenu(Engine)
      * @see #rxa_deleteFromMenu(Engine)
-     * @see #rxv_emptySearchResult(Engine)
+     * @see #rxv_searchResultMustBeEmpty(Engine)
      */
     @Test
     @SuppressWarnings("unchecked")
@@ -205,7 +206,7 @@ public interface UILogMealTestType extends
             /* Delete the meal and verify that the search result view is empty */
             .flatMap(a -> THIS.rxa_openEditMenu(ENGINE))
             .flatMap(a -> THIS.rxa_deleteFromMenu(ENGINE))
-            .flatMap(a -> THIS.rxv_emptySearchResult(ENGINE))
+            .flatMap(a -> THIS.rxv_searchResultMustBeEmpty(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -274,22 +275,21 @@ public interface UILogMealTestType extends
 
         // When
         rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.MEAL_PAGE, Screen.CHAT)
-            .flatMap(a -> Flowable.fromIterable(COMMENTS))
-            .concatMap(a -> THIS.rxa_postChat(ENGINE, a)
-                .flatMap(b -> THIS.rxe_chatMessage(ENGINE, a))
+            .flatMap(a -> Flowable.fromIterable(COMMENTS)
+                .concatMap(b -> Flowable.concat(
+                    THIS.rxa_postChat(ENGINE, b),
+                    THIS.rxe_chatMessage(ENGINE, b)
+                )).all(ObjectUtil::nonNull).toFlowable()
             )
-            .all(ObjectUtil::nonNull)
-            .toFlowable()
             .flatMap(a -> THIS.rxa_dismissChatWindow(ENGINE))
             .flatMap(a -> THIS.rxa_backToDashboard(ENGINE))
             .flatMap(a -> THIS.rxa_toggleDashboardSearch(ENGINE))
-            .flatMap(a -> Flowable.fromIterable(COMMENTS))
-            .concatMap(a -> THIS.rxa_search(ENGINE, a)
-                .flatMap(b -> THIS.rxe_searchResult(ENGINE, a))
-                .flatMap(b -> ENGINE.rxa_clearSearchBar())
-            )
-            .all(ObjectUtil::nonNull)
-            .toFlowable()
+            .flatMap(a -> Flowable.fromIterable(COMMENTS)
+                .concatMap(b -> Flowable.concat(
+                    THIS.rxa_search(ENGINE, b),
+                    THIS.rxe_searchResult(ENGINE, b),
+                    ENGINE.rxa_clearSearchBar()
+                )).all(ObjectUtil::nonNull).toFlowable())
             .flatMap(a -> THIS.rxa_search(ENGINE, COMMENTS.get(0)))
             .flatMap(a -> THIS.rxa_openSearchResult(ENGINE, COMMENTS.get(0)))
 
@@ -301,15 +301,11 @@ public interface UILogMealTestType extends
             .flatMap(a -> THIS.rxa_deleteFromMenu(ENGINE))
             .flatMap(a -> THIS.rxa_dashboardAfterSearchAndDelete(ENGINE))
             .flatMap(a -> THIS.rxa_toggleDashboardSearch(ENGINE))
-            .flatMap(a -> Flowable.fromIterable(COMMENTS))
-            .concatMap(a -> THIS.rxa_search(ENGINE, a)
-                .map(BooleanUtil::toTrue)
-                .flatMap(b -> ENGINE.rxv_errorWithPageSource())
-                .onErrorReturnItem(true)
-                .flatMap(b -> ENGINE.rxa_clearSearchBar())
-            )
-            .all(ObjectUtil::nonNull)
-            .toFlowable()
+            .flatMap(a -> Flowable.fromIterable(COMMENTS)
+                .concatMap(b -> THIS.rxa_search(ENGINE, b)
+                    .flatMap(c -> THIS.rxv_searchResultMustBeEmpty(ENGINE))
+                    .flatMap(c -> ENGINE.rxa_clearSearchBar()))
+                .all(ObjectUtil::nonNull).toFlowable())
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

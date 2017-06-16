@@ -16,8 +16,6 @@ import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
@@ -36,8 +34,8 @@ public interface LoginValidationType extends BaseValidationType {
      * @see Engine#rxe_withXPath(XPath...)
      * @see LocalizerType#localize(String)
      * @see XPath.Builder#addAttribute(AttributeType)
-     * @see AndroidView.ViewType#BUTTON
-     * @see IOSView.ViewType#UI_BUTTON
+     * @see AndroidView.Type#BUTTON
+     * @see IOSView.Type#UI_BUTTON
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -47,10 +45,10 @@ public interface LoginValidationType extends BaseValidationType {
         Attributes attrs = Attributes.of(ENGINE);
 
         if (ENGINE instanceof AndroidEngine) {
-            clsName = AndroidView.ViewType.BUTTON.className();
+            clsName = AndroidView.Type.BUTTON.className();
             title = "login_title_signIn";
         } else if (ENGINE instanceof IOSEngine) {
-            clsName = IOSView.ViewType.UI_BUTTON.className();
+            clsName = IOSView.Type.UI_BUTTON.className();
             title = "login_title_submit";
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
@@ -92,7 +90,7 @@ public interface LoginValidationType extends BaseValidationType {
      * @see Engine#localizer()
      * @see Engine#rxe_containsText(LCFormat...)
      * @see Engine#rxe_withXPath(XPath...)
-     * @see IOSView.ViewType#UI_LINK
+     * @see IOSView.Type#UI_LINK
      * @see LocalizerType#localize(String)
      * @see XPath.Builder#addAttribute(AttributeType)
      * @see #NOT_AVAILABLE
@@ -112,7 +110,7 @@ public interface LoginValidationType extends BaseValidationType {
             Attribute attribute = attrs.containsText(localized);
 
             CompoundAttribute cAttr = CompoundAttribute.single(attribute)
-                .withClass(IOSView.ViewType.UI_LINK.className());
+                .withClass(IOSView.Type.UI_LINK.className());
 
             XPath xPath = XPath.builder().addAttribute(cAttr).build();
             return engine.rxe_withXPath(xPath).firstElement().toFlowable();

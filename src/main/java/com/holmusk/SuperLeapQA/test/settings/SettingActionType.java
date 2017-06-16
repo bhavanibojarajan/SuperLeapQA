@@ -17,7 +17,6 @@ import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -53,9 +52,9 @@ public interface SettingActionType extends BaseActionType, SettingValidationType
      * @see Engine#rxa_toggleSwitch(WebElement, boolean)
      * @see Engine#rxe_ofClass(String...)
      * @see XPath.Builder#addAttribute(CompoundAttribute)
-     * @see AndroidView.ViewType#SWITCH
-     * @see IOSView.ViewType#UI_BUTTON
-     * @see IOSView.ViewType#UI_SEGMENTED_CONTROL
+     * @see AndroidView.Type#SWITCH
+     * @see IOSView.Type#UI_BUTTON
+     * @see IOSView.Type#UI_SEGMENTED_CONTROL
      * @see #unitSystemChangeDelay(Engine)
      * @see #unitSystemSettingIndex(Engine, UnitSystem)
      */
@@ -71,14 +70,14 @@ public interface SettingActionType extends BaseActionType, SettingValidationType
             final boolean ON = value.equals(onValue);
 
             return ENGINE
-                .rxe_ofClass(AndroidView.ViewType.SWITCH.className())
+                .rxe_ofClass(AndroidView.Type.SWITCH.className())
                 .firstElement()
                 .toFlowable()
                 .flatMap(a -> ENGINE.rxa_toggleSwitch(a, ON))
                 .delay(unitSystemChangeDelay(ENGINE), TimeUnit.MILLISECONDS);
         } else if (ENGINE instanceof IOSEngine) {
-            String smc = IOSView.ViewType.UI_SEGMENTED_CONTROL.className();
-            String bnc = IOSView.ViewType.UI_BUTTON.className();
+            String smc = IOSView.Type.UI_SEGMENTED_CONTROL.className();
+            String bnc = IOSView.Type.UI_BUTTON.className();
             CompoundAttribute smcAttr = CompoundAttribute.forClass(smc);
 
             CompoundAttribute bncAttr = CompoundAttribute.builder()

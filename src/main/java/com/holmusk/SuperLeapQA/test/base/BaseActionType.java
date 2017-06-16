@@ -190,7 +190,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @see Engine#localizer()
      * @see Engine#rxa_click(WebElement)
      * @see Engine#rxe_withXPath(XPath...)
-     * @see IOSView.ViewType#UI_BUTTON
+     * @see IOSView.Type#UI_BUTTON
      * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
      * @see XPath.Builder#addAttribute(AttributeType)
      * @see Platform#IOS
@@ -205,7 +205,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
             Attribute attribute = attrs.containsText(localized);
 
             CompoundAttribute cAttr = CompoundAttribute.single(attribute)
-                .withClass(IOSView.ViewType.UI_BUTTON.className());
+                .withClass(IOSView.Type.UI_BUTTON.className());
 
             XPath xPath = XPath.builder().addAttribute(cAttr).build();
             return ENGINE.rxe_withXPath(xPath).flatMap(ENGINE::rxa_click);
@@ -512,10 +512,9 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
         return RxUtil
             .concatArrayDelayEach(
                 generalDelay(ENGINE),
-                rxe_menuDelete(ENGINE),
-                rxe_menuDeleteConfirm(ENGINE)
+                rxe_menuDelete(ENGINE).flatMap(ENGINE::rxa_click),
+                rxe_menuDeleteConfirm(ENGINE).flatMap(ENGINE::rxa_click)
             )
-            .flatMap(ENGINE::rxa_click)
             .all(ObjectUtil::nonNull)
             .toFlowable()
             .delay(contentDeleteProgressDelay(ENGINE), TimeUnit.MILLISECONDS);

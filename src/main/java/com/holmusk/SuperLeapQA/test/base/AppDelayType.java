@@ -84,7 +84,7 @@ public interface AppDelayType extends HMDelayType {
      * @return {@link Long} value.
      */
     default long personalInfoProgressDelay(@NotNull Engine<?> engine) {
-        return 0;
+        return 1000;
     }
 
     /**

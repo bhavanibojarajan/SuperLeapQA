@@ -78,8 +78,8 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
         // When
         rxa_navigate(MODE, Screen.SPLASH, Screen.INVALID_AGE)
             .concatMapIterable(a -> Arrays.asList(TextInput.NAME, INPUT))
-            .concatMap(a -> THIS.rxa_randomInput(ENGINE, a))
-            .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
+            .flatMap(a -> THIS.rxa_randomInput(ENGINE, a))
+            .flatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
             .all(ObjectUtil::nonNull)
             .toFlowable()
             .flatMap(a -> THIS.rxa_confirmInvalidAgeInputs(ENGINE))

@@ -65,9 +65,10 @@ public interface UILogWeightTestType extends
                 .flatMap(b -> THIS.rxa_selectCSSTime(ENGINE, TIME))
                 .flatMap(b -> THIS.rxa_confirmCSSTime(ENGINE, INPUT))
                 .flatMap(b -> THIS.rxa_submitCSSEntry(ENGINE, INPUT))
-                .flatMap(b -> Flowable.mergeArray(THIS.rxv_hasCSSTime(ENGINE, TIME)))
-                .all(ObjectUtil::nonNull)
-                .toFlowable()
+                .flatMap(b -> Flowable
+                    .mergeArray(THIS.rxv_hasCSSTime(ENGINE, TIME))
+                    .all(ObjectUtil::nonNull)
+                    .toFlowable())
                 .flatMap(b -> THIS.rxa_openEditMenu(ENGINE))
                 .flatMap(b -> THIS.rxa_deleteFromMenu(ENGINE))
 

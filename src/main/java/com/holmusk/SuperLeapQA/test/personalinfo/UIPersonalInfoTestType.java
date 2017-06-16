@@ -283,7 +283,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
         dataProviderClass = UIBaseTestType.class,
         dataProvider = "guarantorSpecificUserModeProvider"
     )
-    default void test_guarantorNeeded_requiresParentInfo(@NotNull final UserMode MODE) {
+    default void test_guarantorNeeded_requiresGuarantorInfo(@NotNull final UserMode MODE) {
         // Setup
         TestSubscriber subscriber = CustomTestSubscriber.create();
 

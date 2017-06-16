@@ -71,8 +71,8 @@ public enum DrawerItem implements BaseErrorType {
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see Engine#localizer()
      * @see LocalizerType#localize(String)
-     * @see AndroidView.ViewType#CHECKED_TEXT_VIEW
-     * @see IOSView.ViewType#UI_STATIC_TEXT
+     * @see AndroidView.Type#CHECKED_TEXT_VIEW
+     * @see IOSView.Type#UI_STATIC_TEXT
      * @see Platform#ANDROID
      * @see #title()
      * @see #NOT_AVAILABLE
@@ -83,9 +83,9 @@ public enum DrawerItem implements BaseErrorType {
         String clsName;
 
         if (engine instanceof AndroidEngine) {
-            clsName = AndroidView.ViewType.CHECKED_TEXT_VIEW.className();
+            clsName = AndroidView.Type.CHECKED_TEXT_VIEW.className();
         } else if (engine instanceof IOSEngine) {
-            clsName = IOSView.ViewType.UI_STATIC_TEXT.className();
+            clsName = IOSView.Type.UI_STATIC_TEXT.className();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

@@ -24,20 +24,20 @@ public interface LogWeightValidationType extends HMCircleScrollValidationType {
      * @return {@link Flowable} instance.
      * @see BaseViewType#className()
      * @see Engine#rxe_ofClass(String...)
-     * @see AndroidView.ViewType#SWITCH
-     * @see IOSView.ViewType#UI_SWITCH
+     * @see AndroidView.Type#SWITCH
+     * @see IOSView.Type#UI_SWITCH
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_weightLocSwitch(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             return engine
-                .rxe_ofClass(AndroidView.ViewType.SWITCH.className())
+                .rxe_ofClass(AndroidView.Type.SWITCH.className())
                 .firstElement()
                 .toFlowable();
         } else if (engine instanceof IOSEngine) {
             return engine
-                .rxe_ofClass(IOSView.ViewType.UI_SWITCH.className())
+                .rxe_ofClass(IOSView.Type.UI_SWITCH.className())
                 .firstElement()
                 .toFlowable();
         } else {

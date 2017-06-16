@@ -64,7 +64,7 @@ public interface ChatValidationType extends BaseValidationType {
      * @see BaseViewType#className()
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_ofClass(String...)
-     * @see IOSView.ViewType#UI_TABLE_VIEW
+     * @see IOSView.Type#UI_TABLE_VIEW
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -76,7 +76,7 @@ public interface ChatValidationType extends BaseValidationType {
                 .toFlowable();
         } else if (engine instanceof IOSEngine) {
             return engine
-                .rxe_ofClass(IOSView.ViewType.UI_TABLE_VIEW.className())
+                .rxe_ofClass(IOSView.Type.UI_TABLE_VIEW.className())
                 .firstElement()
                 .toFlowable();
         } else {

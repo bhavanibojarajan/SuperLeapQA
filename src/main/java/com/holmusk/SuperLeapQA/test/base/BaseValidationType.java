@@ -38,13 +38,14 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Attribute.Builder#addAttribute(String)
-     * @see Attribute.Builder#withFormatible(Attribute.Formatible)
+     * @see Attribute.Builder#withFormatible(Formatible)
      * @see Attribute.Builder#withValue(Object)
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformProviderType)
      * @see Engine#platform()
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_withAttributes(Attribute[])
+     * @see Formatibles#containsString()
      * @see XMLAttributeType#value()
      * @see AndroidXMLAttribute#CONTENT_DESC
      * @see #NOT_AVAILABLE
@@ -57,13 +58,13 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
             Attribute navUp = Attribute.<String>builder()
                 .addAttribute(AndroidXMLAttribute.CONTENT_DESC.value())
                 .withValue("Navigate up")
-                .withFormatible(new Attributes.ContainsString() {})
+                .withFormatible(Formatibles.containsString())
                 .build();
 
             Attribute collapse = Attribute.<String>builder()
                 .addAttribute(AndroidXMLAttribute.CONTENT_DESC.value())
                 .withValue("Collapse")
-                .withFormatible(new Attributes.ContainsString() {})
+                .withFormatible(Formatibles.containsString())
                 .build();
 
             Attribute btnBack = attrs.containsID("btnBack");
@@ -209,13 +210,14 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @return {@link Flowable} instance.
      * @see Attribute.Builder#addAttribute(String)
      * @see Attribute.Builder#withValue(Object)
-     * @see Attribute.Builder#withFormatible(Attribute.Formatible)
+     * @see Attribute.Builder#withFormatible(Formatible)
      * @see BaseViewType#className()
      * @see Engine#rxe_ofClass(String...)
+     * @see Formatibles#containsString()
      * @see Point#getX()
      * @see XPath.Builder#addAttribute(AttributeType)
      * @see WebElement#getLocation()
-     * @see IOSView.ViewType#UI_BUTTON
+     * @see IOSView.Type#UI_BUTTON
      * @see com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD
      * @see #rxe_backButton(Engine)
      * @see #NOT_AVAILABLE
@@ -226,7 +228,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
             return rxe_backButton(engine).firstElement().toFlowable();
         } else if (engine instanceof IOSEngine) {
             return engine
-                .rxe_ofClass(IOSView.ViewType.UI_BUTTON.className())
+                .rxe_ofClass(IOSView.Type.UI_BUTTON.className())
                 .filter(a -> a.getLocation().getX() == 0)
                 .firstElement()
                 .toFlowable();
@@ -290,8 +292,8 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @see Engine#rxe_withXPath(XPath...)
      * @see LocalizerType#localize(String)
      * @see XPath.Builder#addAttribute(CompoundAttribute)
-     * @see AndroidView.ViewType#BUTTON
-     * @see IOSView.ViewType#UI_BUTTON
+     * @see AndroidView.Type#BUTTON
+     * @see IOSView.Type#UI_BUTTON
      * @see Platform#IOS
      * @see #NOT_AVAILABLE
      */
@@ -304,9 +306,9 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
         String btnCls;
 
         if (engine instanceof AndroidEngine) {
-            btnCls = AndroidView.ViewType.BUTTON.className();
+            btnCls = AndroidView.Type.BUTTON.className();
         } else if (engine instanceof IOSEngine) {
-            btnCls = IOSView.ViewType.UI_BUTTON.className();
+            btnCls = IOSView.Type.UI_BUTTON.className();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

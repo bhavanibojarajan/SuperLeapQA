@@ -67,6 +67,15 @@ public final class GeneralTest {
     }
 
     @Test
+    public void test_textInput_shouldCreateCorrectXPath() {
+        // Setup
+        InputHelperType helper = TestHelper.mockHelper(Platform.IOS);
+
+        // When & Then
+        LogUtil.printlnt(TextInput.PASSWORD.inputViewXP(helper));
+    }
+
+    @Test
     public void test_birthDayCalculation_shouldBeCorrect() {
         // Setup
         LocalDate date1 = LocalDate.of(2017, 6, 5);

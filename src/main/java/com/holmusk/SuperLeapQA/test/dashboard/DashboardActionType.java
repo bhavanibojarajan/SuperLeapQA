@@ -84,8 +84,6 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
             return ENGINE.rxa_navigateBackOnce();
         } else if (ENGINE instanceof IOSEngine) {
             return ENGINE.rxe_window()
-                .firstElement()
-                .toFlowable()
                 .map(WebElement::getLocation)
                 .map(a -> a.moveBy(20, 20))
                 .flatMap(ENGINE::rxa_tap);

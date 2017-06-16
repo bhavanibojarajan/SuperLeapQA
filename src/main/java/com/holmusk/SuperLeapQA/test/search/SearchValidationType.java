@@ -49,7 +49,7 @@ public interface SearchValidationType extends BaseValidationType {
      * @see BaseViewType#className()
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_ofClass(String...)
-     * @see IOSView.ViewType#UI_SEARCH_BAR
+     * @see IOSView.Type#UI_SEARCH_BAR
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -61,7 +61,7 @@ public interface SearchValidationType extends BaseValidationType {
                 .toFlowable();
         } else if (engine instanceof IOSEngine) {
             return engine
-                .rxe_ofClass(IOSView.ViewType.UI_SEARCH_BAR.className())
+                .rxe_ofClass(IOSView.Type.UI_SEARCH_BAR.className())
                 .firstElement()
                 .toFlowable();
         } else {
@@ -80,9 +80,9 @@ public interface SearchValidationType extends BaseValidationType {
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see Engine#rxe_withXPath(XPath...)
      * @see XPath.Builder#addAttribute(CompoundAttribute)
-     * @see IOSView.ViewType#UI_TABLE_VIEW
-     * @see IOSView.ViewType#UI_TABLE_VIEW_CELL
-     * @see IOSView.ViewType#UI_STATIC_TEXT
+     * @see IOSView.Type#UI_TABLE_VIEW
+     * @see IOSView.Type#UI_TABLE_VIEW_CELL
+     * @see IOSView.Type#UI_STATIC_TEXT
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -98,9 +98,9 @@ public interface SearchValidationType extends BaseValidationType {
 
             xPath = XPath.builder().addAttribute(cAttr).build();
         } else if (engine instanceof IOSEngine) {
-            String tblView = IOSView.ViewType.UI_TABLE_VIEW.className();
-            String tblCell = IOSView.ViewType.UI_TABLE_VIEW_CELL.className();
-            String stText = IOSView.ViewType.UI_STATIC_TEXT.className();
+            String tblView = IOSView.Type.UI_TABLE_VIEW.className();
+            String tblCell = IOSView.Type.UI_TABLE_VIEW_CELL.className();
+            String stText = IOSView.Type.UI_STATIC_TEXT.className();
 
             xPath = XPath.builder()
                 .addAttribute(CompoundAttribute.forClass(tblView))
@@ -136,14 +136,33 @@ public interface SearchValidationType extends BaseValidationType {
      * Verify that the search result is empty.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see NumberUtil#isZero(Number)
      * @see #rxe_searchResults(Engine)
      */
     @NotNull
     default Flowable<Boolean> rxv_emptySearchResult(@NotNull Engine<?> engine) {
-        return rxe_searchResults(engine)
-            .count()
-            .map(NumberUtil::largerThanZero)
+        return rxe_searchResults(engine).count()
+            .map(NumberUtil::isZero)
             .toFlowable()
-            .onErrorReturnItem(false);
+            .onErrorReturnItem(true);
+    }
+
+    /**
+     * Check if the search result is empty. Throw an error otherwise.
+     * @param E {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxv_errorWithPageSource()
+     * @see #rxv_emptySearchResult(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxv_searchResultMustBeEmpty(@NotNull final Engine<?> E) {
+        return rxv_emptySearchResult(E)
+            .flatMap(a -> {
+                if (a) {
+                    return Flowable.just(true);
+                } else {
+                    return E.rxv_errorWithPageSource();
+                }
+            });
     }
 }

@@ -316,7 +316,7 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @see CompoundAttribute#withClass(String)
      * @see XPath.Builder#addAttribute(AttributeType)
      * @see Platform#IOS
-     * @see IOSView.ViewType#UI_BUTTON
+     * @see IOSView.Type#UI_BUTTON
      * @see #CM
      * @see #FT
      * @see #NOT_AVAILABLE
@@ -343,7 +343,7 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
         Attribute attr = attrs.containsText(text);
 
         CompoundAttribute cAttr = CompoundAttribute.single(attr)
-            .withClass(IOSView.ViewType.UI_BUTTON.className());
+            .withClass(IOSView.Type.UI_BUTTON.className());
 
         return XPath.builder().addAttribute(cAttr).build();
     }

@@ -136,8 +136,8 @@ public enum ChoiceInput implements HMTextChoiceType {
      * @see Engine#localizer()
      * @see LocalizerType#localize(String)
      * @see Platform#IOS
-     * @see IOSView.ViewType#UI_STATIC_TEXT
-     * @see IOSView.ViewType#UI_TEXT_FIELD
+     * @see IOSView.Type#UI_STATIC_TEXT
+     * @see IOSView.Type#UI_TEXT_FIELD
      * @see XPath.Builder#followingSibling(CompoundAttribute, CompoundAttribute)
      * @see #iOSTitleDescription()
      * @see #values()
@@ -148,8 +148,8 @@ public enum ChoiceInput implements HMTextChoiceType {
         Platform platform = Platform.IOS;
         String title = iOSTitleDescription();
         String localized = localizer.localize(title);
-        String st = IOSView.ViewType.UI_STATIC_TEXT.className();
-        String tf = IOSView.ViewType.UI_TEXT_FIELD.className();
+        String st = IOSView.Type.UI_STATIC_TEXT.className();
+        String tf = IOSView.Type.UI_TEXT_FIELD.className();
         Attributes attrs = Attributes.of(platform);
         Attribute stAttr = attrs.containsText(localized);
         CompoundAttribute tAttr = CompoundAttribute.forClass(tf);

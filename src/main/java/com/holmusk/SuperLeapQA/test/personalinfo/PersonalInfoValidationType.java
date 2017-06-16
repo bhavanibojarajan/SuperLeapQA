@@ -40,7 +40,7 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
      * @see Engine#rxe_withXPath(XPath...)
      * @see LocalizerType#localize(String)
      * @see XPath.Builder#addAttribute(CompoundAttribute)
-     * @see IOSView.ViewType#UI_BUTTON
+     * @see IOSView.Type#UI_BUTTON
      * @see Platform#IOS
      * @see #NOT_AVAILABLE
      */
@@ -56,7 +56,7 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
 
             CompoundAttribute cAttr = CompoundAttribute.builder()
                 .addAttribute(attrs.containsText(localized))
-                .withClass(IOSView.ViewType.UI_BUTTON.className())
+                .withClass(IOSView.Type.UI_BUTTON.className())
                 .build();
 
             XPath xPath = XPath.builder().addAttribute(cAttr).build();
@@ -74,7 +74,7 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
      * @see CompoundAttribute#forClass(String)
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_withXPath(XPath...)
-     * @see IOSView.ViewType#UI_BUTTON
+     * @see IOSView.Type#UI_BUTTON
      * @see XPath.Builder#addAttribute(AttributeType)
      * @see Platform#IOS
      * @see #NOT_AVAILABLE
@@ -84,7 +84,7 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
         if (engine instanceof AndroidEngine) {
             return engine.rxe_containsID("ctv_toc").firstElement().toFlowable();
         } else if (engine instanceof IOSEngine) {
-            String clsName = IOSView.ViewType.UI_BUTTON.className();
+            String clsName = IOSView.Type.UI_BUTTON.className();
             CompoundAttribute attribute = CompoundAttribute.forClass(clsName);
             XPath xPath = XPath.builder().addAttribute(attribute).build();
 

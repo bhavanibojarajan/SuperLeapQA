@@ -4,6 +4,7 @@ import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.HMUITestKit.model.HMTextChoiceType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LocalizerType;
+import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.mobile.Platform;
@@ -128,7 +129,7 @@ public enum Gender implements BaseErrorType, HMInputType, HMTextChoiceType.Item 
     /**
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
      * This differs from {@link Platform#ANDROID}: whereas there are two
-     * {@link org.swiften.xtestkit.android.AndroidView.ViewType#BUTTON} for
+     * {@link AndroidView.Type#BUTTON} for
      * each {@link Gender} on {@link Platform#ANDROID}, on {@link Platform#IOS}
      * the {@link Gender} input field is a {@link ChoiceInput}.
      * @param helper {@link InputHelperType} instance.

@@ -16,6 +16,9 @@ import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Created by haipham on 5/10/17.
  */
@@ -23,7 +26,6 @@ public enum TextInput implements BaseErrorType, HMTextType {
     CHILD_NAME,
     CHILD_NRIC,
     EMAIL,
-    HOME,
     MEAL_COMMENT,
     MEAL_DESCRIPTION,
     MOBILE,
@@ -114,10 +116,6 @@ public enum TextInput implements BaseErrorType, HMTextType {
                 ID = "et_password";
                 break;
 
-            case HOME:
-                ID = "et_home";
-                break;
-
             case UNIT_NUMBER:
                 ID = "et_unitnumber";
                 break;
@@ -147,39 +145,75 @@ public enum TextInput implements BaseErrorType, HMTextType {
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
+     * @see Attribute.Builder#addAttribute(String)
+     * @see Attribute.Builder#withJoiner(Joiner)
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
      * @see BaseViewType#className()
      * @see CompoundAttribute#forClass(String)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see CompoundAttribute.Builder#withClass(String)
+     * @see Formatibles#containsString()
      * @see InputHelperType#localizer()
+     * @see InputHelperType#platform()
      * @see LocalizerType#localize(String)
      * @see XPath.Builder#addAttribute(AttributeType)
      * @see XPath.Builder#addAttribute(CompoundAttribute)
-     * @see IOSView.ViewType#UI_TEXT_FIELD
-     * @see IOSView.ViewType#UI_SECURE_TEXT_FIELD
-     * @see Platform#IOS
+     * @see IOSView.Type#UI_SECURE_TEXT_FIELD
+     * @see IOSView.Type#UI_STATIC_TEXT
+     * @see IOSView.Type#UI_TEXT_FIELD
+     * @see IOSView.Type#UI_TEXT_VIEW
+     * @see Joiner#OR
      * @see #iOSShortDescription()
      */
     @NotNull
     private XPath iOSInputViewXP(@NotNull InputHelperType helper) {
-        Attributes attrs = Attributes.of(Platform.IOS);
+        final PlatformType PLATFORM = helper.platform();
+        Attributes attrs = Attributes.of(PLATFORM);
         LocalizerType localizer = helper.localizer();
+        String shortDsc = iOSShortDescription();
+        String localized = localizer.localize(shortDsc);
+        String tfClassName = IOSView.Type.UI_TEXT_FIELD.className();
+        Attribute ctText = attrs.containsText(localized);
 
         switch (this) {
-            case PASSWORD:
-                String cls = IOSView.ViewType.UI_SECURE_TEXT_FIELD.className();
-                CompoundAttribute a1 = CompoundAttribute.forClass(cls);
-                return XPath.builder().addAttribute(a1).build();
+            /* For these cases, the short texts are displayed by a neighboring
+             * static text label */
+            case POSTAL_CODE:
+            case UNIT_NUMBER:
+                return XPath.builder().followingSibling(
+                    CompoundAttribute.forClass(tfClassName),
+
+                    CompoundAttribute.builder()
+                        .addAttribute(ctText)
+                        .withClass(IOSView.Type.UI_STATIC_TEXT.className())
+                        .build()
+                ).build();
 
             default:
-                String shortDsc = iOSShortDescription();
-                String localized = localizer.localize(shortDsc);
+                List<AttributeType> clsAttrs = CollectionUtil
+                    .asList(
+                        IOSView.Type.UI_SECURE_TEXT_FIELD.className(),
+                        IOSView.Type.UI_TEXT_VIEW.className(),
+                        tfClassName
+                    )
+                    .stream()
+                    .map(a -> Attribute.<String>builder()
+                        .addAttribute(PLATFORM.classAttribute())
+                        .withValue(a)
+                        .withFormatible(Formatibles.containsString())
+                        .withJoiner(Joiner.OR)
+                        .build())
+                    .collect(Collectors.toList());
+
+                AttributeBlock clsBlock = AttributeBlock.builder()
+                    .addAttribute(clsAttrs)
+                    .withJoiner(Joiner.OR)
+                    .build();
 
                 CompoundAttribute cAttr = CompoundAttribute.builder()
-                    .withClass(IOSView.ViewType.UI_TEXT_FIELD.className())
-                    .addAttribute(attrs.containsText(localized))
+                    .addAttribute(clsBlock)
+                    .addAttribute(ctText)
                     .build();
 
                 return XPath.builder().addAttribute(cAttr).build();
@@ -216,9 +250,6 @@ public enum TextInput implements BaseErrorType, HMTextType {
 
             case PASSWORD:
                 return "user_title_abbv_password";
-
-            case HOME:
-                return "user_title_abbv_home";
 
             case POSTAL_CODE:
                 return "user_title_abbv_postal";
@@ -260,21 +291,22 @@ public enum TextInput implements BaseErrorType, HMTextType {
 
             case CHILD_NRIC:
             case NRIC:
-                String suffix = CollectionUtil.randomElement(
-                    "A",
-                    "B",
-                    "C",
-                    "D",
-                    "E",
-                    "F",
-                    "G",
-                    "H",
-                    "I",
-                    "Z",
-                    "J");
-
-                String digits  = StringUtil.randomDigitString(7);
-                return "S" + digits + suffix;
+//                String suffix = CollectionUtil.randomElement(
+//                    "A",
+//                    "B",
+//                    "C",
+//                    "D",
+//                    "E",
+//                    "F",
+//                    "G",
+//                    "H",
+//                    "I",
+//                    "Z",
+//                    "J");
+//
+//                String digits  = StringUtil.randomDigitString(7);
+//                return "S" + digits + suffix;
+                return StringUtil.randomDigitString(7);
 
             case MOBILE:
             case PARENT_MOBILE:

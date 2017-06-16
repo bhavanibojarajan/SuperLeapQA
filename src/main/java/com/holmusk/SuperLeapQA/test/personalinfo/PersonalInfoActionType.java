@@ -1,16 +1,16 @@
 package com.holmusk.SuperLeapQA.test.personalinfo;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.HMUITestKit.model.HMTextType;
 import com.holmusk.SuperLeapQA.test.validage.ValidAgeActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -73,7 +73,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @param ENGINE {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see #personalInfoProgressDelay(Engine)
+     * @see ObjectUtil#nonNull(Object)
      * @see #rxa_enterPersonalInfo(Engine, UserMode)
      * @see #rxa_confirmPersonalInfo(Engine)
      */
@@ -82,8 +82,13 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
                                                  @NotNull UserMode mode) {
         final PersonalInfoActionType THIS = this;
 
-        return rxa_enterPersonalInfo(ENGINE, mode)
-            .flatMap(a -> THIS.rxa_confirmPersonalInfo(ENGINE));
+        return Flowable
+            .concatArray(
+                rxa_enterPersonalInfo(ENGINE, mode),
+                rxa_confirmPersonalInfo(ENGINE)
+            )
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
     }
 
     /**
