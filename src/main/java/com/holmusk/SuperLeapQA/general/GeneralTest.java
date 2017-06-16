@@ -70,7 +70,7 @@ public final class GeneralTest {
     public void test_birthDayCalculation_shouldBeCorrect() {
         // Setup
         LocalDate date1 = LocalDate.of(2017, 6, 5);
-        LocalDate date2 = LocalDate.of(2013, 6, 5);
+        LocalDate date2 = LocalDate.of(1996, 6, 5);
 
         // When
         long yearDiff = ChronoUnit.YEARS.between(date1, date2);

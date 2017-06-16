@@ -4,6 +4,7 @@ import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.element.date.AndroidDatePickerType;
 import org.swiften.xtestkit.android.type.AndroidSDK;
@@ -90,6 +91,7 @@ public interface DOBPickerActionType extends BaseActionType, DOBPickerValidation
     @NotNull
     default Flowable<?> rxa_selectDoB(@NotNull Engine<?> engine,
                                       @NotNull final Date DATE) {
+        LogUtil.printft("Selecting DoB %s", DATE);
         DatePickerType pickerType;
 
         if (engine instanceof AndroidEngine) {

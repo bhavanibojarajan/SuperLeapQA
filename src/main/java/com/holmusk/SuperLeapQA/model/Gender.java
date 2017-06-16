@@ -6,13 +6,14 @@ import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
-import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.property.base.ValueType;
-import org.swiften.xtestkitcomponents.view.BaseViewType;
-import org.swiften.xtestkitcomponents.xpath.*;
+import org.swiften.xtestkitcomponents.xpath.Attribute;
+import org.swiften.xtestkitcomponents.xpath.AttributeType;
+import org.swiften.xtestkitcomponents.xpath.Attributes;
+import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
  * Created by haipham on 5/10/17.
@@ -126,47 +127,17 @@ public enum Gender implements BaseErrorType, HMInputType, HMTextChoiceType.Item 
 
     /**
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
+     * This differs from {@link Platform#ANDROID}: whereas there are two
+     * {@link org.swiften.xtestkit.android.AndroidView.ViewType#BUTTON} for
+     * each {@link Gender} on {@link Platform#ANDROID}, on {@link Platform#IOS}
+     * the {@link Gender} input field is a {@link ChoiceInput}.
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
-     * @see Attributes#containsText(String)
-     * @see Attributes#of(PlatformType)
-     * @see BaseViewType#className()
-     * @see CompoundAttribute#withClass(String)
-     * @see InputHelperType#localizer()
-     * @see InputHelperType#platform()
-     * @see LocalizerType#localize(String)
-     * @see XPath.Builder#addAttribute(AttributeType)
-     * @see Platform#IOS
-     * @see IOSView.ViewType#UI_BUTTON
-     * @see #NOT_AVAILABLE
+     * @see ChoiceInput#inputViewXP(InputHelperType)
+     * @see ChoiceInput#GENDER
      */
     @NotNull
     private XPath iOSInputViewXP(@NotNull InputHelperType helper) {
-        PlatformType platform = helper.platform();
-        Attributes attrs = Attributes.of(platform);
-
-        String text;
-
-        switch (this) {
-            case MALE:
-                text = "user_title_gender_male";
-                break;
-
-            case FEMALE:
-                text = "user_title_gender_female";
-                break;
-
-            default:
-                throw new RuntimeException(NOT_AVAILABLE);
-        }
-
-        LocalizerType localizer = helper.localizer();
-        String localized = localizer.localize(text);
-        Attribute attr = attrs.containsText(localized);
-
-        CompoundAttribute cAttr = CompoundAttribute.single(attr)
-            .withClass(IOSView.ViewType.UI_BUTTON.className());
-
-        return XPath.builder().addAttribute(cAttr).build();
+        return ChoiceInput.GENDER.inputViewXP(helper);
     }
 }

@@ -15,6 +15,8 @@ import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.javautilities.log.LogUtil;
+import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
@@ -84,23 +86,35 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @param CHOICE {@link HMChoiceType} instance.
      * @param NUMERIC {@link SLNumericChoiceType} instance.
      * @return {@link Flowable} instance.
+     * @see ObjectUtil#nonNull(Object)
      * @see #rxa_clickInput(Engine, HMInputType)
      * @see #NOT_AVAILABLE
      */
     @NotNull
+    @SuppressWarnings("unchecked")
     default Flowable<?> rxa_selectUnitSystemPicker(
         @NotNull final Engine<?> ENGINE,
         @NotNull final HMChoiceType CHOICE,
         @NotNull final SLNumericChoiceType NUMERIC
     ) {
-        final ValidAgeActionType THIS = this;
-
         if (ENGINE instanceof AndroidEngine) {
-            return rxa_clickInput(ENGINE, NUMERIC)
-                .flatMap(a -> THIS.rxa_clickInput(ENGINE, CHOICE));
+            return RxUtil
+                .concatArrayDelayEach(
+                    generalDelay(ENGINE),
+                    rxa_clickInput(ENGINE, NUMERIC),
+                    rxa_clickInput(ENGINE, CHOICE)
+                )
+                .all(ObjectUtil::nonNull)
+                .toFlowable();
         } else if (ENGINE instanceof IOSEngine) {
-            return rxa_clickInput(ENGINE, CHOICE)
-                .flatMap(a -> THIS.rxa_clickInput(ENGINE, NUMERIC));
+            return RxUtil
+                .concatArrayDelayEach(
+                    generalDelay(ENGINE),
+                    rxa_clickInput(ENGINE, CHOICE),
+                    rxa_clickInput(ENGINE, NUMERIC)
+                )
+                .all(ObjectUtil::nonNull)
+                .toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

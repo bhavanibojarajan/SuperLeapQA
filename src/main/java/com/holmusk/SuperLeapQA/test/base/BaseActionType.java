@@ -17,6 +17,7 @@ import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.choice.ChoiceParam;
@@ -499,17 +500,22 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
      * @see ObjectUtil#nonNull(Object)
+     * @see RxUtil#concatArrayDelayEach(long, TimeUnit, Flowable[])
      * @see #generalDelay(Engine)
      * @see #contentDeleteProgressDelay(Engine)
      * @see #rxe_menuDelete(Engine)
      * @see #rxe_menuDeleteConfirm(Engine)
      */
     @NotNull
+    @SuppressWarnings("unchecked")
     default Flowable<?> rxa_deleteFromMenu(@NotNull final Engine<?> ENGINE) {
-        return Flowable
-            .concat(rxe_menuDelete(ENGINE), rxe_menuDeleteConfirm(ENGINE))
-            .concatMap(ENGINE::rxa_click)
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
+        return RxUtil
+            .concatArrayDelayEach(
+                generalDelay(ENGINE),
+                rxe_menuDelete(ENGINE),
+                rxe_menuDeleteConfirm(ENGINE)
+            )
+            .flatMap(ENGINE::rxa_click)
             .all(ObjectUtil::nonNull)
             .toFlowable()
             .delay(contentDeleteProgressDelay(ENGINE), TimeUnit.MILLISECONDS);

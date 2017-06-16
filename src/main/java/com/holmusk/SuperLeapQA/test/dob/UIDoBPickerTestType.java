@@ -6,6 +6,7 @@ import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.Test;
@@ -29,7 +30,7 @@ public interface UIDoBPickerTestType extends UIBaseTestType, DOBPickerActionType
      * @param MODE {@link UserMode} instance.
      * @see Screen#SPLASH
      * @see Screen#DOB
-     * @see UserMode#offsetFromCategoryValidRange(int)
+     * @see UserMode#offsetFromCategoryValidRange(int, int)
      * @see UserMode#validAgeCategoryRange()
      * @see #assertCorrectness(TestSubscriber)
      * @see #generalUserModeProvider()
@@ -50,10 +51,11 @@ public interface UIDoBPickerTestType extends UIBaseTestType, DOBPickerActionType
         // Setup
         final UIDoBPickerTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        final List<Integer> AGES = MODE.offsetFromCategoryValidRange(2);
+        final List<Integer> AGES = MODE.offsetFromCategoryValidRange(1, 1);
         final List<Integer> RANGE = MODE.validAgeCategoryRange();
         final int LENGTH = AGES.size();
         TestSubscriber subscriber = CustomTestSubscriber.create();
+        LogUtil.printft("Selecting ages from range %s", AGES);
 
         class Repeater {
             @NotNull

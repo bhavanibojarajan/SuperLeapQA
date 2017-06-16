@@ -6,6 +6,7 @@ import com.holmusk.SuperLeapQA.model.Gender;
 import com.holmusk.SuperLeapQA.model.Height;
 import com.holmusk.SuperLeapQA.model.Weight;
 import com.holmusk.SuperLeapQA.test.dob.DOBPickerValidationType;
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -39,7 +40,7 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
     /**
      * Validate the screen after the DoB picker whereby the user qualifies
      * for the program.
-     * @param engine {@link Engine} instance.
+     * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see ObjectUtil#nonNull(Object)
      * @see ChoiceInput#COACH_PREF
@@ -56,20 +57,32 @@ public interface ValidAgeValidationType extends DOBPickerValidationType {
     @NotNull
     @Override
     @SuppressWarnings("unchecked")
-    default Flowable<?> rxv_validAgeScreen(@NotNull Engine<?> engine) {
+    default Flowable<?> rxv_validAgeScreen(@NotNull final Engine<?> ENGINE) {
         return Flowable
             .mergeArray(
-                rxe_editField(engine, Gender.MALE),
-                rxe_editField(engine, Gender.FEMALE),
-                rxe_editField(engine, ChoiceInput.HEIGHT),
-                rxe_editField(engine, Height.FT),
-                rxe_editField(engine, Height.CM),
-                rxe_editField(engine, ChoiceInput.WEIGHT),
-                rxe_editField(engine, Weight.LB),
-                rxe_editField(engine, Weight.KG),
-                rxe_editField(engine, ChoiceInput.ETHNICITY),
-                rxe_editField(engine, ChoiceInput.COACH_PREF),
-                rxe_validAgeConfirm(engine)
+                rxe_editField(ENGINE, Gender.MALE),
+                rxe_editField(ENGINE, Gender.FEMALE),
+                rxe_editField(ENGINE, ChoiceInput.HEIGHT),
+                rxe_editField(ENGINE, ChoiceInput.WEIGHT),
+                rxe_editField(ENGINE, ChoiceInput.ETHNICITY),
+                rxe_editField(ENGINE, ChoiceInput.COACH_PREF),
+                rxe_validAgeConfirm(ENGINE),
+
+                Flowable.create(obs -> {
+                    if (ENGINE instanceof AndroidEngine) {
+                        /* The following elements only appear when we are
+                         * testing on Android */
+                        obs.onNext(true);
+                    }
+
+                    obs.onComplete();
+                }, BackpressureStrategy.BUFFER
+                ).flatMap(a -> Flowable.mergeArray(
+                    rxe_editField(ENGINE, Height.FT),
+                    rxe_editField(ENGINE, Height.CM),
+                    rxe_editField(ENGINE, Weight.LB),
+                    rxe_editField(ENGINE, Weight.KG)
+                ))
             )
             .all(ObjectUtil::nonNull)
             .toFlowable();

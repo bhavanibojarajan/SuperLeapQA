@@ -1,9 +1,9 @@
 package com.holmusk.SuperLeapQA.test.invalidage;
 
-import com.holmusk.SuperLeapQA.model.TextInput;
-import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.HMUITestKit.model.HMTextType;
+import com.holmusk.SuperLeapQA.model.TextInput;
+import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import io.reactivex.subscribers.TestSubscriber;
@@ -18,8 +18,6 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by haipham on 23/5/17.
@@ -79,7 +77,7 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
 
         // When
         rxa_navigate(MODE, Screen.SPLASH, Screen.INVALID_AGE)
-            .flatMapIterable(a -> Arrays.asList(TextInput.NAME, INPUT))
+            .concatMapIterable(a -> Arrays.asList(TextInput.NAME, INPUT))
             .concatMap(a -> THIS.rxa_randomInput(ENGINE, a))
             .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
             .all(ObjectUtil::nonNull)

@@ -409,16 +409,17 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * the min/max age by an offset value. Note that this does not take
      * into account {@link #requiresGuarantor()}, so the ranges for
      * {@link #TEEN_A18} and {@link #TEEN_U18} are the same.
-     * @param offset {@link Integer} value.
+     * @param lower {@link Integer} value.
+     * @param upper {@link Integer} value.
      * @return {@link List} of {@link Integer}.
      * @see #valueRange(Number, Number, Number)
      * @see #minCategoryValidAge()
      * @see #maxCategoryValidAge()
      */
     @NotNull
-    public List<Integer> offsetFromCategoryValidRange(int offset) {
-        int minAge = minCategoryValidAge() - offset;
-        int maxAge = maxCategoryValidAge() + offset;
+    public List<Integer> offsetFromCategoryValidRange(int lower, int upper) {
+        int minAge = minCategoryValidAge() - lower;
+        int maxAge = maxCategoryValidAge() + upper;
         return valueRange(minAge, maxAge + 1, 1);
     }
 
