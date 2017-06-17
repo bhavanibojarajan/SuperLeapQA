@@ -5,9 +5,11 @@ import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
+import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.log.LogUtil;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.DataProvider;
@@ -49,7 +51,10 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
      * {@link com.holmusk.SuperLeapQA.model.Height#FT}, every 12
      * {@link com.holmusk.SuperLeapQA.model.Height#INCH} is converted to
      * {@link com.holmusk.SuperLeapQA.model.Height#FT}.
-     * @param MODE {@link UserMode} instance.
+     * @param mode {@link UserMode} instance.
+     * @see ObjectUtil#nonNull(Object)
+     * @see Screen#SPLASH
+     * @see Screen#VALID_AGE
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxh_inchToFootRecursive(Engine, UserMode)
@@ -61,16 +66,16 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
         dataProviderClass = UIBaseTestType.class,
         dataProvider = "generalUserModeProvider"
     )
-    default void test_12Inch_shouldBeConvertedTo1Foot(@NotNull final UserMode MODE) {
+    default void test_12Inch_shouldBeConvertedTo1Foot(@NotNull UserMode mode) {
         // Setup
-        final UIValidAgeTestType THIS = this;
-        final Engine<?> ENGINE = engine();
+        Engine<?> engine = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE)
-            .flatMap(a -> THIS.rxh_inchToFootRecursive(ENGINE, MODE))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.VALID_AGE),
+            rxh_inchToFootRecursive(engine, mode)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -83,7 +88,8 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
      * healthy BMI range), the app should notify and fail the process. We do
      * so by deliberating selecting height/weight so that BMI calculations
      * return a healthy figure.
-     * @param MODE {@link UserMode} instance.
+     * @param mode {@link UserMode} instance.
+     * @see ObjectUtil#nonNull(Object)
      * @see Screen#SPLASH
      * @see Screen#VALID_AGE
      * @see #assertCorrectness(TestSubscriber)
@@ -96,17 +102,17 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
         dataProviderClass = UIValidAgeTestType.class,
         dataProvider = "bmiCheckUserModeProvider"
     )
-    default void test_BMIOutOfRange_shouldNotifyUser(@NotNull final UserMode MODE) {
+    default void test_BMIOutOfRange_shouldNotifyUser(@NotNull UserMode mode) {
         // Setup
-        final UIValidAgeTestType THIS = this;
-        final Engine<?> ENGINE = engine();
+        Engine<?> engine = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE)
-            .flatMap(a -> THIS.rxa_completeValidAgeInputs(ENGINE, MODE, false))
-            .flatMap(a -> THIS.rxv_unqualifiedBMI(ENGINE))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.VALID_AGE),
+            rxa_completeValidAgeInputs(engine, mode, false),
+            rxv_unqualifiedBMI(engine)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

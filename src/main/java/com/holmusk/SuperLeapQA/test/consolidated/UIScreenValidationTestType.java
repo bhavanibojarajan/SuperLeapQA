@@ -481,7 +481,7 @@ public interface UIScreenValidationTestType extends
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        final PlatformType PLATFORM = ENGINE.platform();
+        PlatformType platform = ENGINE.platform();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
@@ -489,9 +489,11 @@ public interface UIScreenValidationTestType extends
             rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO),
             rxv_personalInfoScreen(ENGINE, MODE),
 
-            Flowable.fromIterable(MODE.personalInfo(PLATFORM))
-                .concatMap(a -> THIS.rxa_randomInput(ENGINE, a))
-                .flatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
+            Flowable.fromIterable(MODE.personalInfo(platform))
+                .concatMap(a -> Flowable.concatArray(
+                    THIS.rxa_randomInput(ENGINE, a),
+                    THIS.rxa_makeNextInputVisible(ENGINE)
+                ))
         ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

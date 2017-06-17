@@ -98,7 +98,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @return {@link Flowable} instance.
      * @see ObjectUtil#nonNull(Object)
      * @see #rxa_input(Engine, HMInputType, String)
-     * @see #rxa_makeNextInputVisible(Engine, WebElement)
+     * @see #rxa_makeNextInputVisible(Engine)
      */
     @NotNull
     @SuppressWarnings("ConstantConditions")
@@ -106,10 +106,11 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
                                    @NotNull List<Zip<HMTextType,String>> inputs) {
         final BaseActionType THIS = this;
 
-        return Flowable
-            .fromIterable(inputs)
-            .concatMap(a -> THIS.rxa_input(ENGINE, a.A, a.B)
-                .flatMap(b -> THIS.rxa_makeNextInputVisible(ENGINE, b)))
+        return Flowable.fromIterable(inputs)
+            .concatMap(a -> Flowable.concatArray(
+                THIS.rxa_input(ENGINE, a.A, a.B),
+                THIS.rxa_makeNextInputVisible(ENGINE)
+            ))
             .all(ObjectUtil::nonNull)
             .toFlowable();
     }
@@ -135,17 +136,18 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @return {@link Flowable} instance.
      * @see ObjectUtil#nonNull(Object)
      * @see #rxa_randomInput(Engine, HMTextType)
-     * @see #rxa_makeNextInputVisible(Engine, WebElement)
+     * @see #rxa_makeNextInputVisible(Engine)
      */
     @NotNull
     default Flowable<?> rxa_randomInputs(@NotNull final Engine<?> ENGINE,
                                          @NotNull List<HMTextType> inputs) {
         final BaseActionType THIS = this;
 
-        return Flowable
-            .fromIterable(inputs)
-            .concatMap(a -> THIS.rxa_randomInput(ENGINE, a))
-            .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
+        return Flowable.fromIterable(inputs)
+            .concatMap(a -> Flowable.concatArray(
+                THIS.rxa_randomInput(ENGINE, a),
+                THIS.rxa_makeNextInputVisible(ENGINE)
+            ))
             .all(ObjectUtil::nonNull)
             .toFlowable();
     }
@@ -217,8 +219,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
     /**
      * Make the next input field visible on the screen, by toggling next input
      * or dismissing the keyboard.
-     * @param E {@link Engine} instance.
-     * @param element {@link WebElement} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_hideKeyboard()
      * @see Engine#rxv_isLastInput(WebElement)
@@ -227,14 +228,13 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<?> rxa_makeNextInputVisible(@NotNull final Engine<?> E,
-                                                 @NotNull WebElement element) {
-        if (E instanceof AndroidEngine) {
+    default Flowable<?> rxa_makeNextInputVisible(@NotNull Engine<?> engine) {
+        if (engine instanceof AndroidEngine) {
             /* Since sending key events is rather flaky, we can instead hide
              * the keyboard to expose the next input field */
-            return E.rxa_hideKeyboard();
-        } else if (E instanceof IOSEngine) {
-            return rxa_confirmTextInput(E);
+            return engine.rxa_hideKeyboard();
+        } else if (engine instanceof IOSEngine) {
+            return rxa_confirmTextInput(engine);
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

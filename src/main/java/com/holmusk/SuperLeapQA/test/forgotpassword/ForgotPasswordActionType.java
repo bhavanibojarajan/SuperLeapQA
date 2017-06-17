@@ -10,6 +10,8 @@ import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by haipham on 5/26/17.
  */
@@ -35,11 +37,14 @@ public interface ForgotPasswordActionType extends
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see #forgotPasswordProgressDelay(Engine)
      * @see #rxe_forgotPasswordSubmit(Engine)
      */
     @NotNull
     default Flowable<?> rxa_confirmPassRecovery(@NotNull final Engine<?> ENGINE) {
-        return rxe_forgotPasswordSubmit(ENGINE).flatMap(ENGINE::rxa_click);
+        return rxe_forgotPasswordSubmit(ENGINE)
+            .flatMap(ENGINE::rxa_click)
+            .delay(forgotPasswordProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -66,10 +71,13 @@ public interface ForgotPasswordActionType extends
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see #generalDelay(Engine)
      * @see #rxe_emailSentConfirm(Engine)
      */
     @NotNull
     default Flowable<?> rxa_confirmEmailSent(@NotNull final Engine<?> ENGINE) {
-        return rxe_emailSentConfirm(ENGINE).flatMap(ENGINE::rxa_click);
+        return rxe_emailSentConfirm(ENGINE)
+            .flatMap(ENGINE::rxa_click)
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 }

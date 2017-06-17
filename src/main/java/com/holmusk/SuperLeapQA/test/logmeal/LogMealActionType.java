@@ -93,11 +93,11 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
         if (ENGINE instanceof AndroidEngine) {
             return Flowable.range(0, COUNT)
                 .map(a -> a + 1)
-                .concatMap(a -> THIS.rxa_openPhotoPicker(ENGINE, a)
-                    .flatMap(b -> THIS.rxa_selectLibraryPhotos(ENGINE, 1))
-                    .flatMap(b -> THIS.rxa_confirmPhoto(ENGINE)))
-                .all(ObjectUtil::nonNull)
-                .toFlowable();
+                .concatMap(a -> Flowable.concatArray(
+                    THIS.rxa_openPhotoPicker(ENGINE, a),
+                    THIS.rxa_selectLibraryPhotos(ENGINE, 1),
+                    THIS.rxa_confirmPhoto(ENGINE)
+                ).all(ObjectUtil::nonNull).toFlowable());
         } else if (ENGINE instanceof IOSEngine) {
             return Flowable
                 .concatArray(

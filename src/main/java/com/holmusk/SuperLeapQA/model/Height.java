@@ -381,10 +381,10 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
         switch (this) {
             case INCH:
             case CM_DEC:
-                return 0;
+                return 1;
 
             case FT:
-                return mode.isParent() ? 0 : 3;
+                return mode.isParent() ? 2 : 3;
 
             case CM:
                 return mode.isParent() ? 30 : 120;

@@ -6,6 +6,7 @@ import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
+import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -58,7 +59,7 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
      * @see #invalidAgeInputProgressDelay(Engine)
      * @see #rxa_acknowledgeSubscription(Engine)
      * @see #rxa_randomInput(Engine, HMTextType)
-     * @see #rxa_makeNextInputVisible(Engine, WebElement)
+     * @see #rxa_makeNextInputVisible(Engine)
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_confirmInvalidAgeInputs(Engine)
      * @see #rxv_invalidAgeInputConfirmed(Engine)
@@ -76,16 +77,19 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(MODE, Screen.SPLASH, Screen.INVALID_AGE)
-            .concatMapIterable(a -> Arrays.asList(TextInput.NAME, INPUT))
-            .flatMap(a -> THIS.rxa_randomInput(ENGINE, a))
-            .flatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
-            .all(ObjectUtil::nonNull)
-            .toFlowable()
-            .flatMap(a -> THIS.rxa_confirmInvalidAgeInputs(ENGINE))
-            .flatMap(a -> THIS.rxv_invalidAgeInputConfirmed(ENGINE))
-            .flatMap(a -> THIS.rxa_acknowledgeSubscription(ENGINE))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(MODE, Screen.SPLASH, Screen.INVALID_AGE),
+
+            Flowable.fromArray(TextInput.NAME, INPUT)
+                .concatMap(a -> Flowable.concatArray(
+                    THIS.rxa_randomInput(ENGINE, a),
+                    THIS.rxa_makeNextInputVisible(ENGINE)
+                )),
+
+            rxa_confirmInvalidAgeInputs(ENGINE),
+            rxv_invalidAgeInputConfirmed(ENGINE),
+            rxa_acknowledgeSubscription(ENGINE)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -100,6 +104,7 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
      * {@link Screen#REGISTER}.
      * @param mode {@link UserMode} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see ObjectUtil#nonNull(Object)
      * @see Screen#INVALID_AGE
      * @see Screen#REGISTER
      * @see #assertCorrectness(TestSubscriber)
@@ -107,6 +112,7 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
      * @see #generalUserModeProvider()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_completeInvalidAgeInputs(Engine)
+     * @see #rxa_acknowledgeSubscription(Engine)
      * @see #rxv_invalidAgeInputConfirmed(Engine)
      * @see #rxv_welcomeScreen(Engine)
      * @see #rxe_invalidAgeOk(Engine)
@@ -118,18 +124,17 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
     )
     default void test_invalidAgeInput_shouldWork(@NotNull UserMode mode) {
         // Setup
-        final UIInvalidAgeTestType THIS = this;
-        final Engine<?> ENGINE = engine();
+        Engine<?> engine = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.INVALID_AGE)
-            .flatMap(a -> THIS.rxa_completeInvalidAgeInputs(ENGINE))
-            .flatMap(a -> THIS.rxv_invalidAgeInputConfirmed(ENGINE))
-            .flatMap(a -> THIS.rxe_invalidAgeOk(ENGINE))
-            .flatMap(ENGINE::rxa_click)
-            .flatMap(a -> THIS.rxv_welcomeScreen(ENGINE))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.INVALID_AGE),
+            rxa_completeInvalidAgeInputs(engine),
+            rxv_invalidAgeInputConfirmed(engine),
+            rxa_acknowledgeSubscription(engine),
+            rxv_welcomeScreen(engine)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

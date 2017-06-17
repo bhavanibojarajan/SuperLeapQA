@@ -6,6 +6,7 @@ import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
+import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
@@ -69,7 +70,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * @see #rxa_confirmTextInput(Engine)
      */
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "Convert2MethodRef"})
     default void test_togglePasswordMask_shouldWork() {
         // Setup
         final Engine<?> ENGINE = engine();
@@ -84,14 +85,15 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
-            .flatMap(a -> THIS.rxa_randomInput(ENGINE, TextInput.PASSWORD))
-            .flatMap(a -> THIS.rxa_confirmTextInput(ENGINE)
-                .flatMap(b -> ENGINE.rxa_togglePasswordMask(a))
-                .filter(ENGINE::isShowingPassword)
-                .switchIfEmpty(ENGINE.rxv_errorWithPageSource())
-            )
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO),
+
+            rxa_randomInput(ENGINE, TextInput.PASSWORD)
+                .flatMap(a -> THIS.rxa_confirmTextInput(ENGINE)
+                    .flatMap(b -> ENGINE.rxa_togglePasswordMask(a))
+                    .filter(b -> ENGINE.isShowingPassword(b))
+                    .switchIfEmpty(ENGINE.rxv_errorWithPageSource()))
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -118,7 +120,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_input(Engine, HMInputType, String)
      * @see #rxa_openTC(Engine)
-     * @see #rxa_makeNextInputVisible(Engine, WebElement)
+     * @see #rxa_makeNextInputVisible(Engine)
      * @see #rxv_hasValue(Engine, HMInputType, String)
      */
     @Test
@@ -147,28 +149,28 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        THIS.rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
-            .concatMapIterable(a -> TEXT_INFO)
-            .flatMap(a -> THIS.rxa_input(ENGINE, a, INPUTS.get(a.toString())))
-            .flatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
+        Flowable.concatArray(
+            rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO),
 
-            /* We use toList here because we want to intercept the empty
-             * event as well */
-            .toList()
-            .filter(CollectionUtil::isNotEmpty)
-            .toFlowable()
+            Flowable.fromIterable(TEXT_INFO)
+                .concatMap(a -> Flowable.concatArray(
+                    THIS.rxa_input(ENGINE, a, INPUTS.get(a.toString())),
+                    THIS.rxa_makeNextInputVisible(ENGINE)
+                )),
 
             /* We need to unmask the password field so that later its text
              * can be verified. Otherwise, the text returned will be empty */
-            .flatMap(a -> THIS.rxe_editField(ENGINE, TextInput.PASSWORD))
-            .flatMap(ENGINE::rxa_togglePasswordMask)
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
+            rxe_editField(ENGINE, TextInput.PASSWORD)
+                .flatMap(ENGINE::rxa_togglePasswordMask)
+                .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS),
 
-            .flatMap(a -> THIS.rxa_openTC(ENGINE))
-            .flatMap(a -> ENGINE.rxa_navigateBackOnce())
-            .flatMapIterable(a -> TEXT_INFO)
-            .flatMap(a -> THIS.rxv_hasValue(ENGINE, a, INPUTS.get(a.toString())))
-            .subscribe(subscriber);
+            rxa_openTC(ENGINE),
+            ENGINE.rxa_navigateBackOnce(),
+
+            Flowable.fromIterable(TEXT_INFO).flatMap(a ->
+                THIS.rxv_hasValue(ENGINE, a, INPUTS.get(a.toString()))
+            )
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -180,11 +182,12 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * This test checks that the TOC checkbox has to be ticked before the
      * user continues any further. The check happens in
      * {@link Screen#PERSONAL_INFO}.
-     * @param MODE {@link UserMode} instance.
+     * @param mode {@link UserMode} instance.
      * @see Engine#rxa_hideKeyboard()
+     * @see ObjectUtil#nonNull(Object)
+     * @see UserMode#personalInfo(PlatformType)
      * @see Screen#SPLASH
      * @see Screen#PERSONAL_INFO
-     * @see UserMode#personalInfo(PlatformType)
      * @see #assertCorrectness(TestSubscriber)
      * @see #generalUserModeProvider()
      * @see #engine()
@@ -198,21 +201,20 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
         dataProviderClass = UIBaseTestType.class,
         dataProvider = "generalUserModeProvider"
     )
-    default void test_requireTOCAccepted_toProceed(@NotNull final UserMode MODE) {
+    default void test_requireTCAccepted_toProceed(@NotNull UserMode mode) {
         // Setup
-        final UIPersonalInfoTestType THIS = this;
-        final Engine<?> ENGINE = engine();
-        final PlatformType PLATFORM = ENGINE.platform();
-        final List<HMTextType> INFO = MODE.personalInfo(PLATFORM);
+        Engine<?> engine = engine();
+        PlatformType platform = engine.platform();
+        List<HMTextType> info = mode.personalInfo(platform);
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
-            .flatMap(a -> THIS.rxa_randomInputs(ENGINE, INFO))
-            .flatMap(a -> THIS.rxa_confirmPersonalInfo(ENGINE))
-            .delay(2000, TimeUnit.MILLISECONDS)
-            .flatMap(a -> THIS.rxv_personalInfoScreen(ENGINE, MODE))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.PERSONAL_INFO),
+            rxa_randomInputs(engine, info),
+            rxa_confirmPersonalInfo(engine),
+            rxv_personalInfoScreen(engine, mode)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -227,6 +229,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * This test is only applicable for {@link UserMode#TEEN_U18}, so we use
      * {@link DataProvider} that provides {@link InputType}.
      * @param INPUTS {@link List} of {@link InputType}.
+     * @see ObjectUtil#nonNull(Object)
      * @see Screen#SPLASH
      * @see Screen#GUARANTOR_INFO
      * @see UserMode#TEEN_U18
@@ -246,17 +249,17 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
     )
     default void test_parentInfo_phoneOrEmail(@NotNull final List<HMTextType> INPUTS) {
         // Setup
-        final UIPersonalInfoTestType THIS = this;
-        final Engine<?> ENGINE = engine();
-        final UserMode MODE = UserMode.TEEN_U18;
+        Engine<?> engine = engine();
+        UserMode MODE = UserMode.TEEN_U18;
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(MODE, Screen.SPLASH, Screen.GUARANTOR_INFO)
-            .flatMap(a -> THIS.rxa_randomInputs(ENGINE, INPUTS))
-            .flatMap(a -> THIS.rxa_confirmGuarantorInfo(ENGINE, MODE))
-            .flatMap(a -> THIS.rxv_useAppNow(ENGINE))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(MODE, Screen.SPLASH, Screen.GUARANTOR_INFO),
+            rxa_randomInputs(engine, INPUTS),
+            rxa_confirmGuarantorInfo(engine, MODE),
+            rxv_useAppNow(engine)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

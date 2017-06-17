@@ -340,7 +340,7 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
         switch (this) {
             case KG_DEC:
             case LB_DEC:
-                return 0;
+                return 1;
 
             case LB:
                 return mode.isParent() ? 22 : 110;

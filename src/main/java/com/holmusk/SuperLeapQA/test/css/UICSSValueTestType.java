@@ -96,31 +96,32 @@ public interface UICSSValueTestType extends UIBaseTestType, CSSValueActionType {
         // Setup
         final UICSSValueTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        final int TRIES = 3;
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(MODE, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD)
-            .concatMap(a -> Flowable.range(0, TRIES))
-            .concatMap(a -> THIS.rxa_navigate(MODE, Screen.DASHBOARD, ENTRY_SCREEN)
+        Flowable.concatArray(
+            rxa_navigate(MODE, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD),
 
-                /* For cross-platform reusability, we need to get the CSS value
-                 * from the CSS entry screen, since on Android it's not
-                 * possible to get it directly from the scroll view */
-                .flatMap(b -> THIS.rxe_selectedCSSValue(ENGINE, INPUT))
-                .flatMap(b -> THIS.rxa_submitCSSEntry(ENGINE, INPUT)
-                    .flatMap(c -> THIS.rxa_backToDashboard(ENGINE))
-                    .flatMap(c -> THIS.rxa_navigate(MODE, Screen.DASHBOARD, VALUE_SCREEN))
-                    .flatMap(c -> THIS.rxa_submitCSSValue(ENGINE, INPUT))
+            /* For cross-platform reusability, we need to get the CSS value
+             * from the CSS entry screen, since on Android it's not possible
+             * to get it directly from the scroll view */
+            Flowable.concatArray(
+                THIS.rxa_navigate(MODE, Screen.DASHBOARD, ENTRY_SCREEN),
+                THIS.rxe_selectedCSSValue(ENGINE, INPUT)
+                    .flatMap(b -> Flowable.concatArray(
+                        THIS.rxa_submitCSSEntry(ENGINE, INPUT),
+                        THIS.rxa_backToDashboard(ENGINE),
+                        THIS.rxa_navigate(MODE, Screen.DASHBOARD, VALUE_SCREEN),
+                        THIS.rxa_submitCSSValue(ENGINE, INPUT),
 
-                    /* The value should have been saved from the previous log */
-                    .flatMap(c -> ENGINE.rxe_containsText(b)
-                        .firstElement().toFlowable()
-                        .switchIfEmpty(ENGINE.rxv_errorWithPageSource()))
-                    .flatMap(c -> THIS.rxa_dashboardFromCSSEntry(ENGINE))))
-            .all(ObjectUtil::nonNull)
-            .toFlowable()
-            .subscribe(subscriber);
+                        ENGINE.rxe_containsText(b)
+                            .firstElement().toFlowable()
+                            .switchIfEmpty(ENGINE.rxv_errorWithPageSource()),
+
+                        THIS.rxa_dashboardFromCSSEntry(ENGINE)
+                    ).all(ObjectUtil::nonNull).toFlowable())
+            ).all(ObjectUtil::nonNull).toFlowable().repeat(3)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

@@ -3,7 +3,10 @@ package com.holmusk.SuperLeapQA.test.forgotpassword;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
+import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
+import org.intellij.lang.annotations.Flow;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.Test;
@@ -34,20 +37,18 @@ public interface UIForgotPasswordTestType extends UIBaseTestType, ForgotPassword
     @SuppressWarnings("unchecked")
     default void test_forgotPasswordInput_shouldWork() {
         // Setup
-        final UIForgotPasswordTestType THIS = this;
-        final Engine<?> ENGINE = engine();
+        Engine<?> engine = engine();
         UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.FORGOT_PASSWORD)
-            .flatMap(a -> THIS.rxa_recoverPassword(ENGINE))
-            .delay(forgotPasswordProgressDelay(ENGINE), TimeUnit.MILLISECONDS)
-            .flatMap(a -> THIS.rxv_emailSentConfirmation(ENGINE))
-            .flatMap(a -> THIS.rxa_confirmEmailSent(ENGINE))
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
-            .flatMap(a -> THIS.rxv_loginScreen(ENGINE))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.FORGOT_PASSWORD),
+            rxa_recoverPassword(engine),
+            rxv_emailSentConfirmation(engine),
+            rxa_confirmEmailSent(engine),
+            rxv_loginScreen(engine)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

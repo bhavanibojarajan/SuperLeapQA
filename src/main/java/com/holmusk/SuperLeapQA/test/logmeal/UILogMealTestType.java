@@ -54,12 +54,12 @@ public interface UILogMealTestType extends
      * @see NumberUtil#randomBetween(int, int)
      * @see ObjectUtil#nonNull(Object)
      * @see TextInput#randomInput(InputHelperType)
+     * @see UserMode#defaultUserMode()
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#MEAL_ENTRY
      * @see Screen#SEARCH
      * @see TextInput#MEAL_DESCRIPTION
-     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #randomSelectableTime()
@@ -84,62 +84,60 @@ public interface UILogMealTestType extends
     @SuppressWarnings("unchecked")
     default void test_logMealThenDelete_shouldWork() {
         // Setup
-        final UILogMealTestType THIS = this;
-        final Engine<?> ENGINE = engine();
-        final Date TIME = randomSelectableTime();
-        final TextInput DSC_INPUT = TextInput.MEAL_DESCRIPTION;
-        final String DESCRIPTION = DSC_INPUT.randomInput(ENGINE);
-        final Mood MOOD = CollectionUtil.randomElement(Mood.values());
+        Engine<?> engine = engine();
+        Date time = randomSelectableTime();
+        TextInput dscInput = TextInput.MEAL_DESCRIPTION;
+        String description = dscInput.randomInput(engine);
+        Mood mood = CollectionUtil.randomElement(Mood.values());
         UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
-        final Flowable<?> RXV_MEAL_PAGE = Flowable
+        Flowable<?> rxv_mealPage = Flowable
             .mergeArray(
-                ENGINE.rxe_containsText(MOOD.title()),
-                ENGINE.rxe_containsText(DESCRIPTION),
-                rxv_hasMealTime(ENGINE, TIME)
+                engine.rxe_containsText(mood.title()),
+                engine.rxe_containsText(description),
+                rxv_hasMealTime(engine, time)
             )
             .all(ObjectUtil::nonNull)
             .toFlowable();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.MEAL_ENTRY)
-            .flatMap(a -> THIS.rxa_selectMood(ENGINE, MOOD))
-            .flatMap(a -> THIS.rxa_selectMealPhotos(ENGINE))
-            .flatMap(a -> THIS.rxa_openMealTimePicker(ENGINE))
-            .flatMap(a -> THIS.rxa_selectMealTime(ENGINE, TIME))
-            .flatMap(a -> THIS.rxa_confirmMealTime(ENGINE))
-            .flatMap(a -> THIS.rxa_input(ENGINE, DSC_INPUT, DESCRIPTION))
-            .flatMap(a -> THIS.rxa_confirmMealDescription(ENGINE))
-            .flatMap(a -> THIS.rxa_submitMeal(ENGINE))
-            .flatMap(a -> THIS.rxa_dismissMealImageTutorial(ENGINE))
-            .flatMap(a -> RXV_MEAL_PAGE)
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.MEAL_ENTRY),
+            rxa_selectMood(engine, mood),
+            rxa_selectMealPhotos(engine),
+            rxa_openMealTimePicker(engine),
+            rxa_selectMealTime(engine, time),
+            rxa_confirmMealTime(engine),
+            rxa_input(engine, dscInput, description),
+            rxa_confirmMealDescription(engine),
+            rxa_submitMeal(engine),
+            rxa_dismissMealImageTutorial(engine),
+            rxv_mealPage,
 
             /* Go back to dashboard to access the search menu */
-            .flatMap(a -> THIS.rxa_backToDashboard(ENGINE))
-            .flatMap(a -> THIS.rxa_toggleDashboardSearch(ENGINE))
+            rxa_backToDashboard(engine),
+            rxa_toggleDashboardSearch(engine),
 
             /* Search for the meal and verify that it is present */
-            .flatMap(a -> THIS.rxa_search(ENGINE, DESCRIPTION))
-            .flatMap(a -> THIS.rxa_openSearchResult(ENGINE, DESCRIPTION))
-            .flatMap(a -> RXV_MEAL_PAGE)
+            rxa_search(engine, description),
+            rxa_openSearchResult(engine, description),
+            rxv_mealPage,
 
             /* Delete the meal and verify that it is no longer searchable */
-            .flatMap(a -> THIS.rxa_openEditMenu(ENGINE))
-            .flatMap(a -> THIS.rxa_deleteFromMenu(ENGINE))
-            .flatMap(a -> THIS.rxa_dashboardAfterSearchAndDelete(ENGINE))
-            .flatMap(a -> THIS.rxa_toggleDashboardSearch(ENGINE))
-            .flatMap(a -> THIS.rxa_search(ENGINE, DESCRIPTION))
+            rxa_openEditMenu(engine),
+            rxa_deleteFromMenu(engine),
+            rxa_dashboardAfterSearchAndDelete(engine),
+            rxa_toggleDashboardSearch(engine),
+            rxa_search(engine, description),
 
             /* At this stage, the meal should have been cleared from the
              * search result. If it is still present, throw an error */
-            .flatMap(a -> THIS
-                .rxe_searchResult(ENGINE, DESCRIPTION)
+            rxe_searchResult(engine, description)
                 .map(BooleanUtil::toTrue)
-                .flatMap(b -> ENGINE.rxv_errorWithPageSource())
+                .flatMap(b -> engine.rxv_errorWithPageSource())
                 .onErrorReturnItem(true)
-            )
-            .subscribe(subscriber);
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -182,32 +180,32 @@ public interface UILogMealTestType extends
             return;
         }
 
-        final UILogMealTestType THIS = this;
-        final HMTextType DSC_INPUT = TextInput.MEAL_DESCRIPTION;
-        final String DESCRIPTION = DSC_INPUT.randomInput(ENGINE);
+        HMTextType dscInput = TextInput.MEAL_DESCRIPTION;
+        String description = dscInput.randomInput(ENGINE);
         UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.MEAL_ENTRY)
-            .flatMap(a -> THIS.rxa_input(ENGINE, DSC_INPUT, DESCRIPTION))
-            .flatMap(a -> THIS.rxa_confirmMealDescription(ENGINE))
-            .flatMap(a -> THIS.rxa_submitMeal(ENGINE))
-            .flatMap(a -> THIS.rxa_dismissMealImageTutorial(ENGINE))
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.MEAL_ENTRY),
+            rxa_input(ENGINE, dscInput, description),
+            rxa_confirmMealDescription(ENGINE),
+            rxa_submitMeal(ENGINE),
+            rxa_dismissMealImageTutorial(ENGINE),
 
             /* Go back to dashboard to access the search menu */
-            .flatMap(a -> THIS.rxa_backToDashboard(ENGINE))
-            .flatMap(a -> THIS.rxa_toggleDashboardSearch(ENGINE))
+            rxa_backToDashboard(ENGINE),
+            rxa_toggleDashboardSearch(ENGINE),
 
             /* Search for the meal and verify that it is present */
-            .flatMap(a -> THIS.rxa_search(ENGINE, DESCRIPTION))
-            .flatMap(a -> THIS.rxa_openSearchResult(ENGINE, DESCRIPTION))
+            rxa_search(ENGINE, description),
+            rxa_openSearchResult(ENGINE, description),
 
             /* Delete the meal and verify that the search result view is empty */
-            .flatMap(a -> THIS.rxa_openEditMenu(ENGINE))
-            .flatMap(a -> THIS.rxa_deleteFromMenu(ENGINE))
-            .flatMap(a -> THIS.rxv_searchResultMustBeEmpty(ENGINE))
-            .subscribe(subscriber);
+            rxa_openEditMenu(ENGINE),
+            rxa_deleteFromMenu(ENGINE),
+            rxv_searchResultMustBeEmpty(ENGINE)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -274,39 +272,45 @@ public interface UILogMealTestType extends
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.MEAL_PAGE, Screen.CHAT)
-            .flatMap(a -> Flowable.fromIterable(COMMENTS)
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.MEAL_PAGE, Screen.CHAT),
+
+            Flowable.fromIterable(COMMENTS)
                 .concatMap(b -> Flowable.concat(
                     THIS.rxa_postChat(ENGINE, b),
                     THIS.rxe_chatMessage(ENGINE, b)
-                )).all(ObjectUtil::nonNull).toFlowable()
-            )
-            .flatMap(a -> THIS.rxa_dismissChatWindow(ENGINE))
-            .flatMap(a -> THIS.rxa_backToDashboard(ENGINE))
-            .flatMap(a -> THIS.rxa_toggleDashboardSearch(ENGINE))
-            .flatMap(a -> Flowable.fromIterable(COMMENTS)
+                )),
+
+            rxa_dismissChatWindow(ENGINE),
+            rxa_backToDashboard(ENGINE),
+            rxa_toggleDashboardSearch(ENGINE),
+
+            Flowable.fromIterable(COMMENTS)
                 .concatMap(b -> Flowable.concat(
                     THIS.rxa_search(ENGINE, b),
                     THIS.rxe_searchResult(ENGINE, b),
                     ENGINE.rxa_clearSearchBar()
-                )).all(ObjectUtil::nonNull).toFlowable())
-            .flatMap(a -> THIS.rxa_search(ENGINE, COMMENTS.get(0)))
-            .flatMap(a -> THIS.rxa_openSearchResult(ENGINE, COMMENTS.get(0)))
+                )),
+
+            rxa_search(ENGINE, COMMENTS.get(0)),
+            rxa_openSearchResult(ENGINE, COMMENTS.get(0)),
 
             /* When we access the meal page from a comment search result, the
              * scroll view will show the bottom of the page. We need to scroll
              * up to show the edit button */
-            .flatMap(a -> THIS.rxa_makeEditButtonVisible(ENGINE))
-            .flatMap(a -> THIS.rxa_openEditMenu(ENGINE))
-            .flatMap(a -> THIS.rxa_deleteFromMenu(ENGINE))
-            .flatMap(a -> THIS.rxa_dashboardAfterSearchAndDelete(ENGINE))
-            .flatMap(a -> THIS.rxa_toggleDashboardSearch(ENGINE))
-            .flatMap(a -> Flowable.fromIterable(COMMENTS)
-                .concatMap(b -> THIS.rxa_search(ENGINE, b)
-                    .flatMap(c -> THIS.rxv_searchResultMustBeEmpty(ENGINE))
-                    .flatMap(c -> ENGINE.rxa_clearSearchBar()))
-                .all(ObjectUtil::nonNull).toFlowable())
-            .subscribe(subscriber);
+            rxa_makeEditButtonVisible(ENGINE),
+            rxa_openEditMenu(ENGINE),
+            rxa_deleteFromMenu(ENGINE),
+            rxa_dashboardAfterSearchAndDelete(ENGINE),
+            rxa_toggleDashboardSearch(ENGINE),
+
+            Flowable.fromIterable(COMMENTS)
+                .concatMap(b -> Flowable.concatArray(
+                    THIS.rxa_search(ENGINE, b),
+                    THIS.rxv_searchResultMustBeEmpty(ENGINE),
+                    ENGINE.rxa_clearSearchBar())
+                )
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

@@ -3,7 +3,9 @@ package com.holmusk.SuperLeapQA.test.login;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
+import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.Test;
@@ -16,10 +18,11 @@ import java.util.List;
 public interface UILoginTestType extends UIBaseTestType, LoginActionType {
     /**
      * Login with predefined credentials and verify that it works correctly.
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
+     * @see ObjectUtil#nonNull(Object)
      * @see UserMode#defaultUserMode()
      * @see UserMode#loginCredentials()
+     * @see Screen#SPLASH
+     * @see Screen#LOGIN
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_login(Engine, List)
@@ -28,15 +31,15 @@ public interface UILoginTestType extends UIBaseTestType, LoginActionType {
     @SuppressWarnings("unchecked")
     default void test_loginInputs_shouldWork() {
         // Setup
-        final UILoginTestType THIS = this;
-        final Engine<?> ENGINE = engine();
-        final UserMode MODE = UserMode.defaultUserMode();
+        Engine<?> engine = engine();
+        UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(MODE, Screen.SPLASH, Screen.LOGIN)
-            .flatMap(a -> THIS.rxa_loginWithDefaults(ENGINE, MODE))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN),
+            rxa_loginWithDefaults(engine, mode)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

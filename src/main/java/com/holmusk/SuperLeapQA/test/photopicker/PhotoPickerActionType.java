@@ -38,13 +38,13 @@ public interface PhotoPickerActionType extends BaseActionType, PhotoPickerValida
     default Flowable<?> rxa_selectPickerMode(@NotNull final Engine<?> ENGINE,
                                              @NotNull final PhotoPickerMode MODE) {
         if (ENGINE instanceof AndroidEngine) {
-            final PhotoPickerActionType THIS = this;
-
-            return Flowable.range(0, 2)
-                .concatMap(a -> THIS.rxe_pickerMode(ENGINE, MODE)
-                    .flatMap(ENGINE::rxa_click)
-                    .flatMap(b -> ENGINE.rxa_acceptAlert())
-                    .onErrorReturnItem(true));
+            return rxe_pickerMode(ENGINE, MODE)
+                .flatMap(ENGINE::rxa_click)
+                .flatMap(b -> ENGINE.rxa_acceptAlert())
+                .onErrorReturnItem(true)
+                .repeat(2)
+                .all(ObjectUtil::nonNull)
+                .toFlowable();
         } else if (ENGINE instanceof IOSEngine) {
             return rxe_pickerMode(ENGINE, MODE).flatMap(ENGINE::rxa_click);
         } else {

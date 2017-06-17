@@ -48,23 +48,21 @@ public interface UILogActivityTestType extends UIBaseTestType, LogActivityAction
     )
     default void test_logActivity_shouldWork(@NotNull UserMode mode) {
         // Setup
-        final UILogActivityTestType THIS = this;
-        final Engine<?> ENGINE = engine();
-        final HMCSSInputType INPUT = CSSInput.ACTIVITY;
-        final Date TIME = randomSelectableTime();
+        Engine<?> engine = engine();
+        HMCSSInputType input = CSSInput.ACTIVITY;
+        Date time = randomSelectableTime();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.ACTIVITY_ENTRY)
-            .flatMap(a -> THIS.rxe_selectedCSSValue(ENGINE, INPUT))
-            .flatMap(a -> THIS.rxa_openCSSTimePicker(ENGINE, INPUT)
-                .flatMap(b -> THIS.rxa_selectCSSTime(ENGINE, TIME))
-                .flatMap(b -> THIS.rxa_confirmCSSTime(ENGINE, INPUT))
-                .flatMap(b -> THIS.rxa_submitCSSEntry(ENGINE, INPUT))
-                .flatMap(b -> Flowable.mergeArray(THIS.rxv_hasCSSTime(ENGINE, TIME)))
-                .all(ObjectUtil::nonNull)
-                .toFlowable())
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.ACTIVITY_ENTRY),
+            rxe_selectedCSSValue(engine, input),
+            rxa_openCSSTimePicker(engine, input),
+            rxa_selectCSSTime(engine, time),
+            rxa_confirmCSSTime(engine, input),
+            rxa_submitCSSEntry(engine, input),
+            rxv_hasCSSTime(engine, time)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -109,28 +107,30 @@ public interface UILogActivityTestType extends UIBaseTestType, LogActivityAction
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(MODE, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD)
-            .flatMap(a -> THIS.rxa_dashboardMode(ENGINE, DB_MODE))
-            .flatMap(a -> THIS.rxe_activityValue(ENGINE, MODE, AT_VAL))
-            .flatMap(a -> THIS.rxa_navigate(MODE, Screen.DASHBOARD, Screen.ACTIVITY_ENTRY)
-                .flatMap(b -> THIS.rxe_selectedCSSNumericValue(ENGINE, INPUT))
-                .map(b -> b * STEP_PER_MIN)
-                .map(Double::intValue)
-                .flatMap(b -> THIS.rxa_submitCSSEntry(ENGINE, INPUT)
-                    .flatMap(c -> THIS.rxa_backToDashboard(ENGINE))
-                    .flatMap(c -> THIS.rxa_dashboardMode(ENGINE, DB_MODE))
-                    .flatMap(c -> THIS.rxe_activityValue(ENGINE, MODE, AT_VAL))
-
-                    /* Compare the latest today value with the previously
-                     * displayed value. The difference should be equal to
-                     * minutes * steps/minute */
-                    .map(c -> c - a)
-                    .map(Double::intValue)
-                    .doOnNext(c -> LogUtil.printft("Difference is %d", c))
-                    .filter(c -> c.equals(b))
-                    .switchIfEmpty(ENGINE.rxv_errorWithPageSource()))
-            )
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(MODE, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD),
+            rxa_dashboardMode(ENGINE, DB_MODE),
+            rxe_activityValue(ENGINE, MODE, AT_VAL)
+                .doOnNext(a -> LogUtil.printft("Today value is now %s", a))
+                .flatMap(a -> Flowable.concatArray(
+                    THIS.rxa_navigate(MODE, Screen.DASHBOARD, Screen.ACTIVITY_ENTRY),
+                    THIS.rxe_selectedCSSNumericValue(ENGINE, INPUT)
+                        .doOnNext(b -> LogUtil.printft("Selected value %s", b))
+                        .map(b -> b * STEP_PER_MIN)
+                        .map(Double::intValue)
+                        .flatMap(b -> Flowable.concatArray(
+                            THIS.rxa_submitCSSEntry(ENGINE, INPUT),
+                            THIS.rxa_backToDashboard(ENGINE),
+                            THIS.rxa_dashboardMode(ENGINE, DB_MODE),
+                            THIS.rxe_activityValue(ENGINE, MODE, AT_VAL)
+                                .doOnNext(c -> LogUtil.printft("Today value is now %s", c))
+                                .map(c -> c - a)
+                                .map(Double::intValue)
+                                .doOnNext(c -> LogUtil.printft("Difference is %d", c))
+                                .filter(c -> c.equals(b))
+                                .switchIfEmpty(ENGINE.rxv_errorWithPageSource())
+                        ))))
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
