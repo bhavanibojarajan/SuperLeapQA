@@ -500,7 +500,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
      * @see ObjectUtil#nonNull(Object)
-     * @see RxUtil#concatArrayDelayEach(long, TimeUnit, Flowable[])
+     * @see RxUtil#concatDelayEach(long, TimeUnit, Flowable[])
      * @see #generalDelay(Engine)
      * @see #contentDeleteProgressDelay(Engine)
      * @see #rxe_menuDelete(Engine)
@@ -510,7 +510,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
     @SuppressWarnings("unchecked")
     default Flowable<?> rxa_deleteFromMenu(@NotNull final Engine<?> ENGINE) {
         return RxUtil
-            .concatArrayDelayEach(
+            .concatDelayEach(
                 generalDelay(ENGINE),
                 rxe_menuDelete(ENGINE).flatMap(ENGINE::rxa_click),
                 rxe_menuDeleteConfirm(ENGINE).flatMap(ENGINE::rxa_click)

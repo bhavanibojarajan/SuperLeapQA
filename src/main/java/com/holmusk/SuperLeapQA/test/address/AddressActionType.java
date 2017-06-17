@@ -7,6 +7,7 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.CollectionUtil;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
 
 import java.util.List;
@@ -52,15 +53,20 @@ public interface AddressActionType extends BaseActionType, AddressValidationType
 
     /**
      * Enter and submit address information.
-     * @param E {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #addressInfoProgressDelay(Engine)
+     * @see ObjectUtil#nonNull(Object)
      * @see #rxa_enterAddressInfo(Engine)
      * @see #rxa_submitAddress(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_completeAddressInfo(@NotNull final Engine<?> E) {
-        final AddressActionType THIS = this;
-        return rxa_enterAddressInfo(E).flatMap(a -> THIS.rxa_submitAddress(E));
+    default Flowable<?> rxa_completeAddressInfo(@NotNull Engine<?> engine) {
+        return Flowable
+            .concatArray(
+                rxa_enterAddressInfo(engine),
+                rxa_submitAddress(engine)
+            )
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
     }
 }

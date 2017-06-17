@@ -6,6 +6,7 @@ import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 
@@ -62,18 +63,22 @@ public interface GuarantorInfoActionType extends BaseActionType, GuarantorInfoVa
 
     /**
      * Complete guarantor info inputs.
-     * @param ENGINE {@link Engine} instance.
-     * @param MODE {@link UserMode} instance.
+     * @param engine {@link Engine} instance.
+     * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
+     * @see ObjectUtil#nonNull(Object)
      * @see #rxa_enterGuarantorInfo(Engine, UserMode)
      * @see #rxa_confirmGuarantorInfo(Engine, UserMode)
      */
     @NotNull
-    default Flowable<?> rxa_completeGuarantorInfo(@NotNull final Engine<?> ENGINE,
-                                                  @NotNull final UserMode MODE) {
-        final GuarantorInfoActionType THIS = this;
-
-        return rxa_enterGuarantorInfo(ENGINE, MODE)
-            .flatMap(a -> THIS.rxa_confirmGuarantorInfo(ENGINE, MODE));
+    default Flowable<?> rxa_completeGuarantorInfo(@NotNull Engine<?> engine,
+                                                  @NotNull UserMode mode) {
+        return Flowable
+            .concatArray(
+                rxa_enterGuarantorInfo(engine, mode),
+                rxa_confirmGuarantorInfo(engine, mode)
+            )
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
     }
 }

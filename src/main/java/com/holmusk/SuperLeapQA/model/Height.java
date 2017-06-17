@@ -384,10 +384,10 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
                 return 0;
 
             case FT:
-                return mode.isParent() ? 1 : 3;
+                return mode.isParent() ? 0 : 3;
 
             case CM:
-                return mode.isParent() ? 50 : 120;
+                return mode.isParent() ? 30 : 120;
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);

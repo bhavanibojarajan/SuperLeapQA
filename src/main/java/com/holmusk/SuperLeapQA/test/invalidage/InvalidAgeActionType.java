@@ -5,6 +5,7 @@ import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
 
 import java.util.List;
@@ -20,6 +21,9 @@ public interface InvalidAgeActionType extends BaseActionType, InvalidAgeValidati
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxa_randomInputs(Engine, List)
+     * @see TextInput#EMAIL
+     * @see TextInput#NAME
+     * @see TextInput#PHONE
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -47,17 +51,21 @@ public interface InvalidAgeActionType extends BaseActionType, InvalidAgeValidati
 
     /**
      * Enter and confirm invalid age inputs.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see ObjectUtil#nonNull(Object)
      * @see #rxa_enterInvalidAgeInputs(Engine)
      * @see #rxa_confirmInvalidAgeInputs(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_completeInvalidAgeInputs(@NotNull final Engine<?> ENGINE) {
-        final InvalidAgeActionType THIS = this;
-
-        return rxa_enterInvalidAgeInputs(ENGINE)
-            .flatMap(a -> THIS.rxa_confirmInvalidAgeInputs(ENGINE));
+    default Flowable<?> rxa_completeInvalidAgeInputs(@NotNull Engine<?> engine) {
+        return Flowable
+            .concatArray(
+                rxa_enterInvalidAgeInputs(engine),
+                rxa_confirmInvalidAgeInputs(engine)
+            )
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
 
     }
 
@@ -69,7 +77,7 @@ public interface InvalidAgeActionType extends BaseActionType, InvalidAgeValidati
      * @see Engine#rxa_click(WebElement)
      */
     @NotNull
-    default Flowable<?> rxa_completeInvalidAgeInput(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_acknowledgeSubscription(@NotNull final Engine<?> ENGINE) {
         return rxe_invalidAgeOk(ENGINE).flatMap(ENGINE::rxa_click);
     }
 }

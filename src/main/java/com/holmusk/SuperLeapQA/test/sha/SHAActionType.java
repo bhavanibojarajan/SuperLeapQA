@@ -32,8 +32,13 @@ public interface SHAActionType extends SHAValidationType {
 
         return Flowable.just(mode)
             .filter(UserMode::isTeen)
-            .flatMap(a -> PARTICIPATING ?
-                THIS.rxe_shaYes(ENGINE) : THIS.rxe_shaNo(ENGINE))
+            .flatMap(a -> {
+                if (PARTICIPATING) {
+                    return THIS.rxe_shaYes(ENGINE);
+                } else {
+                    return THIS.rxe_shaNo(ENGINE);
+                }
+            })
             .flatMap(ENGINE::rxa_click)
             .map(BooleanUtil::toTrue)
             .defaultIfEmpty(true)

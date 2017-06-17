@@ -73,6 +73,7 @@ public final class GeneralTest {
 
         // When & Then
         LogUtil.printlnt(TextInput.PASSWORD.inputViewXP(helper));
+        LogUtil.printlnt(TextInput.POSTAL_CODE.inputViewXP(helper));
     }
 
     @Test

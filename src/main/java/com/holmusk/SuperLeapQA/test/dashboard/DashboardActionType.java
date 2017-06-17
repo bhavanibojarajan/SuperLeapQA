@@ -9,6 +9,7 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.param.DirectionParam;
@@ -120,6 +121,7 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      * @param E {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see ObjectUtil#nonNull(Object)
+     * @see RxUtil#concatDelayEach(long, Flowable[])
      * @see #generalDelay(Engine)
      * @see #rxa_openCardAddMenu(Engine)
      * @see #rxa_dismissCardAddMenu(Engine)
@@ -127,6 +129,7 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      * @see #NOT_AVAILABLE
      */
     @NotNull
+    @SuppressWarnings("unchecked")
     default Flowable<?> rxa_dismissDashboardTutorial(@NotNull final Engine<?> E) {
         final DashboardActionType THIS = this;
 
@@ -136,9 +139,12 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
                 .map(BooleanUtil::toTrue)
                 .onErrorReturnItem(true);
         } else if (E instanceof IOSEngine) {
-            return Flowable
-                .concat(rxa_openCardAddMenu(E), rxa_dismissCardAddMenu(E))
-                .delay(generalDelay(E), TimeUnit.MILLISECONDS)
+            return RxUtil
+                .concatDelayEach(
+                    generalDelay(E),
+                    rxa_openCardAddMenu(E).ofType(Object.class),
+                    rxa_dismissCardAddMenu(E).ofType(Object.class)
+                )
                 .all(ObjectUtil::nonNull)
                 .toFlowable();
         } else {

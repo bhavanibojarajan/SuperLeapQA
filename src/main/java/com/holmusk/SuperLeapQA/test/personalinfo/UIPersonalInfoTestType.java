@@ -149,8 +149,8 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
         // When
         THIS.rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
             .concatMapIterable(a -> TEXT_INFO)
-            .concatMap(a -> THIS.rxa_input(ENGINE, a, INPUTS.get(a.toString())))
-            .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
+            .flatMap(a -> THIS.rxa_input(ENGINE, a, INPUTS.get(a.toString())))
+            .flatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
 
             /* We use toList here because we want to intercept the empty
              * event as well */

@@ -502,7 +502,7 @@ public interface UIScreenValidationTestType extends
 
     /**
      * This test builds upon
-     * {@link UIPersonalInfoTestType#test_guarantorNeeded_requiresParentInfo(UserMode)},
+     * {@link UIPersonalInfoTestType#test_guarantorNeeded_requiresGuarantorInfo(UserMode)},
      * but also provides validations for {@link Screen#DASHBOARD}. It will
      * check {@link Screen#USE_APP_NOW} and {@link Screen#DASHBOARD_TUTORIAL}
      * as well.

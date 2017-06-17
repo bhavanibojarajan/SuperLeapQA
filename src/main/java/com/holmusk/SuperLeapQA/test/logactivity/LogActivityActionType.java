@@ -9,7 +9,4 @@ import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 public interface LogActivityActionType extends
     BaseActionType,
     LogActivityValidationType,
-    HMCircleScrollActionType
-{
-
-}
+    HMCircleScrollActionType {}

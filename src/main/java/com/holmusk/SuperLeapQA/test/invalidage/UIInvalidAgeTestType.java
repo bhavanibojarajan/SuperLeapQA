@@ -56,7 +56,7 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
      * @see #engine()
      * @see #generalUserModeProvider()
      * @see #invalidAgeInputProgressDelay(Engine)
-     * @see #rxa_completeInvalidAgeInput(Engine)
+     * @see #rxa_acknowledgeSubscription(Engine)
      * @see #rxa_randomInput(Engine, HMTextType)
      * @see #rxa_makeNextInputVisible(Engine, WebElement)
      * @see #rxa_navigate(UserMode, Screen...)
@@ -84,7 +84,7 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
             .toFlowable()
             .flatMap(a -> THIS.rxa_confirmInvalidAgeInputs(ENGINE))
             .flatMap(a -> THIS.rxv_invalidAgeInputConfirmed(ENGINE))
-            .flatMap(a -> THIS.rxa_completeInvalidAgeInput(ENGINE))
+            .flatMap(a -> THIS.rxa_acknowledgeSubscription(ENGINE))
             .subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

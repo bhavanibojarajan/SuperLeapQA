@@ -7,6 +7,7 @@ import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputHelperType;
 
@@ -54,19 +55,22 @@ public interface ChatActionType extends BaseActionType, ChatValidationType {
 
     /**
      * Type and send a chat message.
-     * @param E {@link Engine} instance.
-     * @param MSG {@link String} chat message.
+     * @param engine {@link Engine} instance.
+     * @param msg {@link String} chat message.
      * @return {@link Flowable} instance.
      * @see TextInput#MEAL_COMMENT
      * @see #rxa_sendChat(Engine)
      * @see #rxe_editField(Engine, HMInputType)
      */
     @NotNull
-    default Flowable<?> rxa_postChat(@NotNull final Engine<?> E,
-                                     @NotNull final String MSG) {
-        final ChatActionType THIS = this;
+    default Flowable<?> rxa_postChat(@NotNull Engine<?> engine,
+                                     @NotNull String msg) {
         HMTextType input = TextInput.MEAL_COMMENT;
-        return THIS.rxa_input(E, input, MSG).flatMap(a -> THIS.rxa_sendChat(E));
+
+        return Flowable
+            .concatArray(rxa_input(engine, input, msg), rxa_sendChat(engine))
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
     }
 
     /**

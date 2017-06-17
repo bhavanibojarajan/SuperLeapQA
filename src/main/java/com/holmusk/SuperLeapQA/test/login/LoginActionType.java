@@ -8,9 +8,11 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.Zip;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -73,17 +75,20 @@ public interface LoginActionType extends BaseActionType, LoginValidationType {
 
     /**
      * Enter and confirm login credentials.
-     * @param E {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @param inputs {@link List} of {@link Zip}.
      * @return {@link Flowable} instance.
+     * @see ObjectUtil#nonNull(Object)
      * @see #rxa_inputs(Engine, List)
      * @see #rxa_confirmLogin(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_login(@NotNull final Engine<?> E,
+    default Flowable<?> rxa_login(@NotNull Engine<?> engine,
                                   @NotNull List<Zip<HMTextType,String>> inputs) {
-        final LoginActionType THIS = this;
-        return rxa_inputs(E, inputs).flatMap(a -> THIS.rxa_confirmLogin(E));
+        return Flowable
+            .concatArray(rxa_inputs(engine, inputs), rxa_confirmLogin(engine))
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
     }
 
     /**

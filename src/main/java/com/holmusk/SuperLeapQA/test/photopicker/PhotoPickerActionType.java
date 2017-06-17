@@ -64,17 +64,15 @@ public interface PhotoPickerActionType extends BaseActionType, PhotoPickerValida
      */
     @NotNull
     default Flowable<?> rxa_selectRandomPhoto(@NotNull final Engine<?> ENGINE) {
-        return Flowable
-            .zip(
-                rxe_imageViews(ENGINE).count()
-                    .map(Long::intValue)
-                    .map(new Random()::nextInt)
-                    .toFlowable(),
+        return Flowable.zip(
+            rxe_imageViews(ENGINE).count()
+                .map(Long::intValue)
+                .map(new Random()::nextInt)
+                .toFlowable(),
 
-                rxe_imageViews(ENGINE).toList().toFlowable(),
-                (a, b) -> ENGINE.rxa_click(b.get(a))
-            )
-            .flatMap(a -> a);
+            rxe_imageViews(ENGINE).toList().toFlowable(),
+            (a, b) -> ENGINE.rxa_click(b.get(a))
+        ).flatMap(a -> a);
     }
 
     /**
@@ -93,10 +91,10 @@ public interface PhotoPickerActionType extends BaseActionType, PhotoPickerValida
         final PhotoPickerActionType THIS = this;
 
         return rxa_selectPickerMode(ENGINE, PhotoPickerMode.LIBRARY)
-            .flatMap(a -> Flowable.range(0, PHOTO_COUNT))
-            .concatMap(a -> THIS.rxa_selectRandomPhoto(ENGINE))
-            .all(ObjectUtil::nonNull)
-            .toFlowable();
+            .flatMap(a -> Flowable.range(0, PHOTO_COUNT)
+                .concatMap(b -> THIS.rxa_selectRandomPhoto(ENGINE))
+                .all(ObjectUtil::nonNull)
+                .toFlowable());
     }
 
     /**

@@ -99,9 +99,14 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
                 .all(ObjectUtil::nonNull)
                 .toFlowable();
         } else if (ENGINE instanceof IOSEngine) {
-            return rxa_openPhotoPicker(ENGINE, 0)
-                .flatMap(a -> THIS.rxa_selectLibraryPhotos(ENGINE, COUNT))
-                .flatMap(a -> THIS.rxa_confirmPhoto(ENGINE));
+            return Flowable
+                .concatArray(
+                    rxa_openPhotoPicker(ENGINE, 0),
+                    rxa_selectLibraryPhotos(ENGINE, COUNT),
+                    rxa_confirmPhoto(ENGINE)
+                )
+                .all(ObjectUtil::nonNull)
+                .toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

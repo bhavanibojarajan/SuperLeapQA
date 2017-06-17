@@ -39,18 +39,24 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_hideKeyboard()
+     * @see ObjectUtil#nonNull(Object)
      * @see UserMode#personalInfo(PlatformType)
      * @see #rxa_randomInputs(Engine, List)
      * @see #rxa_toggleTC(Engine, boolean)
      */
     @NotNull
-    default Flowable<?> rxa_enterPersonalInfo(@NotNull final Engine<?> ENGINE,
+    default Flowable<?> rxa_enterPersonalInfo(@NotNull Engine<?> engine,
                                               @NotNull UserMode mode) {
         final PersonalInfoActionType THIS = this;
-        PlatformType platform = ENGINE.platform();
+        PlatformType platform = engine.platform();
 
-        return rxa_randomInputs(ENGINE, mode.personalInfo(platform))
-            .flatMap(a -> THIS.rxa_toggleTC(ENGINE, true));
+        return Flowable
+            .concatArray(
+                rxa_randomInputs(engine, mode.personalInfo(platform)),
+                rxa_toggleTC(engine, true)
+            )
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
     }
 
     /**
@@ -70,7 +76,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
 
     /**
      * Enter and confirm personal info.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
      * @see ObjectUtil#nonNull(Object)
@@ -78,14 +84,12 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @see #rxa_confirmPersonalInfo(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_completePersonalInfo(@NotNull final Engine ENGINE,
+    default Flowable<?> rxa_completePersonalInfo(@NotNull Engine engine,
                                                  @NotNull UserMode mode) {
-        final PersonalInfoActionType THIS = this;
-
         return Flowable
             .concatArray(
-                rxa_enterPersonalInfo(ENGINE, mode),
-                rxa_confirmPersonalInfo(ENGINE)
+                rxa_enterPersonalInfo(engine, mode),
+                rxa_confirmPersonalInfo(engine)
             )
             .all(ObjectUtil::nonNull)
             .toFlowable();

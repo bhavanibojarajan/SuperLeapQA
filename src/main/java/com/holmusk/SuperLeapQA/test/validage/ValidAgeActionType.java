@@ -35,29 +35,34 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * Select a {@link Gender}. We need a separate method for this action
      * because the flow differs between {@link Platform#ANDROID} and
      * {@link Platform#IOS}.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @param gender {@link Gender} instance.
      * @return {@link Flowable} instance.
      * @see ChoiceInput#GENDER
      * @see Gender#stringValue(InputHelperType)
+     * @see ObjectUtil#nonNull(Object)
      * @see #rxa_clickInput(Engine, HMInputType)
      * @see #rxa_selectChoice(Engine, HMChoiceType, String)
      * @see #rxa_confirmTextChoice(Engine)
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<?> rxa_selectGender(@NotNull final Engine<?> ENGINE,
+    default Flowable<?> rxa_selectGender(@NotNull Engine<?> engine,
                                          @NotNull Gender gender) {
-        if (ENGINE instanceof AndroidEngine) {
-            return rxa_clickInput(ENGINE, gender);
-        } else if (ENGINE instanceof IOSEngine) {
-            final ValidAgeActionType THIS = this;
-            final HMChoiceType CHOICE = ChoiceInput.GENDER;
-            final String STR = gender.stringValue(ENGINE);
+        if (engine instanceof AndroidEngine) {
+            return rxa_clickInput(engine, gender);
+        } else if (engine instanceof IOSEngine) {
+            HMChoiceType choice = ChoiceInput.GENDER;
+            String genderString = gender.stringValue(engine);
 
-            return rxa_clickInput(ENGINE, CHOICE)
-                .flatMap(a -> THIS.rxa_selectChoice(ENGINE, CHOICE, STR))
-                .flatMap(a -> THIS.rxa_confirmTextChoice(ENGINE));
+            return Flowable
+                .concatArray(
+                    rxa_clickInput(engine, choice),
+                    rxa_selectChoice(engine, choice, genderString),
+                    rxa_confirmTextChoice(engine)
+                )
+                .all(ObjectUtil::nonNull)
+                .toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -82,9 +87,9 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * Therefore, we need to select the mode first before opening the picker.
      * On {@link Platform#IOS}, the choice mode is within the picker, so we
      * need to open the picker first, then select the mode.
-     * @param ENGINE {@link Engine} instance.
-     * @param CHOICE {@link HMChoiceType} instance.
-     * @param NUMERIC {@link SLNumericChoiceType} instance.
+     * @param engine {@link Engine} instance.
+     * @param choice {@link HMChoiceType} instance.
+     * @param numeric {@link SLNumericChoiceType} instance.
      * @return {@link Flowable} instance.
      * @see ObjectUtil#nonNull(Object)
      * @see #rxa_clickInput(Engine, HMInputType)
@@ -93,25 +98,25 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
     @NotNull
     @SuppressWarnings("unchecked")
     default Flowable<?> rxa_selectUnitSystemPicker(
-        @NotNull final Engine<?> ENGINE,
-        @NotNull final HMChoiceType CHOICE,
-        @NotNull final SLNumericChoiceType NUMERIC
+        @NotNull Engine<?> engine,
+        @NotNull HMChoiceType choice,
+        @NotNull SLNumericChoiceType numeric
     ) {
-        if (ENGINE instanceof AndroidEngine) {
+        if (engine instanceof AndroidEngine) {
             return RxUtil
-                .concatArrayDelayEach(
-                    generalDelay(ENGINE),
-                    rxa_clickInput(ENGINE, NUMERIC),
-                    rxa_clickInput(ENGINE, CHOICE)
+                .concatDelayEach(
+                    generalDelay(engine),
+                    rxa_clickInput(engine, numeric),
+                    rxa_clickInput(engine, choice)
                 )
                 .all(ObjectUtil::nonNull)
                 .toFlowable();
-        } else if (ENGINE instanceof IOSEngine) {
+        } else if (engine instanceof IOSEngine) {
             return RxUtil
-                .concatArrayDelayEach(
-                    generalDelay(ENGINE),
-                    rxa_clickInput(ENGINE, CHOICE),
-                    rxa_clickInput(ENGINE, NUMERIC)
+                .concatDelayEach(
+                    generalDelay(engine),
+                    rxa_clickInput(engine, choice),
+                    rxa_clickInput(engine, numeric)
                 )
                 .all(ObjectUtil::nonNull)
                 .toFlowable();
@@ -160,7 +165,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#PERSONAL_INFO}.
      * When the user is {@link UserMode#isParent()}, he/she needs to enter the
      * child's name and NRIC as well.
-     * @param E {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @param validBMI {@link Boolean} value. If this is true, we will select
      *                  height and weight such that the calculated BMI value
@@ -195,19 +200,18 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      */
     @NotNull
     @SuppressWarnings({"unchecked", "ConstantConditions"})
-    default Flowable<?> rxa_enterValidAgeInputs(@NotNull final Engine<?> E,
+    default Flowable<?> rxa_enterValidAgeInputs(@NotNull Engine<?> engine,
                                                 @NotNull UserMode mode,
                                                 boolean validBMI) {
-        final ValidAgeActionType THIS = this;
-        PlatformType platform = E.platform();
+        PlatformType platform = engine.platform();
         UnitSystem unit = CollectionUtil.randomElement(UnitSystem.values());
-        final Gender GENDER = CollectionUtil.randomElement(Gender.values());
-        final Ethnicity ETH = CollectionUtil.randomElement(Ethnicity.values());
-        final CoachPref CP = CollectionUtil.randomElement(CoachPref.values());
-        final ChoiceInput C_HEIGHT = ChoiceInput.HEIGHT;
-        final ChoiceInput C_WEIGHT = ChoiceInput.WEIGHT;
-        final ChoiceInput C_ETH = ChoiceInput.ETHNICITY;
-        final ChoiceInput C_COACH = ChoiceInput.COACH_PREF;
+        Gender gender = CollectionUtil.randomElement(Gender.values());
+        Ethnicity ethnicity = CollectionUtil.randomElement(Ethnicity.values());
+        CoachPref coachPref = CollectionUtil.randomElement(CoachPref.values());
+        ChoiceInput cHeight = ChoiceInput.HEIGHT;
+        ChoiceInput cWeight = ChoiceInput.WEIGHT;
+        ChoiceInput cEthnicity = ChoiceInput.ETHNICITY;
+        ChoiceInput cCoach = ChoiceInput.COACH_PREF;
 
         List<Zip<Height,String>> height;
         List<Zip<Weight,String>> weight;
@@ -220,8 +224,8 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
             weight = Weight.random(platform, mode, unit);
 
             param = BMIParam.builder()
-                .withEthnicity(ETH)
-                .withGender(GENDER)
+                .withEthnicity(ethnicity)
+                .withGender(gender)
                 .withHeight(height)
                 .withWeight(weight)
                 .build();
@@ -238,60 +242,72 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
             param.bmi()
         );
 
-        final Height H_MODE = height.get(0).A;
-        final Weight W_MODE = weight.get(0).A;
-        final List<Zip<Height,String>> HEIGHT = height;
-        final List<Zip<Weight,String>> WEIGHT = weight;
+        Height hMode = height.get(0).A;
+        Weight wMode = weight.get(0).A;
 
-        return rxa_randomInputs(E, mode.validAgeInfo(platform))
+        return Flowable
+            .concatArray(
+                rxa_randomInputs(engine, mode.validAgeInfo(platform)),
 
-            /* Select gender */
-            .flatMap(a -> THIS.rxa_selectGender(E, GENDER))
+                /* Select gender */
+                rxa_selectGender(engine, gender),
 
-            /* Select unit system and height */
-            .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_HEIGHT, H_MODE))
-            .flatMap(a -> THIS.rxa_selectChoice(E, HEIGHT))
-            .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
+                /* Select unit system and height */
+                rxa_selectUnitSystemPicker(engine, cHeight, hMode),
+                rxa_selectChoice(engine, height),
+                rxa_confirmNumericChoice(engine),
 
-            /* Select unit system and weight */
-            .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_WEIGHT, W_MODE))
-            .flatMap(a -> THIS.rxa_selectChoice(E, WEIGHT))
-            .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
+                /* Select unit system and weight */
+                rxa_selectUnitSystemPicker(engine, cWeight, wMode),
+                rxa_selectChoice(engine, weight),
+                rxa_confirmNumericChoice(engine),
 
-            /* Select ethnicity */
-            .flatMap(a -> THIS.rxa_clickInput(E, C_ETH))
-            .flatMap(a -> THIS.rxa_selectChoice(E, C_ETH, ETH.stringValue(E)))
-            .flatMap(a -> THIS.rxa_confirmTextChoice(E))
+                /* Select ethnicity */
+                rxa_clickInput(engine, cEthnicity),
+                rxa_selectChoice(engine, cEthnicity, ethnicity.stringValue(engine)),
+                rxa_confirmTextChoice(engine),
 
-            /* Select coach preference */
-            .flatMap(a -> THIS.rxa_clickInput(E, C_COACH))
-            .flatMap(a -> THIS.rxa_selectChoice(E, C_COACH, CP.stringValue(E)))
-            .flatMap(a -> THIS.rxa_confirmTextChoice(E));
+                /* Select coach preference */
+                rxa_clickInput(engine, cCoach),
+                rxa_selectChoice(engine, cCoach, coachPref.stringValue(engine)),
+                rxa_confirmTextChoice(engine)
+            )
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
     }
 
     /**
      * Enter and confirm valid age inputs.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @param validBMI {@link Boolean} value.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_navigateBackOnce()
+     * @see ObjectUtil#nonNull(Object)
      * @see #rxa_enterValidAgeInputs(Engine, UserMode, boolean)
      * @see #rxa_scrollToBottom(Engine)
      * @see #rxa_confirmValidAgeInputs(Engine)
      * @see #rxv_dialogBlockingScreen(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_completeValidAgeInputs(@NotNull final Engine<?> ENGINE,
+    default Flowable<?> rxa_completeValidAgeInputs(@NotNull Engine<?> engine,
                                                    @NotNull UserMode mode,
                                                    boolean validBMI) {
-        final ValidAgeActionType THIS = this;
-
-        return rxa_enterValidAgeInputs(ENGINE, mode, validBMI)
-            .flatMap(a -> THIS.rxa_scrollToBottom(ENGINE))
-            .flatMap(a -> THIS.rxv_dialogBlockingScreen(ENGINE))
-            .flatMap(a -> a ? ENGINE.rxa_navigateBackOnce() : Flowable.just(true))
-            .flatMap(a -> THIS.rxa_confirmValidAgeInputs(ENGINE));
+        return Flowable
+            .concatArray(
+                rxa_enterValidAgeInputs(engine, mode, validBMI),
+                rxa_scrollToBottom(engine),
+                rxv_dialogBlockingScreen(engine).flatMap(a -> {
+                    if (a) {
+                        return engine.rxa_navigateBackOnce();
+                    } else {
+                        return Flowable.just(true);
+                    }
+                }),
+                rxa_confirmValidAgeInputs(engine)
+            )
+            .all(ObjectUtil::nonNull)
+            .toFlowable();
     }
 
     /**
