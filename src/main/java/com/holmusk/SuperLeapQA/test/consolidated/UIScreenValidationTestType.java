@@ -9,6 +9,7 @@ import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import com.holmusk.SuperLeapQA.test.personalinfo.UIPersonalInfoTestType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
+import org.intellij.lang.annotations.Flow;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
@@ -38,9 +39,10 @@ public interface UIScreenValidationTestType extends
     /**
      * This test validates {@link Screen#WELCOME} by checking that all
      * {@link org.openqa.selenium.WebElement} are visible.
+     * @see ObjectUtil#nonNull(Object)
+     * @see UserMode#defaultUserMode()*
      * @see Screen#SPLASH
      * @see Screen#WELCOME
-     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
@@ -56,9 +58,10 @@ public interface UIScreenValidationTestType extends
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.WELCOME)
-            .flatMap(a -> THIS.rxv_welcomeScreen(ENGINE))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.WELCOME),
+            rxv_welcomeScreen(ENGINE)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -70,9 +73,10 @@ public interface UIScreenValidationTestType extends
      * Check that {@link Screen#LOGIN} has valid
      * {@link org.openqa.selenium.WebElement}, by checking their visibility
      * and interacting with them.
+     * @see ObjectUtil#nonNull(Object)
+     * @see UserMode#defaultUserMode()*
      * @see Screen#SPLASH
      * @see Screen#LOGIN
-     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
@@ -88,9 +92,10 @@ public interface UIScreenValidationTestType extends
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN)
-            .flatMap(a -> THIS.rxv_loginScreen(ENGINE))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN),
+            rxv_loginScreen(ENGINE)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -102,9 +107,10 @@ public interface UIScreenValidationTestType extends
      * Verify that {@link Screen#FORGOT_PASSWORD} has valid
      * {@link org.openqa.selenium.WebElement} by checking their visibility
      * and interacting with them.
+     * @see ObjectUtil#nonNull(Object)
+     * @see UserMode#defaultUserMode()
      * @see Screen#SPLASH
      * @see Screen#FORGOT_PASSWORD
-     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
@@ -114,15 +120,15 @@ public interface UIScreenValidationTestType extends
     @SuppressWarnings("unchecked")
     default void test_forgotPassword_isValidScreen() {
         // Setup
-        final UIScreenValidationTestType THIS = this;
-        final Engine<?> ENGINE = engine();
+        Engine<?> engine = engine();
         UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.FORGOT_PASSWORD)
-            .flatMap(a -> THIS.rxv_forgotPassword(ENGINE))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.FORGOT_PASSWORD),
+            rxv_forgotPassword(engine)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -134,10 +140,11 @@ public interface UIScreenValidationTestType extends
      * This test validates that {@link Screen#REGISTER} contains the correct
      * {@link org.openqa.selenium.WebElement} by checking their visibility,
      * and then navigate back once to check {@link Screen#WELCOME}.
+     * @see ObjectUtil#nonNull(Object)
+     * @see UserMode#defaultUserMode()
      * @see Screen#SPLASH
      * @see Screen#REGISTER
      * @see Screen#WELCOME
-     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
@@ -149,19 +156,17 @@ public interface UIScreenValidationTestType extends
     @SuppressWarnings("unchecked")
     default void test_register_isValidScreen() {
         // Setup
-        final UIScreenValidationTestType THIS = this;
-        final Engine<?> ENGINE = engine();
+        Engine<?> engine = engine();
         UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.REGISTER)
-            .flatMap(a -> THIS.rxv_registerScreen(ENGINE))
-
-            /* Make sure the back button works */
-            .flatMap(a -> THIS.rxa_clickBackButton(ENGINE))
-            .flatMap(a -> THIS.rxv_welcomeScreen(ENGINE))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.REGISTER),
+            rxv_registerScreen(engine),
+            rxa_clickBackButton(engine),
+            rxv_welcomeScreen(engine)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -196,25 +201,24 @@ public interface UIScreenValidationTestType extends
     )
     default void test_DoBPicker_isValidScreen(@NotNull UserMode mode) {
         // Setup
-        final UIScreenValidationTestType THIS = this;
-        final Engine<?> ENGINE = engine();
+        Engine<?> engine = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.DOB)
-            .flatMap(a -> Flowable.mergeArray(
-                ENGINE.rxe_containsText("register_title_dateOfBirth"),
-                ENGINE.rxe_containsText(
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.DOB),
+
+            Flowable.mergeArray(
+                engine.rxe_containsText("register_title_dateOfBirth"),
+                engine.rxe_containsText(
                     "parentSignUp_title_whatIsYourChild",
                     "teenSignUp_title_whatIsYour"
                 )
-            ))
-            .all(ObjectUtil::nonNull)
-            .toFlowable()
-            .flatMap(a -> THIS.rxa_openDoBPicker(ENGINE))
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
-            .flatMap(a -> ENGINE.rxa_navigateBackOnce())
-            .subscribe(subscriber);
+            ).all(ObjectUtil::nonNull).toFlowable(),
+
+            rxa_openDoBPicker(engine),
+            engine.rxa_navigateBackOnce()
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -230,6 +234,7 @@ public interface UIScreenValidationTestType extends
      * picker.
      * @param MODE {@link UserMode} instance.
      * @see NumberUtil#randomBetween(int, int)
+     * @see ObjectUtil#nonNull(Object)
      * @see UserMode#maxCategoryValidAge()
      * @see Calendar#DAY_OF_MONTH
      * @see Calendar#MONTH
@@ -254,8 +259,7 @@ public interface UIScreenValidationTestType extends
     )
     default void test_DoBPickerDialog_isValidScreen(@NotNull final UserMode MODE) {
         // Setup
-        final UIScreenValidationTestType THIS = this;
-        final Engine<?> ENGINE = engine();
+        Engine<?> engine = engine();
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, NumberUtil.randomBetween(1, 28));
         calendar.set(Calendar.MONTH, NumberUtil.randomBetween(0, 11));
@@ -265,20 +269,18 @@ public interface UIScreenValidationTestType extends
         int cYear = calendar.get(Calendar.YEAR);
         int mYear = cYear - MODE.maxCategoryValidAge();
         calendar.set(Calendar.YEAR, NumberUtil.randomBetween(mYear, cYear));
-
-        final Date DATE = calendar.getTime();
+        Date date = calendar.getTime();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(MODE, Screen.SPLASH, Screen.DOB)
-            .flatMap(a -> THIS.rxa_openDoBPicker(ENGINE))
-            .flatMap(a -> THIS.rxa_selectDoB(ENGINE, DATE))
-            .flatMap(a -> THIS.rxa_confirmDoB(ENGINE))
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
-            .flatMap(a -> THIS.rxa_clickBackButton(ENGINE))
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
-            .flatMap(a -> THIS.rxv_DoBEditFieldHasDate(ENGINE, DATE))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(MODE, Screen.SPLASH, Screen.DOB),
+            rxa_openDoBPicker(engine),
+            rxa_selectDoB(engine, date),
+            rxa_confirmDoB(engine),
+            rxa_clickBackButton(engine),
+            rxv_DoBEditFieldHasDate(engine, date)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -292,6 +294,7 @@ public interface UIScreenValidationTestType extends
      * submit button without filling in required inputs, and check that
      * it should fail.
      * @param mode {@link UserMode} instance.
+     * @see ObjectUtil#nonNull(Object)
      * @see Screen#SPLASH
      * @see Screen#INVALID_AGE
      * @see #assertCorrectness(TestSubscriber)
@@ -308,15 +311,15 @@ public interface UIScreenValidationTestType extends
     )
     default void test_invalidAgeInputs_isValidScreen(@NotNull UserMode mode) {
         // Setup
-        final UIScreenValidationTestType THIS = this;
-        final Engine<?> ENGINE = engine();
+        Engine<?> ENGINE = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.INVALID_AGE)
-            .flatMap(a -> THIS.rxa_confirmInvalidAgeInputs(ENGINE))
-            .flatMap(a -> THIS.rxa_clickInput(ENGINE, TextInput.NAME))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.INVALID_AGE),
+            rxa_confirmInvalidAgeInputs(ENGINE),
+            rxa_clickInput(ENGINE, TextInput.NAME)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -343,6 +346,8 @@ public interface UIScreenValidationTestType extends
      * @see CollectionUtil#randomElement(Object[])
      * @see Engine#platform()
      * @see Ethnicity#values()
+     * @see ObjectUtil#nonNull(Object)
+     * @see UserMode#validAgeInfo(PlatformType)
      * @see Height#CM
      * @see Height#CM_DEC
      * @see Height#FT
@@ -359,7 +364,6 @@ public interface UIScreenValidationTestType extends
      * @see Screen#VALID_AGE
      * @see UnitSystem#IMPERIAL
      * @see UnitSystem#METRIC
-     * @see UserMode#validAgeInfo(PlatformType)
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #generalUserModeProvider()
@@ -379,70 +383,67 @@ public interface UIScreenValidationTestType extends
     )
     default void test_validAgeInputs_isValidScreen(@NotNull final UserMode MODE) {
         // Setup
-        final UIScreenValidationTestType THIS = this;
-        final Engine<?> E = engine();
-        PlatformType p = E.platform();
+        Engine<?> engine = engine();
+        PlatformType platform = engine.platform();
         UnitSystem metric = UnitSystem.METRIC;
         UnitSystem imperial = UnitSystem.IMPERIAL;
-        final List<HMTextType> INPUTS = MODE.validAgeInfo(p);
-        final ChoiceInput C_HEIGHT = ChoiceInput.HEIGHT;
-        final ChoiceInput C_WEIGHT = ChoiceInput.WEIGHT;
-        final ChoiceInput C_ETH = ChoiceInput.ETHNICITY;
-        final ChoiceInput C_COACH = ChoiceInput.COACH_PREF;
-        final List<Zip<Height,String>> HEIGHT_M = Height.random(p, MODE, metric);
-        final List<Zip<Height,String>> HEIGHT_I = Height.random(p, MODE, imperial);
-        final List<Zip<Weight,String>> WEIGHT_M = Weight.random(p, MODE, metric);
-        final List<Zip<Weight,String>> WEIGHT_I = Weight.random(p, MODE, imperial);
-        final String HEIGHT_M_STR = Height.stringValue(p, metric, HEIGHT_M);
-        final String HEIGHT_I_STR = Height.stringValue(p, imperial, HEIGHT_I);
-        final String WEIGHT_M_STR = Weight.stringValue(p, metric, WEIGHT_M);
-        final String WEIGHT_I_STR = Weight.stringValue(p, imperial, WEIGHT_I);
-        final Ethnicity ETH = CollectionUtil.randomElement(Ethnicity.values());
-        final CoachPref CP = CollectionUtil.randomElement(CoachPref.values());
+        List<HMTextType> inputs = MODE.validAgeInfo(platform);
+        List<Zip<Height,String>> heightM = Height.random(platform, MODE, metric);
+        List<Zip<Height,String>> heightI = Height.random(platform, MODE, imperial);
+        List<Zip<Weight,String>> weightM = Weight.random(platform, MODE, metric);
+        List<Zip<Weight,String>> weightI = Weight.random(platform, MODE, imperial);
+        String heightMStr = Height.stringValue(platform, metric, heightM);
+        String heightIStr = Height.stringValue(platform, imperial, heightI);
+        String weightMStr = Weight.stringValue(platform, metric, weightM);
+        String weightIStr = Weight.stringValue(platform, imperial, weightI);
+        Ethnicity ethnicity = CollectionUtil.randomElement(Ethnicity.values());
+        CoachPref coachPref = CollectionUtil.randomElement(CoachPref.values());
+        String selectedEth = ethnicity.stringValue(engine);
+        String selectedCP = coachPref.stringValue(engine);
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
-        // When
-        rxa_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE)
+        Flowable.concatArray(
+            rxa_navigate(MODE, Screen.SPLASH, Screen.VALID_AGE),
+
             /* Select gender */
-            .flatMap(a -> THIS.rxa_selectGender(E, Gender.MALE))
-            .flatMap(a -> THIS.rxa_selectGender(E, Gender.FEMALE))
+            rxa_selectGender(engine, Gender.MALE),
+            rxa_selectGender(engine, Gender.FEMALE),
 
             /* Select metric unit system for height selection */
-            .flatMap(a -> THIS.rxa_randomInputs(E, INPUTS))
-            .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_HEIGHT, Height.CM))
-            .flatMap(a -> THIS.rxa_selectChoice(E, HEIGHT_M))
-            .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
-            .flatMap(a -> THIS.rxv_hasValue(E, C_HEIGHT, HEIGHT_M_STR))
+            rxa_randomInputs(engine, inputs),
+            rxa_selectUnitSystemPicker(engine, ChoiceInput.HEIGHT, Height.CM),
+            rxa_selectChoice(engine, heightM),
+            rxa_confirmNumericChoice(engine),
+            rxv_hasValue(engine, ChoiceInput.HEIGHT, heightMStr),
 
             /* Select imperial unit system for height selection */
-            .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_HEIGHT, Height.FT))
-            .flatMap(a -> THIS.rxa_selectChoice(E, HEIGHT_I))
-            .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
-            .flatMap(a -> THIS.rxv_hasValue(E, C_HEIGHT, HEIGHT_I_STR))
+            rxa_selectUnitSystemPicker(engine, ChoiceInput.HEIGHT, Height.FT),
+            rxa_selectChoice(engine, heightI),
+            rxa_confirmNumericChoice(engine),
+            rxv_hasValue(engine, ChoiceInput.HEIGHT, heightIStr),
 
             /* Select metric unit system for weight selection */
-            .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_WEIGHT, Weight.KG))
-            .flatMap(a -> THIS.rxa_selectChoice(E, WEIGHT_M))
-            .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
-            .flatMap(a -> THIS.rxv_hasValue(E, C_WEIGHT, WEIGHT_M_STR))
+            rxa_selectUnitSystemPicker(engine, ChoiceInput.WEIGHT, Weight.KG),
+            rxa_selectChoice(engine, weightM),
+            rxa_confirmNumericChoice(engine),
+            rxv_hasValue(engine, ChoiceInput.WEIGHT, weightMStr),
 
             /* Select imperial unit system for weight selection */
-            .flatMap(a -> THIS.rxa_selectUnitSystemPicker(E, C_WEIGHT, Weight.LB))
-            .flatMap(a -> THIS.rxa_selectChoice(E, WEIGHT_I))
-            .flatMap(a -> THIS.rxa_confirmNumericChoice(E))
-            .flatMap(a -> THIS.rxv_hasValue(E, C_WEIGHT, WEIGHT_I_STR))
+            rxa_selectUnitSystemPicker(engine, ChoiceInput.WEIGHT, Weight.LB),
+            rxa_selectChoice(engine, weightI),
+            rxa_confirmNumericChoice(engine),
+            rxv_hasValue(engine, ChoiceInput.WEIGHT, weightIStr),
 
             /* Select ethnicity */
-            .flatMap(a -> THIS.rxa_clickInput(E, C_ETH))
-            .flatMap(a -> THIS.rxa_selectChoice(E, C_ETH, ETH.stringValue(E)))
-            .flatMap(a -> THIS.rxa_confirmTextChoice(E))
+            rxa_clickInput(engine, ChoiceInput.ETHNICITY),
+            rxa_selectChoice(engine, ChoiceInput.ETHNICITY, selectedEth),
+            rxa_confirmTextChoice(engine),
 
             /* Select coach preference */
-            .flatMap(a -> THIS.rxa_clickInput(E, C_COACH))
-            .flatMap(a -> THIS.rxa_selectChoice(E, C_COACH, CP.stringValue(E)))
-            .flatMap(a -> THIS.rxa_confirmTextChoice(E))
-
-            .subscribe(subscriber);
+            rxa_clickInput(engine, ChoiceInput.COACH_PREF),
+            rxa_selectChoice(engine, ChoiceInput.COACH_PREF, selectedCP),
+            rxa_confirmTextChoice(engine)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -460,9 +461,9 @@ public interface UIScreenValidationTestType extends
      * @see Engine#rxa_toggleNextOrFinishInput(WebElement)
      * @see Engine#rxa_togglePasswordMask(WebElement)
      * @see ObjectUtil#nonNull(Object)
+     * @see UserMode#personalInfo(PlatformType)
      * @see Screen#SPLASH
      * @see Screen#PERSONAL_INFO
-     * @see UserMode#personalInfo(PlatformType)
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #generalUserModeProvider()
@@ -484,15 +485,14 @@ public interface UIScreenValidationTestType extends
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO)
-            .flatMap(a -> THIS.rxv_personalInfoScreen(ENGINE, MODE))
-            .concatMapIterable(a -> MODE.personalInfo(PLATFORM))
-            .ofType(HMTextType.class)
-            .concatMap(a -> THIS.rxa_randomInput(ENGINE, a))
-            .concatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
-            .all(ObjectUtil::nonNull)
-            .toFlowable()
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO),
+            rxv_personalInfoScreen(ENGINE, MODE),
+
+            Flowable.fromIterable(MODE.personalInfo(PLATFORM))
+                .concatMap(a -> THIS.rxa_randomInput(ENGINE, a))
+                .flatMap(a -> THIS.rxa_makeNextInputVisible(ENGINE, a))
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -507,6 +507,7 @@ public interface UIScreenValidationTestType extends
      * check {@link Screen#USE_APP_NOW} and {@link Screen#DASHBOARD_TUTORIAL}
      * as well.
      * @param MODE {@link UserMode} instance.
+     * @see ObjectUtil#nonNull(Object)
      * @see DashboardMode#ACTIVITY
      * @see DashboardMode#BMI
      * @see Screen#SPLASH
@@ -528,17 +529,17 @@ public interface UIScreenValidationTestType extends
     )
     default void test_signUpNewAccount_shouldSucceed(@NotNull final UserMode MODE) {
         // Setup
-        final UIScreenValidationTestType THIS = this;
-        final Engine<?> ENGINE = engine();
+        Engine<?> engine = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(MODE, Screen.SPLASH, Screen.DOB, Screen.DASHBOARD)
-            .flatMap(a -> THIS.rxa_dashboardMode(ENGINE, DashboardMode.BMI))
-            .flatMap(a -> THIS.rxv_dashboardBMI(ENGINE))
-            .flatMap(a -> THIS.rxa_dashboardMode(ENGINE, DashboardMode.ACTIVITY))
-            .flatMap(a -> THIS.rxv_dashboardActivity(ENGINE, MODE))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(MODE, Screen.SPLASH, Screen.DOB, Screen.DASHBOARD),
+            rxa_dashboardMode(engine, DashboardMode.BMI),
+            rxv_dashboardBMI(engine),
+            rxa_dashboardMode(engine, DashboardMode.ACTIVITY),
+            rxv_dashboardActivity(engine, MODE)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -552,6 +553,7 @@ public interface UIScreenValidationTestType extends
      * {@link Screen#DASHBOARD} should appear differently depending on the
      * {@link UserMode}.
      * @param MODE {@link UserMode} instance.
+     * @see ObjectUtil#nonNull(Object)
      * @see DashboardMode#BMI
      * @see DashboardMode#ACTIVITY
      * @see Screen#SPLASH
@@ -572,17 +574,17 @@ public interface UIScreenValidationTestType extends
     )
     default void test_loginToDashboard_shouldSucceed(@NotNull final UserMode MODE) {
         // Setup
-        final UIScreenValidationTestType THIS = this;
-        final Engine<?> ENGINE = engine();
+        Engine<?> engine = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(MODE, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD)
-            .flatMap(a -> THIS.rxa_dashboardMode(ENGINE, DashboardMode.BMI))
-            .flatMap(a -> THIS.rxv_dashboardBMI(ENGINE))
-            .flatMap(a -> THIS.rxa_dashboardMode(ENGINE, DashboardMode.ACTIVITY))
-            .flatMap(a -> THIS.rxv_dashboardActivity(ENGINE, MODE))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(MODE, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD),
+            rxa_dashboardMode(engine, DashboardMode.BMI),
+            rxv_dashboardBMI(engine),
+            rxa_dashboardMode(engine, DashboardMode.ACTIVITY),
+            rxv_dashboardActivity(engine, MODE)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -594,10 +596,11 @@ public interface UIScreenValidationTestType extends
      * This test validates the drawer found in {@link Screen#DASHBOARD}.
      * @see BooleanUtil#isFalse(boolean)
      * @see Engine#rxv_errorWithPageSource()
+     * @see ObjectUtil#nonNull(Object)
+     * @see UserMode#defaultUserMode()
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#DASHBOARD
-     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_toggleDrawer(Engine, boolean)
@@ -608,20 +611,21 @@ public interface UIScreenValidationTestType extends
     @SuppressWarnings("unchecked")
     default void test_dashboardDrawer_isValidScreen() {
         // Setup
-        final UIScreenValidationTestType THIS = this;
-        final Engine<?> ENGINE = engine();
+        Engine<?> engine = engine();
         UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD)
-            .flatMap(a -> THIS.rxa_toggleDrawer(ENGINE, true))
-            .flatMap(a -> THIS.rxv_drawer(ENGINE))
-            .flatMap(a -> THIS.rxa_toggleDrawer(ENGINE, false))
-            .flatMap(a -> THIS.rxv_isDrawerOpen(ENGINE))
-            .filter(BooleanUtil::isFalse)
-            .switchIfEmpty(ENGINE.rxv_errorWithPageSource())
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD),
+            rxa_toggleDrawer(engine, true),
+            rxv_drawer(engine),
+            rxa_toggleDrawer(engine, false),
+
+            rxv_isDrawerOpen(engine)
+                .filter(BooleanUtil::isFalse)
+                .switchIfEmpty(engine.rxv_errorWithPageSource())
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -632,10 +636,11 @@ public interface UIScreenValidationTestType extends
     /**
      * Validate {@link Screen#MEAL_ENTRY} and confirm that all
      * {@link org.openqa.selenium.WebElement} are present.
+     * @see ObjectUtil#nonNull(Object)
+     * @see UserMode#defaultUserMode()
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#MEAL_ENTRY
-     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxv_mealLog(Engine)
@@ -644,15 +649,15 @@ public interface UIScreenValidationTestType extends
     @SuppressWarnings("unchecked")
     default void test_logMeal_isValidScreen() {
         // Setup
-        final UIScreenValidationTestType THIS = this;
-        final Engine<?> ENGINE = engine();
+        Engine<?> engine = engine();
         UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.MEAL_ENTRY)
-            .flatMap(a -> THIS.rxv_mealLog(ENGINE))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.MEAL_ENTRY),
+            rxv_mealLog(engine)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -663,11 +668,12 @@ public interface UIScreenValidationTestType extends
     /**
      * Validate {@link Screen#WEIGHT_VALUE} and confirm that all
      * {@link WebElement} are present.
+     * @see ObjectUtil#nonNull(Object)
+     * @see UserMode#defaultUserMode()
      * @see CSSInput#WEIGHT
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#WEIGHT_VALUE
-     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
@@ -678,16 +684,15 @@ public interface UIScreenValidationTestType extends
     @SuppressWarnings("unchecked")
     default void test_logWeightValue_isValidScreen() {
         // Setup
-        final UIScreenValidationTestType THIS = this;
-        final Engine<?> ENGINE = engine();
-        final HMCSSInputType INPUT = CSSInput.WEIGHT;
+        Engine<?> engine = engine();
         UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.WEIGHT_VALUE)
-            .flatMap(a -> THIS.rxv_CSSValue(ENGINE, INPUT))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.WEIGHT_VALUE),
+            rxv_CSSValue(engine, CSSInput.WEIGHT)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -698,10 +703,11 @@ public interface UIScreenValidationTestType extends
     /**
      * Validate {@link Screen#WEIGHT_ENTRY} and confirm that all
      * {@link WebElement} are present.
+     * @see ObjectUtil#nonNull(Object)
+     * @see UserMode#defaultUserMode()
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#WEIGHT_ENTRY
-     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxv_weightEntry(Engine)
@@ -710,15 +716,15 @@ public interface UIScreenValidationTestType extends
     @SuppressWarnings("unchecked")
     default void test_logWeightEntry_isValidScreen() {
         // Setup
-        final UIScreenValidationTestType THIS = this;
-        final Engine<?> ENGINE = engine();
+        Engine<?> engine = engine();
         UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.WEIGHT_ENTRY)
-            .flatMap(a -> THIS.rxv_weightEntry(ENGINE))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.WEIGHT_ENTRY),
+            rxv_weightEntry(engine)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -730,6 +736,7 @@ public interface UIScreenValidationTestType extends
      * Validate {@link Screen#ACTIVITY_VALUE} and confirm that all
      * {@link WebElement} are present.
      * @param mode {@link UserMode} instance.
+     * @see ObjectUtil#nonNull(Object)
      * @see CSSInput#ACTIVITY
      * @see Screen#SPLASH
      * @see Screen#LOGIN
@@ -746,15 +753,14 @@ public interface UIScreenValidationTestType extends
     )
     default void test_logActivityValue_isValidScreen(@NotNull UserMode mode) {
         // Setup
-        final UIScreenValidationTestType THIS = this;
-        final Engine<?> ENGINE = engine();
-        final HMCSSInputType INPUT = CSSInput.ACTIVITY;
+        Engine<?> engine = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.ACTIVITY_VALUE)
-            .flatMap(a -> THIS.rxv_CSSValue(ENGINE, INPUT))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.ACTIVITY_VALUE),
+            rxv_CSSValue(engine, CSSInput.ACTIVITY)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -766,6 +772,7 @@ public interface UIScreenValidationTestType extends
      * Validate {@link Screen#ACTIVITY_ENTRY} and confirm that all
      * {@link WebElement} are present.
      * @param mode {@link UserMode} instance.
+     * @see ObjectUtil#nonNull(Object)
      * @see Screen#SPLASH
      * @see Screen#LOGIN
      * @see Screen#ACTIVITY_ENTRY
@@ -786,9 +793,10 @@ public interface UIScreenValidationTestType extends
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.ACTIVITY_ENTRY)
-            .flatMap(a -> THIS.rxv_activityEntry(ENGINE))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.ACTIVITY_ENTRY),
+            rxv_activityEntry(ENGINE)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -817,19 +825,19 @@ public interface UIScreenValidationTestType extends
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        final List<UnitSystem> UNITS = Arrays.asList(UnitSystem.values());
+        List<UnitSystem> units = Arrays.asList(UnitSystem.values());
         UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
-        rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.SETTINGS)
-            .flatMap(a -> THIS.rxv_settings(ENGINE))
-            .flatMap(a -> Flowable.concatArray(
-                rxa_toggleSetting(ENGINE, Setting.UNITS)
-                    .concatMapIterable(b -> UNITS)
-                    .flatMap(b -> THIS.rxa_changeUnitSystem(ENGINE, b))
-            ).all(ObjectUtil::nonNull).toFlowable())
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.SETTINGS),
+            rxv_settings(ENGINE),
+            rxa_toggleSetting(ENGINE, Setting.UNITS),
+
+            Flowable.fromIterable(units)
+                .concatMap(b -> THIS.rxa_changeUnitSystem(ENGINE, b))
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

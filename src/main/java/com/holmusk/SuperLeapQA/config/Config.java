@@ -44,14 +44,14 @@ public final class Config {
 //            .withTestMode(TestMode.SIMULATED)
 //            .build());
 
-//        ENGINES.add(HMIOSEngine.builder()
-//            .withDeviceUID("771F28EC-C5FC-45B8-8C2A-AF346B219936")
-//            .withApp(IOS_APP_PATH)
-//            .withAppPackage(IOS_APP_PACKAGE)
-//            .withDeviceName("iPhone 7 Plus")
-//            .withPlatformVersion("10.3")
-//            .withTestMode(TestMode.SIMULATED)
-//            .build());
+        ENGINES.add(HMIOSEngine.builder()
+            .withDeviceUID("771F28EC-C5FC-45B8-8C2A-AF346B219936")
+            .withApp(IOS_APP_PATH)
+            .withAppPackage(IOS_APP_PACKAGE)
+            .withDeviceName("iPhone 7 Plus")
+            .withPlatformVersion("10.3")
+            .withTestMode(TestMode.SIMULATED)
+            .build());
 
 //        ENGINES.add(HMIOSEngine.builder()
 //            .withDeviceUID("346114F4-41D4-455A-B6BD-427BCDB3E11A")

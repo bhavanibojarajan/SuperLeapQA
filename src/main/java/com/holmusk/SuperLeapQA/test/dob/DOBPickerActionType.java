@@ -56,6 +56,7 @@ public interface DOBPickerActionType extends BaseActionType, DOBPickerValidation
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsText(String...)
      * @see Engine#rxa_click(WebElement)
+     * @see #generalDelay(Engine)
      */
     @NotNull
     default Flowable<?> rxa_confirmDoB(@NotNull final Engine<?> ENGINE) {
@@ -67,7 +68,8 @@ public interface DOBPickerActionType extends BaseActionType, DOBPickerValidation
             )
             .firstElement()
             .toFlowable()
-            .flatMap(ENGINE::rxa_click);
+            .flatMap(ENGINE::rxa_click)
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**
