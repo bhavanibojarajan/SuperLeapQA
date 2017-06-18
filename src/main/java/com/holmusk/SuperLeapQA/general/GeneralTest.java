@@ -194,4 +194,13 @@ public final class GeneralTest {
         LogUtil.println(param1.weightKG());
         LogUtil.println(param1.bmi());
     }
+
+    @Test(dataProviderClass = TestHelper.class, dataProvider = "platformProvider")
+    public void test_xPathCreation_shouldWork(@NotNull PlatformType platform) {
+        // Setup
+        InputHelperType helper = TestHelper.mockHelper(platform);
+
+        // When & Then
+        LogUtil.printlnt(CardType.ACTIVITY.cardTabXP(helper));
+    }
 }

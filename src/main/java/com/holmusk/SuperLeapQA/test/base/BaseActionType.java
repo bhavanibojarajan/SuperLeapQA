@@ -30,7 +30,7 @@ import org.swiften.xtestkit.base.param.DirectionParam;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkitcomponents.coordinate.RLPosition;
+import org.swiften.xtestkitcomponents.coordinate.RLPoint;
 import org.swiften.xtestkitcomponents.coordinate.RLPositionType;
 import org.swiften.xtestkitcomponents.direction.Direction;
 import org.swiften.xtestkitcomponents.direction.DirectionProviderType;
@@ -381,8 +381,8 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_window()
      * @see Point#moveBy(int, int)
-     * @see RLPosition#MAX
-     * @see RLPosition#MID
+     * @see RLPoint#MAX
+     * @see RLPoint#MID
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -391,7 +391,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
             return ENGINE.rxe_window()
                 .firstElement()
                 .toFlowable()
-                .map(a -> ENGINE.coordinate(a, RLPosition.MAX, RLPosition.MID))
+                .map(a -> ENGINE.coordinate(a, RLPoint.MAX, RLPoint.MID))
                 .map(a -> a.moveBy(-20, -20))
                 .flatMap(ENGINE::rxa_tap);
         } else if (ENGINE instanceof IOSEngine) {

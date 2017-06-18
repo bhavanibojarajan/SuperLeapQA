@@ -8,13 +8,18 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.element.swipe.SwipeParam;
 import org.swiften.xtestkit.base.param.DirectionParam;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.common.RepeatType;
+import org.swiften.xtestkitcomponents.coordinate.RLPoint;
+import org.swiften.xtestkitcomponents.coordinate.RLPositionType;
 import org.swiften.xtestkitcomponents.direction.Direction;
 import org.swiften.xtestkitcomponents.direction.DirectionProviderType;
 
@@ -53,6 +58,23 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
     @NotNull
     default Flowable<?> rxa_useAppNow(@NotNull final Engine<?> ENGINE) {
         return rxe_useAppNow(ENGINE).flatMap(ENGINE::rxa_click);
+    }
+
+    /**
+     * Switch tab to one corresponding to {@link CardType}.
+     * @param ENGINE {@link Engine} instance.
+     * @param card {@link CardType} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxa_click(WebElement)
+     * @see #generalDelay(Engine)
+     * @see #rxe_dashboardCardTab(Engine, CardType)
+     */
+    @NotNull
+    default Flowable<?> rxa_dashboardCardTab(@NotNull final Engine<?> ENGINE,
+                                             @NotNull CardType card) {
+        return rxe_dashboardCardTab(ENGINE, card)
+            .flatMap(ENGINE::rxa_click)
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -193,5 +215,62 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
         return rxe_dashboardModeSwitcher(ENGINE)
             .flatMap(a -> ENGINE.rxa_swipeGeneric(a, PARAM))
             .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * Swipe upwards to hide the dashboard mode switcher and review the card
+     * list view.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#coordinate(WebElement, RLPositionType, RLPositionType)
+     * @see Engine#rxa_swipe(RepeatType)
+     * @see Point#getY()
+     * @see Point#moveBy(int, int)
+     * @see SwipeParam.Builder#withStartX(int)
+     * @see SwipeParam.Builder#withEndX(int)
+     * @see SwipeParam.Builder#withStartY(int)
+     * @see SwipeParam.Builder#withEndY(int)
+     * @see SwipeParam.Builder#withTimes(int)
+     * @see CardType#ALL
+     * @see RLPoint#MIN
+     * @see RLPoint#MID
+     * @see RLPoint#MAX
+     * @see #generalDelay(Engine)
+     * @see #rxe_dashboardCardTab(Engine, CardType)
+     * @see #rxe_dashboardModeSwitcher(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxa_revealCardList(@NotNull final Engine<?> ENGINE) {
+        return Flowable.zip(
+            rxe_dashboardModeSwitcher(ENGINE)
+                .map(a -> ENGINE.coordinate(a, RLPoint.MID, RLPoint.MIN))
+                .map(a -> a.moveBy(0, 10)),
+
+            rxe_dashboardCardTab(ENGINE, CardType.ALL)
+                .map(a -> ENGINE.coordinate(a, RLPoint.MID, RLPoint.MAX))
+                .map(a -> a.moveBy(0, -10)),
+
+            (a, b) -> SwipeParam.builder()
+                .withStartY(b.getY())
+                .withEndY(a.getY())
+                .withStartX(a.getX())
+                .withEndX(a.getX())
+                .withTimes(1)
+                .build())
+            .flatMap(ENGINE::rxa_swipe)
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * Navigate to the first content page corresponding to the first
+     * {@link CardType} item.
+     * @param ENGINE {@link Engine} instance.
+     * @param card {@link CardType} instance.
+     * @return {@link Flowable} instance.
+     */
+    @NotNull
+    default Flowable<?> rxa_firstCardItem(@NotNull final Engine<?> ENGINE,
+                                          @NotNull CardType card) {
+        return rxe_firstCardItem(ENGINE, card).flatMap(ENGINE::rxa_click);
     }
 }

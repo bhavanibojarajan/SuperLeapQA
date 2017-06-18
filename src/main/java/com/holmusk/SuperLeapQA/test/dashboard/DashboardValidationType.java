@@ -5,9 +5,12 @@ import com.holmusk.SuperLeapQA.model.CardType;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
+import org.intellij.lang.annotations.Flow;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.log.LogUtil;
+import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
@@ -92,6 +95,42 @@ public interface DashboardValidationType extends BaseValidationType {
     }
 
     /**
+     * Get the items corresponding to {@link CardType}.
+     * @param engine {@link Engine} instance.
+     * @param card {@link CardType} instance.
+     * @return {@link Flowable} instance.
+     * @see CardType#cardItemXP(InputHelperType)
+     * @see Engine#rxe_withXPath(XPath...)
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_cardItems(@NotNull Engine<?> engine,
+                                               @NotNull CardType card) {
+        XPath xPath = card.cardItemXP(engine);
+        return engine.rxe_withXPath(xPath);
+    }
+
+    /**
+     * Get the first item corresponding to {@link CardType}.
+     * @param engine {@link Engine} instance.
+     * @param card {@link CardType} instance.
+     * @return {@link Flowable} instance.
+     * @see WebElement#getLocation()
+     * @see #rxe_cardItems(Engine, CardType)
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_firstCardItem(@NotNull Engine<?> engine,
+                                                   @NotNull CardType card) {
+        return rxe_cardItems(engine, card)
+            .sorted((a, b) -> {
+                Point aPoint = a.getLocation();
+                Point bPoint = b.getLocation();
+                return aPoint.getY() - bPoint.getY();
+            })
+            .firstElement()
+            .toFlowable();
+    }
+
+    /**
      * Get the scroll view that can be swiped to switch between different
      * dashboard modes.
      * @param engine {@link Engine} instance.
@@ -117,6 +156,38 @@ public interface DashboardValidationType extends BaseValidationType {
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
+    }
+
+    /**
+     * Get the card tab {@link WebElement}.
+     * @param engine {@link Engine} instance.
+     * @param card {@link CardType} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxe_withXPath(XPath...)
+     * @see CardType#cardTabXP(InputHelperType)
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_dashboardCardTab(@NotNull Engine<?> engine,
+                                                      @NotNull CardType card) {
+        XPath xPath = card.cardTabXP(engine);
+        return engine.rxe_withXPath(xPath).firstElement().toFlowable();
+    }
+
+    /**
+     * Check if the card list view is not empty.
+     * @param engine {@link Engine} instance.
+     * @param card {@link CardType} instance.
+     * @return {@link Flowable} instance.
+     * @see NumberUtil#largerThanZero(Number)
+     * @see #rxe_cardItems(Engine, CardType)
+     */
+    @NotNull
+    default Flowable<Boolean> rxv_cardListNotEmpty(@NotNull Engine<?> engine,
+                                                   @NotNull CardType card) {
+        return rxe_cardItems(engine, card)
+            .count().toFlowable()
+            .doOnNext(a -> LogUtil.printft("%s items currently", a))
+            .map(NumberUtil::largerThanZero);
     }
 
     /**
