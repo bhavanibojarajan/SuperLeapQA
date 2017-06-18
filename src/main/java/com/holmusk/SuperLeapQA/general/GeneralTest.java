@@ -9,6 +9,7 @@ import com.holmusk.SuperLeapQA.navigation.ScreenHolder;
 import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import io.reactivex.Flowable;
+import org.apache.bcel.generic.POP;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.javautilities.log.LogUtil;
@@ -202,5 +203,7 @@ public final class GeneralTest {
         // When & Then
         LogUtil.printlnt(CardType.ACTIVITY.cardTabXP(helper));
         LogUtil.printlnt(CardType.ACTIVITY.cardItemXP(helper));
+        LogUtil.printlnt(Popup.RATING.dismissXP(helper));
+        LogUtil.printlnt(Popup.RATING.presenceXP(helper));
     }
 }

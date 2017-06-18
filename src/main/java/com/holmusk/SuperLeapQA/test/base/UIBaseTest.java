@@ -1,5 +1,7 @@
 package com.holmusk.SuperLeapQA.test.base;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.common.RetryType;
@@ -14,6 +16,7 @@ import java.util.List;
 public class UIBaseTest implements UIBaseTestType {
     @NotNull private final List<Node> FORWARD_NODES;
     @NotNull private final List<Node> BACKWARD_NODES;
+    @NotNull private final CompositeDisposable DISPOSABLE;
 
     @NotNull private final Engine<?> ENGINE;
 
@@ -21,12 +24,19 @@ public class UIBaseTest implements UIBaseTestType {
         FORWARD_NODES = new LinkedList<>();
         BACKWARD_NODES = new LinkedList<>();
         ENGINE = engine;
+        DISPOSABLE = new CompositeDisposable();
     }
 
     @NotNull
     @Override
     public Engine<?> engine() {
         return ENGINE;
+    }
+
+    @NotNull
+    @Override
+    public CompositeDisposable masterDisposable() {
+        return DISPOSABLE;
     }
 
     @NotNull
@@ -57,35 +67,39 @@ public class UIBaseTest implements UIBaseTestType {
         BACKWARD_NODES.clear();
     }
 
+    @Override
     @BeforeSuite
     public void beforeSuite() {
-        testKit().beforeSuite();
+        UIBaseTestType.super.beforeSuite();
     }
 
+    @Override
     @AfterSuite
     public void afterSuite() {
-        testKit().afterSuite();
+        UIBaseTestType.super.afterSuite();
     }
 
+    @Override
     @BeforeClass
     public void beforeClass() {
-        engine().beforeClass(RetryType.DEFAULT);
+        UIBaseTestType.super.beforeClass();
     }
 
+    @Override
     @AfterClass
     public void afterClass() {
-        engine().afterClass(RetryType.DEFAULT);
+        UIBaseTestType.super.afterClass();
     }
 
+    @Override
     @BeforeMethod
     public void beforeMethod() {
-        registerScreenHolders();
-        engine().beforeMethod(RetryType.DEFAULT);
+        UIBaseTestType.super.beforeMethod();
     }
 
+    @Override
     @AfterMethod
     public void afterMethod() {
-        clearAllNodes();
-        engine().afterMethod(RetryType.DEFAULT);
+        UIBaseTestType.super.afterMethod();
     }
 }

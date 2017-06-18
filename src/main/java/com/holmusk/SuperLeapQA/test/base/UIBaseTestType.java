@@ -1,17 +1,24 @@
 package com.holmusk.SuperLeapQA.test.base;
 
 import com.holmusk.SuperLeapQA.config.Config;
+import com.holmusk.SuperLeapQA.model.Popup;
 import com.holmusk.SuperLeapQA.model.UserMode;
+import com.holmusk.SuperLeapQA.navigation.type.BackwardNavigationType;
 import com.holmusk.SuperLeapQA.navigation.type.ForwardNavigationType;
 import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.rx.RxTestUtil;
 import org.swiften.javautilities.test.TestNGUtil;
+import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.base.element.popup.PopupType;
 import org.swiften.xtestkit.kit.TestKit;
 import org.swiften.xtestkit.test.BaseTestType;
-import org.testng.annotations.DataProvider;
+import org.swiften.xtestkitcomponents.common.RetryType;
+import org.testng.annotations.*;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -20,7 +27,12 @@ import java.util.List;
 /**
  * Created by haipham on 5/27/17.
  */
-public interface UIBaseTestType extends BaseTestType, ForwardNavigationType, SLScreenManagerType {
+public interface UIBaseTestType extends
+    BaseTestType,
+    BackwardNavigationType,
+    ForwardNavigationType,
+    SLScreenManagerType
+{
     /**
      * This {@link DataProvider} provides {@link org.swiften.xtestkit.base.Engine}
      * instances for constructor methods.
@@ -101,4 +113,54 @@ public interface UIBaseTestType extends BaseTestType, ForwardNavigationType, SLS
         subscriber.assertComplete();
         LogUtil.printft("Test results: %s", RxTestUtil.nextEvents(subscriber));
     }
+
+    @BeforeSuite
+    default void beforeSuite() {
+        testKit().beforeSuite();
+    }
+
+    @AfterSuite
+    default void afterSuite() {
+        testKit().afterSuite();
+    }
+
+    @BeforeClass
+    default void beforeClass() {
+        engine().beforeClass(RetryType.DEFAULT);
+    }
+
+    @AfterClass
+    default void afterClass() {
+        engine().afterClass(RetryType.DEFAULT);
+    }
+
+    @BeforeMethod
+    default void beforeMethod() {
+        registerScreenHolders();
+
+        CompositeDisposable disposable = masterDisposable();
+        Engine<?> engine = engine();
+        Popup[] popups = Popup.values();
+        Disposable d1 = engine.rxa_pollAndDismissPopup(popups).subscribe();
+        disposable.add(d1);
+
+        engine.beforeMethod(RetryType.DEFAULT);
+    }
+
+    @AfterMethod
+    default void afterMethod() {
+        clearAllNodes();
+
+        CompositeDisposable disposable = masterDisposable();
+        disposable.dispose();
+
+        engine().afterMethod(RetryType.DEFAULT);
+    }
+
+    /**
+     * Get the master {@link CompositeDisposable} for everything aside from
+     * tests.
+     * @return {@link CompositeDisposable} instance.
+     */
+    @NotNull CompositeDisposable masterDisposable();
 }

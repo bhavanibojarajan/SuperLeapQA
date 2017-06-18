@@ -145,4 +145,13 @@ public interface AppDelayType extends HMDelayType {
     default long searchProgressDelay(@NotNull Engine<?> engine) {
         return 2000;
     }
+
+    /**
+     * Get the duration interval for popup polling.
+     * @param engine {@link Engine} instance.
+     * @return {@link Long} value.
+     */
+    default long popupPollDuration(@NotNull Engine<?> engine) {
+        return 500;
+    }
 }
