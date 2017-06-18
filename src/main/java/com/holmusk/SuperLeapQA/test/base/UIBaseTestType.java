@@ -8,6 +8,7 @@ import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.rx.RxTestUtil;
+import org.swiften.javautilities.test.TestNGUtil;
 import org.swiften.xtestkit.kit.TestKit;
 import org.swiften.xtestkit.test.BaseTestType;
 import org.testng.annotations.DataProvider;
@@ -44,6 +45,7 @@ public interface UIBaseTestType extends BaseTestType, ForwardNavigationType, SLS
      * This {@link DataProvider} provides {@link UserMode} instances that
      * do not care whether a guarantor is required.
      * @return {@link Iterator} instance.
+     * @see TestNGUtil#oneFromEach(Object...)
      * @see UserMode#PARENT
      * @see UserMode#TEEN_A18
      * @see UserMode#TEEN_U18
@@ -51,19 +53,11 @@ public interface UIBaseTestType extends BaseTestType, ForwardNavigationType, SLS
     @NotNull
     @DataProvider
     static Iterator<Object[]> generalUserModeProvider() {
-        List<Object[]> data = new LinkedList<>();
-
-        UserMode[] modes = new UserMode[] {
+        return TestNGUtil.oneFromEach(
             UserMode.PARENT,
 //            UserMode.TEEN_A18,
             UserMode.TEEN_U18
-        };
-
-        for (UserMode mode : modes) {
-            data.add(new Object[] { mode });
-        }
-
-        return data.iterator();
+        ).iterator();
     }
 
     /**
@@ -72,24 +66,17 @@ public interface UIBaseTestType extends BaseTestType, ForwardNavigationType, SLS
      * information input tests will require {@link UserMode#requiresGuarantor()}
      * to decide whether the parent info screen is required.
      * @return {@link Iterator} instance.
+     * @see TestNGUtil#oneFromEach(Object...)
      * @see UserMode#TEEN_U18
      * @see UserMode#TEEN_A18
      */
     @NotNull
     @DataProvider
     static Iterator<Object[]> guarantorSpecificUserModeProvider() {
-        List<Object[]> data = new LinkedList<>();
-
-        UserMode[] modes = new UserMode[] {
+        return TestNGUtil.oneFromEach(
             UserMode.TEEN_U18,
             UserMode.TEEN_A18
-        };
-
-        for (UserMode mode : modes) {
-            data.add(new Object[] { mode });
-        }
-
-        return data.iterator();
+        ).iterator();
     }
 
     /**

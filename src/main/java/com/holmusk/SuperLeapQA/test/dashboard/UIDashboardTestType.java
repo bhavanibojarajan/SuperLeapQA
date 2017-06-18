@@ -11,13 +11,12 @@ import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.javautilities.rx.RxUtil;
+import org.swiften.javautilities.test.TestNGUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by haipham on 5/16/17.
@@ -26,17 +25,19 @@ public interface UIDashboardTestType extends UIBaseTestType, DashboardActionType
     /**
      * Provide {@link CardType} that can be deleted.
      * @return {@link Iterator} instance.
+     * @see TestNGUtil#oneFromEach(Object[]...)
+     * @see CardType#MEAL
      * @see CardType#WEIGHT
+     * @see UserMode#PARENT
+     * @see UserMode#TEEN_A18
      */
     @NotNull
     @DataProvider
     static Iterator<Object[]> deletableCardProvider() {
-        List<Object[]> data = new ArrayList<>();
-        data.add(new Object[] { UserMode.PARENT, CardType.MEAL });
-        data.add(new Object[] { UserMode.PARENT, CardType.WEIGHT });
-        data.add(new Object[] { UserMode.TEEN_A18, CardType.MEAL });
-        data.add(new Object[] { UserMode.TEEN_U18, CardType.WEIGHT });
-        return data.iterator();
+        return TestNGUtil.oneFromEach(
+            new Object[] { UserMode.PARENT, UserMode.TEEN_A18 },
+            new Object[] { CardType.MEAL, CardType.WEIGHT }
+        ).iterator();
     }
 
     /**

@@ -7,10 +7,12 @@ import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.navigation.ScreenHolder;
 import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
+import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.javautilities.log.LogUtil;
+import org.swiften.javautilities.test.TestNGUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.mobile.Platform;
@@ -24,10 +26,10 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
@@ -36,22 +38,15 @@ import static org.mockito.Mockito.mock;
  */
 @SuppressWarnings("UndeclaredTests")
 public final class GeneralTest {
-    @NotNull
-    @DataProvider
-    public Iterator<Object[]> userModeProvider() {
-        List<Object[]> data = new LinkedList<>();
-
-        UserMode[] modes = new UserMode[] {
-            UserMode.PARENT,
-            UserMode.TEEN_A18,
-            UserMode.TEEN_U18
-        };
-
-        for (UserMode mode : modes) {
-            data.add(new Object[] { mode });
-        }
-
-        return data.iterator();
+    @DataProvider(parallel = true)
+    public static Iterator<Object[]> bmiDataProvider() {
+        return TestNGUtil.oneFromEach(
+            Platform.values(),
+            UserMode.values(),
+            UnitSystem.values(),
+            Ethnicity.values(),
+            Gender.values()
+        ).iterator();
     }
 
     @Test
@@ -101,7 +96,10 @@ public final class GeneralTest {
     }
 
     @SuppressWarnings("unchecked")
-    @Test(dataProvider = "userModeProvider")
+    @Test(
+        dataProviderClass = UIBaseTestType.class,
+        dataProvider = "generalUserModeProvider"
+    )
     public void test_navigation_shouldWorkCorrectly(@NotNull UserMode mode) {
         // Setup
         final Engine<?> ENGINE = mock(Engine.class);
@@ -161,38 +159,39 @@ public final class GeneralTest {
         }
     }
 
-    @Test
-    public void test_bmiRanges_shouldWork() {
+    @Test(
+        dataProviderClass = GeneralTest.class,
+        dataProvider = "bmiDataProvider"
+    )
+    public void test_bmiRanges_shouldWork(@NotNull Platform platform,
+                                          @NotNull UserMode mode,
+                                          @NotNull UnitSystem system,
+                                          @NotNull Ethnicity ethnicity,
+                                          @NotNull Gender gender) {
         // Setup
-        Ethnicity asian = Ethnicity.ASIAN_OTHER;
-        Gender male = Gender.FEMALE;
-        UserMode userMode = UserMode.TEEN_U18;
-
         List<Zip<Height,String>> height = Height.random(
-            Platform.ANDROID,
-            userMode,
-            UnitSystem.IMPERIAL);
+            platform, mode, system
+        );
 
         List<Zip<Weight,String>> weight = Weight.random(
-            Platform.ANDROID,
-            userMode,
-            UnitSystem.IMPERIAL
+            platform, mode, system
         );
 
         BMIParam param1 = BMIParam.builder()
-            .withEthnicity(asian)
-            .withGender(male)
+            .withEthnicity(ethnicity)
+            .withGender(gender)
             .withHeight(height)
             .withWeight(weight)
             .build();
 
-        // When & Then
-        LogUtil.println(BMIUtil.tightestInvalidRange(userMode, param1));
-        LogUtil.println(BMIUtil.widestInvalidRange(userMode, param1));
-        LogUtil.println(BMIUtil.withinTightestInvalidRange(userMode, param1));
-        LogUtil.println(param1.heightM());
-        LogUtil.println(param1.weightKG());
-        LogUtil.println(param1.bmi());
+        // When
+        Zip<Double,Double> tightestInvalid = BMIUtil.tightestInvalidRange(mode, param1);
+        Zip<Double,Double> widestInvalid = BMIUtil.widestInvalidRange(mode, param1);
+        double bmi = param1.bmi();
+
+        // Then
+        assertEquals(tightestInvalid.A, widestInvalid.A);
+        assertTrue(widestInvalid.B >= tightestInvalid.B);
     }
 
     @Test(dataProviderClass = TestHelper.class, dataProvider = "platformProvider")
