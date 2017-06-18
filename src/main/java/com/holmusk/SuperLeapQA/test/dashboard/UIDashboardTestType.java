@@ -1,15 +1,13 @@
 package com.holmusk.SuperLeapQA.test.dashboard;
 
 import com.holmusk.SuperLeapQA.model.CardType;
-import com.holmusk.SuperLeapQA.model.DashboardMode;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
-import com.holmusk.SuperLeapQA.test.personalinfo.UIPersonalInfoTestType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.log.LogUtil;
+import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.javautilities.rx.RxUtil;
@@ -34,14 +32,21 @@ public interface UIDashboardTestType extends UIBaseTestType, DashboardActionType
     @DataProvider
     static Iterator<Object[]> deletableCardProvider() {
         List<Object[]> data = new ArrayList<>();
+        data.add(new Object[] { UserMode.PARENT, CardType.MEAL });
         data.add(new Object[] { UserMode.PARENT, CardType.WEIGHT });
+        data.add(new Object[] { UserMode.TEEN_A18, CardType.MEAL });
+        data.add(new Object[] { UserMode.TEEN_U18, CardType.WEIGHT });
         return data.iterator();
     }
 
     /**
      * Delete all cards for a particular {@link CardType}.
+     * If we want to use this method as an utility method, we should run it
+     * with {@link org.swiften.xtestkit.mobile.Platform#ANDROID} since it's
+     * much faster.
      * @param mode {@link UserMode} instance.
      * @param card {@link CardType} instance.
+     * @see BooleanUtil#isTrue(boolean)
      * @see ObjectUtil#nonNull(Object)
      * @see RxUtil#repeatWhile(Flowable)
      * @see Screen#SPLASH
@@ -54,7 +59,8 @@ public interface UIDashboardTestType extends UIBaseTestType, DashboardActionType
      * @see #rxa_firstCardItem(Engine, CardType)
      * @see #rxa_openEditMenu(Engine)
      * @see #rxa_deleteFromMenu(Engine)
-     * @see #rxv_cardListNotEmpty(Engine, CardType)
+     * @see #rxv_cardListEmpty(Engine, CardType)
+     * @see #rxv_cardListEmpty(Engine, CardType)
      */
     @SuppressWarnings("unchecked")
     @Test(
@@ -81,6 +87,11 @@ public interface UIDashboardTestType extends UIBaseTestType, DashboardActionType
                 )
                 .all(ObjectUtil::nonNull).toFlowable()
                 .compose(RxUtil.repeatWhile(rxv_cardListNotEmpty(engine, card)))
+                .onErrorReturnItem(true),
+
+            rxv_cardListEmpty(engine, card)
+                .filter(BooleanUtil::isTrue)
+                .switchIfEmpty(engine.rxv_errorWithPageSource())
         ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

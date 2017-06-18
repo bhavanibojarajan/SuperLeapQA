@@ -46,15 +46,12 @@ public interface SettingValidationType extends BaseValidationType {
     default Flowable<?> rxv_settings(@NotNull final Engine<?> ENGINE) {
         final SettingValidationType THIS = this;
 
-        return Flowable
-            .mergeArray(
-                Flowable.fromArray(Setting.values())
-                    .flatMap(a -> THIS.rxe_setting(ENGINE, a)),
+        return Flowable.mergeArray(
+            Flowable.fromArray(Setting.values())
+                .flatMap(a -> THIS.rxe_setting(ENGINE, a)),
 
-                rxe_backButton(ENGINE)
-            )
-            .all(ObjectUtil::nonNull)
-            .toFlowable();
+            rxe_backButton(ENGINE)
+        ).all(ObjectUtil::nonNull).toFlowable();
     }
 
     /**

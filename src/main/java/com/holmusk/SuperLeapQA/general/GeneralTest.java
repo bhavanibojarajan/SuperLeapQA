@@ -202,5 +202,6 @@ public final class GeneralTest {
 
         // When & Then
         LogUtil.printlnt(CardType.ACTIVITY.cardTabXP(helper));
+        LogUtil.printlnt(CardType.ACTIVITY.cardItemXP(helper));
     }
 }

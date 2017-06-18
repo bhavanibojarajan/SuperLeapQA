@@ -150,6 +150,7 @@ public enum TextInput implements BaseErrorType, HMTextType {
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
      * @see BaseViewType#className()
+     * @see CompoundAttribute#followingSibling(AttributeType, AttributeType)
      * @see CompoundAttribute#forClass(String)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see CompoundAttribute.Builder#withClass(String)
@@ -181,14 +182,15 @@ public enum TextInput implements BaseErrorType, HMTextType {
              * static text label */
             case POSTAL_CODE:
             case UNIT_NUMBER:
-                return XPath.builder().followingSibling(
-                    CompoundAttribute.forClass(tfClassName),
+                return XPath.builder()
+                    .addAttribute(CompoundAttribute.followingSibling(
+                        CompoundAttribute.forClass(tfClassName),
 
-                    CompoundAttribute.builder()
-                        .addAttribute(ctText)
-                        .withClass(IOSView.Type.UI_STATIC_TEXT.className())
-                        .build()
-                ).build();
+                        CompoundAttribute.builder()
+                            .addAttribute(ctText)
+                            .withClass(IOSView.Type.UI_STATIC_TEXT.className())
+                            .build())
+                    ).build();
 
             default:
                 List<AttributeType> clsAttrs = CollectionUtil

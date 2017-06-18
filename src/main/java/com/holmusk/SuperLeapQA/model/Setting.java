@@ -165,9 +165,9 @@ public enum Setting implements BaseErrorType {
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see BaseViewType#className()
+     * @see CompoundAttribute#followingSibling(AttributeType, AttributeType)
      * @see CompoundAttribute#forClass(String)
      * @see InputHelperType#platform()
-     * @see XPath.Builder#followingSibling(CompoundAttribute, CompoundAttribute)
      * @see AndroidView.Type#SWITCH
      * @see IOSView.Type#UI_SWITCH
      * @see Platform#ANDROID
@@ -189,8 +189,10 @@ public enum Setting implements BaseErrorType {
             throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        CompoundAttribute sAttr = CompoundAttribute.forClass(clsName);
-        CompoundAttribute tAttr = textSettingAttribute(helper);
-        return XPath.builder().followingSibling(sAttr, tAttr).build();
+        return XPath.builder()
+            .addAttribute(CompoundAttribute.followingSibling(
+                CompoundAttribute.forClass(clsName),
+                textSettingAttribute(helper)
+            )).build();
     }
 }

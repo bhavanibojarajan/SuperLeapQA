@@ -115,10 +115,9 @@ public enum ActivityValue implements BaseErrorType {
      * @see Attribute#not()
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
-     * @see CompoundAttribute#single(AttributeType)
+     * @see CompoundAttribute#followingSibling(AttributeType, AttributeType)
      * @see LocalizerType#localize(String)
      * @see InputHelperType#localizer()
-     * @see XPath.Builder#followingSibling(CompoundAttribute, CompoundAttribute)
      * @see UserMode#dashboardActivityKeyword()
      * @see #title()
      */
@@ -129,10 +128,12 @@ public enum ActivityValue implements BaseErrorType {
         LocalizerType localizer = helper.localizer();
         String today = localizer.localize(title());
         String keyword = localizer.localize(mode.dashboardActivityKeyword());
-        Attribute attr1 = attrs.containsText(today);
-        Attribute attr2 = attrs.containsText(keyword).not();
-        CompoundAttribute cAttr1 = CompoundAttribute.single(attr1);
-        CompoundAttribute cAttr2 = CompoundAttribute.single(attr2);
-        return XPath.builder().followingSibling(cAttr2, cAttr1).build();
+
+        return XPath.builder()
+            .addAttribute(CompoundAttribute.followingSibling(
+                attrs.containsText(today),
+                attrs.containsText(keyword).not()
+            ))
+            .build();
     }
 }

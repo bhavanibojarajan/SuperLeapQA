@@ -5,10 +5,10 @@ import com.holmusk.SuperLeapQA.model.CardType;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
-import org.intellij.lang.annotations.Flow;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.object.ObjectUtil;
@@ -174,7 +174,7 @@ public interface DashboardValidationType extends BaseValidationType {
     }
 
     /**
-     * Check if the card list view is not empty.
+     * Check if the card list view is empty.
      * @param engine {@link Engine} instance.
      * @param card {@link CardType} instance.
      * @return {@link Flowable} instance.
@@ -182,12 +182,26 @@ public interface DashboardValidationType extends BaseValidationType {
      * @see #rxe_cardItems(Engine, CardType)
      */
     @NotNull
-    default Flowable<Boolean> rxv_cardListNotEmpty(@NotNull Engine<?> engine,
-                                                   @NotNull CardType card) {
+    default Flowable<Boolean> rxv_cardListEmpty(@NotNull Engine<?> engine,
+                                                @NotNull CardType card) {
         return rxe_cardItems(engine, card)
             .count().toFlowable()
             .doOnNext(a -> LogUtil.printft("%s items currently", a))
-            .map(NumberUtil::largerThanZero);
+            .map(NumberUtil::isZero)
+            .onErrorReturnItem(true);
+    }
+
+    /**
+     * Check if the card list view is not empty.
+     * @param engine {@link Engine} instance.
+     * @param card {@link CardType} instance.
+     * @return {@link Flowable} instance.
+     * @see #rxv_cardListEmpty(Engine, CardType)
+     */
+    @NotNull
+    default Flowable<Boolean> rxv_cardListNotEmpty(@NotNull Engine<?> engine,
+                                                   @NotNull CardType card) {
+        return rxv_cardListEmpty(engine, card).map(BooleanUtil::isFalse);
     }
 
     /**

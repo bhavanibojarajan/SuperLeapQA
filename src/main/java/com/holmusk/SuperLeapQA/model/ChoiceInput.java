@@ -131,6 +131,7 @@ public enum ChoiceInput implements HMTextChoiceType {
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
      * @see BaseViewType#className()
+     * @see CompoundAttribute#followingSibling(AttributeType, AttributeType)
      * @see CompoundAttribute#forClass(String)
      * @see CompoundAttribute#withIndex(Integer)
      * @see Engine#localizer()
@@ -138,7 +139,6 @@ public enum ChoiceInput implements HMTextChoiceType {
      * @see Platform#IOS
      * @see IOSView.Type#UI_STATIC_TEXT
      * @see IOSView.Type#UI_TEXT_FIELD
-     * @see XPath.Builder#followingSibling(CompoundAttribute, CompoundAttribute)
      * @see #iOSTitleDescription()
      * @see #values()
      */
@@ -152,9 +152,12 @@ public enum ChoiceInput implements HMTextChoiceType {
         String tf = IOSView.Type.UI_TEXT_FIELD.className();
         Attributes attrs = Attributes.of(platform);
         Attribute stAttr = attrs.containsText(localized);
-        CompoundAttribute tAttr = CompoundAttribute.forClass(tf);
-        CompoundAttribute sAttr = CompoundAttribute.forClass(st).addAttribute(stAttr);
-        return XPath.builder().followingSibling(tAttr, sAttr).build();
+
+        return XPath.builder()
+            .addAttribute(CompoundAttribute.followingSibling(
+                CompoundAttribute.forClass(tf),
+                CompoundAttribute.forClass(st).addAttribute(stAttr)
+            )).build();
     }
 
     /**

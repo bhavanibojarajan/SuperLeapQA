@@ -51,6 +51,16 @@ public enum CardType implements BaseErrorType {
     }
 
     /**
+     * Get the {@link String} title for the card that is displayed when there
+     * are no logs.
+     * @return {@link String} value.
+     */
+    @NotNull
+    public String emptyItemPrompt() {
+        return "addCard_title_logYour";
+    }
+
+    /**
      * Get {@link XPath} to locate the tab item corresponding to the current
      * {@link CardType} on
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}.
@@ -234,35 +244,74 @@ public enum CardType implements BaseErrorType {
      * Get {@link CardType} items for {@link Platform#ANDROID}.
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
+     * @see Attribute#not()
      * @see Attributes#containsID(String)
+     * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
+     * @see CompoundAttribute#descendant(AttributeType, AttributeType)
+     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
+     * @see CompoundAttribute.Builder#withWrapper(Wrapper)
+     * @see InputHelperType#localizer()
+     * @see LocalizerType#localize(String)
      * @see XPath.Builder#addAttribute(AttributeType)
+     * @see Joiner#AND
+     * @see Wrapper#NOT
      */
     @NotNull
     private XPath androidCardItemXP(@NotNull InputHelperType helper) {
+        LocalizerType localizer = helper.localizer();
+        String emptyTitle = emptyItemPrompt();
+        String localized = localizer.localize(emptyTitle);
         Attributes attrs = Attributes.of(helper);
-        Attribute attribute = attrs.containsID("cv_item");
-        return XPath.builder().addAttribute(attribute).build();
+
+        return XPath.builder()
+            .addAttribute(CompoundAttribute.descendant(
+                attrs.containsID("cv_item"),
+
+                CompoundAttribute.builder()
+                    .addAttribute(attrs.containsText(localized))
+                    .withWrapper(Wrapper.NOT)
+                    .build()
+            ))
+            .build();
     }
 
     /**
      * Get {@link CardType} items for {@link Platform#IOS}.
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
+     * @see Attribute#not()
+     * @see Attributes#containsText(String)
+     * @see Attributes#of(PlatformProviderType)
      * @see BaseViewType#className()
+     * @see CompoundAttribute#descendant(AttributeType, AttributeType)
      * @see CompoundAttribute#forClass(String)
+     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
+     * @see CompoundAttribute.Builder#withClass(String)
+     * @see CompoundAttribute.Builder#withWrapper(Wrapper)
      * @see XPath.Builder#addAttribute(CompoundAttribute)
      * @see IOSView.Type#UI_COLLECTION_VIEW
      * @see IOSView.Type#UI_COLLECTION_VIEW_CELL
+     * @see Wrapper#NOT
      */
     @NotNull
     private XPath iOSCardItemXP(@NotNull InputHelperType helper) {
+        Attributes attrs = Attributes.of(helper);
+        LocalizerType localizer = helper.localizer();
+        String emptyTitle = emptyItemPrompt();
+        String localized = localizer.localize(emptyTitle);
         String clvClass = IOSView.Type.UI_COLLECTION_VIEW.className();
-        String cllClass = IOSView.Type.UI_COLLECTION_VIEW_CELL.className();
 
         return XPath.builder()
             .addAttribute(CompoundAttribute.forClass(clvClass))
-            .addAttribute(CompoundAttribute.forClass(cllClass))
+            .addAttribute(CompoundAttribute.descendant(
+                CompoundAttribute.builder()
+                    .withClass(IOSView.Type.UI_COLLECTION_VIEW_CELL.className())
+                    .withWrapper(Wrapper.NOT)
+                    .build(),
+
+                attrs.containsText(localized)
+            ))
             .build();
     }
 }

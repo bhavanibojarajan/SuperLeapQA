@@ -490,6 +490,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
     @NotNull
     default Flowable<?> rxa_openEditMenu(@NotNull final Engine<?> ENGINE) {
         return rxe_edit(ENGINE)
+            .doOnNext(LogUtil::println)
             .flatMap(ENGINE::rxa_click)
             .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
