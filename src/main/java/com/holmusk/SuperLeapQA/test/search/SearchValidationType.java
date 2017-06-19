@@ -89,20 +89,20 @@ public interface SearchValidationType extends BaseValidationType {
     default Flowable<WebElement> rxe_searchResults(@NotNull Engine<?> engine) {
         Attributes attrs = Attributes.of(engine);
 
-        XPath xPath;
+        XPath xpath;
 
         if (engine instanceof AndroidEngine) {
             CompoundAttribute cAttr = CompoundAttribute.builder()
                 .addAttribute(attrs.containsID("tv_food_name"))
                 .build();
 
-            xPath = XPath.builder().addAttribute(cAttr).build();
+            xpath = XPath.builder().addAttribute(cAttr).build();
         } else if (engine instanceof IOSEngine) {
             String tblView = IOSView.Type.UI_TABLE_VIEW.className();
             String tblCell = IOSView.Type.UI_TABLE_VIEW_CELL.className();
             String stText = IOSView.Type.UI_STATIC_TEXT.className();
 
-            xPath = XPath.builder()
+            xpath = XPath.builder()
                 .addAttribute(CompoundAttribute.forClass(tblView))
                 .addAttribute(CompoundAttribute.forClass(tblCell))
                 .addAttribute(CompoundAttribute.forClass(stText))
@@ -111,7 +111,7 @@ public interface SearchValidationType extends BaseValidationType {
             throw new RuntimeException(NOT_AVAILABLE);
         }
 
-        return engine.rxe_withXPath(xPath);
+        return engine.rxe_withXPath(xpath);
     }
 
     /**

@@ -301,16 +301,17 @@ public enum CardType implements BaseErrorType {
         String emptyTitle = emptyItemPrompt();
         String localized = localizer.localize(emptyTitle);
         String clvClass = IOSView.Type.UI_COLLECTION_VIEW.className();
+        String cllClass = IOSView.Type.UI_COLLECTION_VIEW_CELL.className();
 
         return XPath.builder()
             .addAttribute(CompoundAttribute.forClass(clvClass))
             .addAttribute(CompoundAttribute.descendant(
-                CompoundAttribute.builder()
-                    .withClass(IOSView.Type.UI_COLLECTION_VIEW_CELL.className())
-                    .withWrapper(Wrapper.NOT)
-                    .build(),
+                CompoundAttribute.forClass(cllClass),
 
-                attrs.containsText(localized)
+                CompoundAttribute.builder()
+                    .addAttribute(attrs.containsText(localized))
+                    .withWrapper(Wrapper.NOT)
+                    .build()
             ))
             .build();
     }

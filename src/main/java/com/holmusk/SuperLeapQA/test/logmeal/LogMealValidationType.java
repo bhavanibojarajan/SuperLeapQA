@@ -109,12 +109,12 @@ public interface LogMealValidationType extends BaseValidationType {
                 .forClass(IOSView.Type.UI_STATIC_TEXT.className())
                 .withIndex(2);
 
-            XPath xPath = XPath.builder()
+            XPath xpath = XPath.builder()
                 .addAttribute(first)
                 .addAttribute(second)
                 .build();
 
-            return engine.rxe_withXPath(xPath).firstElement().toFlowable();
+            return engine.rxe_withXPath(xpath).firstElement().toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -177,12 +177,12 @@ public interface LogMealValidationType extends BaseValidationType {
                 .forClass(IOSView.Type.UI_BUTTON.className())
                 .withIndex(1);
 
-            XPath xPath = XPath.builder()
+            XPath xpath = XPath.builder()
                 .addAttribute(first)
                 .addAttribute(second)
                 .build();
 
-            return engine.rxe_withXPath(xPath).firstElement().toFlowable();
+            return engine.rxe_withXPath(xpath).firstElement().toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

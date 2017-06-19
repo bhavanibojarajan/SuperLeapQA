@@ -1,5 +1,6 @@
 package com.holmusk.SuperLeapQA.navigation.type;
 
+import com.holmusk.SuperLeapQA.model.CardType;
 import com.holmusk.SuperLeapQA.test.dashboard.DashboardActionType;
 import com.holmusk.SuperLeapQA.test.mealpage.MealPageActionType;
 import io.reactivex.Flowable;
@@ -105,5 +106,25 @@ public interface ScreenInitializationType extends
     @NotNull
     default Flowable<?> rxn_weightEntryInitialized(@NotNull Engine<?> engine) {
         return engine.rxa_acceptAlert();
+    }
+
+    /**
+     * When the app navigates to {@link com.holmusk.SuperLeapQA.navigation.Screen}
+     * that corresponds to {@link CardType}, perform the appropriate actions.
+     * @param engine {@link Engine} instance.
+     * @param card {@link CardType} instance.
+     * @return {@link Flowable} instance.
+     * @see #rxn_mealPageInitialized(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxn_cardItemPageInitialized(@NotNull Engine<?> engine,
+                                                    @NotNull CardType card) {
+        switch (card) {
+            case MEAL:
+                return rxn_mealPageInitialized(engine);
+
+            default:
+                return Flowable.just(true);
+        }
     }
 }

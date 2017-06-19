@@ -9,7 +9,6 @@ import com.holmusk.SuperLeapQA.navigation.ScreenHolder;
 import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import io.reactivex.Flowable;
-import org.apache.bcel.generic.POP;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.javautilities.log.LogUtil;
@@ -196,9 +195,9 @@ public final class GeneralTest {
     }
 
     @Test(dataProviderClass = TestHelper.class, dataProvider = "platformProvider")
-    public void test_xPathCreation_shouldWork(@NotNull PlatformType platform) {
+    public void test_xpathCreation_shouldWork(@NotNull PlatformType platform) {
         // Setup
-        InputHelperType helper = TestHelper.mockHelper(platform);
+        InputHelperType helper = TestHelper.mockHelper(Platform.IOS);
 
         // When & Then
         LogUtil.printlnt(CardType.ACTIVITY.cardTabXP(helper));

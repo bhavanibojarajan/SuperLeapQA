@@ -209,8 +209,8 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
             CompoundAttribute cAttr = CompoundAttribute.single(attribute)
                 .withClass(IOSView.Type.UI_BUTTON.className());
 
-            XPath xPath = XPath.builder().addAttribute(cAttr).build();
-            return ENGINE.rxe_withXPath(xPath).flatMap(ENGINE::rxa_click);
+            XPath xpath = XPath.builder().addAttribute(cAttr).build();
+            return ENGINE.rxe_withXPath(xpath).flatMap(ENGINE::rxa_click);
         } else {
             return Flowable.just(true);
         }
@@ -485,12 +485,11 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
      * @see #generalDelay(Engine)
-     * @see #rxe_edit(Engine)
+     * @see #rxe_editToggle(Engine)
      */
     @NotNull
     default Flowable<?> rxa_openEditMenu(@NotNull final Engine<?> ENGINE) {
-        return rxe_edit(ENGINE)
-            .doOnNext(LogUtil::println)
+        return rxe_editToggle(ENGINE)
             .flatMap(ENGINE::rxa_click)
             .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
     }

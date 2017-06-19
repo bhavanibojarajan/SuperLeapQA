@@ -106,13 +106,13 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_tap(Point)
-     * @see #webViewDelay(Engine)
-     * @see #rxe_TCAcceptanceLabel(Engine)
      * @see Dimension#getHeight()
      * @see Point#getX()
      * @see Point#getY()
      * @see WebElement#getLocation()
      * @see WebElement#getSize()
+     * @see #webViewDelay(Engine)
+     * @see #rxe_TCAcceptanceLabel(Engine)
      */
     @NotNull
     default Flowable<?> rxa_openTC(@NotNull final Engine<?> ENGINE) {

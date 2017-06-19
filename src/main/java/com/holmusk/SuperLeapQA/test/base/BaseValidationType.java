@@ -165,8 +165,8 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
     @NotNull
     default Flowable<WebElement> rxe_drawerItem(@NotNull Engine<?> engine,
                                                 @NotNull DrawerItem item) {
-        XPath xPath = item.drawerItemXP(engine);
-        return engine.rxe_withXPath(xPath);
+        XPath xpath = item.drawerItemXP(engine);
+        return engine.rxe_withXPath(xpath);
     }
 
     /**
@@ -245,7 +245,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<WebElement> rxe_edit(@NotNull Engine<?> engine) {
+    default Flowable<WebElement> rxe_editToggle(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             return engine
                 .rxe_containsID("action_menu")
@@ -318,7 +318,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
             .addAttribute(attrs.hasText(localized))
             .build();
 
-        XPath xPath = XPath.builder().addAttribute(cAttr).build();
-        return engine.rxe_withXPath(xPath).firstElement().toFlowable();
+        XPath xpath = XPath.builder().addAttribute(cAttr).build();
+        return engine.rxe_withXPath(xpath).firstElement().toFlowable();
     }
 }

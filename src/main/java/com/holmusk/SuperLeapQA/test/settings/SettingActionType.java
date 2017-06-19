@@ -85,13 +85,13 @@ public interface SettingActionType extends BaseActionType, SettingValidationType
                 .withIndex(index + 1)
                 .build();
 
-            XPath xPath = XPath.builder()
+            XPath xpath = XPath.builder()
                 .addAttribute(smcAttr)
                 .addAttribute(bncAttr)
                 .build();
 
             return ENGINE
-                .rxe_withXPath(xPath)
+                .rxe_withXPath(xpath)
                 .firstElement()
                 .toFlowable()
                 .flatMap(ENGINE::rxa_click)

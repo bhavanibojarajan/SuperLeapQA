@@ -1,20 +1,18 @@
 package com.holmusk.SuperLeapQA.test.base;
 
 import com.holmusk.SuperLeapQA.config.Config;
-import com.holmusk.SuperLeapQA.model.Popup;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.type.BackwardNavigationType;
 import com.holmusk.SuperLeapQA.navigation.type.ForwardNavigationType;
 import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
+import com.holmusk.SuperLeapQA.navigation.type.ScreenInitializationType;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.rx.RxTestUtil;
 import org.swiften.javautilities.test.TestNGUtil;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.element.popup.PopupType;
 import org.swiften.xtestkit.kit.TestKit;
 import org.swiften.xtestkit.test.BaseTestType;
 import org.swiften.xtestkitcomponents.common.RetryType;
@@ -31,6 +29,7 @@ public interface UIBaseTestType extends
     BaseTestType,
     BackwardNavigationType,
     ForwardNavigationType,
+    ScreenInitializationType,
     SLScreenManagerType
 {
     /**
@@ -138,11 +137,11 @@ public interface UIBaseTestType extends
     default void beforeMethod() {
         registerScreenHolders();
 
-        CompositeDisposable disposable = masterDisposable();
         Engine<?> engine = engine();
-        Popup[] popups = Popup.values();
-        Disposable d1 = engine.rxa_pollAndDismissPopup(popups).subscribe();
-        disposable.add(d1);
+//        CompositeDisposable disposable = masterDisposable();
+//        Popup[] popups = Popup.values();
+//        Disposable d1 = engine.rxa_pollAndDismissPopup(popups).subscribe();
+//        disposable.add(d1);
 
         engine.beforeMethod(RetryType.DEFAULT);
     }
@@ -151,8 +150,8 @@ public interface UIBaseTestType extends
     default void afterMethod() {
         clearAllNodes();
 
-        CompositeDisposable disposable = masterDisposable();
-        disposable.dispose();
+//        CompositeDisposable disposable = masterDisposable();
+//        disposable.dispose();
 
         engine().afterMethod(RetryType.DEFAULT);
     }

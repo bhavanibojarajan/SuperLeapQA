@@ -60,8 +60,8 @@ public interface LoginValidationType extends BaseValidationType {
             .single(attribute)
             .withClass(clsName);
 
-        XPath xPath = XPath.builder().addAttribute(cAttr).build();
-        return ENGINE.rxe_withXPath(xPath).firstElement().toFlowable();
+        XPath xpath = XPath.builder().addAttribute(cAttr).build();
+        return ENGINE.rxe_withXPath(xpath).firstElement().toFlowable();
     }
 
     /**
@@ -112,8 +112,8 @@ public interface LoginValidationType extends BaseValidationType {
             CompoundAttribute cAttr = CompoundAttribute.single(attribute)
                 .withClass(IOSView.Type.UI_LINK.className());
 
-            XPath xPath = XPath.builder().addAttribute(cAttr).build();
-            return engine.rxe_withXPath(xPath).firstElement().toFlowable();
+            XPath xpath = XPath.builder().addAttribute(cAttr).build();
+            return engine.rxe_withXPath(xpath).firstElement().toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

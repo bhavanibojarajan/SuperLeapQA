@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
@@ -241,24 +240,28 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      */
     @NotNull
     default Flowable<?> rxa_revealCardList(@NotNull final Engine<?> ENGINE) {
-        return Flowable.zip(
-            rxe_dashboardModeSwitcher(ENGINE)
-                .map(a -> ENGINE.coordinate(a, RLPoint.MID, RLPoint.MIN))
-                .map(a -> a.moveBy(0, 10)),
+        if (ENGINE instanceof AndroidEngine) {
+            return Flowable.zip(
+                rxe_dashboardModeSwitcher(ENGINE)
+                    .map(a -> ENGINE.coordinate(a, RLPoint.MID, RLPoint.MIN))
+                    .map(a -> a.moveBy(0, 10)),
 
-            rxe_dashboardCardTab(ENGINE, CardType.ALL)
-                .map(a -> ENGINE.coordinate(a, RLPoint.MID, RLPoint.MAX))
-                .map(a -> a.moveBy(0, -10)),
+                rxe_dashboardCardTab(ENGINE, CardType.ALL)
+                    .map(a -> ENGINE.coordinate(a, RLPoint.MID, RLPoint.MAX))
+                    .map(a -> a.moveBy(0, -10)),
 
-            (a, b) -> SwipeParam.builder()
-                .withStartY(b.getY())
-                .withEndY(a.getY())
-                .withStartX(a.getX())
-                .withEndX(a.getX())
-                .withTimes(1)
-                .build())
-            .flatMap(ENGINE::rxa_swipe)
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
+                (a, b) -> SwipeParam.builder()
+                    .withStartY(b.getY())
+                    .withEndY(a.getY())
+                    .withStartX(a.getX())
+                    .withEndX(a.getX())
+                    .withTimes(1)
+                    .build())
+                .flatMap(ENGINE::rxa_swipe)
+                .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
+        } else {
+            return Flowable.just(true);
+        }
     }
 
     /**
@@ -267,10 +270,15 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      * @param ENGINE {@link Engine} instance.
      * @param card {@link CardType} instance.
      * @return {@link Flowable} instance.
+     * @see Engine#rxa_click(WebElement)
+     * @see #generalDelay(Engine)
+     * @see #rxe_firstCardItem(Engine, CardType)
      */
     @NotNull
     default Flowable<?> rxa_firstCardItem(@NotNull final Engine<?> ENGINE,
                                           @NotNull CardType card) {
-        return rxe_firstCardItem(ENGINE, card).flatMap(ENGINE::rxa_click);
+        return rxe_firstCardItem(ENGINE, card)
+            .flatMap(ENGINE::rxa_click)
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 }

@@ -28,8 +28,8 @@ public interface SettingValidationType extends BaseValidationType {
     @NotNull
     default Flowable<WebElement> rxe_setting(@NotNull Engine<?> engine,
                                              @NotNull Setting setting) {
-        XPath xPath = setting.settingXP(engine);
-        return engine.rxe_withXPath(xPath).firstElement().toFlowable();
+        XPath xpath = setting.settingXP(engine);
+        return engine.rxe_withXPath(xpath).firstElement().toFlowable();
     }
 
     /**

@@ -77,13 +77,13 @@ public interface DashboardValidationType extends BaseValidationType {
     @NotNull
     default Flowable<WebElement> rxe_cardSelector(@NotNull Engine<?> engine,
                                                   @NotNull CardType card) {
-        XPath xPath = card.cardIconXP(engine);
+        XPath xpath = card.cardIconXP(engine);
 
         if (engine instanceof AndroidEngine) {
-            return engine.rxe_withXPath(xPath).firstElement().toFlowable();
+            return engine.rxe_withXPath(xpath).firstElement().toFlowable();
         } else {
             return engine
-                .rxe_withXPath(xPath)
+                .rxe_withXPath(xpath)
                 .sorted((a, b) -> {
                     Point aPoint = a.getLocation();
                     Point bPoint = b.getLocation();
@@ -105,8 +105,8 @@ public interface DashboardValidationType extends BaseValidationType {
     @NotNull
     default Flowable<WebElement> rxe_cardItems(@NotNull Engine<?> engine,
                                                @NotNull CardType card) {
-        XPath xPath = card.cardItemXP(engine);
-        return engine.rxe_withXPath(xPath);
+        XPath xpath = card.cardItemXP(engine);
+        return engine.rxe_withXPath(xpath);
     }
 
     /**
@@ -121,13 +121,23 @@ public interface DashboardValidationType extends BaseValidationType {
     default Flowable<WebElement> rxe_firstCardItem(@NotNull Engine<?> engine,
                                                    @NotNull CardType card) {
         return rxe_cardItems(engine, card)
+
+            /* We need to do this filter to avoid weird, out-of-place elements
+             * on iOS */
+            .filter(a -> a.getLocation().getY() > 0)
             .sorted((a, b) -> {
                 Point aPoint = a.getLocation();
                 Point bPoint = b.getLocation();
+                LogUtil.println(aPoint, bPoint);
                 return aPoint.getY() - bPoint.getY();
             })
             .firstElement()
-            .toFlowable();
+            .toFlowable()
+            .doOnNext(a -> {
+                LogUtil.println(a.getAttribute("type"));
+                LogUtil.println(a.getLocation());
+                LogUtil.println(a.getSize());
+            });
     }
 
     /**
@@ -169,8 +179,8 @@ public interface DashboardValidationType extends BaseValidationType {
     @NotNull
     default Flowable<WebElement> rxe_dashboardCardTab(@NotNull Engine<?> engine,
                                                       @NotNull CardType card) {
-        XPath xPath = card.cardTabXP(engine);
-        return engine.rxe_withXPath(xPath).firstElement().toFlowable();
+        XPath xpath = card.cardTabXP(engine);
+        return engine.rxe_withXPath(xpath).firstElement().toFlowable();
     }
 
     /**
@@ -273,8 +283,8 @@ public interface DashboardValidationType extends BaseValidationType {
         @NotNull UserMode mode,
         @NotNull ActivityValue type)
     {
-        XPath xPath = type.valueXP(engine, mode);
-        return engine.rxe_withXPath(xPath).firstElement().toFlowable();
+        XPath xpath = type.valueXP(engine, mode);
+        return engine.rxe_withXPath(xpath).firstElement().toFlowable();
     }
 
     /**

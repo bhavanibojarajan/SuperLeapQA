@@ -43,7 +43,7 @@ public interface MealPageActionType extends
      * from {@link com.holmusk.SuperLeapQA.navigation.Screen#SEARCH} by
      * searching for a comment, the scroll view will scroll to bottom. We need
      * to scroll up to reveal the edit button so that the {@link WebElement}
-     * from {@link #rxe_edit(Engine)} can be clicked.
+     * from {@link #rxe_editToggle(Engine)} can be clicked.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_swipeGeneric(WebElement, DirectionProviderType)

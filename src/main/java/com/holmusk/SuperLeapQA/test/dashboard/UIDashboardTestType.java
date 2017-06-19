@@ -35,8 +35,15 @@ public interface UIDashboardTestType extends UIBaseTestType, DashboardActionType
     @DataProvider
     static Iterator<Object[]> deletableCardProvider() {
         return TestNGUtil.oneFromEach(
-            new Object[] { UserMode.PARENT, UserMode.TEEN_A18 },
-            new Object[] { CardType.MEAL, CardType.WEIGHT }
+            new Object[] {
+                UserMode.PARENT
+//                UserMode.TEEN_A18
+            },
+
+            new Object[] {
+//                CardType.MEAL
+                CardType.WEIGHT
+            }
         ).iterator();
     }
 
@@ -62,6 +69,7 @@ public interface UIDashboardTestType extends UIBaseTestType, DashboardActionType
      * @see #rxa_deleteFromMenu(Engine)
      * @see #rxv_cardListEmpty(Engine, CardType)
      * @see #rxv_cardListEmpty(Engine, CardType)
+     * @see #rxn_cardItemPageInitialized(Engine, CardType)
      */
     @SuppressWarnings("unchecked")
     @Test(
@@ -80,15 +88,9 @@ public interface UIDashboardTestType extends UIBaseTestType, DashboardActionType
             rxa_revealCardList(engine),
             rxa_dashboardCardTab(engine, card),
 
-            Flowable
-                .concatArray(
-                    rxa_firstCardItem(engine, card),
-                    rxa_openEditMenu(engine),
-                    rxa_deleteFromMenu(engine)
-                )
-                .all(ObjectUtil::nonNull).toFlowable()
-                .compose(RxUtil.repeatWhile(rxv_cardListNotEmpty(engine, card)))
-                .onErrorReturnItem(true),
+            rxa_deleteFirstCardItem(engine, card).compose(
+                RxUtil.repeatWhile(rxv_cardListNotEmpty(engine, card))
+            ),
 
             rxv_cardListEmpty(engine, card)
                 .filter(BooleanUtil::isTrue)
@@ -99,5 +101,30 @@ public interface UIDashboardTestType extends UIBaseTestType, DashboardActionType
 
         // Then
         assertCorrectness(subscriber);
+    }
+
+    /**
+     * Complete steps to delete the first item corresponding to {@link CardType}.
+     * @param engine {@link Engine} instance.
+     * @param card {@link CardType} instance.
+     * @return {@link Flowable} instance.
+     * @see ObjectUtil#nonNull(Object)
+     * @see #rxa_firstCardItem(Engine, CardType)
+     * @see #rxa_openEditMenu(Engine)
+     * @see #rxa_deleteFromMenu(Engine)
+     * @see #rxn_cardItemPageInitialized(Engine, CardType)
+     */
+    @NotNull
+    default Flowable<?> rxa_deleteFirstCardItem(@NotNull Engine<?> engine,
+                                                @NotNull CardType card) {
+        return Flowable
+            .concatArray(
+                rxa_firstCardItem(engine, card),
+                rxn_cardItemPageInitialized(engine, card),
+                rxa_openEditMenu(engine),
+                rxa_deleteFromMenu(engine)
+            )
+            .all(ObjectUtil::nonNull).toFlowable()
+            .onErrorReturnItem(true);
     }
 }

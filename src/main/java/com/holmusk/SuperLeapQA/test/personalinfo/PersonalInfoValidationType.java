@@ -59,8 +59,8 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
                 .withClass(IOSView.Type.UI_BUTTON.className())
                 .build();
 
-            XPath xPath = XPath.builder().addAttribute(cAttr).build();
-            return engine.rxe_withXPath(xPath).firstElement().toFlowable();
+            XPath xpath = XPath.builder().addAttribute(cAttr).build();
+            return engine.rxe_withXPath(xpath).firstElement().toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -86,14 +86,14 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
         } else if (engine instanceof IOSEngine) {
             String clsName = IOSView.Type.UI_BUTTON.className();
             CompoundAttribute attribute = CompoundAttribute.forClass(clsName);
-            XPath xPath = XPath.builder().addAttribute(attribute).build();
+            XPath xpath = XPath.builder().addAttribute(attribute).build();
 
             /* Getting the T&C button this way is admittedly prone to failure,
              * but there is hardly a better way, since the page source for
              * iOS is not very descriptive when it comes to the button's
              * unchecked state */
             return engine
-                .rxe_withXPath(xPath).toList()
+                .rxe_withXPath(xpath).toList()
                 .map(a -> a.get(a.size() - 2))
                 .toFlowable();
         } else {
