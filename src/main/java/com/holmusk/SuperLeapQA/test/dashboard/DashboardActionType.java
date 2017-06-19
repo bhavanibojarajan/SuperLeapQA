@@ -32,7 +32,7 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      * Dismiss the tracker change popup. We declare "Not now" by default.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see BooleanUtil#toTrue(Object) 
+     * @see BooleanUtil#toTrue(Object)
      * @see Engine#rxa_click(WebElement)
      * @see Engine#rxe_containsText(String...)
      */

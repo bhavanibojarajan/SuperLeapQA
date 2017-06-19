@@ -121,6 +121,7 @@ public interface DashboardValidationType extends BaseValidationType {
     default Flowable<WebElement> rxe_firstCardItem(@NotNull Engine<?> engine,
                                                    @NotNull CardType card) {
         return rxe_cardItems(engine, card)
+            .doOnNext(a -> LogUtil.println(a.getLocation()))
 
             /* We need to do this filter to avoid weird, out-of-place elements
              * on iOS */
@@ -132,12 +133,7 @@ public interface DashboardValidationType extends BaseValidationType {
                 return aPoint.getY() - bPoint.getY();
             })
             .firstElement()
-            .toFlowable()
-            .doOnNext(a -> {
-                LogUtil.println(a.getAttribute("type"));
-                LogUtil.println(a.getLocation());
-                LogUtil.println(a.getSize());
-            });
+            .toFlowable();
     }
 
     /**

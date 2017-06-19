@@ -54,22 +54,13 @@ public interface UIDashboardTestType extends UIBaseTestType, DashboardActionType
      * much faster.
      * @param mode {@link UserMode} instance.
      * @param card {@link CardType} instance.
-     * @see BooleanUtil#isTrue(boolean)
      * @see ObjectUtil#nonNull(Object)
-     * @see RxUtil#repeatWhile(Flowable)
      * @see Screen#SPLASH
      * @see Screen#DASHBOARD
      * @see #deletableCardProvider()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rxa_revealCardList(Engine)
-     * @see #rxa_dashboardCardTab(Engine, CardType)
-     * @see #rxa_firstCardItem(Engine, CardType)
-     * @see #rxa_openEditMenu(Engine)
-     * @see #rxa_deleteFromMenu(Engine)
-     * @see #rxv_cardListEmpty(Engine, CardType)
-     * @see #rxv_cardListEmpty(Engine, CardType)
-     * @see #rxn_cardItemPageInitialized(Engine, CardType)
+     * @see #rxa_revealAndDeleteCardItems(Engine, CardType)
      */
     @SuppressWarnings("unchecked")
     @Test(
@@ -85,16 +76,7 @@ public interface UIDashboardTestType extends UIBaseTestType, DashboardActionType
         // When
         Flowable.concatArray(
             rxa_navigate(mode, Screen.SPLASH, Screen.DASHBOARD),
-            rxa_revealCardList(engine),
-            rxa_dashboardCardTab(engine, card),
-
-            rxa_deleteFirstCardItem(engine, card).compose(
-                RxUtil.repeatWhile(rxv_cardListNotEmpty(engine, card))
-            ),
-
-            rxv_cardListEmpty(engine, card)
-                .filter(BooleanUtil::isTrue)
-                .switchIfEmpty(engine.rxv_errorWithPageSource())
+            rxa_revealAndDeleteCardItems(engine, card)
         ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -126,5 +108,51 @@ public interface UIDashboardTestType extends UIBaseTestType, DashboardActionType
             )
             .all(ObjectUtil::nonNull).toFlowable()
             .onErrorReturnItem(true);
+    }
+
+    /**
+     * Delete all items for {@link CardType}.
+     * @param engine {@link Engine} instance.
+     * @param card {@link CardType} instance.
+     * @return {@link Flowable} instance.
+     * @see BooleanUtil#isTrue(boolean)
+     * @see Engine#rxv_errorWithPageSource()
+     * @see ObjectUtil#nonNull(Object)
+     * @see RxUtil#repeatWhile(Flowable)
+     * @see #rxa_deleteFirstCardItem(Engine, CardType)
+     * @see #rxv_cardListEmpty(Engine, CardType)
+     * @see #rxv_cardListNotEmpty(Engine, CardType)
+     */
+    @NotNull
+    default Flowable<?> rxa_deleteAllCardItems(@NotNull Engine<?> engine,
+                                               @NotNull CardType card) {
+        return Flowable.concatArray(
+            rxa_deleteFirstCardItem(engine, card)
+                .compose(RxUtil.repeatWhile(rxv_cardListNotEmpty(engine, card))),
+
+            rxv_cardListEmpty(engine, card)
+                .filter(BooleanUtil::isTrue)
+                .switchIfEmpty(engine.rxv_errorWithPageSource())
+        ).all(ObjectUtil::nonNull).toFlowable();
+    }
+
+    /**
+     * Reveal card list and delete all items for {@link CardType}.
+     * @param engine {@link Engine} instance.
+     * @param card {@link CardType} instance.
+     * @return {@link Flowable} instance.
+     * @see ObjectUtil#nonNull(Object)
+     * @see #rxa_revealCardList(Engine)
+     * @see #rxa_dashboardCardTab(Engine, CardType)
+     * @see #rxa_deleteAllCardItems(Engine, CardType)
+     */
+    @NotNull
+    default Flowable<?> rxa_revealAndDeleteCardItems(@NotNull Engine<?> engine,
+                                                     @NotNull CardType card) {
+        return Flowable.concatArray(
+            rxa_revealCardList(engine),
+            rxa_dashboardCardTab(engine, card),
+            rxa_deleteAllCardItems(engine, card)
+        ).all(ObjectUtil::nonNull).toFlowable();
     }
 }

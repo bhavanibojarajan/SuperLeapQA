@@ -469,7 +469,7 @@ public interface UIScreenValidationTestType extends
      * @see #generalUserModeProvider()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_randomInput(Engine, HMTextType)
-     * @see #rxa_makeNextInputVisible(Engine, WebElement)
+     * @see #rxa_makeNextInputVisible(Engine)
      * @see #rxe_editField(Engine, HMInputType)
      */
     @SuppressWarnings("unchecked")

@@ -11,6 +11,7 @@ import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.javautilities.test.TestNGUtil;
@@ -36,6 +37,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * This {@link DataProvider} is used to check for either/or input
      * requirement when the user is entering guarantor information.
      * @return {@link Iterator} instance.
+     * @see CollectionUtil#asList(Object[])
      * @see TestNGUtil#oneFromEach(Object[][])
      * @see TextInput#PARENT_NAME
      * @see TextInput#PARENT_EMAIL
@@ -44,10 +46,16 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
     @NotNull
     @DataProvider
     static Iterator<Object[]> parentPersonalInfoProvider() {
-        return TestNGUtil.oneFromEach(
-            new Object[] { TextInput.PARENT_NAME },
-            new Object[] { TextInput.PARENT_EMAIL, TextInput.PARENT_MOBILE }
-        ).iterator();
+        return TestNGUtil
+            .oneFromEach(
+                new Object[] { TextInput.PARENT_NAME },
+                new Object[] { TextInput.PARENT_EMAIL, TextInput.PARENT_MOBILE }
+            )
+            .stream()
+            .map(CollectionUtil::asList)
+            .map(a -> new Object[] { a })
+            .collect(Collectors.toList())
+            .iterator();
     }
 
     /**

@@ -45,6 +45,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Interfaces that extend this should declare methods that assist with app
  * navigation.
+ * This is the base action interface that contains common action methods that
+ * should not be declared in the action intefaces for specific screens.
  */
 public interface BaseActionType extends BaseValidationType, HMDateTimeActionType {
     /**
@@ -52,14 +54,25 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @return {@link Flowable} instance.
      * @param ENGINE {@link Engine} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see Engine#rxa_tapMiddle(WebElement)
      * @see #generalDelay(Engine)
      * @see #rxe_backButton(Engine)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_clickBackButton(@NotNull final Engine<?> ENGINE) {
-        return rxe_backButton(ENGINE)
-            .flatMap(ENGINE::rxa_click)
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
+        if (ENGINE instanceof AndroidEngine) {
+            return rxe_backButton(ENGINE)
+                .flatMap(ENGINE::rxa_click)
+                .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
+        } else if (ENGINE instanceof IOSEngine) {
+            /* Click on the coordinates directly to avoid flakiness */
+            return rxe_backButton(ENGINE)
+                .flatMap(ENGINE::rxa_tapMiddle)
+                .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 
     /**
@@ -477,6 +490,24 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
     default Flowable<?> rxa_backToDashboard(@NotNull final Engine<?> ENGINE) {
         LogUtil.printlnt("Going back to dashboard");
         return rxe_dashboardBack(ENGINE).flatMap(ENGINE::rxa_click);
+    }
+
+    /**
+     * Dismiss the meal image tutorial. However, if this is not the first time
+     * the user is logging a meal and there is no such tutorial, simply swallow
+     * the error.
+     * @param E {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see BooleanUtil#toTrue(Object)
+     * @see Engine#rxa_click(WebElement)
+     * @see #rxe_mealImageTutorialDismiss(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxa_dismissMealImageTutorial(@NotNull final Engine<?> E) {
+        return rxe_mealImageTutorialDismiss(E)
+            .flatMap(E::rxa_click)
+            .map(BooleanUtil::toTrue)
+            .onErrorReturnItem(true);
     }
 
     /**

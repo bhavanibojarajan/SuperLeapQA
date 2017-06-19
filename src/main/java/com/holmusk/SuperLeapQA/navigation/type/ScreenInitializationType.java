@@ -15,10 +15,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by haipham on 29/5/17.
  */
-public interface ScreenInitializationType extends
-    DashboardActionType,
-    MealPageActionType
-{
+public interface ScreenInitializationType extends DashboardActionType, MealPageActionType {
     /**
      * When the app navigates to
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#USE_APP_NOW} after a

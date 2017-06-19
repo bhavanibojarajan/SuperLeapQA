@@ -276,6 +276,20 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
     }
 
     /**
+     * Get the image tutorial dismiss {@link WebElement}.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxe_containsText(String...)
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_mealImageTutorialDismiss(@NotNull Engine<?> engine) {
+        return engine
+            .rxe_containsText("mealPage_title_gotIt")
+            .firstElement()
+            .toFlowable();
+    }
+
+    /**
      * Get the edit menu delete confirm button.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
