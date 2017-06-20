@@ -1,6 +1,7 @@
 package com.holmusk.SuperLeapQA.config;
 
 import com.holmusk.HMUITestKit.android.HMAndroidEngine;
+import com.holmusk.HMUITestKit.ios.HMIOSEngine;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.android.type.AndroidSDK;
 import org.swiften.xtestkit.base.Engine;

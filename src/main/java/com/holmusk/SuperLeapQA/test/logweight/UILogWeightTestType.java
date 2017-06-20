@@ -4,6 +4,7 @@ import com.holmusk.HMUITestKit.model.HMCSSInputType;
 import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
+import com.holmusk.SuperLeapQA.test.card.CardItemHelperType;
 import com.holmusk.SuperLeapQA.test.dashboard.UIDashboardTestType;
 import com.holmusk.SuperLeapQA.test.weightpage.WeightPageActionType;
 import io.reactivex.Flowable;
@@ -14,6 +15,8 @@ import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
+import org.swiften.javautilities.rx.RxUtil;
+import org.swiften.javautilities.string.StringUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.Test;
 
@@ -24,7 +27,7 @@ import java.util.Date;
  */
 public interface UILogWeightTestType extends
     UIBaseTestType,
-    UIDashboardTestType,
+    CardItemHelperType,
     LogWeightActionType,
     WeightPageActionType
 {
@@ -101,6 +104,7 @@ public interface UILogWeightTestType extends
      * @see Engine#rxv_errorWithPageSource()
      * @see LocalizerType#localize(String)
      * @see ObjectUtil#nonNull(Object)
+     * @see StringUtil#removeAll(String, String)
      * @see UserMode#defaultUserMode()
      * @see CardType#WEIGHT
      * @see ChoiceInput#START_WEIGHT
@@ -116,6 +120,9 @@ public interface UILogWeightTestType extends
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_revealAndDeleteCardItems(Engine, CardType)
      * @see #rxa_toggleDrawer(Engine, boolean)
+     * @see #rxa_selectDrawerItem(Engine, DrawerItem)
+     * @see #rxa_toggleSetting(Engine, Setting)
+     * @see #rxa_scrollToBottom(Engine)
      * @see #rxa_clickBackButton(Engine)
      * @see #rxe_weightProgressDisplay(Engine, WeightProgress)
      */
@@ -145,12 +152,8 @@ public interface UILogWeightTestType extends
              * value is not directly readable from the meal page screen on
              * Android. */
             rxe_fieldValue(E, ChoiceInput.START_WEIGHT)
-                .flatMap(a -> Flowable
-                    .fromArray("uom_title_kg", "uom_title_lbs", " ")
-                    .flatMap(LOCALIZER::rxa_localize)
-                    .reduce(a, (b, c) -> b.replaceAll(c, ""))
-                    .toFlowable()
-                )
+                .compose(RxUtil.removeFromString(LOCALIZER,
+                    "uom_title_kg", "uom_title_lbs", " "))
                 .map(Double::valueOf)
                 .doOnNext(a -> LogUtil.printft("Initial weight: %s", a))
                 .flatMap(a -> Flowable.concatArray(
@@ -159,17 +162,15 @@ public interface UILogWeightTestType extends
                     THIS.rxa_toggleDrawer(E, false),
                     THIS.rxa_navigate(MODE, Screen.DASHBOARD, Screen.WEIGHT_PAGE),
 
-                    Flowable
-                        .zip(
-                            THIS.rxe_weightProgress(E, WeightProgress.PREVIOUS),
-                            THIS.rxe_weightProgress(E, WeightProgress.CHANGE),
-                            NumberUtil::sum
-                        )
-                        .doOnNext(b -> LogUtil.printft(
-                            "Initial weight should be %s. It actually is %s", b, a))
-                        .filter(b -> b.equals(a))
-                        .switchIfEmpty(E.rxv_errorWithPageSource())
-                ).all(ObjectUtil::nonNull).toFlowable())
+                    Flowable.zip(
+                        THIS.rxe_weightProgress(E, WeightProgress.PREVIOUS),
+                        THIS.rxe_weightProgress(E, WeightProgress.CHANGE),
+                        NumberUtil::sum
+                    ).doOnNext(b -> LogUtil.printft(
+                        "Initial weight should be %s, but is %s", b, a)
+                    ).filter(b -> b.equals(a)
+                    ).switchIfEmpty(E.rxv_errorWithPageSource()))
+                )
         ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

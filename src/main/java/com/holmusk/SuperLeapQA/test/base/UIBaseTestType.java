@@ -10,7 +10,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.log.LogUtil;
-import org.swiften.javautilities.rx.RxTestUtil;
+import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.javautilities.test.TestNGUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.kit.TestKit;
@@ -110,7 +110,7 @@ public interface UIBaseTestType extends
         subscriber.assertSubscribed();
         subscriber.assertNoErrors();
         subscriber.assertComplete();
-        LogUtil.printft("Test results: %s", RxTestUtil.nextEvents(subscriber));
+        LogUtil.printft("Test results: %s", RxUtil.nextEvents(subscriber));
     }
 
     @BeforeSuite
