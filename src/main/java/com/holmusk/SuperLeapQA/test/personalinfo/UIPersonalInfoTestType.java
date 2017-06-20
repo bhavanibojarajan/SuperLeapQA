@@ -126,7 +126,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * @see #rxa_input(Engine, HMInputType, String)
      * @see #rxa_openTC(Engine)
      * @see #rxa_makeNextInputVisible(Engine)
-     * @see #rxv_hasValue(Engine, HMInputType, String)
+     * @see #rxv_fieldHasValue(Engine, HMInputType, String)
      */
     @Test
     @SuppressWarnings("unchecked")
@@ -170,10 +170,11 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
                 .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS),
 
             rxa_openTC(ENGINE),
+
             ENGINE.rxa_navigateBackOnce(),
 
             Flowable.fromIterable(TEXT_INFO).flatMap(a ->
-                THIS.rxv_hasValue(ENGINE, a, INPUTS.get(a.toString()))
+                THIS.rxv_fieldHasValue(ENGINE, a, INPUTS.get(a.toString()))
             )
         ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 

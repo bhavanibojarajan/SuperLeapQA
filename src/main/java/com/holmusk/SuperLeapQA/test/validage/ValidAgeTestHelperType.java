@@ -36,7 +36,7 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
      * @see #rxa_selectChoice(Engine, List)
      * @see #rxa_confirmNumericChoice(Engine)
      * @see #rxa_selectUnitSystemPicker(Engine, HMChoiceType, SLNumericChoiceType)
-     * @see #rxv_hasValue(Engine, HMInputType, String)
+     * @see #rxv_fieldHasValue(Engine, HMInputType, String)
      */
     @NotNull
     default Flowable<?> rxh_inchToFoot(@NotNull final Engine<?> ENGINE, final int FT) {
@@ -56,7 +56,7 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
         return rxa_selectUnitSystemPicker(ENGINE, C_HEIGHT, H_FT)
             .flatMap(a -> THIS.rxa_selectChoice(ENGINE, INPUTS))
             .flatMap(a -> THIS.rxa_confirmNumericChoice(ENGINE))
-            .flatMap(a -> THIS.rxv_hasValue(ENGINE, C_HEIGHT, STR));
+            .flatMap(a -> THIS.rxv_fieldHasValue(ENGINE, C_HEIGHT, STR));
     }
 
     /**

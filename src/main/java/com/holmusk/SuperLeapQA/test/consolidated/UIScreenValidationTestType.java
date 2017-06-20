@@ -9,7 +9,6 @@ import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import com.holmusk.SuperLeapQA.test.personalinfo.UIPersonalInfoTestType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
-import org.intellij.lang.annotations.Flow;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
@@ -26,7 +25,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by haipham on 6/4/17.
@@ -374,7 +372,7 @@ public interface UIScreenValidationTestType extends
      * @see #rxa_selectUnitSystemPicker(Engine, HMChoiceType, SLNumericChoiceType)
      * @see #rxa_confirmNumericChoice(Engine)
      * @see #rxa_confirmTextChoice(Engine)
-     * @see #rxv_hasValue(Engine, HMInputType, String)
+     * @see #rxv_fieldHasValue(Engine, HMInputType, String)
      */
     @SuppressWarnings("unchecked")
     @Test(
@@ -414,25 +412,25 @@ public interface UIScreenValidationTestType extends
             rxa_selectUnitSystemPicker(engine, ChoiceInput.HEIGHT, Height.CM),
             rxa_selectChoice(engine, heightM),
             rxa_confirmNumericChoice(engine),
-            rxv_hasValue(engine, ChoiceInput.HEIGHT, heightMStr),
+            rxv_fieldHasValue(engine, ChoiceInput.HEIGHT, heightMStr),
 
             /* Select imperial unit system for height selection */
             rxa_selectUnitSystemPicker(engine, ChoiceInput.HEIGHT, Height.FT),
             rxa_selectChoice(engine, heightI),
             rxa_confirmNumericChoice(engine),
-            rxv_hasValue(engine, ChoiceInput.HEIGHT, heightIStr),
+            rxv_fieldHasValue(engine, ChoiceInput.HEIGHT, heightIStr),
 
             /* Select metric unit system for weight selection */
             rxa_selectUnitSystemPicker(engine, ChoiceInput.WEIGHT, Weight.KG),
             rxa_selectChoice(engine, weightM),
             rxa_confirmNumericChoice(engine),
-            rxv_hasValue(engine, ChoiceInput.WEIGHT, weightMStr),
+            rxv_fieldHasValue(engine, ChoiceInput.WEIGHT, weightMStr),
 
             /* Select imperial unit system for weight selection */
             rxa_selectUnitSystemPicker(engine, ChoiceInput.WEIGHT, Weight.LB),
             rxa_selectChoice(engine, weightI),
             rxa_confirmNumericChoice(engine),
-            rxv_hasValue(engine, ChoiceInput.WEIGHT, weightIStr),
+            rxv_fieldHasValue(engine, ChoiceInput.WEIGHT, weightIStr),
 
             /* Select ethnicity */
             rxa_clickInput(engine, ChoiceInput.ETHNICITY),
@@ -508,7 +506,7 @@ public interface UIScreenValidationTestType extends
      * but also provides validations for {@link Screen#DASHBOARD}. It will
      * check {@link Screen#USE_APP_NOW} and {@link Screen#DASHBOARD_TUTORIAL}
      * as well.
-     * @param MODE {@link UserMode} instance.
+     * @param mode {@link UserMode} instance.
      * @see ObjectUtil#nonNull(Object)
      * @see DashboardMode#ACTIVITY
      * @see DashboardMode#BMI
@@ -529,18 +527,18 @@ public interface UIScreenValidationTestType extends
         dataProviderClass = UIBaseTestType.class,
         dataProvider = "guarantorSpecificUserModeProvider"
     )
-    default void test_signUpNewAccount_shouldSucceed(@NotNull final UserMode MODE) {
+    default void test_signUpNewAccount_shouldSucceed(@NotNull UserMode mode) {
         // Setup
         Engine<?> engine = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         Flowable.concatArray(
-            rxa_navigate(MODE, Screen.SPLASH, Screen.DOB, Screen.DASHBOARD),
+            rxa_navigate(mode, Screen.SPLASH, Screen.DOB, Screen.DASHBOARD),
             rxa_dashboardMode(engine, DashboardMode.BMI),
             rxv_dashboardBMI(engine),
             rxa_dashboardMode(engine, DashboardMode.ACTIVITY),
-            rxv_dashboardActivity(engine, MODE)
+            rxv_dashboardActivity(engine, mode)
         ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

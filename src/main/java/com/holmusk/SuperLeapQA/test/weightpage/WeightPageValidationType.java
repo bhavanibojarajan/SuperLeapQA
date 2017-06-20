@@ -1,38 +1,52 @@
 package com.holmusk.SuperLeapQA.test.weightpage;
 
+import com.holmusk.SuperLeapQA.model.WeightProgress;
 import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
-import org.intellij.lang.annotations.Flow;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.xtestkit.android.AndroidEngine;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.ios.IOSEngine;
+import org.swiften.xtestkit.base.model.InputHelperType;
+import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
  * Created by haipham on 6/11/17.
  */
 public interface WeightPageValidationType extends BaseValidationType {
-    default Flowable<WebElement> rxe_prevWeightDisplay(@NotNull Engine<?> engine) {
-        if (engine instanceof AndroidEngine) {
-            return engine
-                .rxe_containsID("tv_item_activity_weight_detail_valueleft")
-                .firstElement()
-                .toFlowable();
-        } else {
-            throw new RuntimeException(NOT_AVAILABLE);
-        }
+    /**
+     * Get the display {@link WebElement} that corresponds to
+     * {@link WeightProgress} instance.
+     * @param engine {@link Engine} instance.
+     * @param type {@link WeightProgress} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxe_withXPath(XPath...)
+     * @see WeightProgress#valueXP(InputHelperType)
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_weightProgressDisplay(
+        @NotNull Engine<?> engine,
+        @NotNull WeightProgress type
+    ) {
+        XPath xPath = type.valueXP(engine);
+        return engine.rxe_withXPath(xPath).firstElement().toFlowable();
     }
 
+    /**
+     * Get the weight progress value as {@link Double}.
+     * @param ENGINE {@link Engine} instance.
+     * @param WP {@link WeightProgress} instance.
+     * @return {@link Flowable} instance.
+     * @see Double#valueOf(String)
+     * @see Engine#getText(WebElement)
+     * @see #rxe_weightProgressDisplay(Engine, WeightProgress)
+     */
     @NotNull
-    default Flowable<WebElement> rxe_weightChangeDisplay(@NotNull Engine<?> engine) {
-        if (engine instanceof AndroidEngine) {
-            return engine
-                .rxe_containsID("tv_item_activity_weight_detail_valuemid")
-                .firstElement()
-                .toFlowable();
-        } else {
-            throw new RuntimeException(NOT_AVAILABLE);
-        }
+    default Flowable<Double> rxe_weightProgress(@NotNull final Engine<?> ENGINE,
+                                                @NotNull final WeightProgress WP) {
+        return rxe_weightProgressDisplay(ENGINE, WP)
+            .map(ENGINE::getText)
+            .map(Double::valueOf)
+            .doOnNext(a -> LogUtil.printft("Value for %s is %s", WP, a));
     }
 }

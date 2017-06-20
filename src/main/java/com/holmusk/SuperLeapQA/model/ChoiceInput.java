@@ -23,7 +23,48 @@ public enum ChoiceInput implements HMTextChoiceType {
     HEIGHT,
     WEIGHT,
     ETHNICITY,
-    COACH_PREF;
+    COACH_PREF,
+
+    /* These inputs can be found in Settings > Profile */
+    START_WEIGHT;
+
+    /**
+     * Get the title {@link String} corresponding to the current
+     * {@link ChoiceInput}.
+     * @return {@link String} value.
+     * @see #COACH_PREF
+     * @see #ETHNICITY
+     * @see #GENDER
+     * @see #HEIGHT
+     * @see #WEIGHT
+     * @see #START_WEIGHT
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    public String title() {
+        switch (this) {
+            case GENDER:
+                return "user_title_gender";
+
+            case HEIGHT:
+                return "user_title_height";
+
+            case WEIGHT:
+                return "user_title_weight";
+
+            case ETHNICITY:
+                return "user_title_ethnicity";
+
+            case COACH_PREF:
+                return "user_title_coachPref";
+
+            case START_WEIGHT:
+                return "user_profile_title_startWeight";
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
 
     /**
      * Override this method to provide default implementation.
@@ -95,6 +136,7 @@ public enum ChoiceInput implements HMTextChoiceType {
      * @see #ETHNICITY
      * @see #HEIGHT
      * @see #WEIGHT
+     * @see #START_WEIGHT
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -120,6 +162,10 @@ public enum ChoiceInput implements HMTextChoiceType {
                 ID = "et_coachpref";
                 break;
 
+            case START_WEIGHT:
+                ID = "tv_start_weight";
+                break;
+
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -135,22 +181,23 @@ public enum ChoiceInput implements HMTextChoiceType {
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
      * @see Axes#followingSibling(AttributeType)
-     * @see CompoundAttribute#forClass(String)
      * @see CompoundAttribute#withIndex(Integer)
+     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
+     * @see CompoundAttribute.Builder#withClass(String)
      * @see Engine#localizer()
      * @see LocalizerType#localize(String)
      * @see ViewType#className()
      * @see Platform#IOS
      * @see IOSView.Type#UI_STATIC_TEXT
      * @see IOSView.Type#UI_TEXT_FIELD
-     * @see #iOSTitleDescription()
+     * @see #title()
      * @see #values()
      */
     @NotNull
     private XPath iOSInputViewXP(@NotNull InputHelperType helper) {
         LocalizerType localizer = helper.localizer();
         Platform platform = Platform.IOS;
-        String title = iOSTitleDescription();
+        String title = title();
         String localized = localizer.localize(title);
         String st = IOSView.Type.UI_STATIC_TEXT.className();
         String tf = IOSView.Type.UI_TEXT_FIELD.className();
@@ -159,41 +206,11 @@ public enum ChoiceInput implements HMTextChoiceType {
         CompoundAttribute tfCAttr = CompoundAttribute.forClass(tf);
 
         return XPath.builder()
-            .addAttribute(CompoundAttribute.forClass(st).addAttribute(stAttr))
+            .addAttribute(CompoundAttribute.builder()
+                .withClass(st)
+                .addAttribute(stAttr)
+                .build())
             .addAttribute(Axes.followingSibling(tfCAttr))
             .build();
-    }
-
-    /**
-     * Get the title description to be used with
-     * {@link #iOSInputViewXP(InputHelperType)}.
-     * @return {@link String} value.
-     * @see #COACH_PREF
-     * @see #ETHNICITY
-     * @see #GENDER
-     * @see #HEIGHT
-     * @see #WEIGHT
-     */
-    @NotNull
-    private String iOSTitleDescription() {
-        switch (this) {
-            case GENDER:
-                return "user_title_gender";
-
-            case HEIGHT:
-                return "user_title_height";
-
-            case WEIGHT:
-                return "user_title_weight";
-
-            case ETHNICITY:
-                return "user_title_ethnicity";
-
-            case COACH_PREF:
-                return "user_title_coachPref";
-
-            default:
-                throw new RuntimeException(NOT_AVAILABLE);
-        }
     }
 }

@@ -129,7 +129,6 @@ public interface DashboardValidationType extends BaseValidationType {
             .sorted((a, b) -> {
                 Point aPoint = a.getLocation();
                 Point bPoint = b.getLocation();
-                LogUtil.println(aPoint, bPoint);
                 return aPoint.getY() - bPoint.getY();
             })
             .firstElement()

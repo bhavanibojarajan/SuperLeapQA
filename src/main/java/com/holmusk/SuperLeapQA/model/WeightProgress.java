@@ -115,6 +115,8 @@ public enum WeightProgress implements BaseErrorType {
      * @see Attributes#of(PlatformProviderType)
      * @see Axes#child(AttributeType)
      * @see Axes#followingSibling(AttributeType)
+     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
+     * @see CompoundAttribute.Builder#withClass(String)
      * @see CompoundAttribute#empty()
      * @see ViewType#className()
      * @see XPath.Builder#addAttribute(AttributeType)
@@ -140,6 +142,4 @@ public enum WeightProgress implements BaseErrorType {
             .addAttribute(Axes.child(CompoundAttribute.empty()))
             .build();
     }
-
-
 }

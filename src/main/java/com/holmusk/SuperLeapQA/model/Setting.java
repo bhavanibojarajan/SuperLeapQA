@@ -15,6 +15,7 @@ import org.swiften.xtestkitcomponents.xpath.*;
  * Created by haipham on 6/10/17.
  */
 public enum Setting implements BaseErrorType {
+    PROFILE,
     GOAL,
     FOOD,
     LOCATION,
@@ -25,15 +26,19 @@ public enum Setting implements BaseErrorType {
      * {@link org.openqa.selenium.WebElement} that corresponds to the current
      * {@link Setting}.
      * @return {@link String} value.
-     * @see #GOAL
      * @see #FOOD
+     * @see #GOAL
      * @see #LOCATION
+     * @see #PROFILE
      * @see #UNITS
      * @see #NOT_AVAILABLE
      */
     @NotNull
     public String title() {
         switch (this) {
+            case PROFILE:
+                return "settings_title_profile";
+
             case GOAL:
                 return "settings_title_goal";
 

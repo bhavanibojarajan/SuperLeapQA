@@ -12,6 +12,7 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.localizer.LocalizerType;
+import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
@@ -122,6 +123,91 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
             .firstElement()
             .toFlowable();
     }
+
+    /**
+     * Get the current value displayed by {@link WebElement} instance.
+     * @param ENGINE {@link Engine} instance.
+     * @param INPUT {@link HMInputType} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#getText(WebElement)
+     * @see #rxe_editField(Engine, HMInputType)
+     */
+    @NotNull
+    default Flowable<String> rxe_fieldValue(@NotNull final Engine<?> ENGINE,
+                                            @NotNull final HMInputType INPUT) {
+        return rxe_editField(ENGINE, INPUT).map(ENGINE::getText)
+            .doOnNext(a -> LogUtil.printft("Value for %s: %s", INPUT, a));
+    }
+
+    /**
+     * Check if an editable field has an input.
+     * @param ENGINE {@link Engine} instance.
+     * @param INPUT {@link InputType} instance.
+     * @param VALUE {@link String} value.
+     * @return {@link Flowable} instance.
+     * @see BooleanUtil#toTrue(Object)
+     * @see Engine#getText(WebElement)
+     * @see Engine#rxv_errorWithPageSource(String)
+     * @see #rxe_editField(Engine, HMInputType)
+     */
+    @NotNull
+    default Flowable<?> rxv_fieldHasValue(@NotNull final Engine<?> ENGINE,
+                                          @NotNull final HMInputType INPUT,
+                                          @NotNull final String VALUE) {
+        return rxe_fieldValue(ENGINE, INPUT)
+            .filter(a -> a.toLowerCase().equals(VALUE.toLowerCase()))
+            .switchIfEmpty(ENGINE.rxv_errorWithPageSource(String.format(
+                "Value for %s does not equal %s", INPUT, VALUE)))
+            .map(BooleanUtil::toTrue);
+    }
+
+    /**
+     * Get the confirm button for numeric choice inputs
+     * (e.g. {@link com.holmusk.SuperLeapQA.model.Height} and
+     * {@link com.holmusk.SuperLeapQA.model.Weight}).
+     * @return {@link Flowable} instance.
+     * @see Engine#rxe_containsID(String...)
+     * @see Engine#rxe_containsText(String...)
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_numericChoiceConfirm(@NotNull Engine<?> engine) {
+        if (engine instanceof AndroidEngine) {
+            return engine
+                .rxe_containsID("btnDone")
+                .firstElement()
+                .toFlowable();
+        } else if (engine instanceof IOSEngine) {
+            return engine
+                .rxe_containsText("input_title_done")
+                .firstElement()
+                .toFlowable();
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+
+    /**
+     * Get the confirm button for text choice inputs (e.g.
+     * {@link com.holmusk.SuperLeapQA.model.ChoiceInput#ETHNICITY} or
+     * {@link com.holmusk.SuperLeapQA.model.ChoiceInput#COACH_PREF}.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxe_containsText(String...)
+     * @see #NOT_AVAILABLE
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_textChoiceConfirm(@NotNull Engine<?> engine) {
+        if (engine instanceof IOSEngine) {
+            return engine
+                .rxe_containsText("input_title_done")
+                .firstElement()
+                .toFlowable();
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+
 
     /**
      * Get the drawer toggle {@link WebElement}.
