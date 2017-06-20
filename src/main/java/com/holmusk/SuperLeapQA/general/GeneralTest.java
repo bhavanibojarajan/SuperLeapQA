@@ -197,12 +197,17 @@ public final class GeneralTest {
     @Test(dataProviderClass = TestHelper.class, dataProvider = "platformProvider")
     public void test_xpathCreation_shouldWork(@NotNull PlatformType platform) {
         // Setup
-        InputHelperType helper = TestHelper.mockHelper(Platform.IOS);
+        InputHelperType helper = TestHelper.mockHelper(platform);
 
         // When & Then
+        LogUtil.printlnt(ActivityValue.TODAY.valueXP(helper, UserMode.PARENT));
         LogUtil.printlnt(CardType.ACTIVITY.cardTabXP(helper));
         LogUtil.printlnt(CardType.ACTIVITY.cardItemXP(helper));
+        LogUtil.printlnt(ChoiceInput.HEIGHT.inputViewXP(helper));
         LogUtil.printlnt(Popup.RATING.dismissXP(helper));
         LogUtil.printlnt(Popup.RATING.presenceXP(helper));
+        LogUtil.printlnt(TextInput.POSTAL_CODE.inputViewXP(helper));
+        LogUtil.printlnt(Setting.FOOD.settingXP(helper));
+        LogUtil.printlnt(WeightProgress.PREVIOUS.valueXP(helper));
     }
 }

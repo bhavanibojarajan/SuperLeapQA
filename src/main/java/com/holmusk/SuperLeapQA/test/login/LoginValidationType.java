@@ -13,7 +13,7 @@ import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
-import org.swiften.xtestkitcomponents.view.BaseViewType;
+import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkitcomponents.xpath.*;
@@ -28,7 +28,7 @@ public interface LoginValidationType extends BaseValidationType {
      * @return {@link Flowable} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
-     * @see BaseViewType#className()
+     * @see ViewType#className()
      * @see CompoundAttribute#single(AttributeType)
      * @see CompoundAttribute#withClass(String)
      * @see Engine#rxe_withXPath(XPath...)
@@ -84,7 +84,7 @@ public interface LoginValidationType extends BaseValidationType {
      * @return {@link Flowable} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
-     * @see BaseViewType#className()
+     * @see ViewType#className()
      * @see CompoundAttribute#single(AttributeType)
      * @see CompoundAttribute#withClass(String)
      * @see Engine#localizer()

@@ -9,7 +9,7 @@ import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.view.BaseViewType;
+import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
@@ -70,7 +70,7 @@ public enum CardType implements BaseErrorType {
      * @see Attributes#of(PlatformProviderType)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see CompoundAttribute.Builder#withClass(String)
-     * @see BaseViewType#className()
+     * @see ViewType#className()
      * @see InputHelperType#localizer()
      * @see InputHelperType#platform()
      * @see LocalizerType#localize(String)
@@ -189,7 +189,7 @@ public enum CardType implements BaseErrorType {
      * @see Attributes#containsText(String)
      * @see Attributes#hasText(String)
      * @see Attributes#of(PlatformProviderType)
-     * @see BaseViewType#className()
+     * @see ViewType#className()
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see CompoundAttribute.Builder#withClass(String)
      * @see InputHelperType#localizer()
@@ -248,7 +248,7 @@ public enum CardType implements BaseErrorType {
      * @see Attributes#containsID(String)
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
-     * @see CompoundAttribute#descendant(AttributeType, AttributeType)
+     * @see Axes#descendant(AttributeType)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see CompoundAttribute.Builder#withWrapper(Wrapper)
      * @see InputHelperType#localizer()
@@ -265,13 +265,11 @@ public enum CardType implements BaseErrorType {
         Attributes attrs = Attributes.of(helper);
 
         return XPath.builder()
-            .addAttribute(CompoundAttribute.descendant(
-                attrs.containsID("cv_item"),
-
-                CompoundAttribute.builder()
-                    .addAttribute(attrs.containsText(localized))
-                    .withWrapper(Wrapper.NOT)
-                    .build()
+            .addAttribute(attrs.containsID("cv_item"))
+            .addAttribute(Axes.descendant(CompoundAttribute.builder()
+                .addAttribute(attrs.containsText(localized))
+                .withWrapper(Wrapper.NOT)
+                .build()
             ))
             .build();
     }
@@ -283,12 +281,12 @@ public enum CardType implements BaseErrorType {
      * @see Attribute#not()
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
-     * @see BaseViewType#className()
-     * @see CompoundAttribute#descendant(AttributeType, AttributeType)
+     * @see Axes#descendant(AttributeType)
      * @see CompoundAttribute#forClass(String)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see CompoundAttribute.Builder#withClass(String)
      * @see CompoundAttribute.Builder#withWrapper(Wrapper)
+     * @see ViewType#className()
      * @see XPath.Builder#addAttribute(CompoundAttribute)
      * @see IOSView.Type#UI_COLLECTION_VIEW
      * @see IOSView.Type#UI_COLLECTION_VIEW_CELL
@@ -305,13 +303,11 @@ public enum CardType implements BaseErrorType {
 
         return XPath.builder()
             .addAttribute(CompoundAttribute.forClass(clvClass))
-            .addAttribute(CompoundAttribute.descendant(
-                CompoundAttribute.forClass(cllClass),
-
-                CompoundAttribute.builder()
-                    .addAttribute(attrs.containsText(localized))
-                    .withWrapper(Wrapper.NOT)
-                    .build()
+            .addAttribute(CompoundAttribute.forClass(cllClass))
+            .addAttribute(Axes.descendant(CompoundAttribute.builder()
+                .addAttribute(attrs.containsText(localized))
+                .withWrapper(Wrapper.NOT)
+                .build()
             ))
             .build();
     }

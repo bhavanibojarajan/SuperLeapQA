@@ -12,7 +12,7 @@ import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkitcomponents.view.BaseViewType;
+import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
@@ -84,7 +84,7 @@ public interface LogMealValidationType extends BaseValidationType {
      * Get the meal time display text view.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see BaseViewType#className()
+     * @see ViewType#className()
      * @see CompoundAttribute#forClass(String)
      * @see CompoundAttribute#withIndex(Integer)
      * @see Engine#rxe_withXPath(XPath...)
@@ -125,7 +125,7 @@ public interface LogMealValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see AndroidView.Type#SWITCH
-     * @see BaseViewType#className()
+     * @see ViewType#className()
      * @see Engine#rxe_ofClass(String...)
      * @see IOSView.Type#UI_SWITCH
      * @see #NOT_AVAILABLE
@@ -152,7 +152,7 @@ public interface LogMealValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @param index {@link Integer} value representing the current pick index.
      * @return {@link Flowable} instance.
-     * @see BaseViewType#className()
+     * @see ViewType#className()
      * @see CompoundAttribute#forClass(String)
      * @see CompoundAttribute#withIndex(Integer)
      * @see Engine#rxe_containsID(String...)

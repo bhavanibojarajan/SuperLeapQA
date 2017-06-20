@@ -4,15 +4,13 @@ import com.holmusk.HMUITestKit.model.HMTextChoiceType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.localizer.LocalizerType;
-import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
-import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.view.BaseViewType;
+import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 import java.util.List;
@@ -60,6 +58,7 @@ public enum ChoiceInput implements HMTextChoiceType {
      * Override this method to provide default implementation.
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} value.
+     * @see InputHelperType#platform()
      * @see InputType#inputViewXP(InputHelperType)
      * @see Platform#ANDROID
      * @see Platform#IOS
@@ -70,12 +69,17 @@ public enum ChoiceInput implements HMTextChoiceType {
     @NotNull
     @Override
     public XPath inputViewXP(@NotNull InputHelperType helper) {
-        if (helper instanceof AndroidEngine) {
-            return androidInputViewXP(helper);
-        } else if (helper instanceof IOSEngine) {
-            return iOSInputViewXP(helper);
-        } else {
-            throw new RuntimeException(NOT_AVAILABLE);
+        PlatformType platform = helper.platform();
+
+        switch ((Platform)platform) {
+            case ANDROID:
+                return androidInputViewXP(helper);
+
+            case IOS:
+                return iOSInputViewXP(helper);
+
+            default:
+                throw new RuntimeException(NOT_AVAILABLE);
         }
     }
 
@@ -130,12 +134,12 @@ public enum ChoiceInput implements HMTextChoiceType {
      * @return {@link XPath} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
-     * @see BaseViewType#className()
-     * @see CompoundAttribute#followingSibling(AttributeType, AttributeType)
+     * @see Axes#followingSibling(AttributeType)
      * @see CompoundAttribute#forClass(String)
      * @see CompoundAttribute#withIndex(Integer)
      * @see Engine#localizer()
      * @see LocalizerType#localize(String)
+     * @see ViewType#className()
      * @see Platform#IOS
      * @see IOSView.Type#UI_STATIC_TEXT
      * @see IOSView.Type#UI_TEXT_FIELD
@@ -152,12 +156,12 @@ public enum ChoiceInput implements HMTextChoiceType {
         String tf = IOSView.Type.UI_TEXT_FIELD.className();
         Attributes attrs = Attributes.of(platform);
         Attribute stAttr = attrs.containsText(localized);
+        CompoundAttribute tfCAttr = CompoundAttribute.forClass(tf);
 
         return XPath.builder()
-            .addAttribute(CompoundAttribute.followingSibling(
-                CompoundAttribute.forClass(tf),
-                CompoundAttribute.forClass(st).addAttribute(stAttr)
-            )).build();
+            .addAttribute(CompoundAttribute.forClass(st).addAttribute(stAttr))
+            .addAttribute(Axes.followingSibling(tfCAttr))
+            .build();
     }
 
     /**

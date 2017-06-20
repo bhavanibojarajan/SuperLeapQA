@@ -1,7 +1,6 @@
 package com.holmusk.SuperLeapQA.config;
 
 import com.holmusk.HMUITestKit.android.HMAndroidEngine;
-import com.holmusk.HMUITestKit.ios.HMIOSEngine;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.android.type.AndroidSDK;
 import org.swiften.xtestkit.base.Engine;
@@ -19,6 +18,7 @@ import java.util.Locale;
 public final class Config {
     @NotNull private static final String ANDROID_APP_PACKAGE;
     @NotNull private static final String ANDROID_APP_ACTIVITY;
+    @NotNull private static final String ANDROID_APP_PATH;
     @NotNull private static final String IOS_APP_PACKAGE;
     @NotNull private static final String IOS_APP_PATH;
     @NotNull private static final List<Engine> ENGINES;
@@ -30,6 +30,7 @@ public final class Config {
     static {
         ANDROID_APP_PACKAGE = "com.holmusk.superleap";
         ANDROID_APP_ACTIVITY = ".ui.activity.SplashActivity";
+        ANDROID_APP_PATH = Paths.get("app", "app-debug.apk").toString();
         IOS_APP_PACKAGE = "com.holmusk.superleap";
         IOS_APP_PATH = Paths.get("app", "Superleap.app").toString();
 
@@ -82,6 +83,7 @@ public final class Config {
             .withSDK(AndroidSDK.SDK_23)
             .withAppActivity(ANDROID_APP_ACTIVITY)
             .withAppPackage(ANDROID_APP_PACKAGE)
+            .withApp(ANDROID_APP_PATH)
             .withDeviceName("Nexus_4_API_23")
             .withTestMode(TestMode.SIMULATED)
             .build());

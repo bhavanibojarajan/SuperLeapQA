@@ -2,9 +2,11 @@ package com.holmusk.SuperLeapQA.test.logweight;
 
 import com.holmusk.HMUITestKit.model.HMCSSInputType;
 import com.holmusk.SuperLeapQA.model.CSSInput;
+import com.holmusk.SuperLeapQA.model.CardType;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
+import com.holmusk.SuperLeapQA.test.dashboard.UIDashboardTestType;
 import com.holmusk.SuperLeapQA.test.weightpage.WeightPageActionType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
@@ -21,6 +23,7 @@ import java.util.Date;
  */
 public interface UILogWeightTestType extends
     UIBaseTestType,
+    UIDashboardTestType,
     LogWeightActionType,
     WeightPageActionType
 {
@@ -79,6 +82,44 @@ public interface UILogWeightTestType extends
                         .flatMap(c -> ENGINE.rxv_errorWithPageSource())
                         .onErrorReturnItem(true))
                 )
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+
+        subscriber.awaitTerminalEvent();
+
+        // Then
+        assertCorrectness(subscriber);
+    }
+
+    /**
+     * Check that the initial weight is taken into account when the user
+     * first logs a weight card, i.e. the change in the first weight page
+     * should be non-zero most of the time. We need to delete all weight cards
+     * before logging a new weight.
+     * @see ObjectUtil#nonNull(Object)
+     * @see UserMode#defaultUserMode()
+     * @see CardType#WEIGHT
+     * @see Screen#SPLASH
+     * @see Screen#LOGIN
+     * @see Screen#DASHBOARD
+     * @see #assertCorrectness(TestSubscriber)
+     * @see #engine()
+     * @see #rxa_navigate(UserMode, Screen...)
+     * @see #rxa_deleteAllCardItems(Engine, CardType)
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    default void test_logFirstWeight_shouldComputeCorrectChange() {
+        // Setup
+        final UILogWeightTestType THIS = this;
+        final Engine<?> ENGINE = engine();
+        UserMode mode = UserMode.defaultUserMode();
+        CardType card = CardType.WEIGHT;
+        TestSubscriber subscriber = CustomTestSubscriber.create();
+
+        // When
+        Flowable.concatArray(
+            rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD),
+            rxa_deleteAllCardItems(ENGINE, card)
         ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

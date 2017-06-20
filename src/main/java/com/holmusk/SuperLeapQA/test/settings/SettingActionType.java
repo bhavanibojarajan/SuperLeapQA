@@ -13,7 +13,7 @@ import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkitcomponents.view.BaseViewType;
+import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
@@ -43,7 +43,7 @@ public interface SettingActionType extends BaseActionType, SettingValidationType
      * @param ENGINE {@link Engine} instance.
      * @param unit {@link UnitSystem} instance.
      * @return {@link Flowable} instance.
-     * @see BaseViewType#className()
+     * @see ViewType#className()
      * @see BooleanUtil#isTrue(Object)
      * @see CompoundAttribute#forClass(String)
      * @see CompoundAttribute.Builder#withClass(String)

@@ -25,7 +25,7 @@ import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.platform.XMLAttributeType;
-import org.swiften.xtestkitcomponents.view.BaseViewType;
+import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
@@ -211,7 +211,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @see Attribute.Builder#addAttribute(String)
      * @see Attribute.Builder#withValue(Object)
      * @see Attribute.Builder#withFormatible(Formatible)
-     * @see BaseViewType#className()
+     * @see ViewType#className()
      * @see Engine#rxe_ofClass(String...)
      * @see Formatibles#containsString()
      * @see Point#getX()
@@ -296,7 +296,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @see Attributes#containsText(String)
      * @see Attributes#hasText(String)
      * @see Attributes#of(PlatformProviderType)
-     * @see BaseViewType#className()
+     * @see ViewType#className()
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see CompoundAttribute.Builder#withClass(String)
      * @see Engine#localizer()

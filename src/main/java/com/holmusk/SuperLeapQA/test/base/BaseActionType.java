@@ -35,7 +35,7 @@ import org.swiften.xtestkitcomponents.coordinate.RLPositionType;
 import org.swiften.xtestkitcomponents.direction.Direction;
 import org.swiften.xtestkitcomponents.direction.DirectionProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
-import org.swiften.xtestkitcomponents.view.BaseViewType;
+import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 import java.util.Arrays;
@@ -199,7 +199,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @return {@link Flowable} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
-     * @see BaseViewType#className()
+     * @see ViewType#className()
      * @see CompoundAttribute#single(AttributeType)
      * @see CompoundAttribute#withClass(String)
      * @see Engine#localizer()

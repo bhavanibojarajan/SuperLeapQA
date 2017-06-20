@@ -10,7 +10,7 @@ import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.view.BaseViewType;
+import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
@@ -67,7 +67,7 @@ public enum DrawerItem implements BaseErrorType {
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
      * @see Attributes#ofClass(String)
-     * @see BaseViewType#className()
+     * @see ViewType#className()
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see Engine#localizer()
      * @see LocalizerType#localize(String)

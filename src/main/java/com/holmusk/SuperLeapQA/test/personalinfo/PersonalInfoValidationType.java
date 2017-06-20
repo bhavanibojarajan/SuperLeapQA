@@ -12,7 +12,7 @@ import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
-import org.swiften.xtestkitcomponents.view.BaseViewType;
+import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
@@ -32,7 +32,7 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
      * @return {@link Flowable} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
-     * @see BaseViewType#className()
+     * @see ViewType#className()
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see CompoundAttribute.Builder#withClass(String)
      * @see Engine#localizer()
@@ -70,7 +70,7 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
      * Get the Terms and Conditions checkbox.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see BaseViewType#className()
+     * @see ViewType#className()
      * @see CompoundAttribute#forClass(String)
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_withXPath(XPath...)

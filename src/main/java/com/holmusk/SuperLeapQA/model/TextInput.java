@@ -13,7 +13,6 @@ import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.view.BaseViewType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 import java.util.List;
@@ -149,8 +148,7 @@ public enum TextInput implements BaseErrorType, HMTextType {
      * @see Attribute.Builder#withJoiner(Joiner)
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
-     * @see BaseViewType#className()
-     * @see CompoundAttribute#followingSibling(AttributeType, AttributeType)
+     * @see Axes#followingSibling(AttributeType)
      * @see CompoundAttribute#forClass(String)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see CompoundAttribute.Builder#withClass(String)
@@ -158,6 +156,7 @@ public enum TextInput implements BaseErrorType, HMTextType {
      * @see InputHelperType#localizer()
      * @see InputHelperType#platform()
      * @see LocalizerType#localize(String)
+     * @see org.swiften.xtestkitcomponents.view.ViewType#className()
      * @see XPath.Builder#addAttribute(AttributeType)
      * @see XPath.Builder#addAttribute(CompoundAttribute)
      * @see IOSView.Type#UI_SECURE_TEXT_FIELD
@@ -174,7 +173,7 @@ public enum TextInput implements BaseErrorType, HMTextType {
         LocalizerType localizer = helper.localizer();
         String shortDsc = iOSShortDescription();
         String localized = localizer.localize(shortDsc);
-        String tfClassName = IOSView.Type.UI_TEXT_FIELD.className();
+        String tfClass = IOSView.Type.UI_TEXT_FIELD.className();
         Attribute ctText = attrs.containsText(localized);
 
         switch (this) {
@@ -182,22 +181,22 @@ public enum TextInput implements BaseErrorType, HMTextType {
              * static text label */
             case POSTAL_CODE:
             case UNIT_NUMBER:
-                return XPath.builder()
-                    .addAttribute(CompoundAttribute.followingSibling(
-                        CompoundAttribute.forClass(tfClassName),
+                CompoundAttribute tfCAttr = CompoundAttribute.forClass(tfClass);
 
-                        CompoundAttribute.builder()
-                            .addAttribute(ctText)
-                            .withClass(IOSView.Type.UI_STATIC_TEXT.className())
-                            .build())
-                    ).build();
+                return XPath.builder()
+                    .addAttribute(CompoundAttribute.builder()
+                        .addAttribute(ctText)
+                        .withClass(IOSView.Type.UI_STATIC_TEXT.className())
+                        .build())
+                    .addAttribute(Axes.followingSibling(tfCAttr))
+                    .build();
 
             default:
                 List<AttributeType> clsAttrs = CollectionUtil
                     .asList(
                         IOSView.Type.UI_SECURE_TEXT_FIELD.className(),
                         IOSView.Type.UI_TEXT_VIEW.className(),
-                        tfClassName
+                        tfClass
                     )
                     .stream()
                     .map(a -> Attribute.<String>builder()

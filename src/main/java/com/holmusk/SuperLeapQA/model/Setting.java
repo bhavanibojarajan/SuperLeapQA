@@ -8,7 +8,7 @@ import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.view.BaseViewType;
+import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
@@ -111,7 +111,7 @@ public enum Setting implements BaseErrorType {
      * @return {@link CompoundAttribute} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
-     * @see BaseViewType#className()
+     * @see ViewType#className()
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see CompoundAttribute.Builder#withClass(String)
      * @see InputHelperType#localizer()
@@ -164,10 +164,10 @@ public enum Setting implements BaseErrorType {
      * is true.
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
-     * @see BaseViewType#className()
-     * @see CompoundAttribute#followingSibling(AttributeType, AttributeType)
+     * @see Axes#followingSibling(AttributeType)
      * @see CompoundAttribute#forClass(String)
      * @see InputHelperType#platform()
+     * @see ViewType#className()
      * @see AndroidView.Type#SWITCH
      * @see IOSView.Type#UI_SWITCH
      * @see Platform#ANDROID
@@ -189,10 +189,11 @@ public enum Setting implements BaseErrorType {
             throw new RuntimeException(NOT_AVAILABLE);
         }
 
+        CompoundAttribute cAttr = CompoundAttribute.forClass(clsName);
+
         return XPath.builder()
-            .addAttribute(CompoundAttribute.followingSibling(
-                CompoundAttribute.forClass(clsName),
-                textSettingAttribute(helper)
-            )).build();
+            .addAttribute(textSettingAttribute(helper))
+            .addAttribute(Axes.followingSibling(cAttr))
+            .build();
     }
 }
