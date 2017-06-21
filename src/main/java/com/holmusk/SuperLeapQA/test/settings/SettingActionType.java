@@ -13,7 +13,7 @@ import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkitcomponents.view.ViewType;
+import org.swiften.xtestkitcomponents.common.ClassNameType;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
@@ -43,14 +43,13 @@ public interface SettingActionType extends BaseActionType, SettingValidationType
      * @param ENGINE {@link Engine} instance.
      * @param unit {@link UnitSystem} instance.
      * @return {@link Flowable} instance.
-     * @see ViewType#className()
      * @see BooleanUtil#isTrue(Object)
      * @see CompoundAttribute#forClass(String)
      * @see CompoundAttribute.Builder#withClass(String)
      * @see CompoundAttribute.Builder#withIndex(Integer)
      * @see Engine#switcherOnValue()
      * @see Engine#rxa_toggleSwitch(WebElement, boolean)
-     * @see Engine#rxe_ofClass(String...)
+     * @see Engine#rxe_ofClass(ClassNameType[])
      * @see XPath.Builder#addAttribute(CompoundAttribute)
      * @see AndroidView.Type#SWITCH
      * @see IOSView.Type#UI_BUTTON
@@ -70,7 +69,7 @@ public interface SettingActionType extends BaseActionType, SettingValidationType
             final boolean ON = value.equals(onValue);
 
             return ENGINE
-                .rxe_ofClass(AndroidView.Type.SWITCH.className())
+                .rxe_ofClass(AndroidView.Type.SWITCH)
                 .firstElement()
                 .toFlowable()
                 .flatMap(a -> ENGINE.rxa_toggleSwitch(a, ON))

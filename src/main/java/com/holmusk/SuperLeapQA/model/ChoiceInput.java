@@ -9,8 +9,8 @@ import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.common.ClassNameType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 import java.util.List;
@@ -181,12 +181,12 @@ public enum ChoiceInput implements HMTextChoiceType {
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
      * @see Axes#followingSibling(AttributeType)
+     * @see CompoundAttribute#forClass(ClassNameType)
      * @see CompoundAttribute#withIndex(Integer)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(String)
+     * @see CompoundAttribute.Builder#withClass(ClassNameType)
      * @see Engine#localizer()
      * @see LocalizerType#localize(String)
-     * @see ViewType#className()
      * @see Platform#IOS
      * @see IOSView.Type#UI_STATIC_TEXT
      * @see IOSView.Type#UI_TEXT_FIELD
@@ -199,18 +199,16 @@ public enum ChoiceInput implements HMTextChoiceType {
         Platform platform = Platform.IOS;
         String title = title();
         String localized = localizer.localize(title);
-        String st = IOSView.Type.UI_STATIC_TEXT.className();
-        String tf = IOSView.Type.UI_TEXT_FIELD.className();
         Attributes attrs = Attributes.of(platform);
         Attribute stAttr = attrs.containsText(localized);
-        CompoundAttribute tfCAttr = CompoundAttribute.forClass(tf);
 
         return XPath.builder()
             .addAttribute(CompoundAttribute.builder()
-                .withClass(st)
+                .withClass(IOSView.Type.UI_STATIC_TEXT)
                 .addAttribute(stAttr)
                 .build())
-            .addAttribute(Axes.followingSibling(tfCAttr))
+            .addAttribute(Axes.followingSibling(CompoundAttribute
+                .forClass(IOSView.Type.UI_TEXT_FIELD)))
             .build();
     }
 }

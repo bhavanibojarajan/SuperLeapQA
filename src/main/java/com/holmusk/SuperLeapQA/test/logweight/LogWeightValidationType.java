@@ -12,7 +12,7 @@ import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkitcomponents.view.ViewType;
+import org.swiften.xtestkitcomponents.common.ClassNameType;
 
 /**
  * Created by haipham on 9/6/17.
@@ -22,8 +22,7 @@ public interface LogWeightValidationType extends HMCircleScrollValidationType {
      * Get the weight location switch {@link WebElement}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see ViewType#className()
-     * @see Engine#rxe_ofClass(String...)
+     * @see Engine#rxe_ofClass(ClassNameType[])
      * @see AndroidView.Type#SWITCH
      * @see IOSView.Type#UI_SWITCH
      * @see #NOT_AVAILABLE
@@ -32,12 +31,12 @@ public interface LogWeightValidationType extends HMCircleScrollValidationType {
     default Flowable<WebElement> rxe_weightLocSwitch(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             return engine
-                .rxe_ofClass(AndroidView.Type.SWITCH.className())
+                .rxe_ofClass(AndroidView.Type.SWITCH)
                 .firstElement()
                 .toFlowable();
         } else if (engine instanceof IOSEngine) {
             return engine
-                .rxe_ofClass(IOSView.Type.UI_SWITCH.className())
+                .rxe_ofClass(IOSView.Type.UI_SWITCH)
                 .firstElement()
                 .toFlowable();
         } else {

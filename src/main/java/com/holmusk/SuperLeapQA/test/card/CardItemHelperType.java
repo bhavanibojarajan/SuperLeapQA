@@ -28,14 +28,12 @@ public interface CardItemHelperType extends DashboardActionType, ScreenInitializ
     @NotNull
     default Flowable<?> rxa_deleteFirstCardItem(@NotNull Engine<?> engine,
                                                 @NotNull CardType card) {
-        return Flowable
-            .concatArray(
-                rxa_firstCardItem(engine, card),
-                rxn_cardItemPageInitialized(engine, card),
-                rxa_openEditMenu(engine),
-                rxa_deleteFromMenu(engine)
-            )
-            .all(ObjectUtil::nonNull).toFlowable();
+        return Flowable.concatArray(
+            rxa_firstCardItem(engine, card),
+            rxn_cardItemPageInitialized(engine, card),
+            rxa_openEditMenu(engine),
+            rxa_deleteFromMenu(engine)
+        ).all(ObjectUtil::nonNull).toFlowable();
     }
 
     /**
@@ -56,8 +54,8 @@ public interface CardItemHelperType extends DashboardActionType, ScreenInitializ
                                                @NotNull CardType card) {
         return Flowable.concatArray(
             RxUtil.doWhile(
-                rxa_deleteFirstCardItem(engine, card).ofType(Object.class),
-                rxv_cardListNotEmpty(engine, card), true
+                rxa_deleteFirstCardItem(engine, card),
+                rxv_cardListNotEmpty(engine, card)
             ),
 
             rxv_cardListEmpty(engine, card)

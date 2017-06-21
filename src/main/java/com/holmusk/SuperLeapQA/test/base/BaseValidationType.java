@@ -24,9 +24,9 @@ import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.ios.element.locator.AndroidXMLAttribute;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.xtestkitcomponents.common.ClassNameType;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.platform.XMLAttributeType;
-import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
@@ -88,14 +88,17 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * Get the common progress bar.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxe_containsID(String...)
+     * @see Engine#rxe_ofClass(ClassNameType[])
      * @see Engine#rxe_containsText(String...)
      * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_progressBar(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
-            return engine.rxe_containsID("pb_general").firstElement().toFlowable();
+            return engine
+                .rxe_ofClass(AndroidView.Type.PROGRESS_BAR)
+                .firstElement()
+                .toFlowable();
         } else if (engine instanceof IOSEngine) {
             return engine
                 .rxe_containsText("Loading..", "Indeterminate Progress")
@@ -297,16 +300,14 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @see Attribute.Builder#addAttribute(String)
      * @see Attribute.Builder#withValue(Object)
      * @see Attribute.Builder#withFormatible(Formatible)
-     * @see ViewType#className()
-     * @see Engine#rxe_ofClass(String...)
+     * @see Engine#rxe_ofClass(ClassNameType[])
      * @see Formatibles#containsString()
      * @see Point#getX()
      * @see XPath.Builder#addAttribute(AttributeType)
      * @see WebElement#getLocation()
      * @see IOSView.Type#UI_BUTTON
-     * @see com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD
-     * @see #rxe_backButton(Engine)
      * @see #NOT_AVAILABLE
+     * @see #rxe_backButton(Engine)
      */
     @NotNull
     default Flowable<WebElement> rxe_dashboardBack(@NotNull Engine<?> engine) {
@@ -314,7 +315,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
             return rxe_backButton(engine).firstElement().toFlowable();
         } else if (engine instanceof IOSEngine) {
             return engine
-                .rxe_ofClass(IOSView.Type.UI_BUTTON.className())
+                .rxe_ofClass(IOSView.Type.UI_BUTTON)
                 .filter(a -> a.getLocation().getX() == 0)
                 .firstElement()
                 .toFlowable();
@@ -382,9 +383,8 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @see Attributes#containsText(String)
      * @see Attributes#hasText(String)
      * @see Attributes#of(PlatformProviderType)
-     * @see ViewType#className()
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(String)
+     * @see CompoundAttribute.Builder#withClass(ClassNameType)
      * @see Engine#localizer()
      * @see Engine#platform()
      * @see Engine#rxe_containsID(String...)
@@ -403,12 +403,12 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
         LocalizerType localizer = engine.localizer();
         String localized = localizer.localize("edit_title_delete");
 
-        String btnCls;
+        ClassNameType btnCls;
 
         if (engine instanceof AndroidEngine) {
-            btnCls = AndroidView.Type.BUTTON.className();
+            btnCls = AndroidView.Type.BUTTON;
         } else if (engine instanceof IOSEngine) {
-            btnCls = IOSView.Type.UI_BUTTON.className();
+            btnCls = IOSView.Type.UI_BUTTON;
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

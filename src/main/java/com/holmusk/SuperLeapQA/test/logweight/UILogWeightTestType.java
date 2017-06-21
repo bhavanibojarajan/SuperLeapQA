@@ -5,7 +5,6 @@ import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import com.holmusk.SuperLeapQA.test.card.CardItemHelperType;
-import com.holmusk.SuperLeapQA.test.dashboard.UIDashboardTestType;
 import com.holmusk.SuperLeapQA.test.weightpage.WeightPageActionType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;

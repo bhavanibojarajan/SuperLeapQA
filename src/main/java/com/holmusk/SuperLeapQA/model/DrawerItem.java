@@ -9,9 +9,12 @@ import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.xtestkitcomponents.common.ClassNameType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.view.ViewType;
-import org.swiften.xtestkitcomponents.xpath.*;
+import org.swiften.xtestkitcomponents.xpath.AttributeType;
+import org.swiften.xtestkitcomponents.xpath.Attributes;
+import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
+import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
  * Created by haipham on 6/10/17.
@@ -66,8 +69,7 @@ public enum DrawerItem implements BaseErrorType {
      * @return {@link XPath} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
-     * @see Attributes#ofClass(String)
-     * @see ViewType#className()
+     * @see Attributes#ofClass(ClassNameType)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see Engine#localizer()
      * @see LocalizerType#localize(String)
@@ -80,12 +82,12 @@ public enum DrawerItem implements BaseErrorType {
     @NotNull
     public XPath drawerItemXP(@NotNull Engine<?> engine) {
         LocalizerType localizer = engine.localizer();
-        String clsName;
+        ClassNameType param;
 
         if (engine instanceof AndroidEngine) {
-            clsName = AndroidView.Type.CHECKED_TEXT_VIEW.className();
+            param = AndroidView.Type.CHECKED_TEXT_VIEW;
         } else if (engine instanceof IOSEngine) {
-            clsName = IOSView.Type.UI_STATIC_TEXT.className();
+            param = IOSView.Type.UI_STATIC_TEXT;
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -95,7 +97,7 @@ public enum DrawerItem implements BaseErrorType {
         String localized = localizer.localize(title());
 
         CompoundAttribute cAttr = CompoundAttribute.builder()
-            .addAttribute(attrs.ofClass(clsName))
+            .addAttribute(attrs.ofClass(param))
             .addAttribute(attrs.containsText(localized))
             .build();
 

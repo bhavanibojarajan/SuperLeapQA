@@ -6,9 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
+import org.swiften.xtestkitcomponents.common.ClassNameType;
 
 /**
  * Created by haipham on 1/6/17.
@@ -61,9 +61,8 @@ public interface ChatValidationType extends BaseValidationType {
      * Get the chat list view.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see ViewType#className()
      * @see Engine#rxe_containsID(String...)
-     * @see Engine#rxe_ofClass(String...)
+     * @see Engine#rxe_ofClass(ClassNameType[])
      * @see IOSView.Type#UI_TABLE_VIEW
      * @see #NOT_AVAILABLE
      */
@@ -76,7 +75,7 @@ public interface ChatValidationType extends BaseValidationType {
                 .toFlowable();
         } else if (engine instanceof IOSEngine) {
             return engine
-                .rxe_ofClass(IOSView.Type.UI_TABLE_VIEW.className())
+                .rxe_ofClass(IOSView.Type.UI_TABLE_VIEW)
                 .firstElement()
                 .toFlowable();
         } else {

@@ -11,7 +11,7 @@ import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkitcomponents.view.ViewType;
+import org.swiften.xtestkitcomponents.common.ClassNameType;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -68,8 +68,7 @@ public interface MealPageValidationType extends BaseValidationType {
      * Get the meal image {@link WebElement}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see ViewType#className()
-     * @see Engine#rxe_ofClass(String...)
+     * @see Engine#rxe_ofClass(ClassNameType[])
      * @see AndroidView.Type#IMAGE_VIEW
      * @see IOSView.Type#UI_IMAGE_VIEW
      * @see #NOT_AVAILABLE
@@ -78,12 +77,12 @@ public interface MealPageValidationType extends BaseValidationType {
     default Flowable<WebElement> rxe_mealImage(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             return engine
-                .rxe_ofClass(AndroidView.Type.IMAGE_VIEW.className())
+                .rxe_ofClass(AndroidView.Type.IMAGE_VIEW)
                 .firstElement()
                 .toFlowable();
         } else if (engine instanceof IOSEngine) {
             return engine
-                .rxe_ofClass(IOSView.Type.UI_IMAGE_VIEW.className())
+                .rxe_ofClass(IOSView.Type.UI_IMAGE_VIEW)
                 .firstElement()
                 .toFlowable();
         } else {

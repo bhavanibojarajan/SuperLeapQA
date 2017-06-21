@@ -7,9 +7,9 @@ import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.xtestkitcomponents.common.ClassNameType;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
@@ -69,8 +69,7 @@ public enum CardType implements BaseErrorType {
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(String)
-     * @see ViewType#className()
+     * @see CompoundAttribute.Builder#withClass(ClassNameType)
      * @see InputHelperType#localizer()
      * @see InputHelperType#platform()
      * @see LocalizerType#localize(String)
@@ -89,15 +88,15 @@ public enum CardType implements BaseErrorType {
         Attributes attrs = Attributes.of(helper);
         String title = title();
         String localized = localizer.localize(title);
-        String clsName;
+        ClassNameType clsName;
 
         switch ((Platform)platform) {
             case ANDROID:
-                clsName = AndroidView.Type.BUTTON.className();
+                clsName = AndroidView.Type.BUTTON;
                 break;
 
             case IOS:
-                clsName = IOSView.Type.UI_BUTTON.className();
+                clsName = IOSView.Type.UI_BUTTON;
                 break;
 
             default:
@@ -189,9 +188,8 @@ public enum CardType implements BaseErrorType {
      * @see Attributes#containsText(String)
      * @see Attributes#hasText(String)
      * @see Attributes#of(PlatformProviderType)
-     * @see ViewType#className()
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(String)
+     * @see CompoundAttribute.Builder#withClass(ClassNameType)
      * @see InputHelperType#localizer()
      * @see XPath.Builder#addAttribute(CompoundAttribute)
      * @see IOSView.Type#UI_BUTTON
@@ -206,7 +204,7 @@ public enum CardType implements BaseErrorType {
         Attribute attribute = attrs.containsText(localized);
 
         CompoundAttribute cAttr = CompoundAttribute.builder()
-            .withClass(IOSView.Type.UI_BUTTON.className())
+            .withClass(IOSView.Type.UI_BUTTON)
             .addAttribute(attribute)
             .build();
 
@@ -282,11 +280,10 @@ public enum CardType implements BaseErrorType {
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
      * @see Axes#descendant(AttributeType)
-     * @see CompoundAttribute#forClass(String)
+     * @see CompoundAttribute#forClass(ClassNameType)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see CompoundAttribute.Builder#withClass(String)
      * @see CompoundAttribute.Builder#withWrapper(Wrapper)
-     * @see ViewType#className()
      * @see XPath.Builder#addAttribute(CompoundAttribute)
      * @see IOSView.Type#UI_COLLECTION_VIEW
      * @see IOSView.Type#UI_COLLECTION_VIEW_CELL
@@ -298,12 +295,10 @@ public enum CardType implements BaseErrorType {
         LocalizerType localizer = helper.localizer();
         String emptyTitle = emptyItemPrompt();
         String localized = localizer.localize(emptyTitle);
-        String clvClass = IOSView.Type.UI_COLLECTION_VIEW.className();
-        String cllClass = IOSView.Type.UI_COLLECTION_VIEW_CELL.className();
 
         return XPath.builder()
-            .addAttribute(CompoundAttribute.forClass(clvClass))
-            .addAttribute(CompoundAttribute.forClass(cllClass))
+            .addAttribute(CompoundAttribute.forClass(IOSView.Type.UI_COLLECTION_VIEW))
+            .addAttribute(CompoundAttribute.forClass(IOSView.Type.UI_COLLECTION_VIEW_CELL))
             .addAttribute(Axes.descendant(CompoundAttribute.builder()
                 .addAttribute(attrs.containsText(localized))
                 .withWrapper(Wrapper.NOT)

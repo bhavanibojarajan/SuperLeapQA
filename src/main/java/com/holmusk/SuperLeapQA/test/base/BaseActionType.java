@@ -30,12 +30,12 @@ import org.swiften.xtestkit.base.param.DirectionParam;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.common.ClassNameType;
 import org.swiften.xtestkitcomponents.coordinate.RLPoint;
 import org.swiften.xtestkitcomponents.coordinate.RLPositionType;
 import org.swiften.xtestkitcomponents.direction.Direction;
 import org.swiften.xtestkitcomponents.direction.DirectionProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
-import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 import java.util.Arrays;
@@ -77,16 +77,14 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
 
     /**
      * Watch the progress bar until it's no longer visible.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_watchUntilHidden(WebElement)
+     * @see Engine#rxa_watchUntilHidden(Flowable)
      * @see #rxe_progressBar(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_watchProgressBar(@NotNull final Engine<?> ENGINE) {
-        return rxe_progressBar(ENGINE)
-            .flatMap(ENGINE::rxa_watchUntilHidden)
-            .onErrorReturnItem(true);
+    default Flowable<?> rxa_watchProgressBar(@NotNull Engine<?> engine) {
+        return engine.rxa_watchUntilHidden(rxe_progressBar(engine));
     }
 
     /**
@@ -199,9 +197,8 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @return {@link Flowable} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
-     * @see ViewType#className()
      * @see CompoundAttribute#single(AttributeType)
-     * @see CompoundAttribute#withClass(String)
+     * @see CompoundAttribute#withClass(ClassNameType)
      * @see Engine#localizer()
      * @see Engine#rxa_click(WebElement)
      * @see Engine#rxe_withXPath(XPath...)
@@ -220,7 +217,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
             Attribute attribute = attrs.containsText(localized);
 
             CompoundAttribute cAttr = CompoundAttribute.single(attribute)
-                .withClass(IOSView.Type.UI_BUTTON.className());
+                .withClass(IOSView.Type.UI_BUTTON);
 
             XPath xpath = XPath.builder().addAttribute(cAttr).build();
             return ENGINE.rxe_withXPath(xpath).flatMap(ENGINE::rxa_click);

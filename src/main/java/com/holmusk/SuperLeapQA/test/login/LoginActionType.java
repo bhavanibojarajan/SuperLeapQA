@@ -1,8 +1,8 @@
 package com.holmusk.SuperLeapQA.test.login;
 
+import com.holmusk.HMUITestKit.model.HMTextType;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.UserMode;
-import com.holmusk.HMUITestKit.model.HMTextType;
 import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +12,6 @@ import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -50,14 +49,18 @@ public interface LoginActionType extends BaseActionType, LoginValidationType {
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see Engine#rxa_watchUntilHidden(Flowable)
+     * @see ObjectUtil#nonNull(Object)
      * @see #loginProgressDelay(Engine)
      * @see #rxe_submit(Engine)
      */
     @NotNull
     default Flowable<?> rxa_confirmLogin(@NotNull final Engine<?> ENGINE) {
-        return rxe_submit(ENGINE)
-            .flatMap(ENGINE::rxa_click)
-            .delay(loginProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+        return Flowable.concatArray(
+            rxe_submit(ENGINE).flatMap(ENGINE::rxa_click),
+            Flowable.timer(loginProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
+            rxa_watchProgressBar(ENGINE)
+        ).all(ObjectUtil::nonNull).toFlowable();
     }
 
     /**

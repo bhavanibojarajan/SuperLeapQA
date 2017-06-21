@@ -9,6 +9,7 @@ import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
+import org.swiften.xtestkitcomponents.common.ClassNameType;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkitcomponents.xpath.AttributeType;
@@ -46,9 +47,8 @@ public interface SearchValidationType extends BaseValidationType {
      * Get the search bar.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see ViewType#className()
      * @see Engine#rxe_containsID(String...)
-     * @see Engine#rxe_ofClass(String...)
+     * @see Engine#rxe_ofClass(ClassNameType[])
      * @see IOSView.Type#UI_SEARCH_BAR
      * @see #NOT_AVAILABLE
      */
@@ -61,7 +61,7 @@ public interface SearchValidationType extends BaseValidationType {
                 .toFlowable();
         } else if (engine instanceof IOSEngine) {
             return engine
-                .rxe_ofClass(IOSView.Type.UI_SEARCH_BAR.className())
+                .rxe_ofClass(IOSView.Type.UI_SEARCH_BAR)
                 .firstElement()
                 .toFlowable();
         } else {

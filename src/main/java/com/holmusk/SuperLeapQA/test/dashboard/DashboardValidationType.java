@@ -18,7 +18,7 @@ import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkitcomponents.view.ViewType;
+import org.swiften.xtestkitcomponents.common.ClassNameType;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
@@ -139,8 +139,7 @@ public interface DashboardValidationType extends BaseValidationType {
      * dashboard modes.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see ViewType#className()
-     * @see Engine#rxe_ofClass(String...)
+     * @see Engine#rxe_ofClass(ClassNameType[])
      * @see AndroidView.Type#VIEW_PAGER
      * @see IOSView.Type#UI_SCROLL_VIEW
      * @see #NOT_AVAILABLE
@@ -149,12 +148,12 @@ public interface DashboardValidationType extends BaseValidationType {
     default Flowable<WebElement> rxe_dashboardModeSwitcher(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             return engine
-                .rxe_ofClass(AndroidView.Type.VIEW_PAGER.className())
+                .rxe_ofClass(AndroidView.Type.VIEW_PAGER)
                 .firstElement()
                 .toFlowable();
         } else if (engine instanceof IOSEngine) {
             return engine
-                .rxe_ofClass(IOSView.Type.UI_SCROLL_VIEW.className())
+                .rxe_ofClass(IOSView.Type.UI_SCROLL_VIEW)
                 .firstElement()
                 .toFlowable();
         } else {

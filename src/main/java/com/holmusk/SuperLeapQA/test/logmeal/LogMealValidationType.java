@@ -12,10 +12,10 @@ import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.common.ClassNameType;
 import org.swiften.xtestkitcomponents.xpath.AttributeType;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
@@ -84,9 +84,8 @@ public interface LogMealValidationType extends BaseValidationType {
      * Get the meal time display text view.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see ViewType#className()
-     * @see CompoundAttribute#forClass(String)
-     * @see CompoundAttribute#withIndex(Integer)
+     * @see CompoundAttribute.Builder#withClass(ClassNameType)
+     * @see CompoundAttribute.Builder#withIndex(Integer)
      * @see Engine#rxe_withXPath(XPath...)
      * @see Engine#rxe_containsID(String...)
      * @see XPath.Builder#addAttribute(AttributeType)
@@ -101,13 +100,15 @@ public interface LogMealValidationType extends BaseValidationType {
                 .firstElement()
                 .toFlowable();
         } else if (engine instanceof IOSEngine) {
-            CompoundAttribute first = CompoundAttribute
-                .forClass(IOSView.Type.UI_TABLE_VIEW_CELL.className())
-                .withIndex(3);
+            CompoundAttribute first = CompoundAttribute.builder()
+                .withClass(IOSView.Type.UI_TABLE_VIEW_CELL)
+                .withIndex(3)
+                .build();
 
-            CompoundAttribute second = CompoundAttribute
-                .forClass(IOSView.Type.UI_STATIC_TEXT.className())
-                .withIndex(2);
+            CompoundAttribute second = CompoundAttribute.builder()
+                .withClass(IOSView.Type.UI_STATIC_TEXT)
+                .withIndex(2)
+                .build();
 
             XPath xpath = XPath.builder()
                 .addAttribute(first)
@@ -124,9 +125,8 @@ public interface LogMealValidationType extends BaseValidationType {
      * Get the location switch.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
+     * @see Engine#rxe_ofClass(ClassNameType[])
      * @see AndroidView.Type#SWITCH
-     * @see ViewType#className()
-     * @see Engine#rxe_ofClass(String...)
      * @see IOSView.Type#UI_SWITCH
      * @see #NOT_AVAILABLE
      */
@@ -134,12 +134,12 @@ public interface LogMealValidationType extends BaseValidationType {
     default Flowable<WebElement> rxe_mealLocSwitch(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             return engine
-                .rxe_ofClass(AndroidView.Type.SWITCH.className())
+                .rxe_ofClass(AndroidView.Type.SWITCH)
                 .firstElement()
                 .toFlowable();
         } else if (engine instanceof IOSEngine) {
             return engine
-                .rxe_ofClass(IOSView.Type.UI_SWITCH.className())
+                .rxe_ofClass(IOSView.Type.UI_SWITCH)
                 .firstElement()
                 .toFlowable();
         } else {
@@ -152,9 +152,8 @@ public interface LogMealValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @param index {@link Integer} value representing the current pick index.
      * @return {@link Flowable} instance.
-     * @see ViewType#className()
-     * @see CompoundAttribute#forClass(String)
-     * @see CompoundAttribute#withIndex(Integer)
+     * @see CompoundAttribute.Builder#withClass(ClassNameType)
+     * @see CompoundAttribute.Builder#withIndex(Integer)
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_withXPath(XPath...)
      * @see XPath.Builder#addAttribute(AttributeType)
@@ -169,13 +168,15 @@ public interface LogMealValidationType extends BaseValidationType {
             String id = String.format("photo%d", index);
             return engine.rxe_containsID(id).firstElement().toFlowable();
         } else if (engine instanceof IOSEngine) {
-            CompoundAttribute first = CompoundAttribute
-                .forClass(IOSView.Type.UI_TABLE_VIEW_CELL.className())
-                .withIndex(1);
+            CompoundAttribute first = CompoundAttribute.builder()
+                .withClass(IOSView.Type.UI_TABLE_VIEW_CELL)
+                .withIndex(1)
+                .build();
 
-            CompoundAttribute second = CompoundAttribute
-                .forClass(IOSView.Type.UI_BUTTON.className())
-                .withIndex(1);
+            CompoundAttribute second = CompoundAttribute.builder()
+                .withClass(IOSView.Type.UI_BUTTON)
+                .withIndex(1)
+                .build();
 
             XPath xpath = XPath.builder()
                 .addAttribute(first)

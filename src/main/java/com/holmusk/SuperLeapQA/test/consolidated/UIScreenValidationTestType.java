@@ -50,15 +50,14 @@ public interface UIScreenValidationTestType extends
     @SuppressWarnings("unchecked")
     default void test_welcomeScreen_containsCorrectElements() {
         // Setup
-        final UIScreenValidationTestType THIS = this;
-        final Engine<?> ENGINE = engine();
+        Engine<?> engine = engine();
         UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         Flowable.concatArray(
             rxa_navigate(mode, Screen.SPLASH, Screen.WELCOME),
-            rxv_welcomeScreen(ENGINE)
+            rxv_welcomeScreen(engine)
         ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

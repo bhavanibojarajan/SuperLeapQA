@@ -12,10 +12,10 @@ import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
-import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
+import org.swiften.xtestkitcomponents.common.ClassNameType;
+import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
@@ -28,9 +28,8 @@ public interface LoginValidationType extends BaseValidationType {
      * @return {@link Flowable} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
-     * @see ViewType#className()
      * @see CompoundAttribute#single(AttributeType)
-     * @see CompoundAttribute#withClass(String)
+     * @see CompoundAttribute#withClass(ClassNameType)
      * @see Engine#rxe_withXPath(XPath...)
      * @see LocalizerType#localize(String)
      * @see XPath.Builder#addAttribute(AttributeType)
@@ -41,14 +40,15 @@ public interface LoginValidationType extends BaseValidationType {
     @NotNull
     default Flowable<WebElement> rxe_submit(@NotNull final Engine<?> ENGINE) {
         LocalizerType localizer = ENGINE.localizer();
-        String title, clsName;
         Attributes attrs = Attributes.of(ENGINE);
+        ClassNameType clsName;
+        String title;
 
         if (ENGINE instanceof AndroidEngine) {
-            clsName = AndroidView.Type.BUTTON.className();
+            clsName = AndroidView.Type.BUTTON;
             title = "login_title_signIn";
         } else if (ENGINE instanceof IOSEngine) {
-            clsName = IOSView.Type.UI_BUTTON.className();
+            clsName = IOSView.Type.UI_BUTTON;
             title = "login_title_submit";
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
@@ -84,9 +84,8 @@ public interface LoginValidationType extends BaseValidationType {
      * @return {@link Flowable} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
-     * @see ViewType#className()
-     * @see CompoundAttribute#single(AttributeType)
-     * @see CompoundAttribute#withClass(String)
+     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
+     * @see CompoundAttribute.Builder#withClass(ClassNameType)
      * @see Engine#localizer()
      * @see Engine#rxe_containsText(LCFormat...)
      * @see Engine#rxe_withXPath(XPath...)
@@ -109,8 +108,10 @@ public interface LoginValidationType extends BaseValidationType {
 
             Attribute attribute = attrs.containsText(localized);
 
-            CompoundAttribute cAttr = CompoundAttribute.single(attribute)
-                .withClass(IOSView.Type.UI_LINK.className());
+            CompoundAttribute cAttr = CompoundAttribute.builder()
+                .addAttribute(attribute)
+                .withClass(IOSView.Type.UI_LINK)
+                .build();
 
             XPath xpath = XPath.builder().addAttribute(cAttr).build();
             return engine.rxe_withXPath(xpath).firstElement().toFlowable();

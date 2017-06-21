@@ -10,17 +10,13 @@ import org.swiften.xtestkit.base.Engine;
  */
 public interface AppDelayType extends HMDelayType {
     /**
-     * Delay between the time the user logs in and that when the dashboard
-     * tutorial screen appears.
+     * Delay between the time the user logs in and that when the progress bar
+     * appears.
      * @param engine {@link Engine} instance.
      * @return {@link Long} value.
      */
     default long loginProgressDelay(@NotNull Engine<?> engine) {
-        if (engine instanceof AndroidEngine) {
-            return 15000;
-        } else {
-            return 3000;
-        }
+        return 1000;
     }
 
     /**
