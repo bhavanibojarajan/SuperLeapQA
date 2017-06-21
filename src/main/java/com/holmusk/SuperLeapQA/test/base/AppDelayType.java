@@ -17,7 +17,7 @@ public interface AppDelayType extends HMDelayType {
      */
     default long loginProgressDelay(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
-            return 20000;
+            return 15000;
         } else {
             return 3000;
         }

@@ -3,6 +3,7 @@ package com.holmusk.SuperLeapQA.test.dashboard;
 import com.holmusk.SuperLeapQA.model.CardType;
 import com.holmusk.SuperLeapQA.model.DashboardMode;
 import com.holmusk.SuperLeapQA.test.base.BaseActionType;
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.Point;
@@ -77,16 +78,64 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
     }
 
     /**
+     * Reveal the card add {@link WebElement} if it is not visible. This is
+     * only applicable to {@link Platform#ANDROID} since the FAB disappears
+     * after a period of inactivity.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see BooleanUtil#toTrue(Object)
+     * @see DirectionParam.Builder#withAnchorRLPosition(RLPositionType)
+     * @see DirectionParam.Builder#withDirection(Direction)
+     * @see DirectionParam.Builder#withEndRatio(double)
+     * @see DirectionParam.Builder#withStartRatio(double)
+     * @see DirectionParam.Builder#withTimes(int)
+     * @see Engine#rxa_swipeThenReverse(DirectionProviderType)
+     * @see Direction#DOWN_UP
+     * @see RLPoint#MID
+     * @see #rxe_addCard(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxa_revealCardAdd(@NotNull final Engine<?> ENGINE) {
+        if (ENGINE instanceof AndroidEngine) {
+            return rxe_addCard(ENGINE)
+                .onErrorResumeNext(Flowable
+                    .<DirectionParam.Builder>create(obs -> {
+                        DirectionParam.Builder param = DirectionParam.builder()
+                            .withStartRatio(0.8d)
+                            .withEndRatio(0.9d)
+                            .withAnchorRLPosition(RLPoint.MID)
+                            .withTimes(1)
+                            .withDirection(Direction.DOWN_UP);
+
+                        obs.onNext(param);
+                        obs.onComplete();
+                    }, BackpressureStrategy.BUFFER)
+                    .map(DirectionParam.Builder::build)
+                    .flatMap(ENGINE::rxa_swipeGeneric));
+        } else {
+            return Flowable.just(true);
+        }
+    }
+
+    /**
      * Click the add card button to open
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#ADD_CARD}.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see #generalDelay(Engine)
+     * @see #rxa_revealCardAdd(Engine)
      * @see #rxe_addCard(Engine)
      */
     @NotNull
     default Flowable<?> rxa_openCardAddMenu(@NotNull final Engine<?> ENGINE) {
-        return rxe_addCard(ENGINE).flatMap(ENGINE::rxa_click);
+        return Flowable
+            .concatArray(
+                rxa_revealCardAdd(ENGINE),
+                rxe_addCard(ENGINE).flatMap(ENGINE::rxa_click)
+            )
+            .all(ObjectUtil::nonNull).toFlowable()
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -98,6 +147,7 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      * @see Engine#rxe_window()
      * @see org.openqa.selenium.Point#moveBy(int, int)
      * @see WebElement#getLocation()
+     * @see #generalDelay(Engine)
      * @see #NOT_AVAILABLE
      */
     @NotNull
@@ -108,7 +158,8 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
             return ENGINE.rxe_window()
                 .map(WebElement::getLocation)
                 .map(a -> a.moveBy(20, 20))
-                .flatMap(ENGINE::rxa_tap);
+                .flatMap(ENGINE::rxa_tap)
+                .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

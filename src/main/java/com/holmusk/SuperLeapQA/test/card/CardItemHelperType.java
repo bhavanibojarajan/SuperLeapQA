@@ -35,8 +35,7 @@ public interface CardItemHelperType extends DashboardActionType, ScreenInitializ
                 rxa_openEditMenu(engine),
                 rxa_deleteFromMenu(engine)
             )
-            .all(ObjectUtil::nonNull).toFlowable()
-            .onErrorReturnItem(true);
+            .all(ObjectUtil::nonNull).toFlowable();
     }
 
     /**
@@ -47,7 +46,7 @@ public interface CardItemHelperType extends DashboardActionType, ScreenInitializ
      * @see BooleanUtil#isTrue(boolean)
      * @see Engine#rxv_errorWithPageSource()
      * @see ObjectUtil#nonNull(Object)
-     * @see RxUtil#repeatWhile(Flowable)
+     * @see RxUtil#doWhile(Flowable, Flowable, Object)
      * @see #rxa_deleteFirstCardItem(Engine, CardType)
      * @see #rxv_cardListEmpty(Engine, CardType)
      * @see #rxv_cardListNotEmpty(Engine, CardType)
@@ -56,8 +55,10 @@ public interface CardItemHelperType extends DashboardActionType, ScreenInitializ
     default Flowable<?> rxa_deleteAllCardItems(@NotNull Engine<?> engine,
                                                @NotNull CardType card) {
         return Flowable.concatArray(
-            rxa_deleteFirstCardItem(engine, card)
-                .compose(RxUtil.repeatWhile(rxv_cardListNotEmpty(engine, card))),
+            RxUtil.doWhile(
+                rxa_deleteFirstCardItem(engine, card).ofType(Object.class),
+                rxv_cardListNotEmpty(engine, card), true
+            ),
 
             rxv_cardListEmpty(engine, card)
                 .filter(BooleanUtil::isTrue)
