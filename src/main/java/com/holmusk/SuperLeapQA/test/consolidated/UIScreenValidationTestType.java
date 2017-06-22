@@ -14,16 +14,12 @@ import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zip;
-import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,38 +30,6 @@ public interface UIScreenValidationTestType extends
     ForwardNavigationType,
     BackwardNavigationType
 {
-    /**
-     * This test validates {@link Screen#WELCOME} by checking that all
-     * {@link org.openqa.selenium.WebElement} are visible.
-     * @see ObjectUtil#nonNull(Object)
-     * @see UserMode#defaultUserMode()*
-     * @see Screen#SPLASH
-     * @see Screen#WELCOME
-     * @see #assertCorrectness(TestSubscriber)
-     * @see #engine()
-     * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rxv_welcomeScreen(Engine)
-     */
-    @Test
-    @SuppressWarnings("unchecked")
-    default void test_welcomeScreen_containsCorrectElements() {
-        // Setup
-        Engine<?> engine = engine();
-        UserMode mode = UserMode.defaultUserMode();
-        TestSubscriber subscriber = CustomTestSubscriber.create();
-
-        // When
-        Flowable.concatArray(
-            rxa_navigate(mode, Screen.SPLASH, Screen.WELCOME),
-            rxv_welcomeScreen(engine)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
-
-        subscriber.awaitTerminalEvent();
-
-        // Then
-        assertCorrectness(subscriber);
-    }
-
     /**
      * Check that {@link Screen#LOGIN} has valid
      * {@link org.openqa.selenium.WebElement}, by checking their visibility
@@ -215,68 +179,6 @@ public interface UIScreenValidationTestType extends
 
             rxa_openDoBPicker(engine),
             engine.rxa_navigateBackOnce()
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
-
-        subscriber.awaitTerminalEvent();
-
-        // Then
-        assertCorrectness(subscriber);
-    }
-
-    /**
-     * This test checks {@link Screen#DOB} dialog has the correct
-     * elements, by verifying that all required
-     * {@link org.openqa.selenium.WebElement} are present. It selects a random
-     * {@link java.util.Date} with which to interact with the calendar/date
-     * picker.
-     * @param MODE {@link UserMode} instance.
-     * @see NumberUtil#randomBetween(int, int)
-     * @see ObjectUtil#nonNull(Object)
-     * @see UserMode#maxCategoryValidAge()
-     * @see Calendar#DAY_OF_MONTH
-     * @see Calendar#MONTH
-     * @see Calendar#YEAR
-     * @see Screen#SPLASH
-     * @see Screen#DOB
-     * @see Screen#INVALID_AGE
-     * @see #assertCorrectness(TestSubscriber)
-     * @see #engine()
-     * @see #generalDelay(Engine)
-     * @see #generalUserModeProvider()
-     * @see #rxa_navigate(UserMode, Screen...)
-     * @see #rxa_openDoBPicker(Engine)
-     * @see #rxa_selectDoB(Engine, Date)
-     * @see #rxa_clickBackButton(Engine)
-     * @see #rxv_DoBEditFieldHasDate(Engine, Date)
-     */
-    @SuppressWarnings("unchecked")
-    @Test(
-        dataProviderClass = UIBaseTestType.class,
-        dataProvider = "generalUserModeProvider"
-    )
-    default void test_DoBPickerDialog_isValidScreen(@NotNull final UserMode MODE) {
-        // Setup
-        Engine<?> engine = engine();
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH, NumberUtil.randomBetween(1, 28));
-        calendar.set(Calendar.MONTH, NumberUtil.randomBetween(0, 11));
-
-        /* If we select a year that is too far away from present, the year
-         * picker will snap back to the earliest applicable year */
-        int cYear = calendar.get(Calendar.YEAR);
-        int mYear = cYear - MODE.maxCategoryValidAge();
-        calendar.set(Calendar.YEAR, NumberUtil.randomBetween(mYear, cYear));
-        Date date = calendar.getTime();
-        TestSubscriber subscriber = CustomTestSubscriber.create();
-
-        // When
-        Flowable.concatArray(
-            rxa_navigate(MODE, Screen.SPLASH, Screen.DOB),
-            rxa_openDoBPicker(engine),
-            rxa_selectDoB(engine, date),
-            rxa_confirmDoB(engine),
-            rxa_clickBackButton(engine),
-            rxv_DoBEditFieldHasDate(engine, date)
         ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -824,7 +726,7 @@ public interface UIScreenValidationTestType extends
         // Setup
         final UIScreenValidationTestType THIS = this;
         final Engine<?> ENGINE = engine();
-        List<UnitSystem> units = Arrays.asList(UnitSystem.values());
+        UnitSystem[] units = UnitSystem.values();
         UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
@@ -834,8 +736,8 @@ public interface UIScreenValidationTestType extends
             rxv_settings(ENGINE),
             rxa_toggleSetting(ENGINE, Setting.UNITS),
 
-            Flowable.fromIterable(units)
-                .concatMap(b -> THIS.rxa_changeUnitSystem(ENGINE, b))
+            Flowable.fromArray(units)
+                .concatMap(a -> THIS.rxa_changeUnitSystem(ENGINE, a))
         ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
