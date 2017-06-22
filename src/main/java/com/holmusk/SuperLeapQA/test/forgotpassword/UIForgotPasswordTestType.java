@@ -25,7 +25,6 @@ public interface UIForgotPasswordTestType extends UIBaseTestType, ForgotPassword
      * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
-     * @see #forgotPasswordProgressDelay(Engine)
      * @see #generalDelay(Engine)
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_recoverPassword(Engine)

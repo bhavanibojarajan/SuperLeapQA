@@ -150,14 +150,18 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * the user is already in the acceptable age input screen.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see ObjectUtil#nonNull(Object)
      * @see #validAgeInputProgressDelay(Engine)
+     * @see #rxa_watchProgressBar(Engine)
      * @see #rxe_validAgeConfirm(Engine)
      */
     @NotNull
     default Flowable<?> rxa_confirmValidAgeInputs(@NotNull final Engine<?> ENGINE) {
-        return rxe_validAgeConfirm(ENGINE)
-            .flatMap(ENGINE::rxa_click)
-            .delay(validAgeInputProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+        return Flowable.concatArray(
+            rxe_validAgeConfirm(ENGINE).flatMap(ENGINE::rxa_click),
+            Flowable.timer(validAgeInputProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
+            rxa_watchProgressBar(ENGINE)
+        ).all(ObjectUtil::nonNull).toFlowable();
     }
 
     /**

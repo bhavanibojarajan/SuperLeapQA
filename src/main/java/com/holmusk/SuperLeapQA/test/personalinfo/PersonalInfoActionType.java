@@ -64,14 +64,18 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see ObjectUtil#nonNull(Object)
      * @see #personalInfoProgressDelay(Engine)
+     * @see #rxa_watchProgressBar(Engine)
      * @see #rxe_personalInfoSubmit(Engine)
      */
     @NotNull
     default Flowable<?> rxa_confirmPersonalInfo(@NotNull final Engine<?> ENGINE) {
-        return rxe_personalInfoSubmit(ENGINE)
-            .flatMap(ENGINE::rxa_click)
-            .delay(personalInfoProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+        return Flowable.concatArray(
+            rxe_personalInfoSubmit(ENGINE).flatMap(ENGINE::rxa_click),
+            Flowable.timer(personalInfoProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
+            rxa_watchProgressBar(ENGINE)
+        ).all(ObjectUtil::nonNull).toFlowable();
     }
 
     /**

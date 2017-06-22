@@ -22,14 +22,18 @@ public interface AddressActionType extends BaseActionType, AddressValidationType
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see ObjectUtil#nonNull(Object)
      * @see #addressInfoProgressDelay(Engine)
+     * @see #rxa_watchProgressBar(Engine)
      * @see #rxe_addressSubmit(Engine)
      */
     @NotNull
     default Flowable<?> rxa_submitAddress(@NotNull final Engine<?> ENGINE) {
-        return rxe_addressSubmit(ENGINE)
-            .flatMap(ENGINE::rxa_click)
-            .delay(addressInfoProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+        return Flowable.concatArray(
+            rxe_addressSubmit(ENGINE).flatMap(ENGINE::rxa_click),
+            Flowable.timer(addressInfoProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
+            rxa_watchProgressBar(ENGINE)
+        ).all(ObjectUtil::nonNull).toFlowable();
     }
 
     /**

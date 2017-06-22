@@ -23,17 +23,21 @@ public interface GuarantorInfoActionType extends BaseActionType, GuarantorInfoVa
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see ObjectUtil#nonNull(Object)
      * @see UserMode#requiresGuarantor()
      * @see #registerProgressDelay(Engine)
+     * @see #rxa_watchProgressBar(Engine)
      * @see #rxe_guarantorInfoSubmit(Engine)
      */
     @NotNull
     default Flowable<?> rxa_confirmGuarantorInfo(@NotNull final Engine<?> ENGINE,
                                                  @NotNull UserMode mode) {
         if (mode.requiresGuarantor()) {
-            return rxe_guarantorInfoSubmit(ENGINE)
-                .flatMap(ENGINE::rxa_click)
-                .delay(registerProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+            return Flowable.concatArray(
+                rxe_guarantorInfoSubmit(ENGINE).flatMap(ENGINE::rxa_click),
+                Flowable.timer(registerProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
+                rxa_watchProgressBar(ENGINE)
+            ).all(ObjectUtil::nonNull).toFlowable();
         } else {
             return Flowable.just(true);
         }

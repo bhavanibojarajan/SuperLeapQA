@@ -2,7 +2,6 @@ package com.holmusk.SuperLeapQA.test.base;
 
 import com.holmusk.HMUITestKit.test.base.HMDelayType;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 
 /**
@@ -10,38 +9,46 @@ import org.swiften.xtestkit.base.Engine;
  */
 public interface AppDelayType extends HMDelayType {
     /**
-     * Delay between the time the user logs in and that when the progress bar
+     * Delay between the start of an action and the time the progress bar
      * appears.
      * @param engine {@link Engine} instance.
      * @return {@link Long} value.
      */
-    default long loginProgressDelay(@NotNull Engine<?> engine) {
+    default long progressBarWaitDelay(@NotNull Engine<?> engine) {
         return 1000;
     }
 
     /**
-     * Delay between the time the user confirm sign-up information, and the
-     * time {@link com.holmusk.SuperLeapQA.navigation.Screen#USE_APP_NOW}
+     * Delay between the time the user logs in and that when the progress bar
      * appears.
      * @param engine {@link Engine} instance.
      * @return {@link Long} value.
+     * @see #progressBarWaitDelay(Engine)
+     */
+    default long loginProgressDelay(@NotNull Engine<?> engine) {
+        return progressBarWaitDelay(engine);
+    }
+
+    /**
+     * Delay between the time the user confirm sign-up information, and when
+     * the progress bar appears.
+     * @param engine {@link Engine} instance.
+     * @return {@link Long} value.
+     * @see #progressBarWaitDelay(Engine)
      */
     default long registerProgressDelay(@NotNull Engine<?> engine) {
-        if (engine instanceof AndroidEngine) {
-            return 10000;
-        } else {
-            return 3000;
-        }
+        return progressBarWaitDelay(engine);
     }
 
     /**
      * Delay between the time the user asks for email confirmation for
-     * password retrieval, and the time the email sent notification is shown.
+     * password retrieval, and the time the progress bar appears.
      * @param engine {@link Engine} instance.
      * @return {@link Long value}.
+     * @see #progressBarWaitDelay(Engine)
      */
     default long forgotPasswordProgressDelay(@NotNull Engine<?> engine) {
-        return 2000;
+        return progressBarWaitDelay(engine);
     }
 
     /**
@@ -55,42 +62,46 @@ public interface AppDelayType extends HMDelayType {
 
     /**
      * Delay between the time the user submits invalid age inputs, and the
-     * time the confirmation screen is shown.
+     * time the progress bar appears.
      * @param engine {@link Engine} instance.
      * @return {@link Long} value.
+     * @see #progressBarWaitDelay(Engine)
      */
     default long invalidAgeInputProgressDelay(@NotNull Engine<?> engine) {
-        return 3000;
+        return progressBarWaitDelay(engine);
     }
 
     /**
      * Delay between the time the user submits valid age inputs, and the
-     * time the user is directed to the next page.
+     * time the progress bar appears.
      * @param engine {@link Engine} instance.
      * @return {@link Long} value.
+     * @see #progressBarWaitDelay(Engine)
      */
     default long validAgeInputProgressDelay(@NotNull Engine<?> engine) {
-        return 3000;
+        return progressBarWaitDelay(engine);
     }
 
     /**
      * The delay between the time the user submits personal info and the time
-     * when the app navigates to the next page.
+     * the progress bar appears.
      * @param engine {@link Engine} instance.
      * @return {@link Long} value.
+     * @see #progressBarWaitDelay(Engine)
      */
     default long personalInfoProgressDelay(@NotNull Engine<?> engine) {
-        return 1000;
+        return progressBarWaitDelay(engine);
     }
 
     /**
      * Delay between the time the user submits address info, and the time
-     * the app redirects to the next page.
+     * the progress bar appears.
      * @param engine {@link Engine} instance.
      * @return {@link Long} value.
+     * @see #progressBarWaitDelay(Engine)
      */
     default long addressInfoProgressDelay(@NotNull Engine<?> engine) {
-        return 2000;
+        return progressBarWaitDelay(engine);
     }
 
     /**

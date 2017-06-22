@@ -39,14 +39,18 @@ public interface InvalidAgeActionType extends BaseActionType, InvalidAgeValidati
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see ObjectUtil#nonNull(Object)
      * @see #invalidAgeInputProgressDelay(Engine)
+     * @see #rxa_watchProgressBar(Engine)
      * @see #rxe_invalidAgeSubmit(Engine)
      */
     @NotNull
     default Flowable<?> rxa_confirmInvalidAgeInputs(@NotNull final Engine<?> ENGINE) {
-        return rxe_invalidAgeSubmit(ENGINE)
-            .flatMap(ENGINE::rxa_click)
-            .delay(invalidAgeInputProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+        return Flowable.concatArray(
+            rxe_invalidAgeSubmit(ENGINE).flatMap(ENGINE::rxa_click),
+            Flowable.timer(invalidAgeInputProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
+            rxa_watchProgressBar(ENGINE)
+        ).all(ObjectUtil::nonNull).toFlowable();
     }
 
     /**

@@ -37,14 +37,18 @@ public interface ForgotPasswordActionType extends
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see ObjectUtil#nonNull(Object)
      * @see #forgotPasswordProgressDelay(Engine)
+     * @see #rxa_watchProgressBar(Engine)
      * @see #rxe_forgotPasswordSubmit(Engine)
      */
     @NotNull
     default Flowable<?> rxa_confirmPassRecovery(@NotNull final Engine<?> ENGINE) {
-        return rxe_forgotPasswordSubmit(ENGINE)
-            .flatMap(ENGINE::rxa_click)
-            .delay(forgotPasswordProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+        return Flowable.concatArray(
+            rxe_forgotPasswordSubmit(ENGINE).flatMap(ENGINE::rxa_click),
+            Flowable.timer(forgotPasswordProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
+            rxa_watchProgressBar(ENGINE)
+        );
     }
 
     /**

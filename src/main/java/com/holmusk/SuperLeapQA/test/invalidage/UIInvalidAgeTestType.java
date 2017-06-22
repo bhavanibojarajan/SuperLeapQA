@@ -56,7 +56,6 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #generalUserModeProvider()
-     * @see #invalidAgeInputProgressDelay(Engine)
      * @see #rxa_acknowledgeSubscription(Engine)
      * @see #rxa_randomInput(Engine, HMTextType)
      * @see #rxa_makeNextInputVisible(Engine)
