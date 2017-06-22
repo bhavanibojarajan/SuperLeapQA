@@ -7,13 +7,13 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.log.LogUtil;
+import org.swiften.javautilities.util.LogUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkitcomponents.common.ClassNameType;
+import org.swiften.javautilities.protocol.ClassNameType;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
@@ -44,8 +44,8 @@ public interface SettingActionType extends BaseActionType, SettingValidationType
      * @param unit {@link UnitSystem} instance.
      * @return {@link Flowable} instance.
      * @see BooleanUtil#isTrue(Object)
-     * @see CompoundAttribute#forClass(String)
-     * @see CompoundAttribute.Builder#withClass(String)
+     * @see CompoundAttribute#forClass(ClassNameType)
+     * @see CompoundAttribute.Builder#withClass(ClassNameType)
      * @see CompoundAttribute.Builder#withIndex(Integer)
      * @see Engine#switcherOnValue()
      * @see Engine#rxa_toggleSwitch(WebElement, boolean)
@@ -75,18 +75,13 @@ public interface SettingActionType extends BaseActionType, SettingValidationType
                 .flatMap(a -> ENGINE.rxa_toggleSwitch(a, ON))
                 .delay(unitSystemChangeDelay(ENGINE), TimeUnit.MILLISECONDS);
         } else if (ENGINE instanceof IOSEngine) {
-            String smc = IOSView.Type.UI_SEGMENTED_CONTROL.className();
-            String bnc = IOSView.Type.UI_BUTTON.className();
-            CompoundAttribute smcAttr = CompoundAttribute.forClass(smc);
-
-            CompoundAttribute bncAttr = CompoundAttribute.builder()
-                .withClass(bnc)
-                .withIndex(index + 1)
-                .build();
-
             XPath xpath = XPath.builder()
-                .addAttribute(smcAttr)
-                .addAttribute(bncAttr)
+                .addAttribute(CompoundAttribute
+                    .forClass(IOSView.Type.UI_SEGMENTED_CONTROL))
+                .addAttribute(CompoundAttribute.builder()
+                    .withClass(IOSView.Type.UI_BUTTON)
+                    .withIndex(index + 1)
+                    .build())
                 .build();
 
             return ENGINE

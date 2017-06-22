@@ -3,13 +3,10 @@ package com.holmusk.SuperLeapQA.test.registermode;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
-import org.swiften.xtestkitcomponents.coordinate.RLPoint;
 
 /**
  * Created by haipham on 5/8/17.

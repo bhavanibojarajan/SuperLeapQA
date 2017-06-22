@@ -6,9 +6,9 @@ import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.javautilities.protocol.ClassNameType;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
@@ -115,10 +115,10 @@ public enum WeightProgress implements BaseErrorType {
      * @see Attributes#of(PlatformProviderType)
      * @see Axes#child(AttributeType)
      * @see Axes#followingSibling(AttributeType)
-     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(String)
      * @see CompoundAttribute#empty()
-     * @see ViewType#className()
+     * @see CompoundAttribute#forClass(ClassNameType)
+     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
+     * @see CompoundAttribute.Builder#withClass(ClassNameType)
      * @see XPath.Builder#addAttribute(AttributeType)
      * @see IOSView.Type#UI_STATIC_TEXT
      * @see IOSView.Type#UNDEFINED
@@ -129,16 +129,14 @@ public enum WeightProgress implements BaseErrorType {
         LocalizerType localizer = helper.localizer();
         String title = title();
         String localized = localizer.localize(title);
-        String otherCls = IOSView.Type.UNDEFINED.className();
-        String sttCls = IOSView.Type.UI_STATIC_TEXT.className();
-        CompoundAttribute otherCAttr = CompoundAttribute.forClass(otherCls);
 
         return XPath.builder()
             .addAttribute(CompoundAttribute.builder()
-                .withClass(sttCls)
+                .withClass(IOSView.Type.UI_STATIC_TEXT)
                 .addAttribute(attrs.containsText(localized))
                 .build())
-            .addAttribute(Axes.followingSibling(otherCAttr))
+            .addAttribute(Axes.followingSibling(CompoundAttribute
+                .forClass(IOSView.Type.UNDEFINED)))
             .addAttribute(Axes.child(CompoundAttribute.empty()))
             .build();
     }

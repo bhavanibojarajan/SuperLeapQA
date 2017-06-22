@@ -271,11 +271,11 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @return {@link XPath} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
-     * @see CompoundAttribute#single(AttributeType)
-     * @see CompoundAttribute#withClass(String)
+     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
+     * @see CompoundAttribute.Builder#withClass(String)
+     * @see XPath.Builder#addAttribute(CompoundAttribute)
      * @see Platform#IOS
      * @see IOSView.Type#UI_BUTTON
-     * @see XPath.Builder#addAttribute(CompoundAttribute)
      * @see #KG
      * @see #LB
      * @see #NOT_AVAILABLE
@@ -301,8 +301,10 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
 
         Attribute attr = attrs.containsText(text);
 
-        CompoundAttribute cAttr = CompoundAttribute.single(attr)
-            .withClass(IOSView.Type.UI_BUTTON.className());
+        CompoundAttribute cAttr = CompoundAttribute.builder()
+            .addAttribute(attr)
+            .withClass(IOSView.Type.UI_BUTTON)
+            .build();
 
         return XPath.builder().addAttribute(cAttr).build();
     }

@@ -1,10 +1,8 @@
 package com.holmusk.SuperLeapQA.test.base;
 
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkitcomponents.common.RetryType;
 import org.testng.annotations.*;
 
 import java.util.LinkedList;

@@ -6,7 +6,6 @@ import com.holmusk.SuperLeapQA.model.Ethnicity;
 import com.holmusk.SuperLeapQA.model.Gender;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
 

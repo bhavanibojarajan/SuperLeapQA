@@ -1,14 +1,11 @@
 package com.holmusk.SuperLeapQA.test.validage;
 
-import com.holmusk.HMUITestKit.model.UnitSystem;
 import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.SuperLeapQA.navigation.Screen;
-import com.holmusk.SuperLeapQA.test.base.UIBaseTest;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.log.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;

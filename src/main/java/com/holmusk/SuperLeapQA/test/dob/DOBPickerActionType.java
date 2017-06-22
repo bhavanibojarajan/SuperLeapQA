@@ -4,7 +4,7 @@ import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.log.LogUtil;
+import org.swiften.javautilities.util.LogUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.element.date.AndroidDatePickerType;
 import org.swiften.xtestkit.android.type.AndroidSDK;
@@ -15,7 +15,7 @@ import org.swiften.xtestkit.base.element.date.DateType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.element.date.IOSDatePickerType;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkitcomponents.common.DelayType;
+import org.swiften.javautilities.protocol.DelayType;
 
 import java.util.Calendar;
 import java.util.Date;

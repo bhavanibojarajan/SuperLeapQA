@@ -7,8 +7,8 @@ import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.javautilities.protocol.ClassNameType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
@@ -116,9 +116,8 @@ public enum Setting implements BaseErrorType {
      * @return {@link CompoundAttribute} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
-     * @see ViewType#className()
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(String)
+     * @see CompoundAttribute.Builder#withClass(ClassNameType)
      * @see InputHelperType#localizer()
      * @see InputHelperType#platform()
      * @see LocalizerType#localize(String)
@@ -130,12 +129,12 @@ public enum Setting implements BaseErrorType {
     @NotNull
     private CompoundAttribute textSettingAttribute(@NotNull InputHelperType helper) {
         PlatformType platform = helper.platform();
-        String clsName;
+        ClassNameType clsName;
 
         if (platform.equals(Platform.ANDROID)) {
-            clsName = AndroidView.Type.TEXT_VIEW.className();
+            clsName = AndroidView.Type.TEXT_VIEW;
         } else if (platform.equals(Platform.IOS)) {
-            clsName = IOSView.Type.UI_STATIC_TEXT.className();
+            clsName = IOSView.Type.UI_STATIC_TEXT;
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -170,9 +169,8 @@ public enum Setting implements BaseErrorType {
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Axes#followingSibling(AttributeType)
-     * @see CompoundAttribute#forClass(String)
+     * @see CompoundAttribute#forClass(ClassNameType)
      * @see InputHelperType#platform()
-     * @see ViewType#className()
      * @see AndroidView.Type#SWITCH
      * @see IOSView.Type#UI_SWITCH
      * @see Platform#ANDROID
@@ -183,13 +181,12 @@ public enum Setting implements BaseErrorType {
     @NotNull
     private XPath switchSettingXP(@NotNull InputHelperType helper) {
         PlatformType platform = helper.platform();
-
-        String clsName;
+        ClassNameType clsName;
 
         if (platform.equals(Platform.ANDROID)) {
-            clsName = AndroidView.Type.SWITCH.className();
+            clsName = AndroidView.Type.SWITCH;
         } else if (platform.equals(Platform.IOS)) {
-            clsName = IOSView.Type.UI_SWITCH.className();
+            clsName = IOSView.Type.UI_SWITCH;
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

@@ -11,13 +11,16 @@ import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
-import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.javautilities.protocol.ClassNameType;
+import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.xpath.*;
+import org.swiften.xtestkitcomponents.xpath.AttributeType;
+import org.swiften.xtestkitcomponents.xpath.Attributes;
+import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
+import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
  * Created by haipham on 17/5/17.
@@ -32,9 +35,8 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
      * @return {@link Flowable} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
-     * @see ViewType#className()
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(String)
+     * @see CompoundAttribute.Builder#withClass(ClassNameType)
      * @see Engine#localizer()
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_withXPath(XPath...)
@@ -56,7 +58,7 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
 
             CompoundAttribute cAttr = CompoundAttribute.builder()
                 .addAttribute(attrs.containsText(localized))
-                .withClass(IOSView.Type.UI_BUTTON.className())
+                .withClass(IOSView.Type.UI_BUTTON)
                 .build();
 
             XPath xpath = XPath.builder().addAttribute(cAttr).build();
@@ -70,8 +72,7 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
      * Get the Terms and Conditions checkbox.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see ViewType#className()
-     * @see CompoundAttribute#forClass(String)
+     * @see CompoundAttribute#forClass(ClassNameType)
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_withXPath(XPath...)
      * @see IOSView.Type#UI_BUTTON
@@ -84,8 +85,8 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
         if (engine instanceof AndroidEngine) {
             return engine.rxe_containsID("ctv_toc").firstElement().toFlowable();
         } else if (engine instanceof IOSEngine) {
-            String clsName = IOSView.Type.UI_BUTTON.className();
-            CompoundAttribute attribute = CompoundAttribute.forClass(clsName);
+            ClassNameType param = IOSView.Type.UI_BUTTON;
+            CompoundAttribute attribute = CompoundAttribute.forClass(param);
             XPath xpath = XPath.builder().addAttribute(attribute).build();
 
             /* Getting the T&C button this way is admittedly prone to failure,

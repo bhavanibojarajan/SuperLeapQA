@@ -9,9 +9,8 @@ import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkitcomponents.common.ClassNameType;
+import org.swiften.javautilities.protocol.ClassNameType;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
-import org.swiften.xtestkitcomponents.view.ViewType;
 import org.swiften.xtestkitcomponents.xpath.AttributeType;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
@@ -75,8 +74,7 @@ public interface SearchValidationType extends BaseValidationType {
      * @return {@link Flowable} instance.
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformProviderType)
-     * @see ViewType#className()
-     * @see CompoundAttribute#forClass(String)
+     * @see CompoundAttribute#forClass(ClassNameType)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see Engine#rxe_withXPath(XPath...)
      * @see XPath.Builder#addAttribute(CompoundAttribute)
@@ -98,14 +96,10 @@ public interface SearchValidationType extends BaseValidationType {
 
             xpath = XPath.builder().addAttribute(cAttr).build();
         } else if (engine instanceof IOSEngine) {
-            String tblView = IOSView.Type.UI_TABLE_VIEW.className();
-            String tblCell = IOSView.Type.UI_TABLE_VIEW_CELL.className();
-            String stText = IOSView.Type.UI_STATIC_TEXT.className();
-
             xpath = XPath.builder()
-                .addAttribute(CompoundAttribute.forClass(tblView))
-                .addAttribute(CompoundAttribute.forClass(tblCell))
-                .addAttribute(CompoundAttribute.forClass(stText))
+                .addAttribute(CompoundAttribute.forClass(IOSView.Type.UI_TABLE_VIEW))
+                .addAttribute(CompoundAttribute.forClass(IOSView.Type.UI_TABLE_VIEW_CELL))
+                .addAttribute(CompoundAttribute.forClass(IOSView.Type.UI_STATIC_TEXT))
                 .build();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);

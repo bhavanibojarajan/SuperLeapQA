@@ -6,7 +6,7 @@ import com.holmusk.SuperLeapQA.navigation.type.ForwardNavigationType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.swiften.javautilities.collection.CollectionUtil;
-import org.swiften.javautilities.log.LogUtil;
+import org.swiften.javautilities.util.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.navigation.NavigationSupplier;
 import org.swiften.xtestkitcomponents.platform.PlatformType;

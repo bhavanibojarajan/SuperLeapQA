@@ -9,13 +9,13 @@ import com.holmusk.SuperLeapQA.navigation.type.ScreenInitializationType;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.log.LogUtil;
+import org.swiften.javautilities.util.LogUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.javautilities.test.TestNGUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.kit.TestKit;
 import org.swiften.xtestkit.test.BaseTestType;
-import org.swiften.xtestkitcomponents.common.RetryType;
+import org.swiften.javautilities.protocol.RetryType;
 import org.testng.annotations.*;
 
 import java.util.Iterator;
