@@ -9,13 +9,13 @@ import com.holmusk.SuperLeapQA.navigation.type.ScreenInitializationType;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.protocol.RetryProviderType;
 import org.swiften.javautilities.util.LogUtil;
 import org.swiften.javautilities.rx.RxUtil;
 import org.swiften.javautilities.test.TestNGUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.kit.TestKit;
 import org.swiften.xtestkit.test.BaseTestType;
-import org.swiften.javautilities.protocol.RetryType;
 import org.testng.annotations.*;
 
 import java.util.Iterator;
@@ -125,12 +125,12 @@ public interface UIBaseTestType extends
 
     @BeforeClass
     default void beforeClass() {
-        engine().beforeClass(RetryType.DEFAULT);
+        engine().beforeClass(RetryProviderType.DEFAULT);
     }
 
     @AfterClass
     default void afterClass() {
-        engine().afterClass(RetryType.DEFAULT);
+        engine().afterClass(RetryProviderType.DEFAULT);
     }
 
     @BeforeMethod
@@ -143,7 +143,7 @@ public interface UIBaseTestType extends
 //        Disposable d1 = engine.rxa_pollAndDismissPopup(popups).subscribe();
 //        disposable.add(d1);
 
-        engine.beforeMethod(RetryType.DEFAULT);
+        engine.beforeMethod(RetryProviderType.DEFAULT);
     }
 
     @AfterMethod
@@ -153,7 +153,7 @@ public interface UIBaseTestType extends
 //        CompositeDisposable disposable = masterDisposable();
 //        disposable.dispose();
 
-        engine().afterMethod(RetryType.DEFAULT);
+        engine().afterMethod(RetryProviderType.DEFAULT);
     }
 
     /**

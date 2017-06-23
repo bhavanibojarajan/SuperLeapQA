@@ -30,7 +30,7 @@ import org.swiften.xtestkit.base.param.DirectionParam;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.javautilities.protocol.ClassNameType;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkitcomponents.coordinate.RLPoint;
 import org.swiften.xtestkitcomponents.coordinate.RLPositionType;
 import org.swiften.xtestkitcomponents.direction.Direction;
@@ -198,7 +198,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
      * @see CompoundAttribute#single(AttributeType)
-     * @see CompoundAttribute#withClass(ClassNameType)
+     * @see CompoundAttribute#withClass(ClassNameProviderType)
      * @see Engine#localizer()
      * @see Engine#rxa_click(WebElement)
      * @see Engine#rxe_withXPath(XPath...)

@@ -24,7 +24,7 @@ import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.ios.element.locator.AndroidXMLAttribute;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
-import org.swiften.javautilities.protocol.ClassNameType;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.platform.XMLAttributeType;
 import org.swiften.xtestkitcomponents.xpath.*;
@@ -88,7 +88,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * Get the common progress bar.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxe_ofClass(ClassNameType[])
+     * @see Engine#rxe_ofClass(ClassNameProviderType[])
      * @see Engine#rxe_containsText(String...)
      * @see #NOT_AVAILABLE
      */
@@ -300,7 +300,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @see Attribute.Builder#addAttribute(String)
      * @see Attribute.Builder#withValue(Object)
      * @see Attribute.Builder#withFormatible(Formatible)
-     * @see Engine#rxe_ofClass(ClassNameType[])
+     * @see Engine#rxe_ofClass(ClassNameProviderType[])
      * @see Formatibles#containsString()
      * @see Point#getX()
      * @see XPath.Builder#addAttribute(AttributeType)
@@ -384,7 +384,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @see Attributes#hasText(String)
      * @see Attributes#of(PlatformProviderType)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(ClassNameType)
+     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
      * @see Engine#localizer()
      * @see Engine#platform()
      * @see Engine#rxe_containsID(String...)
@@ -403,7 +403,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
         LocalizerType localizer = engine.localizer();
         String localized = localizer.localize("edit_title_delete");
 
-        ClassNameType btnCls;
+        ClassNameProviderType btnCls;
 
         if (engine instanceof AndroidEngine) {
             btnCls = AndroidView.Type.BUTTON;

@@ -7,7 +7,7 @@ import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
-import org.swiften.javautilities.protocol.ClassNameType;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.*;
@@ -69,7 +69,7 @@ public enum CardType implements BaseErrorType {
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(ClassNameType)
+     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
      * @see InputHelperType#localizer()
      * @see InputHelperType#platform()
      * @see LocalizerType#localize(String)
@@ -88,7 +88,7 @@ public enum CardType implements BaseErrorType {
         Attributes attrs = Attributes.of(helper);
         String title = title();
         String localized = localizer.localize(title);
-        ClassNameType clsName;
+        ClassNameProviderType clsName;
 
         switch ((Platform)platform) {
             case ANDROID:
@@ -189,7 +189,7 @@ public enum CardType implements BaseErrorType {
      * @see Attributes#hasText(String)
      * @see Attributes#of(PlatformProviderType)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(ClassNameType)
+     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
      * @see InputHelperType#localizer()
      * @see XPath.Builder#addAttribute(CompoundAttribute)
      * @see IOSView.Type#UI_BUTTON
@@ -280,7 +280,7 @@ public enum CardType implements BaseErrorType {
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
      * @see Axes#descendant(AttributeType)
-     * @see CompoundAttribute#forClass(ClassNameType)
+     * @see CompoundAttribute#forClass(ClassNameProviderType)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see CompoundAttribute.Builder#withClass(String)
      * @see CompoundAttribute.Builder#withWrapper(Wrapper)

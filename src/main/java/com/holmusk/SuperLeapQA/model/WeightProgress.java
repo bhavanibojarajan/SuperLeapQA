@@ -6,7 +6,7 @@ import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
-import org.swiften.javautilities.protocol.ClassNameType;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.*;
@@ -116,9 +116,9 @@ public enum WeightProgress implements BaseErrorType {
      * @see Axes#child(AttributeType)
      * @see Axes#followingSibling(AttributeType)
      * @see CompoundAttribute#empty()
-     * @see CompoundAttribute#forClass(ClassNameType)
+     * @see CompoundAttribute#forClass(ClassNameProviderType)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(ClassNameType)
+     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
      * @see XPath.Builder#addAttribute(AttributeType)
      * @see IOSView.Type#UI_STATIC_TEXT
      * @see IOSView.Type#UNDEFINED

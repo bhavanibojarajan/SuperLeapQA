@@ -18,7 +18,7 @@ import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.javautilities.protocol.ClassNameType;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
@@ -139,7 +139,7 @@ public interface DashboardValidationType extends BaseValidationType {
      * dashboard modes.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxe_ofClass(ClassNameType[])
+     * @see Engine#rxe_ofClass(ClassNameProviderType[])
      * @see AndroidView.Type#VIEW_PAGER
      * @see IOSView.Type#UI_SCROLL_VIEW
      * @see #NOT_AVAILABLE

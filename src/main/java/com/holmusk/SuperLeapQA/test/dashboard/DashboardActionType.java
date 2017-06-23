@@ -17,7 +17,7 @@ import org.swiften.xtestkit.base.element.swipe.SwipeParam;
 import org.swiften.xtestkit.base.param.DirectionParam;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.javautilities.protocol.RepeatType;
+import org.swiften.javautilities.protocol.RepeatProviderType;
 import org.swiften.xtestkitcomponents.coordinate.RLPoint;
 import org.swiften.xtestkitcomponents.coordinate.RLPositionType;
 import org.swiften.xtestkitcomponents.direction.Direction;
@@ -273,7 +273,7 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#coordinate(WebElement, RLPositionType, RLPositionType)
-     * @see Engine#rxa_swipe(RepeatType)
+     * @see Engine#rxa_swipe(RepeatProviderType)
      * @see Point#getY()
      * @see Point#moveBy(int, int)
      * @see SwipeParam.Builder#withStartX(int)

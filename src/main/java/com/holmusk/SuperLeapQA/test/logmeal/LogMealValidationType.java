@@ -15,7 +15,7 @@ import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.javautilities.protocol.ClassNameType;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkitcomponents.xpath.AttributeType;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
@@ -84,7 +84,7 @@ public interface LogMealValidationType extends BaseValidationType {
      * Get the meal time display text view.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see CompoundAttribute.Builder#withClass(ClassNameType)
+     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
      * @see CompoundAttribute.Builder#withIndex(Integer)
      * @see Engine#rxe_withXPath(XPath...)
      * @see Engine#rxe_containsID(String...)
@@ -125,7 +125,7 @@ public interface LogMealValidationType extends BaseValidationType {
      * Get the location switch.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxe_ofClass(ClassNameType[])
+     * @see Engine#rxe_ofClass(ClassNameProviderType[])
      * @see AndroidView.Type#SWITCH
      * @see IOSView.Type#UI_SWITCH
      * @see #NOT_AVAILABLE
@@ -152,7 +152,7 @@ public interface LogMealValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @param index {@link Integer} value representing the current pick index.
      * @return {@link Flowable} instance.
-     * @see CompoundAttribute.Builder#withClass(ClassNameType)
+     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
      * @see CompoundAttribute.Builder#withIndex(Integer)
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_withXPath(XPath...)

@@ -13,7 +13,7 @@ import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.javautilities.protocol.ClassNameType;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
@@ -44,12 +44,12 @@ public interface SettingActionType extends BaseActionType, SettingValidationType
      * @param unit {@link UnitSystem} instance.
      * @return {@link Flowable} instance.
      * @see BooleanUtil#isTrue(Object)
-     * @see CompoundAttribute#forClass(ClassNameType)
-     * @see CompoundAttribute.Builder#withClass(ClassNameType)
+     * @see CompoundAttribute#forClass(ClassNameProviderType)
+     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
      * @see CompoundAttribute.Builder#withIndex(Integer)
      * @see Engine#switcherOnValue()
      * @see Engine#rxa_toggleSwitch(WebElement, boolean)
-     * @see Engine#rxe_ofClass(ClassNameType[])
+     * @see Engine#rxe_ofClass(ClassNameProviderType[])
      * @see XPath.Builder#addAttribute(CompoundAttribute)
      * @see AndroidView.Type#SWITCH
      * @see IOSView.Type#UI_BUTTON

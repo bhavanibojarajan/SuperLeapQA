@@ -14,7 +14,7 @@ import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.javautilities.protocol.ClassNameType;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
@@ -29,7 +29,7 @@ public interface LoginValidationType extends BaseValidationType {
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
      * @see CompoundAttribute#single(AttributeType)
-     * @see CompoundAttribute#withClass(ClassNameType)
+     * @see CompoundAttribute#withClass(ClassNameProviderType)
      * @see Engine#rxe_withXPath(XPath...)
      * @see LocalizerType#localize(String)
      * @see XPath.Builder#addAttribute(AttributeType)
@@ -41,7 +41,7 @@ public interface LoginValidationType extends BaseValidationType {
     default Flowable<WebElement> rxe_submit(@NotNull final Engine<?> ENGINE) {
         LocalizerType localizer = ENGINE.localizer();
         Attributes attrs = Attributes.of(ENGINE);
-        ClassNameType clsName;
+        ClassNameProviderType clsName;
         String title;
 
         if (ENGINE instanceof AndroidEngine) {
@@ -85,7 +85,7 @@ public interface LoginValidationType extends BaseValidationType {
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(ClassNameType)
+     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
      * @see Engine#localizer()
      * @see Engine#rxe_containsText(LCFormat...)
      * @see Engine#rxe_withXPath(XPath...)

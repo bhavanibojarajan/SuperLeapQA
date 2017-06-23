@@ -9,7 +9,7 @@ import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
-import org.swiften.javautilities.protocol.ClassNameType;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.AttributeType;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
@@ -69,7 +69,7 @@ public enum DrawerItem implements BaseErrorType {
      * @return {@link XPath} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
-     * @see Attributes#ofClass(ClassNameType)
+     * @see Attributes#ofClass(ClassNameProviderType)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see Engine#localizer()
      * @see LocalizerType#localize(String)
@@ -82,7 +82,7 @@ public enum DrawerItem implements BaseErrorType {
     @NotNull
     public XPath drawerItemXP(@NotNull Engine<?> engine) {
         LocalizerType localizer = engine.localizer();
-        ClassNameType param;
+        ClassNameProviderType param;
 
         if (engine instanceof AndroidEngine) {
             param = AndroidView.Type.CHECKED_TEXT_VIEW;

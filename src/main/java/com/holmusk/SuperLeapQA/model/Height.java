@@ -9,7 +9,7 @@ import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.javautilities.protocol.ClassNameType;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
@@ -312,7 +312,7 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(ClassNameType)
+     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
      * @see XPath.Builder#addAttribute(AttributeType)
      * @see Platform#IOS
      * @see IOSView.Type#UI_BUTTON

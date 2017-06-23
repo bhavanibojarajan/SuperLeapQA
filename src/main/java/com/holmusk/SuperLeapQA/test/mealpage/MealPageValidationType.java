@@ -11,7 +11,7 @@ import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.javautilities.protocol.ClassNameType;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -68,7 +68,7 @@ public interface MealPageValidationType extends BaseValidationType {
      * Get the meal image {@link WebElement}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxe_ofClass(ClassNameType[])
+     * @see Engine#rxe_ofClass(ClassNameProviderType[])
      * @see AndroidView.Type#IMAGE_VIEW
      * @see IOSView.Type#UI_IMAGE_VIEW
      * @see #NOT_AVAILABLE

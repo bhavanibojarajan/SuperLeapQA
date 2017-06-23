@@ -8,7 +8,7 @@ import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.javautilities.protocol.ClassNameType;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 
 /**
  * Created by haipham on 1/6/17.
@@ -62,7 +62,7 @@ public interface ChatValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsID(String...)
-     * @see Engine#rxe_ofClass(ClassNameType[])
+     * @see Engine#rxe_ofClass(ClassNameProviderType[])
      * @see IOSView.Type#UI_TABLE_VIEW
      * @see #NOT_AVAILABLE
      */

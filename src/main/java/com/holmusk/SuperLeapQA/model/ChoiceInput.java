@@ -9,7 +9,7 @@ import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.javautilities.protocol.ClassNameType;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
@@ -181,10 +181,10 @@ public enum ChoiceInput implements HMTextChoiceType {
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
      * @see Axes#followingSibling(AttributeType)
-     * @see CompoundAttribute#forClass(ClassNameType)
+     * @see CompoundAttribute#forClass(ClassNameProviderType)
      * @see CompoundAttribute#withIndex(Integer)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(ClassNameType)
+     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
      * @see Engine#localizer()
      * @see LocalizerType#localize(String)
      * @see Platform#IOS

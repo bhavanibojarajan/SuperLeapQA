@@ -14,7 +14,7 @@ import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.javautilities.protocol.ClassNameType;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.AttributeType;
@@ -36,7 +36,7 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformProviderType)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(ClassNameType)
+     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
      * @see Engine#localizer()
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_withXPath(XPath...)
@@ -72,7 +72,7 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
      * Get the Terms and Conditions checkbox.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see CompoundAttribute#forClass(ClassNameType)
+     * @see CompoundAttribute#forClass(ClassNameProviderType)
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_withXPath(XPath...)
      * @see IOSView.Type#UI_BUTTON
@@ -85,7 +85,7 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
         if (engine instanceof AndroidEngine) {
             return engine.rxe_containsID("ctv_toc").firstElement().toFlowable();
         } else if (engine instanceof IOSEngine) {
-            ClassNameType param = IOSView.Type.UI_BUTTON;
+            ClassNameProviderType param = IOSView.Type.UI_BUTTON;
             CompoundAttribute attribute = CompoundAttribute.forClass(param);
             XPath xpath = XPath.builder().addAttribute(attribute).build();
 

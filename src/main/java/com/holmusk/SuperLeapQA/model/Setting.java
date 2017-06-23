@@ -7,7 +7,7 @@ import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.BaseErrorType;
-import org.swiften.javautilities.protocol.ClassNameType;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
@@ -117,7 +117,7 @@ public enum Setting implements BaseErrorType {
      * @see Attributes#containsText(String)
      * @see Attributes#of(PlatformType)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(ClassNameType)
+     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
      * @see InputHelperType#localizer()
      * @see InputHelperType#platform()
      * @see LocalizerType#localize(String)
@@ -129,7 +129,7 @@ public enum Setting implements BaseErrorType {
     @NotNull
     private CompoundAttribute textSettingAttribute(@NotNull InputHelperType helper) {
         PlatformType platform = helper.platform();
-        ClassNameType clsName;
+        ClassNameProviderType clsName;
 
         if (platform.equals(Platform.ANDROID)) {
             clsName = AndroidView.Type.TEXT_VIEW;
@@ -169,7 +169,7 @@ public enum Setting implements BaseErrorType {
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Axes#followingSibling(AttributeType)
-     * @see CompoundAttribute#forClass(ClassNameType)
+     * @see CompoundAttribute#forClass(ClassNameProviderType)
      * @see InputHelperType#platform()
      * @see AndroidView.Type#SWITCH
      * @see IOSView.Type#UI_SWITCH
@@ -181,7 +181,7 @@ public enum Setting implements BaseErrorType {
     @NotNull
     private XPath switchSettingXP(@NotNull InputHelperType helper) {
         PlatformType platform = helper.platform();
-        ClassNameType clsName;
+        ClassNameProviderType clsName;
 
         if (platform.equals(Platform.ANDROID)) {
             clsName = AndroidView.Type.SWITCH;

@@ -38,6 +38,7 @@ import static org.mockito.Mockito.mock;
  */
 @SuppressWarnings("UndeclaredTests")
 public final class GeneralTest {
+    @NotNull
     @DataProvider(parallel = true)
     public static Iterator<Object[]> bmiDataProvider() {
         return TestNGUtil.oneFromEach(

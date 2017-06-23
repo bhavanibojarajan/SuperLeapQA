@@ -9,7 +9,7 @@ import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.javautilities.protocol.ClassNameType;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.xpath.AttributeType;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
@@ -47,7 +47,7 @@ public interface SearchValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsID(String...)
-     * @see Engine#rxe_ofClass(ClassNameType[])
+     * @see Engine#rxe_ofClass(ClassNameProviderType[])
      * @see IOSView.Type#UI_SEARCH_BAR
      * @see #NOT_AVAILABLE
      */
@@ -74,7 +74,7 @@ public interface SearchValidationType extends BaseValidationType {
      * @return {@link Flowable} instance.
      * @see Attributes#containsID(String)
      * @see Attributes#of(PlatformProviderType)
-     * @see CompoundAttribute#forClass(ClassNameType)
+     * @see CompoundAttribute#forClass(ClassNameProviderType)
      * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see Engine#rxe_withXPath(XPath...)
      * @see XPath.Builder#addAttribute(CompoundAttribute)

@@ -12,7 +12,7 @@ import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.javautilities.protocol.ClassNameType;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 
 /**
  * Created by haipham on 9/6/17.
@@ -22,7 +22,7 @@ public interface LogWeightValidationType extends HMCircleScrollValidationType {
      * Get the weight location switch {@link WebElement}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxe_ofClass(ClassNameType[])
+     * @see Engine#rxe_ofClass(ClassNameProviderType[])
      * @see AndroidView.Type#SWITCH
      * @see IOSView.Type#UI_SWITCH
      * @see #NOT_AVAILABLE

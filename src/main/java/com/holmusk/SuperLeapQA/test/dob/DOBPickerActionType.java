@@ -11,11 +11,11 @@ import org.swiften.xtestkit.android.type.AndroidSDK;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.date.DateParam;
 import org.swiften.xtestkit.base.element.date.DatePickerType;
-import org.swiften.xtestkit.base.element.date.DateType;
+import org.swiften.xtestkit.base.element.date.DateProviderType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.element.date.IOSDatePickerType;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.javautilities.protocol.DelayType;
+import org.swiften.javautilities.protocol.DelayProviderType;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -36,7 +36,7 @@ public interface DOBPickerActionType extends BaseActionType, DOBPickerValidation
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
-     * @see Engine#rxa_implicitlyWait(DelayType)
+     * @see Engine#rxa_implicitlyWait(DelayProviderType)
      * @see #generalDelay(Engine)
      * @see #rxe_DoBEditField(Engine)
      */
@@ -81,7 +81,7 @@ public interface DOBPickerActionType extends BaseActionType, DOBPickerValidation
      * @see AndroidEngine#androidSDK()
      * @see AndroidSDK#isAtLeastLollipop()
      * @see AndroidSDK#isAtLeastM()
-     * @see Engine#rxa_selectDate(DateType)
+     * @see Engine#rxa_selectDate(DateProviderType)
      * @see DateParam.Builder#withDate(Date)
      * @see DateParam.Builder#withDatePickerUnits()
      * @see AndroidDatePickerType#DATE_CALENDAR_PICKER
@@ -116,7 +116,7 @@ public interface DOBPickerActionType extends BaseActionType, DOBPickerValidation
         return engine.rxa_selectDate(DateParam.builder()
             .withDate(DATE)
             .withDatePickerUnits()
-            .withPickerType(pickerType)
+            .withPicker(pickerType)
             .build());
     }
 
