@@ -44,8 +44,8 @@ public interface UIDashboardTestType extends
             },
 
             new Object[] {
-                CardType.MEAL
-//                CardType.WEIGHT
+//                CardType.MEAL
+                CardType.WEIGHT
             }
         ).iterator();
     }
