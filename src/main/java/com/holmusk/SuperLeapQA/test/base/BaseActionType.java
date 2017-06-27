@@ -92,14 +92,14 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @param input {@link TextInputType} instance.
      * @param TEXT {@link String} value.
      * @return {@link Flowable} instance.
+     * @see Engine#rxa_sendValue(WebElement, String...)
      * @see #rxe_editField(Engine, HMInputType)
-     * @see Engine#rxa_type(WebElement, String...)
      */
     @NotNull
     default Flowable<WebElement> rxa_input(@NotNull final Engine<?> ENGINE,
                                            @NotNull HMInputType input,
                                            @NotNull final String TEXT) {
-        return rxe_editField(ENGINE, input).flatMap(a -> ENGINE.rxa_type(a, TEXT));
+        return rxe_editField(ENGINE, input).flatMap(a -> ENGINE.rxa_sendValue(a, TEXT));
     }
 
     /**

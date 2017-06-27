@@ -68,7 +68,7 @@ public interface UICSSValueTestType extends UIBaseTestType, CSSValueActionType {
      * Log some CSS cards and verify that the previous values are saved the
      * next time the user logs another CSS entry.
      * @see Engine#rxe_containsText(String...)
-     * @see Engine#rxv_errorWithPageSource()
+     * @see Engine#rxv_error()
      * @see ObjectUtil#nonNull(Object)
      * @see Screen#SPLASH
      * @see Screen#LOGIN
@@ -116,7 +116,7 @@ public interface UICSSValueTestType extends UIBaseTestType, CSSValueActionType {
 
                         ENGINE.rxe_containsText(b)
                             .firstElement().toFlowable()
-                            .switchIfEmpty(ENGINE.rxv_errorWithPageSource()),
+                            .switchIfEmpty(ENGINE.rxv_error()),
 
                         THIS.rxa_dashboardFromCSSEntry(ENGINE)
                     ).all(ObjectUtil::nonNull).toFlowable())

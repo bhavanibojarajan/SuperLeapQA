@@ -150,7 +150,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
      * @return {@link Flowable} instance.
      * @see BooleanUtil#toTrue(Object)
      * @see Engine#getText(WebElement)
-     * @see Engine#rxv_errorWithPageSource(String)
+     * @see Engine#rxv_error(String)
      * @see #rxe_editField(Engine, HMInputType)
      */
     @NotNull
@@ -159,7 +159,7 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
                                           @NotNull final String VALUE) {
         return rxe_fieldValue(ENGINE, INPUT)
             .filter(a -> a.toLowerCase().equals(VALUE.toLowerCase()))
-            .switchIfEmpty(ENGINE.rxv_errorWithPageSource(String.format(
+            .switchIfEmpty(ENGINE.rxv_error(String.format(
                 "Value for %s does not equal %s", INPUT, VALUE)))
             .map(BooleanUtil::toTrue);
     }

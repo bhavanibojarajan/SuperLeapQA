@@ -64,7 +64,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * {@link Platform#IOS} there is no way to reveal the password content.
      * @see Engine#isShowingPassword(WebElement)
      * @see Engine#rxa_togglePasswordMask(WebElement)
-     * @see Engine#rxv_errorWithPageSource()
+     * @see Engine#rxv_error()
      * @see Screen#SPLASH
      * @see Screen#PERSONAL_INFO
      * @see UserMode#defaultUserMode()
@@ -97,7 +97,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
                 .flatMap(a -> THIS.rxa_confirmTextInput(ENGINE)
                     .flatMap(b -> ENGINE.rxa_togglePasswordMask(a))
                     .filter(b -> ENGINE.isShowingPassword(b))
-                    .switchIfEmpty(ENGINE.rxv_errorWithPageSource()))
+                    .switchIfEmpty(ENGINE.rxv_error()))
         ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

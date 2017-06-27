@@ -95,6 +95,19 @@ public interface DashboardValidationType extends BaseValidationType {
     }
 
     /**
+     * For some card types, such as {@link CardType#MEAL}, when the user
+     * initializes the entry screen, there may be a introductory popup that
+     * we need to dismiss before continuing further.
+     * @param engine {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#rxe_containsText(String...)
+     */
+    @NotNull
+    default Flowable<WebElement> rxe_cardIntroDismiss(@NotNull Engine<?> engine) {
+        return engine.rxe_containsText("addCard_title_gotIt").firstElement().toFlowable();
+    }
+
+    /**
      * Get the items corresponding to {@link CardType}.
      * @param engine {@link Engine} instance.
      * @param card {@link CardType} instance.

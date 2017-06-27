@@ -1,5 +1,6 @@
 package com.holmusk.SuperLeapQA.test.logmeal;
 
+import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.HMUITestKit.model.HMTextType;
 import com.holmusk.SuperLeapQA.config.Config;
 import com.holmusk.SuperLeapQA.model.Mood;
@@ -7,11 +8,12 @@ import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.test.photopicker.PhotoPickerActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.CollectionUtil;
-import org.swiften.javautilities.util.LogUtil;
 import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.util.LogUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
@@ -29,14 +31,26 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @param ENGINE {@link Engine} instance.
      * @param mood {@link Mood} instance.
      * @return {@link Flowable} instance.
+     * @see Engine#middleCoordinate(WebElement)
      * @see Engine#rxa_click(WebElement)
+     * @see Engine#rxa_tap(Point)
      * @see #rxe_mood(Engine, Mood)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_selectMood(@NotNull final Engine<?> ENGINE,
                                        @NotNull Mood mood) {
         LogUtil.printft("Selecting mood %s", mood);
-        return rxe_mood(ENGINE, mood).flatMap(ENGINE::rxa_click);
+
+        if (ENGINE instanceof AndroidEngine) {
+            return rxe_mood(ENGINE, mood).flatMap(ENGINE::rxa_click);
+        } else if (ENGINE instanceof IOSEngine) {
+            return rxe_mood(ENGINE, mood)
+                .map(ENGINE::middleCoordinate)
+                .flatMap(ENGINE::rxa_tap);
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 
     /**
@@ -109,6 +123,31 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
                 .toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
+        }
+    }
+
+    /**
+     * Enable the meal description editable field by tapping on it. This is
+     * only applicable on {@link Platform#IOS} because
+     * {@link Engine#sendValue(WebElement, String)} does not work unless the
+     * {@link WebElement} is already in focus.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see Engine#middleCoordinate(WebElement)
+     * @see Engine#rxa_tap(Point)
+     * @see TextInput#MEAL_DESCRIPTION
+     * @see #rxe_editField(Engine, HMInputType)
+     */
+    @NotNull
+    default Flowable<?> rxa_openMealDescription(@NotNull final Engine<?> ENGINE) {
+        if (ENGINE instanceof IOSEngine) {
+            TextInput input = TextInput.MEAL_DESCRIPTION;
+
+            return rxe_editField(ENGINE, input)
+                .map(ENGINE::middleCoordinate)
+                .flatMap(ENGINE::rxa_tap);
+        } else {
+            return Flowable.just(true);
         }
     }
 
@@ -229,6 +268,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @see #randomSelectableTime()
      * @see #rxa_selectMealPhotos(Engine)
      * @see #rxa_selectRandomMood(Engine)
+     * @see #rxa_openMealDescription(Engine)
      * @see #rxa_randomInput(Engine, HMTextType)
      * @see #rxa_confirmMealDescription(Engine)
      * @see #rxa_openMealTimePicker(Engine)
@@ -242,6 +282,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
 
         return Flowable
             .concatArray(
+                rxa_openMealDescription(engine),
                 rxa_randomInput(engine, TextInput.MEAL_DESCRIPTION),
                 rxa_confirmMealDescription(engine),
 //                rxa_selectMealPhotos(ENGINE),

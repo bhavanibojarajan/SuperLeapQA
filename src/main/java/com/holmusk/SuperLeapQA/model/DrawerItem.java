@@ -21,7 +21,7 @@ import org.swiften.xtestkitcomponents.xpath.XPath;
  */
 public enum DrawerItem implements BaseErrorType {
     SETTINGS,
-    DIETITIAN_PROFILES,
+    HEALTH_COACH_PROFILES,
     ABOUT,
     FEEDBACK,
     SIGN_OUT;
@@ -32,7 +32,7 @@ public enum DrawerItem implements BaseErrorType {
      * {@link DrawerItem}.
      * @return {@link String} value.
      * @see #ABOUT
-     * @see #DIETITIAN_PROFILES
+     * @see #HEALTH_COACH_PROFILES
      * @see #FEEDBACK
      * @see #SETTINGS
      * @see #SIGN_OUT
@@ -44,8 +44,8 @@ public enum DrawerItem implements BaseErrorType {
             case SETTINGS:
                 return "drawer_title_settings";
 
-            case DIETITIAN_PROFILES:
-                return "drawer_title_dietitianProfile";
+            case HEALTH_COACH_PROFILES:
+                return "drawer_title_healthCoachProfile";
 
             case ABOUT:
                 return "drawer_title_about";

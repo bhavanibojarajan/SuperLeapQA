@@ -171,12 +171,34 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      * @param card {@link CardType} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
+     * @see #rxa_dismissCardIntro(Engine)
      * @see #rxe_cardSelector(Engine, CardType)
      */
     @NotNull
     default Flowable<?> rxa_addCard(@NotNull final Engine<?> ENGINE,
                                     @NotNull CardType card) {
-        return rxe_cardSelector(ENGINE, card).flatMap(ENGINE::rxa_click);
+        return Flowable.concatArray(
+            rxe_cardSelector(ENGINE, card).flatMap(ENGINE::rxa_click),
+            rxa_dismissCardIntro(ENGINE)
+        ).all(ObjectUtil::nonNull).toFlowable();
+    }
+
+    /**
+     * Dismiss the card intro popup, if it is present on the screen.
+     * @param ENGINE {@link Engine} instance.
+     * @return {@link Flowable} instance.
+     * @see BooleanUtil#toTrue(Object)
+     * @see Engine#rxa_click(WebElement)
+     * @see #generalDelay(Engine)
+     * @see #rxe_cardIntroDismiss(Engine)
+     */
+    @NotNull
+    default Flowable<?> rxa_dismissCardIntro(@NotNull final Engine<?> ENGINE) {
+        return rxe_cardIntroDismiss(ENGINE)
+            .flatMap(ENGINE::rxa_click)
+            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
+            .map(BooleanUtil::toTrue)
+            .onErrorReturnItem(false);
     }
 
     /**

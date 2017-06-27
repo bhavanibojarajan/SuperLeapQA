@@ -496,7 +496,7 @@ public interface UIScreenValidationTestType extends
     /**
      * This test validates the drawer found in {@link Screen#DASHBOARD}.
      * @see BooleanUtil#isFalse(boolean)
-     * @see Engine#rxv_errorWithPageSource()
+     * @see Engine#rxv_error()
      * @see ObjectUtil#nonNull(Object)
      * @see UserMode#defaultUserMode()
      * @see Screen#SPLASH
@@ -525,7 +525,7 @@ public interface UIScreenValidationTestType extends
 
             rxv_isDrawerOpen(engine)
                 .filter(BooleanUtil::isFalse)
-                .switchIfEmpty(engine.rxv_errorWithPageSource())
+                .switchIfEmpty(engine.rxv_error())
         ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

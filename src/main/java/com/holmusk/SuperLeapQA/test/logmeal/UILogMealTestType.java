@@ -48,7 +48,7 @@ public interface UILogMealTestType extends
      * searchable from {@link Screen#SEARCH}.
      * @see CollectionUtil#randomElement(Object[])
      * @see Engine#rxe_containsText(String...)
-     * @see Engine#rxv_errorWithPageSource()
+     * @see Engine#rxv_error()
      * @see Mood#title()
      * @see Mood#values()
      * @see NumberUtil#randomBetween(int, int)
@@ -65,6 +65,7 @@ public interface UILogMealTestType extends
      * @see #randomSelectableTime()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_selectMealPhotos(Engine)
+     * @see #rxa_openMealDescription(Engine) 
      * @see #rxa_input(Engine, HMInputType, String)
      * @see #rxa_confirmMealDescription(Engine)
      * @see #rxa_selectMood(Engine, Mood)
@@ -109,6 +110,7 @@ public interface UILogMealTestType extends
             rxa_openMealTimePicker(engine),
             rxa_selectMealTime(engine, time),
             rxa_confirmMealTime(engine),
+            rxa_openMealDescription(engine),
             rxa_input(engine, dscInput, description),
             rxa_confirmMealDescription(engine),
             rxa_submitMeal(engine),
@@ -135,7 +137,7 @@ public interface UILogMealTestType extends
              * search result. If it is still present, throw an error */
             rxe_searchResult(engine, description)
                 .map(BooleanUtil::toTrue)
-                .flatMap(b -> engine.rxv_errorWithPageSource())
+                .flatMap(b -> engine.rxv_error())
                 .onErrorReturnItem(true)
         ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
@@ -222,7 +224,7 @@ public interface UILogMealTestType extends
      * @see BooleanUtil#toTrue(Object)
      * @see Engine#rxa_clearSearchBar()
      * @see Engine#rxa_click(WebElement)
-     * @see Engine#rxv_errorWithPageSource()
+     * @see Engine#rxv_error()
      * @see ObjectUtil#nonNull(Object)
      * @see TextInput#randomInput(InputHelperType)
      * @see Screen#SPLASH

@@ -74,7 +74,7 @@ public interface UILogActivityTestType extends UIBaseTestType, LogActivityAction
      * Log a new activity and confirm that step calculations are correct. This
      * is only relevant for {@link UserMode#isTeen()}.
      * @see Double#intValue()
-     * @see Engine#rxv_errorWithPageSource()
+     * @see Engine#rxv_error()
      * @see UserMode#defaultTeenUserMode()
      * @see ActivityValue#TODAY
      * @see Config#STEP_PER_MIN
@@ -128,7 +128,8 @@ public interface UILogActivityTestType extends UIBaseTestType, LogActivityAction
                                 .map(Double::intValue)
                                 .doOnNext(c -> LogUtil.printft("Difference is %d", c))
                                 .filter(c -> c.equals(b))
-                                .switchIfEmpty(ENGINE.rxv_errorWithPageSource())
+                                .filter(c -> c % STEP_PER_MIN == 0)
+                                .switchIfEmpty(ENGINE.rxv_error("Steps do not match"))
                         ))))
         ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 

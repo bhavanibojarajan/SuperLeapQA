@@ -145,7 +145,7 @@ public interface SearchValidationType extends BaseValidationType {
      * Check if the search result is empty. Throw an error otherwise.
      * @param E {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxv_errorWithPageSource()
+     * @see Engine#rxv_error()
      * @see #rxv_emptySearchResult(Engine)
      */
     @NotNull
@@ -155,7 +155,7 @@ public interface SearchValidationType extends BaseValidationType {
                 if (a) {
                     return Flowable.just(true);
                 } else {
-                    return E.rxv_errorWithPageSource();
+                    return E.rxv_error();
                 }
             });
     }

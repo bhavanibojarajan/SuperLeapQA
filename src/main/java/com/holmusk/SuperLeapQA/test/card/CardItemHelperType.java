@@ -42,7 +42,7 @@ public interface CardItemHelperType extends DashboardActionType, ScreenInitializ
      * @param card {@link CardType} instance.
      * @return {@link Flowable} instance.
      * @see BooleanUtil#isTrue(boolean)
-     * @see Engine#rxv_errorWithPageSource()
+     * @see Engine#rxv_error()
      * @see ObjectUtil#nonNull(Object)
      * @see RxUtil#doWhile(Flowable, Flowable, Object)
      * @see #rxa_deleteFirstCardItem(Engine, CardType)
@@ -60,7 +60,7 @@ public interface CardItemHelperType extends DashboardActionType, ScreenInitializ
 
             rxv_cardListEmpty(engine, card)
                 .filter(BooleanUtil::isTrue)
-                .switchIfEmpty(engine.rxv_errorWithPageSource())
+                .switchIfEmpty(engine.rxv_error())
         ).all(ObjectUtil::nonNull).toFlowable();
     }
 

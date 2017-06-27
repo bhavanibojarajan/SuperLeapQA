@@ -34,7 +34,7 @@ public interface UILogWeightTestType extends
      * Validate that weight logging works by posting a new weight card.
      * @see BooleanUtil#toTrue(Object)
      * @see Engine#rxe_containsText(String...)
-     * @see Engine#rxv_errorWithPageSource()
+     * @see Engine#rxv_error()
      * @see ObjectUtil#nonNull(Object)
      * @see CSSInput#WEIGHT
      * @see Screen#SPLASH
@@ -82,7 +82,7 @@ public interface UILogWeightTestType extends
                      * in the dashboard */
                     ENGINE.rxe_containsText(a)
                         .map(BooleanUtil::toTrue)
-                        .flatMap(c -> ENGINE.rxv_errorWithPageSource())
+                        .flatMap(c -> ENGINE.rxv_error())
                         .onErrorReturnItem(true))
                 )
         ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
@@ -100,7 +100,7 @@ public interface UILogWeightTestType extends
      * before logging a new weight.
      * @see Double#valueOf(String)
      * @see Engine#localizer()
-     * @see Engine#rxv_errorWithPageSource()
+     * @see Engine#rxv_error()
      * @see LocalizerType#localize(String)
      * @see ObjectUtil#nonNull(Object)
      * @see StringUtil#removeAll(String, String)
@@ -168,7 +168,7 @@ public interface UILogWeightTestType extends
                     ).doOnNext(b -> LogUtil.printft(
                         "Initial weight should be %s, but is %s", b, a)
                     ).filter(b -> b.equals(a)
-                    ).switchIfEmpty(E.rxv_errorWithPageSource()))
+                    ).switchIfEmpty(E.rxv_error()))
                 )
         ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
