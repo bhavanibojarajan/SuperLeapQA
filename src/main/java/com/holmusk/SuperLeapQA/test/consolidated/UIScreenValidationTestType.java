@@ -689,14 +689,13 @@ public interface UIScreenValidationTestType extends
     )
     default void test_logActivityEntry_isValidScreen(@NotNull UserMode mode) {
         // Setup
-        final UIScreenValidationTestType THIS = this;
-        final Engine<?> ENGINE = engine();
+        Engine<?> engine = engine();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         Flowable.concatArray(
             rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.ACTIVITY_ENTRY),
-            rxv_activityEntry(ENGINE)
+            rxv_activityEntry(engine)
         ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
