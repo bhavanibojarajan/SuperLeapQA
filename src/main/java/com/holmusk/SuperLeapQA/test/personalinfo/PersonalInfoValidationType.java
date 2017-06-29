@@ -6,15 +6,14 @@ import com.holmusk.SuperLeapQA.test.validage.ValidAgeValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.AttributeType;
@@ -121,22 +120,23 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
      * {@link WebElement}.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
+     * @see ObjectUtil#nonNull(Object)
      * @see UserMode#personalInfo(PlatformType)
      * @see #rxe_editField(Engine, HMInputType)
      * @see #rxe_personalInfoSubmit(Engine)
-     * @see ObjectUtil#nonNull(Object)
-     * @see BooleanUtil#toTrue(Object)
      */
     @NotNull
+    @SuppressWarnings("unchecked")
     default Flowable<?> rxv_personalInfoScreen(@NotNull final Engine<?> ENGINE,
                                                @NotNull UserMode mode) {
         final PersonalInfoValidationType THIS = this;
         final PlatformType PLATFORM = ENGINE.platform();
 
-        return Flowable.fromIterable(mode.personalInfo(PLATFORM))
-            .flatMap(a -> THIS.rxe_editField(ENGINE, a))
-            .concatWith(THIS.rxe_personalInfoSubmit(ENGINE))
-            .all(ObjectUtil::nonNull)
-            .toFlowable();
+        return Flowable.concatArray(
+            Flowable.fromIterable(mode.personalInfo(PLATFORM))
+                .flatMap(a -> THIS.rxe_editField(ENGINE, a)),
+
+            rxe_personalInfoSubmit(ENGINE)
+        ).all(ObjectUtil::nonNull).toFlowable();
     }
 }

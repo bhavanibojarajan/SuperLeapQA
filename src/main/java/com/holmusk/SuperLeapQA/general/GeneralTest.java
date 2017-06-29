@@ -2,6 +2,7 @@ package com.holmusk.SuperLeapQA.general;
 
 import com.holmusk.HMUITestKit.model.UnitSystem;
 import com.holmusk.SuperLeapQA.bmi.BMIParam;
+import com.holmusk.SuperLeapQA.bmi.BMIResult;
 import com.holmusk.SuperLeapQA.bmi.BMIUtil;
 import com.holmusk.SuperLeapQA.model.*;
 import com.holmusk.SuperLeapQA.navigation.Screen;
@@ -10,9 +11,10 @@ import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zip;
-import org.swiften.javautilities.util.LogUtil;
 import org.swiften.javautilities.test.TestNGUtil;
+import org.swiften.javautilities.util.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.mobile.Platform;
@@ -30,6 +32,7 @@ import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.fail;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
@@ -47,6 +50,19 @@ public final class GeneralTest {
             UnitSystem.values(),
             Ethnicity.values(),
             Gender.values()
+        ).iterator();
+    }
+
+    @NotNull
+    @DataProvider(parallel = true)
+    public static Iterator<Object[]> findBmiDataProvider() {
+        return TestNGUtil.oneFromEach(
+            Platform.values(),
+            UserMode.values(),
+            UnitSystem.values(),
+            Ethnicity.values(),
+            Gender.values(),
+            CollectionUtil.asList(true, false).toArray()
         ).iterator();
     }
 
@@ -193,6 +209,45 @@ public final class GeneralTest {
         // Then
         assertEquals(tightestInvalid.A, widestInvalid.A);
         assertTrue(widestInvalid.B >= tightestInvalid.B);
+    }
+
+    @Test(
+        dataProviderClass = GeneralTest.class,
+        dataProvider = "findBmiDataProvider"
+    )
+    @SuppressWarnings("unchecked")
+    public void test_findValidBMI_shouldWork(@NotNull PlatformType platform,
+                                             @NotNull UserMode mode,
+                                             @NotNull UnitSystem unit,
+                                             @NotNull Ethnicity ethnicity,
+                                             @NotNull Gender gender,
+                                             boolean validBMI) {
+        // Setup
+        BMIParam param = BMIParam.builder()
+            .withEthnicity(ethnicity)
+            .withGender(gender)
+            .build();
+
+        // When
+        BMIResult result = BMIUtil.findBMIResult(platform, mode, unit, param, validBMI);
+
+        // Then
+        BMIParam nParam = result.requestParam();
+        boolean generatedCorrectly;
+
+        if (validBMI) {
+            generatedCorrectly = BMIUtil.outOfWidestInvalidRange(mode, nParam);
+        } else {
+            generatedCorrectly = BMIUtil.withinTightestInvalidRange(mode, nParam);
+        }
+
+        if (!generatedCorrectly) {
+            LogUtil.printft("Current bmi %.2f. Valid: %b", nParam.bmi(), validBMI);
+            LogUtil.printlnt(result.height(), result.weight());
+            LogUtil.printft("Widest invalid range: %s", BMIUtil.widestInvalidRange(mode, nParam));
+            LogUtil.printft("Tightest invalid range: %s", BMIUtil.tightestInvalidRange(mode, nParam));
+            fail("BMI was not correctly generated");
+        }
     }
 
     @Test(dataProviderClass = TestHelper.class, dataProvider = "platformProvider")

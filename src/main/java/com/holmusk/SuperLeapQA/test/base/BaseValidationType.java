@@ -121,10 +121,8 @@ public interface BaseValidationType extends BaseErrorType, AppDelayType {
     @NotNull
     default Flowable<WebElement> rxe_editField(@NotNull Engine<?> engine,
                                                @NotNull HMInputType input) {
-        return engine
-            .rxe_withXPath(input.inputViewXP(engine))
-            .firstElement()
-            .toFlowable();
+        XPath xpath = input.inputViewXP(engine);
+        return engine.rxe_withXPath(xpath).firstElement().toFlowable();
     }
 
     /**

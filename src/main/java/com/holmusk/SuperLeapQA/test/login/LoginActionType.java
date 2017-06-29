@@ -9,7 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
+import org.swiften.xtestkit.ios.IOSEngine;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -38,10 +40,19 @@ public interface LoginActionType extends BaseActionType, LoginValidationType {
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
      * @see #rxe_loginRegister(Engine)
+     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_registerFromLogin(@NotNull final Engine<?> ENGINE) {
-        return rxe_loginRegister(ENGINE).flatMap(ENGINE::rxa_click);
+        if (ENGINE instanceof AndroidEngine) {
+            return rxe_loginRegister(ENGINE).flatMap(ENGINE::rxa_click);
+        } else if (ENGINE instanceof IOSEngine) {
+            return rxe_loginRegister(ENGINE)
+                .map(ENGINE::middleCoordinate)
+                .flatMap(ENGINE::rxa_tap);
+        } else {
+            throw new RuntimeException(NOT_AVAILABLE);
+        }
     }
 
     /**

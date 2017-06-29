@@ -1,28 +1,28 @@
 package com.holmusk.SuperLeapQA.test.validage;
 
+import com.holmusk.HMUITestKit.model.HMChoiceType;
+import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.HMUITestKit.model.HMTextChoiceType;
 import com.holmusk.HMUITestKit.model.UnitSystem;
 import com.holmusk.SuperLeapQA.bmi.BMIParam;
+import com.holmusk.SuperLeapQA.bmi.BMIResult;
 import com.holmusk.SuperLeapQA.bmi.BMIUtil;
 import com.holmusk.SuperLeapQA.model.*;
-import com.holmusk.HMUITestKit.model.HMChoiceType;
-import com.holmusk.HMUITestKit.model.HMInputType;
-import com.holmusk.SuperLeapQA.model.SLNumericChoiceType;
 import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zip;
-import org.swiften.javautilities.util.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
+import org.swiften.javautilities.util.LogUtil;
+import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputHelperType;
-import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.ios.IOSEngine;
+import org.swiften.xtestkit.mobile.Platform;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -177,22 +177,21 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @return {@link Flowable} instance.
      * @see BMIParam.Builder#withEthnicity(Ethnicity)
      * @see BMIParam.Builder#withGender(Gender)
-     * @see BMIParam.Builder#withHeight(List)
-     * @see BMIParam.Builder#withWeight(List)
-     * @see BMIUtil#outOfWidestInvalidRange(UserMode, BMIParam)
-     * @see BMIUtil#withinTightestInvalidRange(UserMode, BMIParam)
-     * @see ChoiceInput#HEIGHT
-     * @see ChoiceInput#WEIGHT
+     * @see BMIResult#height()
+     * @see BMIResult#weight()
+     * @see BMIUtil#findBMIResult(PlatformType, UserMode, UnitSystem, BMIParam, boolean)
      * @see CoachPref#values()
      * @see CollectionUtil#randomElement(Object[])
      * @see Ethnicity#values()
      * @see Gender#values()
      * @see Height#randomValue(UserMode)
      * @see HMTextChoiceType.Item#stringValue(InputHelperType, double)
-     * @see com.holmusk.SuperLeapQA.navigation.Screen#PERSONAL_INFO
      * @see UnitSystem#values()
      * @see UserMode#validAgeInfo(PlatformType)
      * @see Weight#randomValue(UserMode)
+     * @see ChoiceInput#HEIGHT
+     * @see ChoiceInput#WEIGHT
+     * @see com.holmusk.SuperLeapQA.navigation.Screen#PERSONAL_INFO
      * @see Zip#A
      * @see #rxa_selectGender(Engine, Gender)
      * @see #rxa_clickInput(Engine, HMInputType)
@@ -217,37 +216,14 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
         ChoiceInput cEthnicity = ChoiceInput.ETHNICITY;
         ChoiceInput cCoach = ChoiceInput.COACH_PREF;
 
-        List<Zip<Height,String>> height;
-        List<Zip<Weight,String>> weight;
-        BMIParam param;
-
-        /* Keep randomizing until BMI falls out of healthy range, otherwise
-         * the BMI check will fail */
-        do {
-            height = Height.random(platform, mode, unit);
-            weight = Weight.random(platform, mode, unit);
-
-            param = BMIParam.builder()
-                .withEthnicity(ethnicity)
-                .withGender(gender)
-                .withHeight(height)
-                .withWeight(weight)
-                .build();
-
-            LogUtil.printft("Current BMI: %.2f", param.bmi());
-        } while (validBMI
-            ? BMIUtil.withinTightestInvalidRange(mode, param)
-            : BMIUtil.outOfWidestInvalidRange(mode, param));
-
-        LogUtil.printft(
-            "Selecting height: %s, weight: %s, BMI: %.2f",
-            height,
-            weight,
-            param.bmi()
-        );
-
+        BMIParam param = BMIParam.builder().withEthnicity(ethnicity).withGender(gender).build();
+        BMIResult result = BMIUtil.findBMIResult(platform, mode, unit, param, validBMI);
+        List<Zip<Height,String>> height = result.height();
+        List<Zip<Weight,String>> weight = result.weight();
         Height hMode = height.get(0).A;
         Weight wMode = weight.get(0).A;
+
+        LogUtil.printft("Selecting height: %s, weight: %s", height, weight);
 
         return Flowable
             .concatArray(
@@ -282,7 +258,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
 
     /**
      * Enter and confirm valid age inputs.
-     * @param engine {@link Engine} instance.
+     * @param ENGINE {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @param validBMI {@link Boolean} value.
      * @return {@link Flowable} instance.
@@ -294,21 +270,22 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @see #rxv_dialogBlockingScreen(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_completeValidAgeInputs(@NotNull Engine<?> engine,
+    default Flowable<?> rxa_completeValidAgeInputs(@NotNull final Engine<?> ENGINE,
                                                    @NotNull UserMode mode,
                                                    boolean validBMI) {
         return Flowable
             .concatArray(
-                rxa_enterValidAgeInputs(engine, mode, validBMI),
-                rxa_scrollToBottom(engine),
-                rxv_dialogBlockingScreen(engine).flatMap(a -> {
-                    if (a) {
-                        return engine.rxa_navigateBackOnce();
-                    } else {
-                        return Flowable.just(true);
-                    }
-                }),
-                rxa_confirmValidAgeInputs(engine)
+                rxa_enterValidAgeInputs(ENGINE, mode, validBMI),
+                rxa_scrollToBottom(ENGINE),
+                rxv_dialogBlockingScreen(ENGINE)
+                    .flatMap(a -> {
+                        if (a) {
+                            return ENGINE.rxa_navigateBackOnce();
+                        } else {
+                            return Flowable.just(true);
+                        }
+                    }),
+                rxa_confirmValidAgeInputs(ENGINE)
             )
             .all(ObjectUtil::nonNull)
             .toFlowable();

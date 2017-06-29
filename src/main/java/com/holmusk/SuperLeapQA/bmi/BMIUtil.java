@@ -1,10 +1,10 @@
 package com.holmusk.SuperLeapQA.bmi;
 
-import com.holmusk.SuperLeapQA.model.Ethnicity;
-import com.holmusk.SuperLeapQA.model.Gender;
-import com.holmusk.SuperLeapQA.model.UserMode;
+import com.holmusk.HMUITestKit.model.UnitSystem;
+import com.holmusk.SuperLeapQA.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
+import org.swiften.xtestkitcomponents.platform.PlatformType;
 
 import java.util.Collection;
 import java.util.List;
@@ -15,6 +15,62 @@ import java.util.stream.Collectors;
  * Created by haipham on 6/6/17.
  */
 public final class BMIUtil {
+    /**
+     * Loop height and weight creation until we arrive at an appropriate BMI
+     * value.
+     * @param platform {@link PlatformType} instance.
+     * @param mode {@link UserMode} instance.
+     * @param unit {@link UnitSystem} instance.
+     * @param param {@link BMIParam} instance.
+     * @param validBMI {@link Boolean} value.
+     * @return {@link BMIResult} instance.
+     * @see BMIParam.Builder#withEthnicity(Ethnicity)
+     * @see BMIParam.Builder#withGender(Gender)
+     * @see BMIParam.Builder#withHeight(List)
+     * @see BMIParam.Builder#withWeight(List)
+     * @see BMIResult.Builder#withHeight(List)
+     * @see BMIResult.Builder#withRequestParam(BMIParam)
+     * @see BMIResult.Builder#withWeight(List)
+     * @see Height#random(PlatformType, UserMode, UnitSystem)
+     * @see Weight#random(PlatformType, UserMode, UnitSystem)
+     * @see #outOfWidestInvalidRange(UserMode, BMIParam)
+     * @see #withinTightestInvalidRange(UserMode, BMIParam)
+     */
+    @NotNull
+    public static BMIResult findBMIResult(@NotNull PlatformType platform,
+                                          @NotNull UserMode mode,
+                                          @NotNull UnitSystem unit,
+                                          @NotNull BMIParam param,
+                                          boolean validBMI) {
+        // Setup
+        List<Zip<Height,String>> height;
+        List<Zip<Weight,String>> weight;
+        BMIParam newParam;
+
+        // When
+        /* Keep randomizing until BMI falls out of healthy range, otherwise
+         * the BMI check will fail */
+        do {
+            height = Height.random(platform, mode, unit);
+            weight = Weight.random(platform, mode, unit);
+
+            newParam = BMIParam.builder()
+                .withEthnicity(param.ethnicity())
+                .withGender(param.gender())
+                .withHeight(height)
+                .withWeight(weight)
+                .build();
+        } while (validBMI
+            ? BMIUtil.withinWidestInvalidRange(mode, newParam)
+            : BMIUtil.outOfTightestInvalidRange(mode, newParam));
+
+        return BMIResult.builder()
+            .withHeight(height)
+            .withWeight(weight)
+            .withRequestParam(newParam)
+            .build();
+    }
+
     /**
      * Get the invalid BMI range based on {@link Ethnicity}, {@link Gender}
      * and age.
@@ -170,6 +226,18 @@ public final class BMIUtil {
     public static boolean withinTightestInvalidRange(@NotNull UserMode mode,
                                                      @NotNull BMIParam param) {
         return withinRange(tightestInvalidRange(mode, param), param);
+    }
+
+    /**
+     * Antithesis of {@link #withinTightestInvalidRange(UserMode, BMIParam)}.
+     * @param mode {@link UserMode} instance.
+     * @param param {@link BMIParam} instance.
+     * @return {@link Boolean} value.
+     * @see #withinTightestInvalidRange(UserMode, BMIParam)
+     */
+    public static boolean outOfTightestInvalidRange(@NotNull UserMode mode,
+                                                    @NotNull BMIParam param) {
+        return !withinTightestInvalidRange(mode, param);
     }
 
     /**

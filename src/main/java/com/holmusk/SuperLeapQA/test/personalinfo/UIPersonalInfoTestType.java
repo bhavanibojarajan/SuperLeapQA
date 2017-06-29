@@ -200,7 +200,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_randomInputs(Engine, List)
      * @see #rxa_confirmPersonalInfo(Engine)
-     * @see #rxv_personalInfoScreen(Engine, UserMode)
+     * @see #rxe_TCCheckBox(Engine)
      */
     @SuppressWarnings("unchecked")
     @Test(
@@ -219,7 +219,10 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
             rxa_navigate(mode, Screen.SPLASH, Screen.PERSONAL_INFO),
             rxa_randomInputs(engine, info),
             rxa_confirmPersonalInfo(engine),
-            rxv_personalInfoScreen(engine, mode)
+
+            /* If the check box is present, that means we haven't left the
+             * current screen yet */
+            rxe_TCCheckBox(engine)
         ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
