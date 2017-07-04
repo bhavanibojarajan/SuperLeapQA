@@ -85,7 +85,7 @@ public interface UIBaseTestType extends
     @DataProvider
     static Iterator<Object[]> guarantorSpecificUserModeProvider() {
         return TestNGUtil.oneFromEach(
-//            UserMode.TEEN_U18,
+            UserMode.TEEN_U18,
             UserMode.TEEN_A18
         ).iterator();
     }

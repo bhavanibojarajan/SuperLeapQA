@@ -47,20 +47,6 @@ public interface UICSSValueTestType extends UIBaseTestType, CSSValueActionType {
             CSSInput.WEIGHT
         });
 
-        UserMode[] modes = new UserMode[] {
-            UserMode.PARENT,
-            UserMode.TEEN_A18
-        };
-
-        for (UserMode mode : modes) {
-            data.add(new Object[] {
-                mode,
-                Screen.ACTIVITY_VALUE,
-                Screen.ACTIVITY_ENTRY,
-                CSSInput.ACTIVITY
-            });
-        }
-
         return data.iterator();
     }
 

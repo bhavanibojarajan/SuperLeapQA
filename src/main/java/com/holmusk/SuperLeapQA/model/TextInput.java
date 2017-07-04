@@ -291,22 +291,22 @@ public enum TextInput implements BaseErrorType, HMTextType {
 
             case CHILD_NRIC:
             case NRIC:
-//                String suffix = CollectionUtil.randomElement(
-//                    "A",
-//                    "B",
-//                    "C",
-//                    "D",
-//                    "E",
-//                    "F",
-//                    "G",
-//                    "H",
-//                    "I",
-//                    "Z",
-//                    "J");
-//
-//                String digits  = StringUtil.randomDigitString(7);
-//                return "S" + digits + suffix;
-                return StringUtil.randomDigitString(7);
+                String suffix = CollectionUtil.randomElement(
+                    "A",
+                    "B",
+                    "C",
+                    "D",
+                    "E",
+                    "F",
+                    "G",
+                    "H",
+                    "I",
+                    "Z",
+                    "J");
+
+                String digits  = StringUtil.randomDigitString(7);
+                return "S" + digits + suffix;
+//                return StringUtil.randomDigitString(7);
 
             case MOBILE:
             case PARENT_MOBILE:
