@@ -249,14 +249,14 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
-     * @see #CSSLogProgressDelay(Engine)
+     * @see #cssLogProgressDelay(Engine)
      * @see #rxe_mealConfirm(Engine)
      */
     @NotNull
     default Flowable<?> rxa_submitMeal(@NotNull final Engine<?> ENGINE) {
         return rxe_mealConfirm(ENGINE)
             .flatMap(ENGINE::rxa_click)
-            .delay(CSSLogProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+            .delay(cssLogProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
     /**
