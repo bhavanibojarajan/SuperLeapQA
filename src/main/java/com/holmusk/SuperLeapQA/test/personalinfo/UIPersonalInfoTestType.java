@@ -189,11 +189,6 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * user continues any further. The check happens in
      * {@link Screen#PERSONAL_INFO}.
      * @param mode {@link UserMode} instance.
-     * @see Engine#rxa_hideKeyboard()
-     * @see ObjectUtil#nonNull(Object)
-     * @see UserMode#personalInfo(PlatformType)
-     * @see Screen#SPLASH
-     * @see Screen#PERSONAL_INFO
      * @see #assertCorrectness(TestSubscriber)
      * @see #generalUserModeProvider()
      * @see #engine()

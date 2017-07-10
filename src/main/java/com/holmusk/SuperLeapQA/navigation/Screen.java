@@ -43,11 +43,6 @@ public enum Screen implements ScreenInitializationType {
      * has been fully initialized.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #DASHBOARD_TUTORIAL
-     * @see #MEAL_PAGE
-     * @see #PHOTO_PICKER
-     * @see #USE_APP_NOW
-     * @see #WEIGHT_ENTRY
      * @see #rxn_dashboardTutorialInitialized(Engine)
      * @see #rxn_mealPageInitialized(Engine)
      * @see #rxn_photoPickerInitialized(Engine)

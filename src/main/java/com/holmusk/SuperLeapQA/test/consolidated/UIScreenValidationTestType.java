@@ -408,12 +408,6 @@ public interface UIScreenValidationTestType extends
      * check {@link Screen#USE_APP_NOW} and {@link Screen#DASHBOARD_TUTORIAL}
      * as well.
      * @param mode {@link UserMode} instance.
-     * @see ObjectUtil#nonNull(Object)
-     * @see DashboardMode#ACTIVITY
-     * @see DashboardMode#BMI
-     * @see Screen#SPLASH
-     * @see Screen#DOB
-     * @see Screen#DASHBOARD
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #guarantorSpecificUserModeProvider()

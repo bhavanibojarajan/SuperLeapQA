@@ -10,12 +10,11 @@ import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.localizer.LocalizerType;
-import org.swiften.javautilities.util.LogUtil;
 import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.javautilities.rx.RxUtil;
-import org.swiften.javautilities.string.StringUtil;
+import org.swiften.javautilities.util.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.Test;
 
@@ -32,15 +31,6 @@ public interface UILogWeightTestType extends
 {
     /**
      * Validate that weight logging works by posting a new weight card.
-     * @see BooleanUtil#toTrue(Object)
-     * @see Engine#rxe_containsText(String...)
-     * @see Engine#rxv_error()
-     * @see ObjectUtil#nonNull(Object)
-     * @see CSSInput#WEIGHT
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
-     * @see Screen#WEIGHT_ENTRY
-     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
@@ -98,22 +88,6 @@ public interface UILogWeightTestType extends
      * first logs a weight card, i.e. the change in the first weight page
      * should be non-zero most of the time. We need to delete all weight cards
      * before logging a new weight.
-     * @see Double#valueOf(String)
-     * @see Engine#localizer()
-     * @see Engine#rxv_error()
-     * @see LocalizerType#localize(String)
-     * @see ObjectUtil#nonNull(Object)
-     * @see StringUtil#removeAll(String, String)
-     * @see UserMode#defaultUserMode()
-     * @see CardType#WEIGHT
-     * @see ChoiceInput#START_WEIGHT
-     * @see DrawerItem#SETTINGS
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
-     * @see Screen#DASHBOARD
-     * @see Setting#PROFILE
-     * @see WeightProgress#CHANGE
-     * @see WeightProgress#PREVIOUS
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
@@ -151,8 +125,7 @@ public interface UILogWeightTestType extends
              * value is not directly readable from the meal page screen on
              * Android. */
             rxe_fieldValue(E, ChoiceInput.START_WEIGHT)
-                .compose(RxUtil.removeFromString(LOCALIZER,
-                    "uom_title_kg", "uom_title_lbs", " "))
+                .compose(RxUtil.removeFromString(LOCALIZER, "uom_title_kg", "uom_title_lbs", " "))
                 .map(Double::valueOf)
                 .doOnNext(a -> LogUtil.printft("Initial weight: %s", a))
                 .flatMap(a -> Flowable.concatArray(

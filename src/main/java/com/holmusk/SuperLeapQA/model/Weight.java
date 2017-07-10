@@ -51,9 +51,8 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @param platform {@link PlatformType} instance.
      * @param unit {@link UnitSystem} instance.
      * @return {@link List} of {@link Weight}.
-     * @see #metric(PlatformType)
      * @see #imperial(PlatformType)
-     * @see #NOT_AVAILABLE
+     * @see #metric(PlatformType)
      */
     @NotNull
     public static List<Weight> instances(@NotNull PlatformType platform,
@@ -76,7 +75,6 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @param MODE {@link UserMode} instance.
      * @param unit {@link UnitSystem} instance.
      * @return {@link List} of {@link Zip}.
-     * @see SLNumericChoiceType#randomValue(UserMode)
      * @see #instances(PlatformType, UnitSystem)
      */
     @NotNull
@@ -95,9 +93,6 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @param unit {@link UnitSystem} instance.
      * @param inputs {@link List} of {@link Zip}.
      * @return {@link String} value.
-     * @see UnitSystem#METRIC
-     * @see UnitSystem#IMPERIAL
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     @SuppressWarnings("ConstantConditions")
@@ -124,10 +119,6 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * Override this method to provide default implementation.
      * @return {@link UnitSystem} instance.
      * @see HMUnitSystemConvertibleType#unitSystem()
-     * @see UnitSystem#IMPERIAL
-     * @see UnitSystem#METRIC
-     * @see #LB
-     * @see #LB_DEC
      */
     @NotNull
     @Override
@@ -148,11 +139,6 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @param helper {@link InputHelperType} instance.
      * @return {@link Integer} value.
      * @see SLNumericChoiceType#androidScrollablePickerIndex(InputHelperType)
-     * @see #KG
-     * @see #KG_DEC
-     * @see #LB
-     * @see #LB_DEC
-     * @see #NOT_AVAILABLE
      */
     @Override
     public int androidScrollablePickerIndex(@NotNull InputHelperType helper) {
@@ -175,11 +161,6 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @param helper {@link InputHelperType} instance.
      * @return {@link Integer} value.
      * @see SLNumericChoiceType#iOSScrollablePickerIndex(InputHelperType)
-     * @see #KG
-     * @see #KG_DEC
-     * @see #LB
-     * @see #LB_DEC
-     * @see #NOT_AVAILABLE
      */
     @Override
     public int iOSScrollablePickerIndex(@NotNull InputHelperType helper) {
@@ -203,11 +184,9 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * Override this method to provide default implementation.
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} value.
-     * @see InputHelperType#platform()
      * @see InputType#inputViewXP(InputHelperType)
      * @see #androidInputViewXP(InputHelperType)
      * @see #iOSInputViewXP(InputHelperType)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
@@ -231,14 +210,6 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsID(String)
-     * @see Attributes#of(PlatformType)
-     * @see XPath.Builder#addAttribute(AttributeType)
-     * @see Platform#ANDROID
-     * @see #KG
-     * @see #KG_DEC
-     * @see #LB
-     * @see #LB_DEC
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     private XPath androidInputViewXP(@NotNull InputHelperType helper) {
@@ -270,15 +241,6 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsText(String)
-     * @see Attributes#of(PlatformType)
-     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(String)
-     * @see XPath.Builder#addAttribute(CompoundAttribute)
-     * @see Platform#IOS
-     * @see IOSView.Type#UI_BUTTON
-     * @see #KG
-     * @see #LB
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     private XPath iOSInputViewXP(@NotNull InputHelperType helper) {
@@ -330,12 +292,6 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @param mode {@link UserMode} instance.
      * @return {@link Integer} value.
      * @see SLNumericChoiceType#minSelectableValue(UserMode)
-     * @see UserMode#isParent()
-     * @see #KG
-     * @see #KG_DEC
-     * @see #LB
-     * @see #LB_DEC
-     * @see #NOT_AVAILABLE
      */
     @Override
     public int minSelectableValue(@NotNull UserMode mode) {
@@ -361,12 +317,6 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @param mode {@link UserMode} instance.
      * @return {@link Integer} value.
      * @see SLNumericChoiceType#maxSelectableValue(UserMode)
-     * @see UserMode#isParent()
-     * @see #KG
-     * @see #KG_DEC
-     * @see #LB
-     * @see #LB_DEC
-     * @see #NOT_AVAILABLE
      */
     @Override
     public int maxSelectableValue(@NotNull UserMode mode) {

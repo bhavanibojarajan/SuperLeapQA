@@ -71,7 +71,6 @@ public interface SLNumericChoiceType extends HMNumericChoiceType {
     /**
      * Get a random numeric value from {@link #selectableRange(UserMode)}.
      * @return {@link Integer} value.
-     * @see CollectionUtil#randomElement(List)
      * @see #selectableRange(UserMode)
      */
     default int randomValue(@NotNull UserMode mode) {

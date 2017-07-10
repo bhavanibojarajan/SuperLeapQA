@@ -22,7 +22,6 @@ import java.util.List;
 public interface SLScreenManagerType extends ScreenManagerType {
     /**
      * Convenience to register all available {@link ScreenHolder}.
-     * @see ScreenHolder#of(Engine, Screen, UserMode)
      */
     default void registerScreenHolders() {
         final Engine<?> ENGINE = engine();
@@ -41,7 +40,6 @@ public interface SLScreenManagerType extends ScreenManagerType {
      * @param MODE {@link UserMode} instance.
      * @param screens Varargs of {@link Screen}.
      * @return An Array of {@link ScreenHolder}.
-     * @see ScreenHolder#of(Engine, Screen, UserMode)
      */
     @NotNull
     default ScreenHolder[] holders(@NotNull final UserMode MODE,

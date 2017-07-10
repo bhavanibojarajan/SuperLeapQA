@@ -6,8 +6,7 @@ import com.holmusk.SuperLeapQA.model.Ethnicity;
 import com.holmusk.SuperLeapQA.model.Gender;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.Zip;
-import org.swiften.javautilities.object.ObjectUtil;
-import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.xtestkitcomponents.common.ErrorProviderType;
 
 import java.util.List;
 
@@ -37,7 +36,6 @@ public final class BMIParam {
     /**
      * Get {@link #ethnicity}.
      * @return {@link Ethnicity} instance.
-     * @see #ethnicity
      */
     @NotNull
     public Ethnicity ethnicity() {
@@ -47,7 +45,6 @@ public final class BMIParam {
     /**
      * Get {@link #gender}.
      * @return {@link Gender} instance.
-     * @see #gender
      */
     @NotNull
     public Gender gender() {
@@ -57,7 +54,6 @@ public final class BMIParam {
     /**
      * Get {@link #age}.
      * @return {@link Integer} value.
-     * @see #age
      */
     public int age() {
         return age;
@@ -66,7 +62,6 @@ public final class BMIParam {
     /**
      * Get {@link #heightM}.
      * @return {@link Double} value.
-     * @see #heightM
      */
     public double heightM() {
         return heightM;
@@ -75,7 +70,6 @@ public final class BMIParam {
     /**
      * Get {@link #weightKG}.
      * @return {@link Double} value.
-     * @see #weightKG
      */
     public double weightKG() {
         return weightKG;
@@ -84,7 +78,6 @@ public final class BMIParam {
     /**
      * Calculate the BMI.
      * @return {@link Double} value.
-     * @see Math#pow(double, double)
      * @see #heightM()
      * @see #weightKG()
      */
@@ -95,7 +88,7 @@ public final class BMIParam {
     /**
      * Builder class for {@link BMIParam}.
      */
-    public static final class Builder implements BaseErrorType {
+    public static final class Builder implements ErrorProviderType {
         @NotNull private final BMIParam PARAM;
 
         Builder() {
@@ -106,7 +99,6 @@ public final class BMIParam {
          * Set {@link #ethnicity} instance.
          * @param ethnicity {@link Ethnicity} instance.
          * @return {@link Builder} instance.
-         * @see #ethnicity
          */
         @NotNull
         public Builder withEthnicity(@NotNull Ethnicity ethnicity) {
@@ -118,7 +110,6 @@ public final class BMIParam {
          * Set {@link #gender} instance.
          * @param gender {@link Gender} instance.
          * @return {@link Builder} instance.
-         * @see #gender
          */
         @NotNull
         public Builder withGender(@NotNull Gender gender) {
@@ -130,7 +121,6 @@ public final class BMIParam {
          * Set {@link #age}.
          * @param age {@link Integer} value.
          * @return {@link Builder} instance.
-         * @see #age
          */
         @NotNull
         public Builder withAge(int age) {
@@ -142,7 +132,6 @@ public final class BMIParam {
          * Set the {@link #heightM} value.
          * @param heightM {@link Double} value.
          * @return {@link Builder} instance.
-         * @see #heightM
          */
         @NotNull
         public Builder withHeight(double heightM) {
@@ -154,7 +143,6 @@ public final class BMIParam {
          * Set the {@link #weightKG} value.
          * @param weightKG {@link Double} value.
          * @return {@link Builder} instance.
-         * @see #weightKG
          */
         @NotNull
         public Builder withWeight(double weightKG) {
@@ -168,8 +156,6 @@ public final class BMIParam {
          * @param primary {@link Double} value.
          * @param secondary {@link Double} value.
          * @return {@link Builder} instance.
-         * @see UnitSystem#IMPERIAL
-         * @see UnitSystem#METRIC
          * @see #withHeight(UnitSystem, double, double)
          */
         @NotNull
@@ -193,12 +179,7 @@ public final class BMIParam {
          * @param inputs {@link List} of {@link Zip}.
          * @param <T> Generics parameter.
          * @return {@link Builder} instance.
-         * @see HMUnitSystemConvertibleType#unitSystem()
-         * @see ObjectUtil#nonNull(Object)
-         * @see Zip#A
-         * @see Zip#B
          * @see #withHeight(UnitSystem, double, double)
-         * @see #NOT_AVAILABLE
          */
         @NotNull
         public <T extends HMUnitSystemConvertibleType> Builder withHeight(
@@ -233,8 +214,6 @@ public final class BMIParam {
          * @param primary {@link Double} value.
          * @param secondary {@link Double} value.
          * @return {@link Builder} instance.
-         * @see UnitSystem#IMPERIAL
-         * @see UnitSystem#METRIC
          * @see #withWeight(double)
          */
         @NotNull
@@ -258,12 +237,7 @@ public final class BMIParam {
          * @param inputs {@link List} of {@link Zip}.
          * @param <T> Generics parameter.
          * @return {@link Builder} instance.
-         * @see HMUnitSystemConvertibleType#unitSystem()
-         * @see ObjectUtil#nonNull(Object)
-         * @see Zip#A
-         * @see Zip#B
          * @see #withWeight(UnitSystem, double, double)
-         * @see #NOT_AVAILABLE
          */
         @NotNull
         public <T extends HMUnitSystemConvertibleType> Builder withWeight(
@@ -296,11 +270,6 @@ public final class BMIParam {
          * Copy properties from another {@link BMIParam}.
          * @param param {@link BMIParam} instance.
          * @return {@link Builder} instance.
-         * @see BMIParam#age()
-         * @see BMIParam#ethnicity()
-         * @see BMIParam#gender()
-         * @see BMIParam#heightM()
-         * @see BMIParam#weightKG()
          * @see #withAge(int)
          * @see #withEthnicity(Ethnicity)
          * @see #withGender(Gender)
@@ -320,7 +289,6 @@ public final class BMIParam {
         /**
          * Get {@link #PARAM}.
          * @return {@link BMIParam} instance.
-         * @see #PARAM
          */
         @NotNull
         public BMIParam build() {

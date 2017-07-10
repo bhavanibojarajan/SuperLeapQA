@@ -4,12 +4,10 @@ import com.holmusk.HMUITestKit.model.HMTextChoiceType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.localizer.LocalizerType;
-import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
@@ -24,21 +22,12 @@ public enum ChoiceInput implements HMTextChoiceType {
     WEIGHT,
     ETHNICITY,
     COACH_PREF,
-
-    /* These inputs can be found in Settings > Profile */
     START_WEIGHT;
 
     /**
      * Get the title {@link String} corresponding to the current
      * {@link ChoiceInput}.
      * @return {@link String} value.
-     * @see #COACH_PREF
-     * @see #ETHNICITY
-     * @see #GENDER
-     * @see #HEIGHT
-     * @see #WEIGHT
-     * @see #START_WEIGHT
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     public String title() {
@@ -70,12 +59,6 @@ public enum ChoiceInput implements HMTextChoiceType {
      * Override this method to provide default implementation.
      * @return {@link List} of {@link HMTextChoiceType}.
      * @see HMTextChoiceType#allTextChoices()
-     * @see CollectionUtil#asList(Object[])
-     * @see CoachPref#values()
-     * @see CollectionUtil#asList(Object[])
-     * @see Ethnicity#values()
-     * @see Gender#values()
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
@@ -99,13 +82,9 @@ public enum ChoiceInput implements HMTextChoiceType {
      * Override this method to provide default implementation.
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} value.
-     * @see InputHelperType#platform()
      * @see InputType#inputViewXP(InputHelperType)
-     * @see Platform#ANDROID
-     * @see Platform#IOS
      * @see #androidInputViewXP(InputHelperType)
      * @see #iOSInputViewXP(InputHelperType)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
@@ -129,15 +108,6 @@ public enum ChoiceInput implements HMTextChoiceType {
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsID(String)
-     * @see Attributes#of(PlatformType)
-     * @see Platform#ANDROID
-     * @see XPath.Builder#addAttribute(AttributeType)
-     * @see #COACH_PREF
-     * @see #ETHNICITY
-     * @see #HEIGHT
-     * @see #WEIGHT
-     * @see #START_WEIGHT
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     private XPath androidInputViewXP(@NotNull InputHelperType helper) {
@@ -179,17 +149,7 @@ public enum ChoiceInput implements HMTextChoiceType {
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsText(String)
-     * @see Attributes#of(PlatformType)
      * @see Axes#followingSibling(AttributeType)
-     * @see CompoundAttribute#forClass(ClassNameProviderType)
-     * @see CompoundAttribute#withIndex(Integer)
-     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
-     * @see Engine#localizer()
-     * @see LocalizerType#localize(String)
-     * @see Platform#IOS
-     * @see IOSView.Type#UI_STATIC_TEXT
-     * @see IOSView.Type#UI_TEXT_FIELD
      * @see #title()
      * @see #values()
      */

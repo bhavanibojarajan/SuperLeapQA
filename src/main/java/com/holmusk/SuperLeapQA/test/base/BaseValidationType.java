@@ -23,7 +23,7 @@ import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.ios.element.locator.AndroidXMLAttribute;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.xtestkitcomponents.common.ErrorProviderType;
 import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.platform.XMLAttributeType;
@@ -33,7 +33,7 @@ import org.swiften.xtestkitcomponents.xpath.*;
  * Interfaces that extend this should declare methods that assist with app
  * validation (e.g. make sure all views are present).
  */
-public interface BaseValidationType extends BaseErrorType, AppDelayType {
+public interface BaseValidationType extends ErrorProviderType, AppDelayType {
     /**
      * Get the common back button.
      * @param engine {@link Engine} instance.

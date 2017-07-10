@@ -4,23 +4,20 @@ import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkitcomponents.common.BaseErrorType;
-import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
+import org.swiften.xtestkitcomponents.common.ErrorProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
  * Created by haipham on 15/6/17.
  */
-public enum ActivityValue implements BaseErrorType {
+public enum ActivityValue implements ErrorProviderType {
     TODAY,
     WEEKLY_GOAL;
 
     /**
      * Get the associated title.
      * @return {@link String} value.
-     * @see #TODAY
-     * @see #WEEKLY_GOAL
      */
     @NotNull
     public String title() {
@@ -43,12 +40,8 @@ public enum ActivityValue implements BaseErrorType {
      * @param helper {@link InputHelperType} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link XPath} instance.
-     * @see InputHelperType#platform()
-     * @see Platform#ANDROID
-     * @see Platform#IOS
      * @see #androidValueXP(InputHelperType, UserMode)
      * @see #iOSValueXP(InputHelperType, UserMode)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     public XPath valueXP(@NotNull InputHelperType helper, @NotNull UserMode mode) {
@@ -70,9 +63,6 @@ public enum ActivityValue implements BaseErrorType {
      * Get the id of the value {@link org.openqa.selenium.WebElement} for
      * {@link Platform#ANDROID}.
      * @return {@link String} value.
-     * @see #TODAY
-     * @see #WEEKLY_GOAL
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     private String androidValueId() {
@@ -93,9 +83,6 @@ public enum ActivityValue implements BaseErrorType {
      * @param helper {@link InputHelperType} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link XPath} instance.
-     * @see Attributes#containsID(String)
-     * @see Attributes#of(PlatformProviderType)
-     * @see XPath.Builder#addAttribute(AttributeType)
      * @see #androidValueId()
      */
     @NotNull
@@ -114,11 +101,7 @@ public enum ActivityValue implements BaseErrorType {
      * @return {@link XPath} instance.
      * @see Attribute#not()
      * @see Attributes#containsText(String)
-     * @see Attributes#of(PlatformProviderType)
      * @see Axes#followingSibling(AttributeType)
-     * @see LocalizerType#localize(String)
-     * @see InputHelperType#localizer()
-     * @see UserMode#dashboardActivityKeyword()
      * @see #title()
      */
     @NotNull

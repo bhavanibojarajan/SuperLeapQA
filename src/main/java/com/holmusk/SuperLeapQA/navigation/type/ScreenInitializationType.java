@@ -6,6 +6,7 @@ import com.holmusk.SuperLeapQA.test.mealpage.MealPageActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
@@ -21,21 +22,19 @@ public interface ScreenInitializationType extends DashboardActionType, MealPageA
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#USE_APP_NOW} after a
      * new sign up, it may display a pop-up asking the use whether he/she
      * wants to change tracker source. We need to dismiss it.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_acceptAlert()
      * @see #rxa_dismissTrackerPopup(Engine)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
-    default Flowable<?> rxn_useAppNowInitialized(@NotNull final Engine<?> ENGINE) {
-        if (ENGINE instanceof AndroidEngine) {
-            return rxa_dismissTrackerPopup(ENGINE);
-        } else if (ENGINE instanceof IOSEngine) {
-            final ScreenInitializationType THIS = this;
-
-            return ENGINE.rxa_acceptAlert()
-                .flatMap(a -> THIS.rxa_dismissTrackerPopup(ENGINE));
+    default Flowable<?> rxn_useAppNowInitialized(@NotNull Engine<?> engine) {
+        if (engine instanceof AndroidEngine) {
+            return rxa_dismissTrackerPopup(engine);
+        } else if (engine instanceof IOSEngine) {
+            return Flowable.concatArray(
+                engine.rxa_acceptAlert(),
+                rxa_dismissTrackerPopup(engine)
+            ).all(ObjectUtil::nonNull).toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -62,8 +61,6 @@ public interface ScreenInitializationType extends DashboardActionType, MealPageA
      * The number of dialogs may depend on the platform/version being tested on.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see BooleanUtil#isTrue(boolean)
-     * @see Engine#rxa_acceptAlert()
      * @see #photoPickerScreenDelay(Engine)
      */
     @NotNull
@@ -98,7 +95,6 @@ public interface ScreenInitializationType extends DashboardActionType, MealPageA
      * may prompt the user for location access.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_acceptAlert()
      */
     @NotNull
     default Flowable<?> rxn_weightEntryInitialized(@NotNull Engine<?> engine) {

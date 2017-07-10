@@ -5,16 +5,14 @@ import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkitcomponents.common.BaseErrorType;
-import org.swiften.javautilities.protocol.ClassNameProviderType;
-import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
+import org.swiften.xtestkitcomponents.common.ErrorProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
  * Created by haipham on 20/6/17.
  */
-public enum WeightProgress implements BaseErrorType {
+public enum WeightProgress implements ErrorProviderType {
     PREVIOUS,
     CHANGE;
 
@@ -22,9 +20,6 @@ public enum WeightProgress implements BaseErrorType {
      * Get the title {@link String} corresponding to the current
      * {@link WeightProgress}.
      * @return {@link String} value.
-     * @see #CHANGE
-     * @see #PREVIOUS
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     public String title() {
@@ -45,12 +40,8 @@ public enum WeightProgress implements BaseErrorType {
      * {@link WeightProgress}.
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
-     * @see InputHelperType#platform()
-     * @see Platform#ANDROID
-     * @see Platform#IOS
      * @see #androidValueXP(InputHelperType)
      * @see #iOSValueXP(InputHelperType)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     public XPath valueXP(@NotNull InputHelperType helper) {
@@ -73,8 +64,6 @@ public enum WeightProgress implements BaseErrorType {
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsID(String)
-     * @see Attributes#of(PlatformProviderType)
-     * @see XPath.Builder#addAttribute(AttributeType)
      * @see #androidValueId()
      */
     @NotNull
@@ -89,9 +78,6 @@ public enum WeightProgress implements BaseErrorType {
      * Get the id of {@link org.openqa.selenium.WebElement} corresponding to
      * the current {@link WeightProgress}.
      * @return {@link String} value.
-     * @see #CHANGE
-     * @see #PREVIOUS
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     private String androidValueId() {
@@ -112,16 +98,8 @@ public enum WeightProgress implements BaseErrorType {
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsText(String)
-     * @see Attributes#of(PlatformProviderType)
      * @see Axes#child(AttributeType)
      * @see Axes#followingSibling(AttributeType)
-     * @see CompoundAttribute#empty()
-     * @see CompoundAttribute#forClass(ClassNameProviderType)
-     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
-     * @see XPath.Builder#addAttribute(AttributeType)
-     * @see IOSView.Type#UI_STATIC_TEXT
-     * @see IOSView.Type#UNDEFINED
      */
     @NotNull
     private XPath iOSValueXP(@NotNull InputHelperType helper) {

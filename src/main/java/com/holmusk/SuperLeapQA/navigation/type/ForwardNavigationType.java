@@ -29,6 +29,7 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.CollectionUtil;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
 
 import java.util.List;
@@ -162,21 +163,20 @@ public interface ForwardNavigationType extends
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#DOB}
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#INVALID_AGE}
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#VALID_AGE}
-     * @param ENGINE {@link Engine} instance.
-     * @param AGE {@link Integer} value.
+     * @param engine {@link Engine} instance.
+     * @param age {@link Integer} value.
      * @return {@link Flowable} instance.
      * @see #rxa_openDoBPicker(Engine)
      * @see #rxa_selectDoBToBeOfAge(Engine, int)
      * @see #rxa_confirmDoB(Engine) )
      */
     @NotNull
-    default Flowable<?> rxn_DoBPicker_ageInput(@NotNull final Engine<?> ENGINE,
-                                               final int AGE) {
-        final DOBPickerActionType THIS = this;
-
-        return rxa_openDoBPicker(ENGINE)
-            .flatMap(a -> THIS.rxa_selectDoBToBeOfAge(ENGINE, AGE))
-            .flatMap(a -> THIS.rxa_confirmDoB(ENGINE));
+    default Flowable<?> rxn_DoBPicker_ageInput(@NotNull Engine<?> engine, int age) {
+        return Flowable.concatArray(
+            rxa_openDoBPicker(engine),
+            rxa_selectDoBToBeOfAge(engine, age),
+            rxa_confirmDoB(engine)
+        ).all(ObjectUtil::nonNull).toFlowable();
     }
 
     /**
@@ -186,7 +186,6 @@ public interface ForwardNavigationType extends
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see UserMode#maxCategoryValidAge()
      * @see #rxn_DoBPicker_ageInput(Engine, int)
      */
     @NotNull
@@ -202,7 +201,6 @@ public interface ForwardNavigationType extends
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see UserMode#validAgeRange()
      * @see #rxn_DoBPicker_ageInput(Engine, int)
      */
     @NotNull
@@ -216,15 +214,15 @@ public interface ForwardNavigationType extends
     /**
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#VALID_AGE}
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#PERSONAL_INFO}
-     * @param ENGINE {@link Engine} instance.
-     * @param MODE {@link UserMode} instance.
+     * @param engine {@link Engine} instance.
+     * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
      * @see #rxa_completeValidAgeInputs(Engine, UserMode)
      */
     @NotNull
-    default Flowable<?> rxn_validAge_personalInfo(@NotNull final Engine<?> ENGINE,
-                                                  @NotNull final UserMode MODE) {
-        return rxa_completeValidAgeInputs(ENGINE, MODE);
+    default Flowable<?> rxn_validAge_personalInfo(@NotNull Engine<?> engine,
+                                                  @NotNull UserMode mode) {
+        return rxa_completeValidAgeInputs(engine, mode);
     }
 
     /**
@@ -329,8 +327,6 @@ public interface ForwardNavigationType extends
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#PHOTO_PICKER}
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see CardType#MEAL
-     * @see Engine#rxa_acceptAlert()
      * @see #rxa_addCard(Engine, CardType)
      */
     @NotNull
@@ -344,7 +340,6 @@ public interface ForwardNavigationType extends
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#MEAL_ENTRY}
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #rxe_skipPhoto(Engine)
      */
     @NotNull
@@ -381,7 +376,6 @@ public interface ForwardNavigationType extends
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#WEIGHT_VALUE}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see CardType#WEIGHT
      * @see #rxa_addCard(Engine, CardType)
      */
     @NotNull
@@ -394,13 +388,11 @@ public interface ForwardNavigationType extends
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#WEIGHT_ENTRY}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see CSSInput#WEIGHT
      * @see #rxa_completeCSSValue(Engine, HMCSSInputType)
      */
     @NotNull
     default Flowable<?> rxn_weightValue_weightEntry(@NotNull Engine<?> engine) {
-        HMCSSInputType input = CSSInput.WEIGHT;
-        return rxa_completeCSSValue(engine, input);
+        return rxa_completeCSSValue(engine, CSSInput.WEIGHT);
     }
 
     /**
@@ -408,13 +400,11 @@ public interface ForwardNavigationType extends
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#WEIGHT_PAGE}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see CSSInput#WEIGHT
      * @see #rxa_completeCSSEntry(Engine, HMCSSInputType)
      */
     @NotNull
     default Flowable<?> rxn_weightEntry_weightPage(@NotNull Engine<?> engine) {
-        HMCSSInputType input = CSSInput.WEIGHT;
-        return rxa_completeCSSEntry(engine, input);
+        return rxa_completeCSSEntry(engine, CSSInput.WEIGHT);
     }
 
     /**
@@ -434,7 +424,6 @@ public interface ForwardNavigationType extends
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#ACTIVITY_VALUE}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see CSSInput#ACTIVITY
      * @see #rxa_completeCSSValue(Engine, HMCSSInputType)
      */
     @NotNull
@@ -448,7 +437,6 @@ public interface ForwardNavigationType extends
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#SETTINGS}
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see DrawerItem#SETTINGS
      * @see #rxa_openDrawerAndSelect(Engine, DrawerItem)
      */
     @NotNull

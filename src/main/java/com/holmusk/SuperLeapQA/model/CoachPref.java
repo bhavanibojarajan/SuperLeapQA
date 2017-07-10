@@ -7,14 +7,14 @@ import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.xtestkitcomponents.common.ErrorProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
  * Created by haipham on 5/12/17.
  */
-public enum CoachPref implements BaseErrorType, HMInputType, HMTextChoiceType.Item {
+public enum CoachPref implements ErrorProviderType, HMInputType, HMTextChoiceType.Item {
     MALE,
     FEMALE,
     NO_PREFERENCE;
@@ -24,10 +24,6 @@ public enum CoachPref implements BaseErrorType, HMInputType, HMTextChoiceType.It
      * {@link org.openqa.selenium.WebElement} corresponding to the current
      * {@link CoachPref}.
      * @return {@link String} value.
-     * @see #FEMALE
-     * @see #MALE
-     * @see #NO_PREFERENCE
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     public String title() {
@@ -51,8 +47,6 @@ public enum CoachPref implements BaseErrorType, HMInputType, HMTextChoiceType.It
      * @param helper {@link InputHelperType} instance.
      * @return {@link String} value.
      * @see HMTextChoiceType.Item#stringValue(InputHelperType, double)
-     * @see LocalizerType#localize(String)
-     * @see InputHelperType#localizer()
      * @see #title()
      */
     @NotNull
@@ -66,13 +60,9 @@ public enum CoachPref implements BaseErrorType, HMInputType, HMTextChoiceType.It
      * Override this method to provide default implementation.
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} value.
-     * @see InputHelperType#platform()
      * @see InputType#inputViewXP(InputHelperType)
      * @see #androidInputViewXP(InputHelperType)
      * @see #iOSInputViewXP(InputHelperType)
-     * @see Platform#ANDROID
-     * @see Platform#IOS
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
@@ -96,9 +86,6 @@ public enum CoachPref implements BaseErrorType, HMInputType, HMTextChoiceType.It
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsID(String)
-     * @see Attributes#of(PlatformType)
-     * @see XPath.Builder#addAttribute(AttributeType)
-     * @see Platform#ANDROID
      */
     @NotNull
     private XPath androidInputViewXP(@NotNull InputHelperType helper) {
@@ -111,8 +98,6 @@ public enum CoachPref implements BaseErrorType, HMInputType, HMTextChoiceType.It
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
-     * @see CompoundAttribute#empty()
-     * @see XPath.Builder#addAttribute(CompoundAttribute)
      */
     @NotNull
     private XPath iOSInputViewXP(@NotNull InputHelperType helper) {

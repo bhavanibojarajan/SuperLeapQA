@@ -2,20 +2,19 @@ package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LocalizerType;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkitcomponents.common.BaseErrorType;
-import org.swiften.javautilities.protocol.ClassNameProviderType;
-import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
+import org.swiften.xtestkitcomponents.common.ErrorProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
  * Created by haipham on 29/5/17.
  */
-public enum CardType implements BaseErrorType {
+public enum CardType implements ErrorProviderType {
     ALL,
     MEAL,
     WEIGHT,
@@ -24,11 +23,6 @@ public enum CardType implements BaseErrorType {
     /**
      * Get the displayed text on a {@link CardType} selector button.
      * @return {@link String} value.
-     * @see #ALL
-     * @see #ACTIVITY
-     * @see #MEAL
-     * @see #WEIGHT
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     public String title() {
@@ -67,19 +61,7 @@ public enum CardType implements BaseErrorType {
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsText(String)
-     * @see Attributes#of(PlatformProviderType)
-     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
-     * @see InputHelperType#localizer()
-     * @see InputHelperType#platform()
-     * @see LocalizerType#localize(String)
-     * @see XPath.Builder#addAttribute(CompoundAttribute)
-     * @see AndroidView.Type#BUTTON
-     * @see IOSView.Type#UI_BUTTON
-     * @see Platform#ANDROID
-     * @see Platform#IOS
      * @see #title()
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     public XPath cardTabXP(@NotNull InputHelperType helper) {
@@ -118,9 +100,6 @@ public enum CardType implements BaseErrorType {
      * @return {@link XPath} instance.
      * @see #androidIconXP(InputHelperType)
      * @see #iOSIconXP(InputHelperType)
-     * @see Platform#ANDROID
-     * @see Platform#IOS
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     public XPath cardIconXP(@NotNull InputHelperType helper) {
@@ -143,8 +122,6 @@ public enum CardType implements BaseErrorType {
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsID(String)
-     * @see Attributes#of(PlatformProviderType)
-     * @see XPath.Builder#addAttribute(AttributeType)
      * @see #androidViewId()
      */
     @NotNull
@@ -158,11 +135,6 @@ public enum CardType implements BaseErrorType {
     /**
      * Get the view id for each FAB button for {@link Platform#ANDROID}.
      * @return {@link String} value.
-     * @see Platform#ANDROID
-     * @see #ACTIVITY
-     * @see #MEAL
-     * @see #WEIGHT
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     public String androidViewId() {
@@ -187,12 +159,6 @@ public enum CardType implements BaseErrorType {
      * @return {@link XPath} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#hasText(String)
-     * @see Attributes#of(PlatformProviderType)
-     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
-     * @see InputHelperType#localizer()
-     * @see XPath.Builder#addAttribute(CompoundAttribute)
-     * @see IOSView.Type#UI_BUTTON
      * @see #title()
      */
     @NotNull
@@ -215,12 +181,8 @@ public enum CardType implements BaseErrorType {
      * Get {@link CardType} items.
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
-     * @see InputHelperType#platform()
-     * @see Platform#ANDROID
-     * @see Platform#IOS
      * @see #androidCardItemXP(InputHelperType)
      * @see #iOSCardItemXP(InputHelperType)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     public XPath cardItemXP(@NotNull InputHelperType helper) {
@@ -242,18 +204,9 @@ public enum CardType implements BaseErrorType {
      * Get {@link CardType} items for {@link Platform#ANDROID}.
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
-     * @see Attribute#not()
      * @see Attributes#containsID(String)
      * @see Attributes#containsText(String)
-     * @see Attributes#of(PlatformProviderType)
      * @see Axes#descendant(AttributeType)
-     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withWrapper(Wrapper)
-     * @see InputHelperType#localizer()
-     * @see LocalizerType#localize(String)
-     * @see XPath.Builder#addAttribute(AttributeType)
-     * @see Joiner#AND
-     * @see Wrapper#NOT
      */
     @NotNull
     private XPath androidCardItemXP(@NotNull InputHelperType helper) {
@@ -276,18 +229,8 @@ public enum CardType implements BaseErrorType {
      * Get {@link CardType} items for {@link Platform#IOS}.
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
-     * @see Attribute#not()
      * @see Attributes#containsText(String)
-     * @see Attributes#of(PlatformProviderType)
      * @see Axes#descendant(AttributeType)
-     * @see CompoundAttribute#forClass(ClassNameProviderType)
-     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(String)
-     * @see CompoundAttribute.Builder#withWrapper(Wrapper)
-     * @see XPath.Builder#addAttribute(CompoundAttribute)
-     * @see IOSView.Type#UI_COLLECTION_VIEW
-     * @see IOSView.Type#UI_COLLECTION_VIEW_CELL
-     * @see Wrapper#NOT
      */
     @NotNull
     private XPath iOSCardItemXP(@NotNull InputHelperType helper) {

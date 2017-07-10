@@ -1,7 +1,8 @@
 package com.holmusk.SuperLeapQA.config;
 
-import com.holmusk.HMUITestKit.ios.HMIOSEngine;
+import com.holmusk.HMUITestKit.android.HMAndroidEngine;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.xtestkit.android.type.AndroidSDK;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.TestMode;
 import org.swiften.xtestkit.kit.TestKit;
@@ -43,16 +44,16 @@ public final class Config {
 //            .withPlatformVersion("10.3")
 //            .withTestMode(TestMode.SIMULATED)
 //            .build());
-
-        ENGINES.add(HMIOSEngine.builder()
-            .withDeviceUID("771F28EC-C5FC-45B8-8C2A-AF346B219936")
-            .withApp(IOS_APP_PATH)
-            .withAppPackage(IOS_APP_PACKAGE)
-            .withDeviceName("iPhone 7 Plus")
-            .withPlatformVersion("10.3")
-            .withTestMode(TestMode.SIMULATED)
-            .build());
-
+//
+//        ENGINES.add(HMIOSEngine.builder()
+//            .withDeviceUID("771F28EC-C5FC-45B8-8C2A-AF346B219936")
+//            .withApp(IOS_APP_PATH)
+//            .withAppPackage(IOS_APP_PACKAGE)
+//            .withDeviceName("iPhone 7 Plus")
+//            .withPlatformVersion("10.3")
+//            .withTestMode(TestMode.SIMULATED)
+//            .build());
+//
 //        ENGINES.add(HMIOSEngine.builder()
 //            .withDeviceUID("346114F4-41D4-455A-B6BD-427BCDB3E11A")
 //            .withApp(IOS_APP_PATH)
@@ -61,7 +62,7 @@ public final class Config {
 //            .withPlatformVersion("9.3")
 //            .withTestMode(TestMode.SIMULATED)
 //            .build());
-
+//
 //        ENGINES.add(HMAndroidEngine.builder()
 //            .withSDK(AndroidSDK.SDK_18)
 //            .withAppActivity(ANDROID_APP_ACTIVITY)
@@ -69,7 +70,7 @@ public final class Config {
 //            .withDeviceName("Nexus_4_API_18")
 //            .withTestMode(TestMode.SIMULATED)
 //            .build());
-
+//
 //        ENGINES.add(HMAndroidEngine.builder()
 //            .withSDK(AndroidSDK.SDK_22)
 //            .withAppActivity(ANDROID_APP_ACTIVITY)
@@ -77,15 +78,15 @@ public final class Config {
 //            .withDeviceName("Nexus_4_API_22")
 //            .withTestMode(TestMode.SIMULATED)
 //            .build());
-//
-//        ENGINES.add(HMAndroidEngine.builder()
-//            .withSDK(AndroidSDK.SDK_23)
-//            .withAppActivity(ANDROID_APP_ACTIVITY)
-//            .withAppPackage(ANDROID_APP_PACKAGE)
-//            .withApp(ANDROID_APP_PATH)
-//            .withDeviceName("Nexus_4_API_23")
-//            .withTestMode(TestMode.SIMULATED)
-//            .build());
+
+        ENGINES.add(HMAndroidEngine.builder()
+            .withSDK(AndroidSDK.SDK_23)
+            .withAppActivity(ANDROID_APP_ACTIVITY)
+            .withAppPackage(ANDROID_APP_PACKAGE)
+            .withApp(ANDROID_APP_PATH)
+            .withDeviceName("Nexus_4_API_23")
+            .withTestMode(TestMode.SIMULATED)
+            .build());
 
         TEST_KIT = TestKit.builder()
             .withEngines(ENGINES)

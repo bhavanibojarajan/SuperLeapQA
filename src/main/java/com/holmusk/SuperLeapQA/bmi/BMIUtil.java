@@ -24,15 +24,6 @@ public final class BMIUtil {
      * @param param {@link BMIParam} instance.
      * @param validBMI {@link Boolean} value.
      * @return {@link BMIResult} instance.
-     * @see BMIParam.Builder#withEthnicity(Ethnicity)
-     * @see BMIParam.Builder#withGender(Gender)
-     * @see BMIParam.Builder#withHeight(List)
-     * @see BMIParam.Builder#withWeight(List)
-     * @see BMIResult.Builder#withHeight(List)
-     * @see BMIResult.Builder#withRequestParam(BMIParam)
-     * @see BMIResult.Builder#withWeight(List)
-     * @see Height#random(PlatformType, UserMode, UnitSystem)
-     * @see Weight#random(PlatformType, UserMode, UnitSystem)
      * @see #outOfWidestInvalidRange(UserMode, BMIParam)
      * @see #withinTightestInvalidRange(UserMode, BMIParam)
      */
@@ -76,8 +67,6 @@ public final class BMIUtil {
      * and age.
      * @param param {@link BMIParam} instance.
      * @return {@link Zip} instance.
-     * @see BMIParam#ethnicity()
-     * @see Ethnicity#isAsian()
      * @see #asianInvalidRange(BMIParam)
      * @see #otherInvalidRange(BMIParam)
      */
@@ -132,9 +121,6 @@ public final class BMIUtil {
      * @param mode {@link UserMode} instance.
      * @param PARAM {@link BMIParam} instance.
      * @return {@link Collection} of {@link Zip}.
-     * @see BMIParam.Builder#withAge(int)
-     * @see BMIParam.Builder#withBMIParam(BMIParam)
-     * @see UserMode#validAgeRange()
      */
     @NotNull
     private static Collection<Zip<Double,Double>> allInvalidRangesBasedOnAge(
@@ -154,9 +140,6 @@ public final class BMIUtil {
      * Get the range with the highest upper bound and lowest lower bound.
      * @param ranges {@link Collection} of {@link Zip}.
      * @return {@link Zip}.
-     * @see Zip#first()
-     * @see Zip#second()
-     * @see Zip#of(Object, Object)
      */
     @NotNull
     private static Zip<Double,Double> tightestRange(
@@ -179,9 +162,6 @@ public final class BMIUtil {
      * Get the range with the lowest lower bound and highest upper bound.
      * @param ranges {@link Collection} of {@link Zip}.
      * @return {@link Zip}.
-     * @see Zip#first()
-     * @see Zip#second()
-     * @see Zip#of(Object, Object)
      */
     @NotNull
     private static Zip<Double,Double> widestRange(
@@ -205,9 +185,6 @@ public final class BMIUtil {
      * @param range {@link Zip} instance.
      * @param param {@link BMIParam} instance.
      * @return {@link Boolean} value.
-     * @see BMIParam#bmi()
-     * @see Zip#A
-     * @see Zip#B
      */
     private static boolean withinRange(@NotNull Zip<Double,Double> range,
                                        @NotNull BMIParam param) {
@@ -269,11 +246,6 @@ public final class BMIUtil {
      * Get unacceptable BMI range for {@link Ethnicity#isAsian()}.
      * @param param {@link BMIParam} instance.
      * @return {@link Zip} instance.
-     * @see BMIParam#age()
-     * @see BMIParam#gender()
-     * @see Zip#of(Object, Object)
-     * @see Gender#MALE
-     * @see Gender#FEMALE
      */
     @NotNull
     @SuppressWarnings({"unused", "UnusedAssignment"})
@@ -351,7 +323,6 @@ public final class BMIUtil {
      * Get healthy BMI range for other {@link Ethnicity}.
      * @param param {@link BMIParam} instance.
      * @return {@link Zip} instance.
-     * @see Zip#of(Object, Object)
      */
     @NotNull
     @SuppressWarnings("unused")

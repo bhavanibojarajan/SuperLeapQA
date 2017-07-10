@@ -15,7 +15,6 @@ import io.reactivex.subscribers.TestSubscriber;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionUtil;
-import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.android.AndroidEngine;
@@ -46,20 +45,6 @@ public interface UILogMealTestType extends
      * We then search for the meal from {@link Screen#SEARCH}.
      * Finally, we delete the meal to clean up and verify that it is no longer
      * searchable from {@link Screen#SEARCH}.
-     * @see CollectionUtil#randomElement(Object[])
-     * @see Engine#rxe_containsText(String...)
-     * @see Engine#rxv_error()
-     * @see Mood#title()
-     * @see Mood#values()
-     * @see NumberUtil#randomBetween(int, int)
-     * @see ObjectUtil#nonNull(Object)
-     * @see TextInput#randomInput(InputHelperType)
-     * @see UserMode#defaultUserMode()
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
-     * @see Screen#MEAL_ENTRY
-     * @see Screen#SEARCH
-     * @see TextInput#MEAL_DESCRIPTION
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #randomSelectableTime()

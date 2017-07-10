@@ -4,15 +4,14 @@ import com.holmusk.HMUITestKit.model.HMTextType;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.localizer.LocalizerType;
-import org.swiften.javautilities.util.LogUtil;
 import org.swiften.javautilities.number.NumberUtil;
 import org.swiften.javautilities.string.StringUtil;
+import org.swiften.javautilities.util.LogUtil;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkitcomponents.common.BaseErrorType;
-import org.swiften.javautilities.protocol.ClassNameProviderType;
+import org.swiften.xtestkitcomponents.common.ErrorProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * Created by haipham on 5/10/17.
  */
-public enum TextInput implements BaseErrorType, HMTextType {
+public enum TextInput implements ErrorProviderType, HMTextType {
     CHILD_NAME,
     CHILD_NRIC,
     EMAIL,
@@ -44,11 +43,8 @@ public enum TextInput implements BaseErrorType, HMTextType {
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} value.
      * @see InputType#inputViewXP(InputHelperType)
-     * @see Platform#ANDROID
-     * @see Platform#IOS
      * @see #androidInputViewXP(InputHelperType)
      * @see #iOSInputViewXP(InputHelperType)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
@@ -72,10 +68,6 @@ public enum TextInput implements BaseErrorType, HMTextType {
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsID(String)
-     * @see Attributes#of(PlatformType)
-     * @see XPath.Builder#addAttribute(AttributeType)
-     * @see Platform#ANDROID
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     private XPath androidInputViewXP(@NotNull InputHelperType helper) {
@@ -145,26 +137,8 @@ public enum TextInput implements BaseErrorType, HMTextType {
      * Get {@link XPath} for the input view for {@link Platform#IOS}.
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
-     * @see Attribute.Builder#addAttribute(String)
-     * @see Attribute.Builder#withJoiner(Joiner)
      * @see Attributes#containsText(String)
-     * @see Attributes#of(PlatformType)
      * @see Axes#followingSibling(AttributeType)
-     * @see CompoundAttribute#forClass(ClassNameProviderType)
-     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
-     * @see Formatibles#containsString()
-     * @see InputHelperType#localizer()
-     * @see InputHelperType#platform()
-     * @see LocalizerType#localize(String)
-     * @see org.swiften.xtestkitcomponents.view.ViewType#className()
-     * @see XPath.Builder#addAttribute(AttributeType)
-     * @see XPath.Builder#addAttribute(CompoundAttribute)
-     * @see IOSView.Type#UI_SECURE_TEXT_FIELD
-     * @see IOSView.Type#UI_STATIC_TEXT
-     * @see IOSView.Type#UI_TEXT_FIELD
-     * @see IOSView.Type#UI_TEXT_VIEW
-     * @see Joiner#OR
      * @see #iOSShortDescription()
      */
     @NotNull
@@ -225,7 +199,6 @@ public enum TextInput implements BaseErrorType, HMTextType {
      * {@link #iOSInputViewXP(InputHelperType)}. This is done so we do not
      * have to search for the input fields by their indexes.
      * @return {@link String} value.
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     private String iOSShortDescription() {
@@ -274,10 +247,6 @@ public enum TextInput implements BaseErrorType, HMTextType {
      * @param helper {@link InputHelperType} instance.
      * @return {@link String} value.
      * @see org.swiften.xtestkit.base.model.TextInputType#randomInput(InputHelperType)
-     * @see CollectionUtil#randomElement(Object[])
-     * @see StringUtil#randomDigitString(int)
-     * @see StringUtil#randomString(int)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override

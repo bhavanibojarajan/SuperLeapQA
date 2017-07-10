@@ -6,7 +6,7 @@ import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.xtestkitcomponents.common.ErrorProviderType;
 import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.*;
@@ -14,7 +14,7 @@ import org.swiften.xtestkitcomponents.xpath.*;
 /**
  * Created by haipham on 6/10/17.
  */
-public enum Setting implements BaseErrorType {
+public enum Setting implements ErrorProviderType {
     PROFILE,
     GOAL,
     FOOD,
@@ -26,12 +26,6 @@ public enum Setting implements BaseErrorType {
      * {@link org.openqa.selenium.WebElement} that corresponds to the current
      * {@link Setting}.
      * @return {@link String} value.
-     * @see #FOOD
-     * @see #GOAL
-     * @see #LOCATION
-     * @see #PROFILE
-     * @see #UNITS
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     public String title() {
@@ -81,10 +75,6 @@ public enum Setting implements BaseErrorType {
      * {@link org.openqa.selenium.WebElement} differently.
      * @param helper {@link InputHelperType} instance.
      * @return {@link Boolean} value.
-     * @see InputHelperType#platform()
-     * @see Platform#ANDROID
-     * @see #FOOD
-     * @see #LOCATION
      */
     private boolean isToggleSettings(@NotNull InputHelperType helper) {
         PlatformType platform = helper.platform();
@@ -115,16 +105,6 @@ public enum Setting implements BaseErrorType {
      * @param helper {@link InputHelperType} instance.
      * @return {@link CompoundAttribute} instance.
      * @see Attributes#containsText(String)
-     * @see Attributes#of(PlatformType)
-     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
-     * @see InputHelperType#localizer()
-     * @see InputHelperType#platform()
-     * @see LocalizerType#localize(String)
-     * @see AndroidView.Type#TEXT_VIEW
-     * @see IOSView.Type#UI_STATIC_TEXT
-     * @see Platform#ANDROID
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     private CompoundAttribute textSettingAttribute(@NotNull InputHelperType helper) {
@@ -154,7 +134,6 @@ public enum Setting implements BaseErrorType {
      * is false.
      * @param helper {@link PlatformType} instance.
      * @return {@link XPath} instance.
-     * @see XPath.Builder#addAttribute(AttributeType)
      * @see #textSettingAttribute(InputHelperType)
      */
     @NotNull
@@ -169,14 +148,7 @@ public enum Setting implements BaseErrorType {
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Axes#followingSibling(AttributeType)
-     * @see CompoundAttribute#forClass(ClassNameProviderType)
-     * @see InputHelperType#platform()
-     * @see AndroidView.Type#SWITCH
-     * @see IOSView.Type#UI_SWITCH
-     * @see Platform#ANDROID
-     * @see Platform#IOS
      * @see #textSettingAttribute(InputHelperType)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     private XPath switchSettingXP(@NotNull InputHelperType helper) {

@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.swiften.javautilities.collection.Zip;
 import org.swiften.javautilities.object.ObjectUtil;
-import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.xtestkitcomponents.common.ErrorProviderType;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by haipham on 29/6/17.
  */
-public final class BMIResult implements BaseErrorType {
+public final class BMIResult implements ErrorProviderType {
     /**
      * Get new {@link Builder} instance.
      * @return {@link Builder} instance.
@@ -35,7 +35,6 @@ public final class BMIResult implements BaseErrorType {
     /**
      * Get {@link #requestParam}.
      * @return {@link BMIParam} instance.
-     * @see #requestParam
      */
     @NotNull
     public BMIParam requestParam() {
@@ -49,7 +48,6 @@ public final class BMIResult implements BaseErrorType {
     /**
      * Get {@link #height}.
      * @return {@link List} of {@link Zip}.
-     * @see #height
      */
     @NotNull
     public List<Zip<Height,String>> height() {
@@ -59,7 +57,6 @@ public final class BMIResult implements BaseErrorType {
     /**
      * Get {@link #weight}.
      * @return {@link List} of {@link Zip}.
-     * @see #weight
      */
     @NotNull
     public List<Zip<Weight,String>> weight() {
@@ -80,7 +77,6 @@ public final class BMIResult implements BaseErrorType {
          * Set {@link #requestParam} instance.
          * @param param {@link BMIParam} instance.
          * @return {@link Builder} instance.
-         * @see #requestParam
          */
         @NotNull
         public Builder withRequestParam(@NotNull BMIParam param) {
@@ -92,7 +88,6 @@ public final class BMIResult implements BaseErrorType {
          * Set {@link #height} instance.
          * @param height {@link List} of {@link Zip}.
          * @return {@link Builder} instance.
-         * @see #height
          */
         @NotNull
         public Builder withHeight(@NotNull List<Zip<Height,String>> height) {
@@ -104,7 +99,6 @@ public final class BMIResult implements BaseErrorType {
          * Set {@link #weight} instance.
          * @param weight {@link List} of {@link Zip}.
          * @return {@link Builder} instance.
-         * @see #weight
          */
         @NotNull
         public Builder withWeight(@NotNull List<Zip<Weight,String>> weight) {
@@ -115,7 +109,6 @@ public final class BMIResult implements BaseErrorType {
         /**
          * Get {@link #RESULT}.
          * @return {@link BMIResult} instance.
-         * @see #RESULT
          */
         @NotNull
         public BMIResult build() {

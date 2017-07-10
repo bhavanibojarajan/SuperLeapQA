@@ -8,18 +8,16 @@ import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.xtestkitcomponents.common.ErrorProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.property.base.ValueType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
-import org.swiften.xtestkitcomponents.xpath.AttributeType;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
 /**
  * Created by haipham on 5/10/17.
  */
-public enum Gender implements BaseErrorType, HMInputType, HMTextChoiceType.Item {
+public enum Gender implements ErrorProviderType, HMInputType, HMTextChoiceType.Item {
     MALE,
     FEMALE;
 
@@ -28,10 +26,6 @@ public enum Gender implements BaseErrorType, HMInputType, HMTextChoiceType.Item 
      * {@link org.openqa.selenium.WebElement} corresponding to the current
      * {@link Gender}.
      * @return {@link String} value.
-     * @see ValueType#value()
-     * @see #FEMALE
-     * @see #MALE
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     public String title() {
@@ -52,8 +46,6 @@ public enum Gender implements BaseErrorType, HMInputType, HMTextChoiceType.Item 
      * @param helper {@link InputHelperType} instance.
      * @return {@link String} value.
      * @see HMTextChoiceType.Item#stringValue(InputHelperType, double)
-     * @see InputHelperType#localizer()
-     * @see LocalizerType#localize(String)
      * @see #title()
      */
     @NotNull
@@ -70,9 +62,6 @@ public enum Gender implements BaseErrorType, HMInputType, HMTextChoiceType.Item 
      * @see InputType#inputViewXP(InputHelperType)
      * @see #androidInputViewXP(InputHelperType)
      * @see #iOSInputViewXP(InputHelperType)
-     * @see Platform#ANDROID
-     * @see Platform#IOS
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     @Override
@@ -96,12 +85,6 @@ public enum Gender implements BaseErrorType, HMInputType, HMTextChoiceType.Item 
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsID(String)
-     * @see Attributes#of(PlatformType)
-     * @see XPath.Builder#addAttribute(AttributeType)
-     * @see Platform#ANDROID
-     * @see #FEMALE
-     * @see #MALE
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     private XPath androidInputViewXP(@NotNull InputHelperType helper) {
@@ -134,8 +117,6 @@ public enum Gender implements BaseErrorType, HMInputType, HMTextChoiceType.Item 
      * the {@link Gender} input field is a {@link ChoiceInput}.
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
-     * @see ChoiceInput#inputViewXP(InputHelperType)
-     * @see ChoiceInput#GENDER
      */
     @NotNull
     private XPath iOSInputViewXP(@NotNull InputHelperType helper) {

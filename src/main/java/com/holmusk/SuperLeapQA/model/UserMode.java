@@ -6,7 +6,7 @@ import com.holmusk.SuperLeapQA.navigation.Screen;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.collection.Zip;
-import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.xtestkitcomponents.common.ErrorProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.util.ValueRangeConverterType;
@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by haipham on 5/13/17.
  */
-public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> {
+public enum UserMode implements ErrorProviderType, ValueRangeConverterType<Integer> {
     PARENT,
     TEEN_U18,
     TEEN_A18;
@@ -26,7 +26,6 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     /**
      * Get the default {@link UserMode}.
      * @return {@link UserMode} instance.
-     * @see #PARENT
      */
     @NotNull
     public static UserMode defaultUserMode() {
@@ -36,7 +35,6 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     /**
      * Get the default {@link UserMode} that is {@link UserMode#isTeen()}.
      * @return {@link UserMode} instance.
-     * @see #TEEN_A18
      */
     @NotNull
     public static UserMode defaultTeenUserMode() {
@@ -52,8 +50,6 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     /**
      * Check if the current {@link UserMode} is in the teen category.
      * @return {@link Boolean} instance.
-     * @see #TEEN_U18
-     * @see #TEEN_A18
      */
     public boolean isTeen() {
         switch (this) {
@@ -70,7 +66,6 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * Check whether the current use requires guarantor information. This
      * is only applicable for {@link #TEEN_U18}.
      * @return {@link Boolean} value.
-     * @see #TEEN_U18
      */
     public boolean requiresGuarantor() {
         switch (this) {
@@ -94,7 +89,6 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     /**
      * Check if the current {@link UserMode} is in the parent category.
      * @return {@link Boolean} instance.
-     * @see #PARENT
      */
     public boolean isParent() {
         return this.equals(PARENT);
@@ -103,10 +97,6 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
     /**
      * Get the default login credentials for the current {@link UserMode}.
      * @return {@link List} of {@link Zip}.
-     * @see Zip#of(Object, Object)
-     * @see TextInput#EMAIL
-     * @see TextInput#PASSWORD
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     public List<Zip<HMTextType,String>> loginCredentials() {
@@ -135,11 +125,6 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * enter the child's name and NRIC to be verified.
      * @param platform {@link PlatformType} instance.
      * @return {@link List} of {@link HMTextType}.
-     * @see CollectionUtil#asList(Object[])
-     * @see Collections#emptyList()
-     * @see TextInput#CHILD_NAME
-     * @see TextInput#CHILD_NRIC
-     * @see UserMode#isParent()
      */
     @NotNull
     public List<HMTextType> validAgeInfo(@NotNull PlatformType platform) {
@@ -157,11 +142,8 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * Get the personal information inputs for this {@link UserMode}.
      * @param platform {@link PlatformType} instance.
      * @return {@link List} of {@link HMInputType}.
-     * @see Platform#ANDROID
-     * @see Platform#IOS
      * @see #androidPersonalInfo()
      * @see #iOSPersonalInfo()
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     public List<HMTextType> personalInfo(@NotNull PlatformType platform) {
@@ -181,10 +163,6 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * Get personal info {@link HMInputType} for
      * {@link Platform#ANDROID}.
      * @return {@link List} of {@link HMInputType}.
-     * @see #PARENT
-     * @see #TEEN_A18
-     * @see #TEEN_U18
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     private List<HMTextType> androidPersonalInfo() {
@@ -216,7 +194,6 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * Get personal info {@link HMInputType} for
      * {@link Platform#IOS}.
      * @return {@link List} of {@link HMInputType}.
-     * @see #NOT_AVAILABLE
      */
     private List<HMTextType> iOSPersonalInfo() {
         switch (this) {
@@ -248,8 +225,6 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * users will need to enter parent's information as well.
      * @param platform {@link PlatformType} instance.
      * @return {@link List} of {@link HMInputType}.
-     * @see Arrays#asList(Object[])
-     * @see Collections#emptyList()
      */
     @NotNull
     public List<HMTextType> guarantorInfo(@NotNull PlatformType platform) {
@@ -271,7 +246,6 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * Get {@link DashboardMode#ACTIVITY} keyword to be searched, because
      * each {@link UserMode} group has a different activity metric.
      * @return {@link String} value.
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     public String dashboardActivityKeyword() {
@@ -336,7 +310,6 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * from the application's perspective.
      * @return {@link Integer} value.
      * @see #minValidAge()
-     * @see #NOT_AVAILABLE
      */
     public int minCategoryValidAge() {
         switch (this) {
@@ -360,7 +333,6 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * from the application's perspective.
      * @return {@link Integer} value.
      * @see #maxValidAge()
-     * @see #NOT_AVAILABLE
      */
     public int maxCategoryValidAge() {
         switch (this) {
@@ -444,7 +416,6 @@ public enum UserMode implements BaseErrorType, ValueRangeConverterType<Integer> 
      * Get the register butto text for the current {@link UserMode} for
      * {@link Screen#REGISTER}.
      * @return {@link String} value.
-     * @see Screen#REGISTER
      */
     @NotNull
     public String registerButtonText() {

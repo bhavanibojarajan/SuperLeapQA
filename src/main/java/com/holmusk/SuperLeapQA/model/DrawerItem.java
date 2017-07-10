@@ -2,16 +2,14 @@ package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.localizer.LocalizerType;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkitcomponents.common.BaseErrorType;
-import org.swiften.javautilities.protocol.ClassNameProviderType;
+import org.swiften.xtestkitcomponents.common.ErrorProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.xpath.AttributeType;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
@@ -19,7 +17,7 @@ import org.swiften.xtestkitcomponents.xpath.XPath;
 /**
  * Created by haipham on 6/10/17.
  */
-public enum DrawerItem implements BaseErrorType {
+public enum DrawerItem implements ErrorProviderType {
     SETTINGS,
     HEALTH_COACH_PROFILES,
     ABOUT,
@@ -31,12 +29,6 @@ public enum DrawerItem implements BaseErrorType {
      * {@link org.openqa.selenium.WebElement} corresponding to the current
      * {@link DrawerItem}.
      * @return {@link String} value.
-     * @see #ABOUT
-     * @see #HEALTH_COACH_PROFILES
-     * @see #FEEDBACK
-     * @see #SETTINGS
-     * @see #SIGN_OUT
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     public String title() {
@@ -68,16 +60,7 @@ public enum DrawerItem implements BaseErrorType {
      * @param engine {@link PlatformType} instance.
      * @return {@link XPath} instance.
      * @see Attributes#containsText(String)
-     * @see Attributes#of(PlatformType)
-     * @see Attributes#ofClass(ClassNameProviderType)
-     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see Engine#localizer()
-     * @see LocalizerType#localize(String)
-     * @see AndroidView.Type#CHECKED_TEXT_VIEW
-     * @see IOSView.Type#UI_STATIC_TEXT
-     * @see Platform#ANDROID
      * @see #title()
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     public XPath drawerItemXP(@NotNull Engine<?> engine) {

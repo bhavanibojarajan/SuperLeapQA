@@ -7,7 +7,6 @@ import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkitcomponents.xpath.Attribute;
-import org.swiften.xtestkitcomponents.xpath.AttributeType;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
@@ -24,12 +23,7 @@ public enum CSSInput implements HMCSSInputType {
      * Override this method to provide default implementation.
      * @param helper {@link InputHelperType} instance.
      * @return {@link XPath} instance.
-     * @see HMCSSInputType#CSSXP(InputHelperType)
      * @see Attributes#containsID(String)
-     * @see Attributes#of(PlatformType)
-     * @see InputHelperType#platform()
-     * @see XPath.Builder#addAttribute(AttributeType)
-     * @see Platform#ANDROID
      * @see #androidCSSId()
      */
     @NotNull
@@ -53,10 +47,6 @@ public enum CSSInput implements HMCSSInputType {
      * @return {@link XPath} instance.
      * @see HMCSSInputType#CSSValueDisplayXP(InputHelperType)
      * @see Attributes#containsID(String)
-     * @see Attributes#of(PlatformType)
-     * @see InputHelperType#platform()
-     * @see XPath.Builder#addAttribute(AttributeType)
-     * @see Platform#ANDROID
      * @see #androidCSSValueDisplayId()
      */
     @NotNull
@@ -77,9 +67,6 @@ public enum CSSInput implements HMCSSInputType {
     /**
      * Get the CSS id for {@link Platform#ANDROID}.
      * @return {@link String} value.
-     * @see #ACTIVITY
-     * @see #WEIGHT
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     private String androidCSSId() {
@@ -98,9 +85,6 @@ public enum CSSInput implements HMCSSInputType {
     /**
      * Get the CSS value display id for {@link Platform#ANDROID}.
      * @return {@link String} value.
-     * @see #ACTIVITY
-     * @see #WEIGHT
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     private String androidCSSValueDisplayId() {
@@ -120,12 +104,11 @@ public enum CSSInput implements HMCSSInputType {
      * Override this method to provide default implementation.
      * @param helper {@link InputHelperType} instance.
      * @return {@link Collection} of {@link String}.
-     * @see HMCSSInputType#unitOfMeasurement(InputHelperType)
-     * @see CollectionUtil#asList(Object[])
+     * @see HMCSSInputType#uom(InputHelperType)
      */
     @NotNull
     @Override
-    public Collection<String> unitOfMeasurement(@NotNull InputHelperType helper) {
+    public Collection<String> uom(@NotNull InputHelperType helper) {
         switch (this) {
             case ACTIVITY:
                 return CollectionUtil.asList("activityLog_title_minutes");

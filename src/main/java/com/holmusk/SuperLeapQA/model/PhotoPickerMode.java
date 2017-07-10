@@ -1,12 +1,12 @@
 package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
-import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.xtestkitcomponents.common.ErrorProviderType;
 
 /**
  * Created by haipham on 29/5/17.
  */
-public enum PhotoPickerMode implements BaseErrorType {
+public enum PhotoPickerMode implements ErrorProviderType {
     CAMERA,
     LIBRARY,
     RECENT;
@@ -14,10 +14,6 @@ public enum PhotoPickerMode implements BaseErrorType {
     /**
      * Get the title {@link String} to locate the picker mode switcher.
      * @return {@link String} value.
-     * @see #CAMERA
-     * @see #LIBRARY
-     * @see #RECENT
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     public String title() {

@@ -1,12 +1,12 @@
 package com.holmusk.SuperLeapQA.model;
 
 import org.jetbrains.annotations.NotNull;
-import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.xtestkitcomponents.common.ErrorProviderType;
 
 /**
  * Created by haipham on 5/30/17.
  */
-public enum Mood implements BaseErrorType {
+public enum Mood implements ErrorProviderType {
     EXCITED,
     RELAXED,
     TIRED,
@@ -16,12 +16,6 @@ public enum Mood implements BaseErrorType {
     /**
      * The title of the current {@link Mood}.
      * @return {@link String} value.
-     * @see #EXCITED
-     * @see #RELAXED
-     * @see #SICK
-     * @see #STRESSED
-     * @see #TIRED
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     public String title() {

@@ -1,11 +1,11 @@
 package com.holmusk.SuperLeapQA.model;
 
-import org.swiften.xtestkitcomponents.common.BaseErrorType;
+import org.swiften.xtestkitcomponents.common.ErrorProviderType;
 
 /**
  * Created by haipham on 29/6/17.
  */
-public enum RewardedAction implements BaseErrorType {
+public enum RewardedAction implements ErrorProviderType {
     LOG_MEAL,
     LOG_WEIGHT;
 
@@ -13,9 +13,6 @@ public enum RewardedAction implements BaseErrorType {
      * Get the number of points awarded for each instance of
      * {@link RewardedAction} logged.
      * @return {@link Double} value.
-     * @see #LOG_MEAL
-     * @see #LOG_WEIGHT
-     * @see #NOT_AVAILABLE
      */
     public double points() {
         switch (this) {
