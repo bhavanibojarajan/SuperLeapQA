@@ -25,7 +25,6 @@ public interface CSSValueActionType extends BaseActionType {
      * @return {@link Flowable} instance.
      * @see #generalDelay(Engine)
      * @see #rxa_clickBackButton(Engine)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_dashboardFromCSSEntry(@NotNull Engine<?> engine) {

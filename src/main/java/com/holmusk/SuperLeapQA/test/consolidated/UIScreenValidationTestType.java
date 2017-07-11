@@ -34,10 +34,6 @@ public interface UIScreenValidationTestType extends
      * Check that {@link Screen#LOGIN} has valid
      * {@link org.openqa.selenium.WebElement}, by checking their visibility
      * and interacting with them.
-     * @see ObjectUtil#nonNull(Object)
-     * @see UserMode#defaultUserMode()*
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
@@ -68,10 +64,6 @@ public interface UIScreenValidationTestType extends
      * Verify that {@link Screen#FORGOT_PASSWORD} has valid
      * {@link org.openqa.selenium.WebElement} by checking their visibility
      * and interacting with them.
-     * @see ObjectUtil#nonNull(Object)
-     * @see UserMode#defaultUserMode()
-     * @see Screen#SPLASH
-     * @see Screen#FORGOT_PASSWORD
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
@@ -101,11 +93,6 @@ public interface UIScreenValidationTestType extends
      * This test validates that {@link Screen#REGISTER} contains the correct
      * {@link org.openqa.selenium.WebElement} by checking their visibility,
      * and then navigate back once to check {@link Screen#WELCOME}.
-     * @see ObjectUtil#nonNull(Object)
-     * @see UserMode#defaultUserMode()
-     * @see Screen#SPLASH
-     * @see Screen#REGISTER
-     * @see Screen#WELCOME
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
@@ -139,13 +126,6 @@ public interface UIScreenValidationTestType extends
      * This test checks that {@link Screen#DOB} has correct elements,
      * by checking that all {@link org.openqa.selenium.WebElement} are present.
      * @param mode {@link UserMode} instance.
-     * @see Engine#rxa_click(WebElement)
-     * @see Engine#rxa_navigateBackOnce()
-     * @see Engine#rxe_containsText(String...)
-     * @see ObjectUtil#nonNull(Object)
-     * @see Screen#SPLASH
-     * @see Screen#REGISTER
-     * @see Screen#DOB
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #generalDelay(Engine)
@@ -193,9 +173,6 @@ public interface UIScreenValidationTestType extends
      * submit button without filling in required inputs, and check that
      * it should fail.
      * @param mode {@link UserMode} instance.
-     * @see ObjectUtil#nonNull(Object)
-     * @see Screen#SPLASH
-     * @see Screen#INVALID_AGE
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #generalUserModeProvider()
@@ -237,32 +214,6 @@ public interface UIScreenValidationTestType extends
      * selection.
      * Be aware that this test does not take into account BMI calculations.
      * @param MODE {@link UserMode} instance.
-     * @see ChoiceInput#HEIGHT
-     * @see ChoiceInput#WEIGHT
-     * @see ChoiceInput#ETHNICITY
-     * @see ChoiceInput#COACH_PREF
-     * @see CoachPref#values()
-     * @see CollectionUtil#randomElement(Object[])
-     * @see Engine#platform()
-     * @see Ethnicity#values()
-     * @see ObjectUtil#nonNull(Object)
-     * @see UserMode#validAgeInfo(PlatformType)
-     * @see Height#CM
-     * @see Height#CM_DEC
-     * @see Height#FT
-     * @see Height#INCH
-     * @see Height#random(PlatformType, UserMode, UnitSystem)
-     * @see Height#stringValue(PlatformType, UnitSystem, List)
-     * @see Weight#KG
-     * @see Weight#KG_DEC
-     * @see Weight#LB
-     * @see Weight#LB_DEC
-     * @see Weight#random(PlatformType, UserMode, UnitSystem)
-     * @see Weight#stringValue(PlatformType, UnitSystem, List)
-     * @see Screen#SPLASH
-     * @see Screen#VALID_AGE
-     * @see UnitSystem#IMPERIAL
-     * @see UnitSystem#METRIC
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #generalUserModeProvider()
@@ -356,13 +307,7 @@ public interface UIScreenValidationTestType extends
      * visibility and interacting with each of them.
      * @param MODE {@link UserMode} instance.
      * @see Engine#isShowingPassword(WebElement)
-     * @see Engine#platform()
-     * @see Engine#rxa_toggleNextOrFinishInput(WebElement)
      * @see Engine#rxa_togglePasswordMask(WebElement)
-     * @see ObjectUtil#nonNull(Object)
-     * @see UserMode#personalInfo(PlatformType)
-     * @see Screen#SPLASH
-     * @see Screen#PERSONAL_INFO
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #generalUserModeProvider()
@@ -448,12 +393,6 @@ public interface UIScreenValidationTestType extends
      * {@link Screen#DASHBOARD} should appear differently depending on the
      * {@link UserMode}.
      * @param MODE {@link UserMode} instance.
-     * @see ObjectUtil#nonNull(Object)
-     * @see DashboardMode#BMI
-     * @see DashboardMode#ACTIVITY
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
-     * @see Screen#DASHBOARD
      * @see #assertCorrectness(TestSubscriber)
      * @see #generalUserModeProvider()
      * @see #rxa_navigate(UserMode, Screen...)
@@ -489,13 +428,6 @@ public interface UIScreenValidationTestType extends
 
     /**
      * This test validates the drawer found in {@link Screen#DASHBOARD}.
-     * @see BooleanUtil#isFalse(boolean)
-     * @see Engine#rxv_error()
-     * @see ObjectUtil#nonNull(Object)
-     * @see UserMode#defaultUserMode()
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
-     * @see Screen#DASHBOARD
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_toggleDrawer(Engine, boolean)
@@ -531,11 +463,6 @@ public interface UIScreenValidationTestType extends
     /**
      * Validate {@link Screen#MEAL_ENTRY} and confirm that all
      * {@link org.openqa.selenium.WebElement} are present.
-     * @see ObjectUtil#nonNull(Object)
-     * @see UserMode#defaultUserMode()
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
-     * @see Screen#MEAL_ENTRY
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxv_mealLog(Engine)
@@ -563,12 +490,6 @@ public interface UIScreenValidationTestType extends
     /**
      * Validate {@link Screen#WEIGHT_VALUE} and confirm that all
      * {@link WebElement} are present.
-     * @see ObjectUtil#nonNull(Object)
-     * @see UserMode#defaultUserMode()
-     * @see CSSInput#WEIGHT
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
-     * @see Screen#WEIGHT_VALUE
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
@@ -598,11 +519,6 @@ public interface UIScreenValidationTestType extends
     /**
      * Validate {@link Screen#WEIGHT_ENTRY} and confirm that all
      * {@link WebElement} are present.
-     * @see ObjectUtil#nonNull(Object)
-     * @see UserMode#defaultUserMode()
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
-     * @see Screen#WEIGHT_ENTRY
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxv_weightEntry(Engine)
@@ -631,11 +547,6 @@ public interface UIScreenValidationTestType extends
      * Validate {@link Screen#ACTIVITY_VALUE} and confirm that all
      * {@link WebElement} are present.
      * @param mode {@link UserMode} instance.
-     * @see ObjectUtil#nonNull(Object)
-     * @see CSSInput#ACTIVITY
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
-     * @see Screen#ACTIVITY_VALUE
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #generalUserModeProvider()
@@ -667,10 +578,6 @@ public interface UIScreenValidationTestType extends
      * Validate {@link Screen#ACTIVITY_ENTRY} and confirm that all
      * {@link WebElement} are present.
      * @param mode {@link UserMode} instance.
-     * @see ObjectUtil#nonNull(Object)
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
-     * @see Screen#ACTIVITY_ENTRY
      * @see #assertCorrectness(TestSubscriber)
      * @see #generalUserModeProvider()
      * @see #engine()                          
@@ -701,12 +608,6 @@ public interface UIScreenValidationTestType extends
     /**
      * Validate {@link Screen#SETTINGS} and confirm that all {@link WebElement}
      * are present.
-     * @see ObjectUtil#nonNull(Object)
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
-     * @see Screen#SETTINGS
-     * @see Setting#UNITS
-     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_toggleSetting(Engine, Setting)
@@ -728,9 +629,7 @@ public interface UIScreenValidationTestType extends
             rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.SETTINGS),
             rxv_settings(ENGINE),
             rxa_toggleSetting(ENGINE, Setting.UNITS),
-
-            Flowable.fromArray(units)
-                .concatMap(a -> THIS.rxa_changeUnitSystem(ENGINE, a))
+            Flowable.fromArray(units).concatMap(a -> THIS.rxa_changeUnitSystem(ENGINE, a))
         ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

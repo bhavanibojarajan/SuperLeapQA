@@ -10,14 +10,12 @@ import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.CollectionUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.javautilities.test.TestNGUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.base.model.TextInputType;
 import org.swiften.xtestkit.mobile.Platform;
@@ -25,7 +23,10 @@ import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -37,11 +38,6 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * This {@link DataProvider} is used to check for either/or input
      * requirement when the user is entering guarantor information.
      * @return {@link Iterator} instance.
-     * @see CollectionUtil#asList(Object[])
-     * @see TestNGUtil#oneFromEach(Object[][])
-     * @see TextInput#PARENT_NAME
-     * @see TextInput#PARENT_EMAIL
-     * @see TextInput#PARENT_MOBILE
      */
     @NotNull
     @DataProvider
@@ -64,9 +60,6 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * {@link Platform#IOS} there is no way to reveal the password content.
      * @see Engine#isShowingPassword(WebElement)
      * @see Engine#rxa_togglePasswordMask(WebElement)
-     * @see Engine#rxv_error()
-     * @see Screen#SPLASH
-     * @see Screen#PERSONAL_INFO
      * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
@@ -111,13 +104,6 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * the Web browser, {@link Screen#PERSONAL_INFO} inputs are saved and then
      * restored when the user gets back to the app. This is more relevant for
      * {@link Platform#ANDROID}.
-     * @see BooleanUtil#isTrue(boolean)
-     * @see HMTextType#randomInput(InputHelperType)
-     * @see ObjectUtil#nonNull(Object)
-     * @see UserMode#personalInfo(PlatformType)
-     * @see Screen#SPLASH
-     * @see Screen#PERSONAL_INFO
-     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #generalDelay(Engine)
@@ -233,10 +219,6 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * This test is only applicable for {@link UserMode#TEEN_U18}, so we use
      * {@link DataProvider} that provides {@link InputType}.
      * @param INPUTS {@link List} of {@link InputType}.
-     * @see ObjectUtil#nonNull(Object)
-     * @see Screen#SPLASH
-     * @see Screen#GUARANTOR_INFO
-     * @see UserMode#TEEN_U18
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #parentPersonalInfoProvider()
@@ -277,9 +259,6 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * not. It uses a custom {@link DataProvider} that provides only
      * {@link UserMode#TEEN_U18} and {@link UserMode#TEEN_A18}.
      * @param MODE {@link UserMode} instance.
-     * @see Screen#SPLASH
-     * @see Screen#GUARANTOR_INFO
-     * @see Screen#USE_APP_NOW
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #guarantorSpecificUserModeProvider()

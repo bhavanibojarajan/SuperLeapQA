@@ -8,25 +8,20 @@ import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.SuperLeapQA.model.DrawerItem;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.localizer.LocalizerType;
-import org.swiften.javautilities.util.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
+import org.swiften.javautilities.util.LogUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.ios.element.locator.AndroidXMLAttribute;
-import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.common.ErrorProviderType;
-import org.swiften.javautilities.protocol.ClassNameProviderType;
-import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
-import org.swiften.xtestkitcomponents.platform.XMLAttributeType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
@@ -38,18 +33,8 @@ public interface BaseValidationType extends ErrorProviderType, AppDelayType {
      * Get the common back button.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Attribute.Builder#addAttribute(String)
-     * @see Attribute.Builder#withFormatible(Formatible)
-     * @see Attribute.Builder#withValue(Object)
      * @see Attributes#containsID(String)
-     * @see Attributes#of(PlatformProviderType)
-     * @see Engine#platform()
      * @see Engine#rxe_containsID(String...)
-     * @see Engine#rxe_withAttributes(Attribute[])
-     * @see Formatibles#containsString()
-     * @see XMLAttributeType#value()
-     * @see AndroidXMLAttribute#CONTENT_DESC
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_backButton(@NotNull Engine<?> engine) {
@@ -88,9 +73,6 @@ public interface BaseValidationType extends ErrorProviderType, AppDelayType {
      * Get the common progress bar.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxe_ofClass(ClassNameProviderType[])
-     * @see Engine#rxe_containsText(String...)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_progressBar(@NotNull Engine<?> engine) {
@@ -115,8 +97,6 @@ public interface BaseValidationType extends ErrorProviderType, AppDelayType {
      * @param engine {@link Engine} instance.
      * @param input {@link InputType} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxe_withXPath(XPath...)
-     * @see HMInputType#inputViewXP(InputHelperType)
      */
     @NotNull
     default Flowable<WebElement> rxe_editField(@NotNull Engine<?> engine,
@@ -130,7 +110,6 @@ public interface BaseValidationType extends ErrorProviderType, AppDelayType {
      * @param ENGINE {@link Engine} instance.
      * @param INPUT {@link HMInputType} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#getText(WebElement)
      * @see #rxe_editField(Engine, HMInputType)
      */
     @NotNull
@@ -146,9 +125,6 @@ public interface BaseValidationType extends ErrorProviderType, AppDelayType {
      * @param INPUT {@link InputType} instance.
      * @param VALUE {@link String} value.
      * @return {@link Flowable} instance.
-     * @see BooleanUtil#toTrue(Object)
-     * @see Engine#getText(WebElement)
-     * @see Engine#rxv_error(String)
      * @see #rxe_editField(Engine, HMInputType)
      */
     @NotNull
@@ -169,7 +145,6 @@ public interface BaseValidationType extends ErrorProviderType, AppDelayType {
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_containsText(String...)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_numericChoiceConfirm(@NotNull Engine<?> engine) {
@@ -195,7 +170,6 @@ public interface BaseValidationType extends ErrorProviderType, AppDelayType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsText(String...)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_textChoiceConfirm(@NotNull Engine<?> engine) {
@@ -214,13 +188,8 @@ public interface BaseValidationType extends ErrorProviderType, AppDelayType {
      * Get the drawer toggle {@link WebElement}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Attribute.Builder#addAttribute(String)
-     * @see Attribute.Builder#withValue(Object)
      * @see Engine#rxe_withAttributes(Attribute[])
      * @see Engine#rxe_containsID(String...)
-     * @see XMLAttributeType#value()
-     * @see AndroidXMLAttribute#CONTENT_DESC
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_drawerToggle(@NotNull Engine<?> engine) {
@@ -246,8 +215,6 @@ public interface BaseValidationType extends ErrorProviderType, AppDelayType {
      * @param engine {@link Engine} instance.
      * @param item {@link DrawerItem} instance.
      * @return {@link Flowable} instance.
-     * @see DrawerItem#drawerItemXP(Engine)
-     * @see Engine#rxe_withXPath(XPath...)
      */
     @NotNull
     default Flowable<WebElement> rxe_drawerItem(@NotNull Engine<?> engine,
@@ -261,8 +228,6 @@ public interface BaseValidationType extends ErrorProviderType, AppDelayType {
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see DrawerItem#values()
-     * @see ObjectUtil#nonNull(Object)
      * @see #rxe_drawerItem(Engine, DrawerItem)
      */
     @NotNull
@@ -280,7 +245,6 @@ public interface BaseValidationType extends ErrorProviderType, AppDelayType {
      * Check if the drawer is open.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see BooleanUtil#isTrue(boolean)
      * @see #rxv_drawer(Engine)
      */
     @NotNull
@@ -295,16 +259,7 @@ public interface BaseValidationType extends ErrorProviderType, AppDelayType {
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#MEAL_PAGE}, for e.g.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Attribute.Builder#addAttribute(String)
-     * @see Attribute.Builder#withValue(Object)
-     * @see Attribute.Builder#withFormatible(Formatible)
      * @see Engine#rxe_ofClass(ClassNameProviderType[])
-     * @see Formatibles#containsString()
-     * @see Point#getX()
-     * @see XPath.Builder#addAttribute(AttributeType)
-     * @see WebElement#getLocation()
-     * @see IOSView.Type#UI_BUTTON
-     * @see #NOT_AVAILABLE
      * @see #rxe_backButton(Engine)
      */
     @NotNull
@@ -367,7 +322,7 @@ public interface BaseValidationType extends ErrorProviderType, AppDelayType {
      * @see Engine#rxe_containsText(String...)
      */
     @NotNull
-    default Flowable<WebElement> rxe_mealImageTutorialDismiss(@NotNull Engine<?> engine) {
+    default Flowable<WebElement> rxe_mealImageTutDismiss(@NotNull Engine<?> engine) {
         return engine
             .rxe_containsText("mealPage_title_gotIt")
             .firstElement()
@@ -380,20 +335,8 @@ public interface BaseValidationType extends ErrorProviderType, AppDelayType {
      * @return {@link Flowable} instance.
      * @see Attributes#containsText(String)
      * @see Attributes#hasText(String)
-     * @see Attributes#of(PlatformProviderType)
-     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
-     * @see Engine#localizer()
-     * @see Engine#platform()
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_containsText(String...)
-     * @see Engine#rxe_withXPath(XPath...)
-     * @see LocalizerType#localize(String)
-     * @see XPath.Builder#addAttribute(CompoundAttribute)
-     * @see AndroidView.Type#BUTTON
-     * @see IOSView.Type#UI_BUTTON
-     * @see Platform#IOS
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_menuDeleteConfirm(@NotNull Engine<?> engine) {

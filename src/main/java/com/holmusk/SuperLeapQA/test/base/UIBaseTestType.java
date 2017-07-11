@@ -36,8 +36,6 @@ public interface UIBaseTestType extends
      * This {@link DataProvider} provides {@link org.swiften.xtestkit.base.Engine}
      * instances for constructor methods.
      * @return {@link Iterator} instance.
-     * @see Config#runCount()
-     * @see TestKit#engine(int)
      */
     @NotNull
     @DataProvider(parallel = true)
@@ -56,10 +54,6 @@ public interface UIBaseTestType extends
      * This {@link DataProvider} provides {@link UserMode} instances that
      * do not care whether a guarantor is required.
      * @return {@link Iterator} instance.
-     * @see TestNGUtil#oneFromEach(Object...)
-     * @see UserMode#PARENT
-     * @see UserMode#TEEN_A18
-     * @see UserMode#TEEN_U18
      */
     @NotNull
     @DataProvider
@@ -77,9 +71,6 @@ public interface UIBaseTestType extends
      * information input tests will require {@link UserMode#requiresGuarantor()}
      * to decide whether the parent info screen is required.
      * @return {@link Iterator} instance.
-     * @see TestNGUtil#oneFromEach(Object...)
-     * @see UserMode#TEEN_U18
-     * @see UserMode#TEEN_A18
      */
     @NotNull
     @DataProvider
@@ -93,7 +84,6 @@ public interface UIBaseTestType extends
     /**
      * Override this method to provide default implementation.
      * @return {@link TestKit} instance.
-     * @see Config#TEST_KIT
      */
     @NotNull
     @Override

@@ -19,7 +19,6 @@ public interface ChatValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsID(String...)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_chatCamera(@NotNull Engine<?> engine) {
@@ -38,7 +37,6 @@ public interface ChatValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsID(String...)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_chatSend(@NotNull Engine<?> engine) {
@@ -63,8 +61,6 @@ public interface ChatValidationType extends BaseValidationType {
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_ofClass(ClassNameProviderType[])
-     * @see IOSView.Type#UI_TABLE_VIEW
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_chatListView(@NotNull Engine<?> engine) {

@@ -1,15 +1,13 @@
 package com.holmusk.SuperLeapQA.test.chat;
 
-import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.HMUITestKit.model.HMTextType;
+import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.model.InputHelperType;
 
 /**
  * Created by haipham on 1/6/17.
@@ -19,8 +17,6 @@ public interface ChatActionType extends BaseActionType, ChatValidationType {
      * Open the chat window.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
-     * @see TextInput#MEAL_COMMENT
      * @see #rxe_editField(Engine, HMInputType)
      */
     @NotNull
@@ -33,7 +29,6 @@ public interface ChatActionType extends BaseActionType, ChatValidationType {
      * Dismiss the chat window.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #rxe_chatListView(Engine)
      */
     @NotNull
@@ -45,7 +40,6 @@ public interface ChatActionType extends BaseActionType, ChatValidationType {
      * Confirm a chat message.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #rxe_chatSend(Engine)
      */
     @NotNull
@@ -58,7 +52,6 @@ public interface ChatActionType extends BaseActionType, ChatValidationType {
      * @param engine {@link Engine} instance.
      * @param msg {@link String} chat message.
      * @return {@link Flowable} instance.
-     * @see TextInput#MEAL_COMMENT
      * @see #rxa_sendChat(Engine)
      * @see #rxe_editField(Engine, HMInputType)
      */
@@ -77,8 +70,6 @@ public interface ChatActionType extends BaseActionType, ChatValidationType {
      * Type and send a random chat message.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see TextInput#MEAL_COMMENT
-     * @see TextInput#randomInput(InputHelperType)
      * @see #rxa_postChat(Engine, String)
      */
     @NotNull

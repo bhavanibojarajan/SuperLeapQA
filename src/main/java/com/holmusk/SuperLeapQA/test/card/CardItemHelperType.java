@@ -19,7 +19,6 @@ public interface CardItemHelperType extends DashboardActionType, ScreenInitializ
      * @param engine {@link Engine} instance.
      * @param card {@link CardType} instance.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
      * @see #rxa_firstCardItem(Engine, CardType)
      * @see #rxa_openEditMenu(Engine)
      * @see #rxa_deleteFromMenu(Engine)
@@ -41,9 +40,6 @@ public interface CardItemHelperType extends DashboardActionType, ScreenInitializ
      * @param engine {@link Engine} instance.
      * @param card {@link CardType} instance.
      * @return {@link Flowable} instance.
-     * @see BooleanUtil#isTrue(boolean)
-     * @see Engine#rxv_error()
-     * @see ObjectUtil#nonNull(Object)
      * @see RxUtil#doWhile(Flowable, Flowable, Object)
      * @see #rxa_deleteFirstCardItem(Engine, CardType)
      * @see #rxv_cardListEmpty(Engine, CardType)
@@ -69,7 +65,6 @@ public interface CardItemHelperType extends DashboardActionType, ScreenInitializ
      * @param engine {@link Engine} instance.
      * @param card {@link CardType} instance.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
      * @see #rxa_revealCardList(Engine)
      * @see #rxa_dashboardCardTab(Engine, CardType)
      * @see #rxa_deleteAllCardItems(Engine, CardType)

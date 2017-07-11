@@ -6,6 +6,7 @@ import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
+import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.util.LogUtil;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
@@ -28,10 +29,6 @@ public interface UIDoBPickerTestType extends UIBaseTestType, DOBPickerActionType
      * {@link UserMode#validAgeCategoryRange()} instead of
      * {@link UserMode#validAgeRange()}.
      * @param MODE {@link UserMode} instance.
-     * @see Screen#SPLASH
-     * @see Screen#DOB
-     * @see UserMode#offsetFromCategoryValidRange(int, int)
-     * @see UserMode#validAgeCategoryRange()
      * @see #assertCorrectness(TestSubscriber)
      * @see #generalUserModeProvider()
      * @see #engine()
@@ -44,6 +41,7 @@ public interface UIDoBPickerTestType extends UIBaseTestType, DOBPickerActionType
      */
     @SuppressWarnings("unchecked")
     @Test(
+        enabled = false,
         dataProviderClass = UIBaseTestType.class,
         dataProvider = "generalUserModeProvider"
     )
@@ -83,9 +81,10 @@ public interface UIDoBPickerTestType extends UIBaseTestType, DOBPickerActionType
         }
 
         // When
-        rxa_navigate(MODE, Screen.SPLASH, Screen.DOB)
-            .flatMap(a -> new Repeater().repeat(0))
-            .subscribe(subscriber);
+        Flowable.concatArray(
+            rxa_navigate(MODE, Screen.SPLASH, Screen.DOB),
+            new Repeater().repeat(0)
+        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

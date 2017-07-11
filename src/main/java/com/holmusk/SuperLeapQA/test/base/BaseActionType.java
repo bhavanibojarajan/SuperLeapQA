@@ -11,18 +11,15 @@ import com.holmusk.HMUITestKit.test.datetime.HMDateTimeActionType;
 import com.holmusk.SuperLeapQA.model.*;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.BooleanUtil;
 import org.swiften.javautilities.collection.Zip;
-import org.swiften.javautilities.util.LogUtil;
 import org.swiften.javautilities.object.ObjectUtil;
 import org.swiften.javautilities.rx.RxUtil;
+import org.swiften.javautilities.util.LogUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.choice.ChoiceParam;
-import org.swiften.xtestkit.base.element.choice.ChoiceType;
-import org.swiften.xtestkit.base.model.ChoiceInputType;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.base.model.TextInputType;
@@ -30,13 +27,12 @@ import org.swiften.xtestkit.base.param.DirectionParam;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkitcomponents.coordinate.RLPoint;
-import org.swiften.xtestkitcomponents.coordinate.RLPositionType;
 import org.swiften.xtestkitcomponents.direction.Direction;
-import org.swiften.xtestkitcomponents.direction.DirectionProviderType;
-import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
-import org.swiften.xtestkitcomponents.xpath.*;
+import org.swiften.xtestkitcomponents.xpath.Attribute;
+import org.swiften.xtestkitcomponents.xpath.Attributes;
+import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
+import org.swiften.xtestkitcomponents.xpath.XPath;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,11 +49,8 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * Navigate backwards by clicking the back button.
      * @return {@link Flowable} instance.
      * @param ENGINE {@link Engine} instance.
-     * @see Engine#rxa_click(WebElement)
-     * @see Engine#rxa_tapMiddle(WebElement)
      * @see #generalDelay(Engine)
      * @see #rxe_backButton(Engine)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_clickBackButton(@NotNull final Engine<?> ENGINE) {
@@ -79,7 +72,6 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * Watch the progress bar until it's no longer visible.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_watchUntilHidden(Flowable)
      * @see #rxe_progressBar(Engine)
      */
     @NotNull
@@ -92,7 +84,6 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @param input {@link TextInputType} instance.
      * @param TEXT {@link String} value.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_sendValue(WebElement, String...)
      * @see #rxe_editField(Engine, HMInputType)
      */
     @NotNull
@@ -107,7 +98,6 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @param ENGINE {@link Engine} instance.
      * @param inputs {@link List} of {@link HMTextType}.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
      * @see #rxa_input(Engine, HMInputType, String)
      * @see #rxa_makeNextInputVisible(Engine)
      */
@@ -121,9 +111,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
             .concatMap(a -> Flowable.concatArray(
                 THIS.rxa_input(ENGINE, a.A, a.B),
                 THIS.rxa_makeNextInputVisible(ENGINE)
-            ))
-            .all(ObjectUtil::nonNull)
-            .toFlowable();
+            )).all(ObjectUtil::nonNull).toFlowable();
     }
 
     /**
@@ -131,7 +119,6 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @param engine {@link Engine} instance.
      * @param input {@link TextInputType} instance.
      * @return {@link Flowable} instance.
-     * @see TextInputType#randomInput(InputHelperType)
      * @see #rxa_input(Engine, HMInputType, String)
      */
     @NotNull
@@ -145,7 +132,6 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @param ENGINE {@link Engine} instance.
      * @param inputs {@link List} of {@link HMTextType}.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
      * @see #rxa_randomInput(Engine, HMTextType)
      * @see #rxa_makeNextInputVisible(Engine)
      */
@@ -158,9 +144,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
             .concatMap(a -> Flowable.concatArray(
                 THIS.rxa_randomInput(ENGINE, a),
                 THIS.rxa_makeNextInputVisible(ENGINE)
-            ))
-            .all(ObjectUtil::nonNull)
-            .toFlowable();
+            )).all(ObjectUtil::nonNull).toFlowable();
     }
 
     /**
@@ -182,8 +166,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * clicked (however, this is only applicable to {@link Platform#ANDROID}.
      * @param input {@link InputType} instance.
      * @return {@link Flowable} instance.
-     * @see #rxe_editField(Engine, HMInputType)   )
-     * @see Engine#rxa_click(WebElement)
+     * @see #rxe_editField(Engine, HMInputType)
      */
     @NotNull
     default Flowable<WebElement> rxa_clickInput(@NotNull final Engine<?> ENGINE,
@@ -196,16 +179,6 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Attributes#containsText(String)
-     * @see Attributes#of(PlatformProviderType)
-     * @see CompoundAttribute#single(AttributeType)
-     * @see CompoundAttribute#withClass(ClassNameProviderType)
-     * @see Engine#localizer()
-     * @see Engine#rxa_click(WebElement)
-     * @see Engine#rxe_withXPath(XPath...)
-     * @see IOSView.Type#UI_BUTTON
-     * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
-     * @see XPath.Builder#addAttribute(AttributeType)
-     * @see Platform#IOS
      */
     @NotNull
     default Flowable<?> rxa_confirmTextInput(@NotNull final Engine<?> ENGINE) {
@@ -231,11 +204,6 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * or dismissing the keyboard.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_hideKeyboard()
-     * @see Engine#rxv_isLastInput(WebElement)
-     * @see Engine#rxa_toggleNextOrFinishInput(WebElement)
-     * @see #rxa_confirmTextInput(Engine)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_makeNextInputVisible(@NotNull Engine<?> engine) {
@@ -255,8 +223,6 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @param E {@link Engine} instance.
      * @param element {@link WebElement} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxe_containsID(String...)
-     * @see Engine#rxa_click(WebElement)
      */
     @NotNull
     default Flowable<?> rxa_toggleNextInput(@NotNull final Engine<?> E,
@@ -273,9 +239,6 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @param ENGINE {@link Engine} instance.
      * @param element {@link WebElement} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxe_containsID(String...)
-     * @see Engine#rxa_click(WebElement)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_togglePreviousInput(@NotNull final Engine<?> ENGINE,
@@ -293,13 +256,6 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @param input {@link SLNumericChoiceType} instance.
      * @param selected {@link String} value.
      * @return {@link Flowable} instance.
-     * @see ChoiceParam.Builder#withGeneralMode()
-     * @see ChoiceParam.Builder#withInput(ChoiceInputType)
-     * @see ChoiceParam.Builder#withSelectedChoice(String)
-     * @see Engine#localizer()
-     * @see Engine#rxa_selectChoice(ChoiceType)
-     * @see org.swiften.javautilities.localizer.LocalizerType#localize(String)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_selectChoice(@NotNull Engine<?> engine,
@@ -327,7 +283,6 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @param ENGINE {@link Engine} instance.
      * @param inputs {@link List} of {@link Zip} instances.
      * @return {@link Flowable} instance.
-     * @see BooleanUtil#isTrue(boolean)
      * @see #rxa_selectChoice(Engine, HMChoiceType, String)
      */
     @NotNull
@@ -346,19 +301,11 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
 
     /**
      * Scroll to the bottom of the screen.
-     * @param E {@link Engine} instance.
+     * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_swipeGeneric(WebElement, DirectionProviderType)
-     * @see Engine#rxe_window()
-     * @see Direction#DOWN_UP
-     * @see DirectionParam.Builder#withDirection(Direction)
-     * @see DirectionParam.Builder#withDuration(int)
-     * @see DirectionParam.Builder#withEndRatio(double)
-     * @see DirectionParam.Builder#withStartRatio(double)
-     * @see DirectionParam.Builder#withTimes(int)
      */
     @NotNull
-    default Flowable<?> rxa_scrollToBottom(@NotNull final Engine<?> E) {
+    default Flowable<?> rxa_scrollToBottom(@NotNull final Engine<?> ENGINE) {
         final DirectionParam PARAM = DirectionParam.builder()
             .withDirection(Direction.DOWN_UP)
             .withStartRatio(0.1d)
@@ -366,14 +313,13 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
             .withTimes(1)
             .build();
 
-        return E.rxe_window().flatMap(a -> E.rxa_swipeGeneric(a, PARAM));
+        return ENGINE.rxe_window().flatMap(a -> ENGINE.rxa_swipeGeneric(a, PARAM));
     }
 
     /**
      * Open the drawer.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #rxe_drawerToggle(Engine)
      */
     @NotNull
@@ -385,15 +331,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * Close the drawer.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#coordinate(WebElement, RLPositionType, RLPositionType)
-     * @see Engine#rxa_click(WebElement)
-     * @see Engine#rxa_tap(Point)
      * @see Engine#rxe_containsID(String...)
-     * @see Engine#rxe_window()
-     * @see Point#moveBy(int, int)
-     * @see RLPoint#MAX
-     * @see RLPoint#MID
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_closeDrawer(@NotNull final Engine<?> ENGINE) {
@@ -449,7 +387,6 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @param ENGINE {@link Engine} instance.
      * @param item {@link DrawerItem} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #rxe_drawerItem(Engine, DrawerItem)
      */
     @NotNull
@@ -470,9 +407,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
     default Flowable<?> rxa_openDrawerAndSelect(@NotNull final Engine<?> E,
                                                 @NotNull final DrawerItem DI) {
         final BaseActionType THIS = this;
-
-        return rxa_toggleDrawer(E, true)
-            .flatMap(a -> THIS.rxa_selectDrawerItem(E, DI));
+        return rxa_toggleDrawer(E, true).flatMap(a -> THIS.rxa_selectDrawerItem(E, DI));
     }
 
     /**
@@ -480,7 +415,6 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #rxe_dashboardBack(Engine)
      */
     @NotNull
@@ -495,13 +429,11 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * the error.
      * @param E {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see BooleanUtil#toTrue(Object)
-     * @see Engine#rxa_click(WebElement)
-     * @see #rxe_mealImageTutorialDismiss(Engine)
+     * @see #rxe_mealImageTutDismiss(Engine)
      */
     @NotNull
     default Flowable<?> rxa_dismissMealImageTutorial(@NotNull final Engine<?> E) {
-        return rxe_mealImageTutorialDismiss(E)
+        return rxe_mealImageTutDismiss(E)
             .flatMap(E::rxa_click)
             .map(BooleanUtil::toTrue)
             .onErrorReturnItem(true);
@@ -511,7 +443,6 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * Toggle edit mode, then delay for a while for the menu to fully appear.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #generalDelay(Engine)
      * @see #rxe_editToggle(Engine)
      */
@@ -526,9 +457,6 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * Delete some content from the item menu.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
-     * @see ObjectUtil#nonNull(Object)
-     * @see RxUtil#concatDelayEach(long, TimeUnit, Flowable[])
      * @see #generalDelay(Engine)
      * @see #contentDeleteProgressDelay(Engine)
      * @see #rxe_menuDelete(Engine)

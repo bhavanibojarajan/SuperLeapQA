@@ -28,11 +28,11 @@ public interface MealPageActionType extends
      * @return {@link Flowable} instance.
      * @see BooleanUtil#toTrue(Object)
      * @see Engine#rxa_click(WebElement)
-     * @see #rxe_mealImageTutorialDismiss(Engine)
+     * @see #rxe_mealImageTutDismiss(Engine)
      */
     @NotNull
     default Flowable<?> rxa_dismissMealImageTutorial(@NotNull final Engine<?> E) {
-        return rxe_mealImageTutorialDismiss(E)
+        return rxe_mealImageTutDismiss(E)
             .flatMap(E::rxa_click)
             .map(BooleanUtil::toTrue)
             .onErrorReturnItem(true);

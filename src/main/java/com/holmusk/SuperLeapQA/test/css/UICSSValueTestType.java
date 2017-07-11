@@ -26,14 +26,6 @@ public interface UICSSValueTestType extends UIBaseTestType, CSSValueActionType {
      * {@link org.testng.annotations.DataProvider} for
      * {@link #test_logCSS_shouldStartFromPreviousCSSValue(UserMode, Screen, Screen, HMCSSInputType)}
      * @return {@link Iterator} instance.
-     * @see CSSInput#ACTIVITY
-     * @see CSSInput#WEIGHT
-     * @see Screen#ACTIVITY_ENTRY
-     * @see Screen#ACTIVITY_VALUE
-     * @see Screen#WEIGHT_ENTRY
-     * @see Screen#WEIGHT_VALUE
-     * @see UserMode#PARENT
-     * @see UserMode#TEEN_A18
      */
     @NotNull
     @DataProvider
@@ -54,11 +46,6 @@ public interface UICSSValueTestType extends UIBaseTestType, CSSValueActionType {
      * Log some CSS cards and verify that the previous values are saved the
      * next time the user logs another CSS entry.
      * @see Engine#rxe_containsText(String...)
-     * @see Engine#rxv_error()
-     * @see ObjectUtil#nonNull(Object)
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
-     * @see Screen#DASHBOARD
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxa_backToDashboard(Engine)
