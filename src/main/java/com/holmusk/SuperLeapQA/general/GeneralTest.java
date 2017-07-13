@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.HPIterables;
 import org.swiften.javautilities.functional.Tuple;
 import org.swiften.javautilities.test.TestNGs;
-import org.swiften.javautilities.util.LogUtil;
+import org.swiften.javautilities.util.HPLog;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.mobile.Platform;
@@ -72,10 +72,10 @@ public final class GeneralTest {
         InputHelperType helper = TestHelper.mockHelper();
 
         // When & Then
-        LogUtil.println(TextInput.NAME.randomInput(helper));
-        LogUtil.println(TextInput.PHONE.randomInput(helper));
-        LogUtil.println(TextInput.EMAIL.randomInput(helper));
-        LogUtil.println(TextInput.UNIT_NUMBER.randomInput(helper));
+        HPLog.println(TextInput.NAME.randomInput(helper));
+        HPLog.println(TextInput.PHONE.randomInput(helper));
+        HPLog.println(TextInput.EMAIL.randomInput(helper));
+        HPLog.println(TextInput.UNIT_NUMBER.randomInput(helper));
     }
 
     @Test
@@ -84,8 +84,8 @@ public final class GeneralTest {
         InputHelperType helper = TestHelper.mockHelper(Platform.IOS);
 
         // When & Then
-        LogUtil.printlnt(TextInput.PASSWORD.inputViewXP(helper));
-        LogUtil.printlnt(TextInput.POSTAL_CODE.inputViewXP(helper));
+        HPLog.printlnt(TextInput.PASSWORD.inputViewXP(helper));
+        HPLog.printlnt(TextInput.POSTAL_CODE.inputViewXP(helper));
     }
 
     @Test
@@ -98,18 +98,18 @@ public final class GeneralTest {
         long yearDiff = ChronoUnit.YEARS.between(date1, date2);
 
         // Then
-        LogUtil.println(yearDiff);
+        HPLog.println(yearDiff);
     }
 
     @Test
     public void test_userModeAgeRange_shouldBeCorrect() {
         // Setup & When & Then
-        LogUtil.println(UserMode.PARENT.validAgeRange());
-        LogUtil.println(UserMode.PARENT.validAgeCategoryRangeString());
-        LogUtil.println(UserMode.TEEN_U18.validAgeRange());
-        LogUtil.println(UserMode.TEEN_U18.validAgeCategoryRangeString());
-        LogUtil.println(UserMode.TEEN_A18.validAgeRange());
-        LogUtil.println(UserMode.TEEN_A18.validAgeCategoryRangeString());
+        HPLog.println(UserMode.PARENT.validAgeRange());
+        HPLog.println(UserMode.PARENT.validAgeCategoryRangeString());
+        HPLog.println(UserMode.TEEN_U18.validAgeRange());
+        HPLog.println(UserMode.TEEN_U18.validAgeCategoryRangeString());
+        HPLog.println(UserMode.TEEN_A18.validAgeRange());
+        HPLog.println(UserMode.TEEN_A18.validAgeCategoryRangeString());
     }
 
     @SuppressWarnings("unchecked")
@@ -166,13 +166,13 @@ public final class GeneralTest {
 
         // When & Then
         for (Screen screen : screens) {
-            LogUtil.printf("Checking screen %s", screen);
+            HPLog.printf("Checking screen %s", screen);
             List<ScreenManagerType.Node> nodes = manager.multiNodes(mode, start, screen);
             ScreenManagerType.Node first = nodes.get(0);
             ScreenManagerType.Node last = nodes.get(nodes.size() - 1);
             assertEquals(((ScreenHolder)first.S1).SCREEN, start);
             assertEquals(((ScreenHolder)last.S2).SCREEN, screen);
-            LogUtil.printf("Start: %s, end: %s. Route: %s", start, screen, nodes);
+            HPLog.printf("Start: %s, end: %s. Route: %s", start, screen, nodes);
         }
     }
 
@@ -242,10 +242,10 @@ public final class GeneralTest {
         }
 
         if (!generatedCorrectly) {
-            LogUtil.printft("Current bmi %.2f. Valid: %b", nParam.bmi(), validBMI);
-            LogUtil.printlnt(result.height(), result.weight());
-            LogUtil.printft("Widest invalid range: %s", BMIUtil.widestInvalidRange(mode, nParam));
-            LogUtil.printft("Tightest invalid range: %s", BMIUtil.tightestInvalidRange(mode, nParam));
+            HPLog.printft("Current bmi %.2f. Valid: %b", nParam.bmi(), validBMI);
+            HPLog.printlnt(result.height(), result.weight());
+            HPLog.printft("Widest invalid range: %s", BMIUtil.widestInvalidRange(mode, nParam));
+            HPLog.printft("Tightest invalid range: %s", BMIUtil.tightestInvalidRange(mode, nParam));
             fail("BMI was not correctly generated");
         }
     }
@@ -256,14 +256,14 @@ public final class GeneralTest {
         InputHelperType helper = TestHelper.mockHelper(platform);
 
         // When & Then
-        LogUtil.printlnt(ActivityValue.TODAY.valueXP(helper, UserMode.PARENT));
-        LogUtil.printlnt(CardType.ACTIVITY.cardTabXP(helper));
-        LogUtil.printlnt(CardType.ACTIVITY.cardItemXP(helper));
-        LogUtil.printlnt(ChoiceInput.HEIGHT.inputViewXP(helper));
-        LogUtil.printlnt(Popup.RATING.dismissXP(helper));
-        LogUtil.printlnt(Popup.RATING.presenceXP(helper));
-        LogUtil.printlnt(TextInput.POSTAL_CODE.inputViewXP(helper));
-        LogUtil.printlnt(Setting.FOOD.settingXP(helper));
-        LogUtil.printlnt(WeightProgress.PREVIOUS.valueXP(helper));
+        HPLog.printlnt(ActivityValue.TODAY.valueXP(helper, UserMode.PARENT));
+        HPLog.printlnt(CardType.ACTIVITY.cardTabXP(helper));
+        HPLog.printlnt(CardType.ACTIVITY.cardItemXP(helper));
+        HPLog.printlnt(ChoiceInput.HEIGHT.inputViewXP(helper));
+        HPLog.printlnt(Popup.RATING.dismissXP(helper));
+        HPLog.printlnt(Popup.RATING.presenceXP(helper));
+        HPLog.printlnt(TextInput.POSTAL_CODE.inputViewXP(helper));
+        HPLog.printlnt(Setting.FOOD.settingXP(helper));
+        HPLog.printlnt(WeightProgress.PREVIOUS.valueXP(helper));
     }
 }

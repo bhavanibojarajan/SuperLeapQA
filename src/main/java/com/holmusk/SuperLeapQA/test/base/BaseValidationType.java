@@ -13,7 +13,7 @@ import org.swiften.javautilities.bool.HPBooleans;
 import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.protocol.ClassNameProviderType;
-import org.swiften.javautilities.util.LogUtil;
+import org.swiften.javautilities.util.HPLog;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
@@ -116,7 +116,7 @@ public interface BaseValidationType extends ErrorProviderType, AppDelayType {
     default Flowable<String> rxe_fieldValue(@NotNull final Engine<?> ENGINE,
                                             @NotNull final HMInputType INPUT) {
         return rxe_editField(ENGINE, INPUT).map(ENGINE::getText)
-            .doOnNext(a -> LogUtil.printft("Value for %s: %s", INPUT, a));
+            .doOnNext(a -> HPLog.printft("Value for %s: %s", INPUT, a));
     }
 
     /**

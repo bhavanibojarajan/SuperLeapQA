@@ -16,7 +16,7 @@ import org.swiften.javautilities.bool.HPBooleans;
 import org.swiften.javautilities.functional.Tuple;
 import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.rx.HPReactives;
-import org.swiften.javautilities.util.LogUtil;
+import org.swiften.javautilities.util.HPLog;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.choice.ChoiceParam;
@@ -261,7 +261,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
     default Flowable<?> rxa_selectChoice(@NotNull Engine<?> engine,
                                          @NotNull HMChoiceType input,
                                          @NotNull String selected) {
-        LogUtil.printft("Selecting %s for %s", selected, input);
+        HPLog.printft("Selecting %s for %s", selected, input);
 
         /* Localize the selected choice just in case */
         String localized = engine.localizer().localize(selected);
@@ -419,7 +419,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      */
     @NotNull
     default Flowable<?> rxa_backToDashboard(@NotNull final Engine<?> ENGINE) {
-        LogUtil.printlnt("Going back to dashboard");
+        HPLog.printlnt("Going back to dashboard");
         return rxe_dashboardBack(ENGINE).flatMap(ENGINE::rxa_click);
     }
 

@@ -7,7 +7,7 @@ import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.object.HPObjects;
-import org.swiften.javautilities.util.LogUtil;
+import org.swiften.javautilities.util.HPLog;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.Test;
@@ -53,7 +53,7 @@ public interface UIDoBPickerTestType extends UIBaseTestType, DOBPickerActionType
         final List<Integer> RANGE = MODE.validAgeCategoryRange();
         final int LENGTH = AGES.size();
         TestSubscriber subscriber = CustomTestSubscriber.create();
-        LogUtil.printft("Selecting ages from range %s", AGES);
+        HPLog.printft("Selecting ages from range %s", AGES);
 
         class Repeater {
             @NotNull

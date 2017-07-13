@@ -16,7 +16,7 @@ import org.swiften.javautilities.collection.HPIterables;
 import org.swiften.javautilities.functional.Tuple;
 import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.rx.HPReactives;
-import org.swiften.javautilities.util.LogUtil;
+import org.swiften.javautilities.util.HPLog;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputHelperType;
@@ -223,7 +223,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
         Height hMode = height.get(0).A;
         Weight wMode = weight.get(0).A;
 
-        LogUtil.printft("Selecting height: %s, weight: %s", height, weight);
+        HPLog.printft("Selecting height: %s, weight: %s", height, weight);
 
         return Flowable
             .concatArray(

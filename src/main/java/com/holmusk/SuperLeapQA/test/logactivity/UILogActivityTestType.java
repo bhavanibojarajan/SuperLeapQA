@@ -11,7 +11,7 @@ import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.util.LogUtil;
+import org.swiften.javautilities.util.HPLog;
 import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
@@ -111,11 +111,11 @@ public interface UILogActivityTestType extends UIBaseTestType, LogActivityAction
             rxa_navigate(MODE, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD),
             rxa_dashboardMode(ENGINE, DB_MODE),
             rxe_activityValue(ENGINE, MODE, AT_VAL)
-                .doOnNext(a -> LogUtil.printft("Today value is now %s", a))
+                .doOnNext(a -> HPLog.printft("Today value is now %s", a))
                 .flatMap(a -> Flowable.concatArray(
                     THIS.rxa_navigate(MODE, Screen.DASHBOARD, Screen.ACTIVITY_ENTRY),
                     THIS.rxe_selectedCSSNumericValue(ENGINE, INPUT)
-                        .doOnNext(b -> LogUtil.printft("Selected value %s", b))
+                        .doOnNext(b -> HPLog.printft("Selected value %s", b))
                         .map(b -> b * STEP_PER_MIN)
                         .map(Double::intValue)
                         .flatMap(b -> Flowable.concatArray(
@@ -123,10 +123,10 @@ public interface UILogActivityTestType extends UIBaseTestType, LogActivityAction
                             THIS.rxa_backToDashboard(ENGINE),
                             THIS.rxa_dashboardMode(ENGINE, DB_MODE),
                             THIS.rxe_activityValue(ENGINE, MODE, AT_VAL)
-                                .doOnNext(c -> LogUtil.printft("Today value is now %s", c))
+                                .doOnNext(c -> HPLog.printft("Today value is now %s", c))
                                 .map(c -> c - a)
                                 .map(Double::intValue)
-                                .doOnNext(c -> LogUtil.printft("Difference is %d", c))
+                                .doOnNext(c -> HPLog.printft("Difference is %d", c))
                                 .filter(c -> c.equals(b))
                                 .filter(c -> c % STEP_PER_MIN == 0)
                                 .switchIfEmpty(ENGINE.rxv_error("Steps do not match"))

@@ -7,7 +7,7 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.HPBooleans;
-import org.swiften.javautilities.util.LogUtil;
+import org.swiften.javautilities.util.HPLog;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
@@ -60,7 +60,7 @@ public interface SettingActionType extends BaseActionType, SettingValidationType
     @NotNull
     default Flowable<?> rxa_changeUnitSystem(@NotNull final Engine<?> ENGINE,
                                              @NotNull UnitSystem unit) {
-        LogUtil.printft("Changing unit system to %s", unit);
+        HPLog.printft("Changing unit system to %s", unit);
         int index = unitSystemSettingIndex(ENGINE, unit);
 
         if (ENGINE instanceof AndroidEngine) {

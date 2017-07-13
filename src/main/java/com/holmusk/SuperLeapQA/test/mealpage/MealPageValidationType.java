@@ -4,7 +4,7 @@ import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.date.DateUtil;
+import org.swiften.javautilities.date.HPDates;
 import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
@@ -42,10 +42,10 @@ public interface MealPageValidationType extends BaseValidationType {
             SimpleDateFormat hmaFormatter = new SimpleDateFormat("h:mm a");
             String hma = hmaFormatter.format(date);
 
-            if (DateUtil.sameAs(date, current, Calendar.DAY_OF_MONTH)) {
+            if (HPDates.sameAs(date, current, Calendar.DAY_OF_MONTH)) {
                 String today = localizer.localize("date_title_today");
                 dateString = String.format("%s %s", today, hma);
-            } else if (DateUtil.difference(current, date, Calendar.DAY_OF_MONTH) == 1) {
+            } else if (HPDates.difference(current, date, Calendar.DAY_OF_MONTH) == 1) {
                 String yesterday = localizer.localize("date_title_yesterday");
                 dateString = String.format("%s %s", yesterday, hma);
             } else {

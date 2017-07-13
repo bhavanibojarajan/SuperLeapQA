@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.HPBooleans;
-import org.swiften.javautilities.util.LogUtil;
+import org.swiften.javautilities.util.HPLog;
 import org.swiften.javautilities.number.HPNumbers;
 import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.android.AndroidEngine;
@@ -202,7 +202,7 @@ public interface DashboardValidationType extends BaseValidationType {
                                                 @NotNull CardType card) {
         return rxe_cardItems(engine, card)
             .count().toFlowable()
-            .doOnNext(a -> LogUtil.printft("%s items currently", a))
+            .doOnNext(a -> HPLog.printft("%s items currently", a))
             .map(HPNumbers::isZero)
             .onErrorReturnItem(true);
     }

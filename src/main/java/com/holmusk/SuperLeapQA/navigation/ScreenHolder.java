@@ -6,7 +6,7 @@ import com.holmusk.SuperLeapQA.navigation.type.ForwardNavigationType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.swiften.javautilities.collection.HPIterables;
-import org.swiften.javautilities.util.LogUtil;
+import org.swiften.javautilities.util.HPLog;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.navigation.NavigationSupplier;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
@@ -334,7 +334,7 @@ public final class ScreenHolder implements
                 return HPIterables.asList();
 
             default:
-                LogUtil.println(this);
+                HPLog.println(this);
                 throw new RuntimeException(NOT_AVAILABLE);
         }
     }
@@ -488,7 +488,7 @@ public final class ScreenHolder implements
                 return HPIterables.asList();
 
             default:
-                LogUtil.println(this);
+                HPLog.println(this);
                 throw new RuntimeException(NOT_AVAILABLE);
         }
     }

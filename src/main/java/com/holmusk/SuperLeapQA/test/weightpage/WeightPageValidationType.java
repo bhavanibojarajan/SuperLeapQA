@@ -5,7 +5,7 @@ import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.util.LogUtil;
+import org.swiften.javautilities.util.HPLog;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkitcomponents.xpath.XPath;
@@ -47,6 +47,6 @@ public interface WeightPageValidationType extends BaseValidationType {
         return rxe_weightProgressDisplay(ENGINE, WP)
             .map(ENGINE::getText)
             .map(Double::valueOf)
-            .doOnNext(a -> LogUtil.printft("Value for %s is %s", WP, a));
+            .doOnNext(a -> HPLog.printft("Value for %s is %s", WP, a));
     }
 }

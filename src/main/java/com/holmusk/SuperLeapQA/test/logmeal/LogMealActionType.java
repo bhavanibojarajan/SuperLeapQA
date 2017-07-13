@@ -13,7 +13,7 @@ import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.HPIterables;
 import org.swiften.javautilities.number.HPNumbers;
 import org.swiften.javautilities.object.HPObjects;
-import org.swiften.javautilities.util.LogUtil;
+import org.swiften.javautilities.util.HPLog;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
@@ -40,7 +40,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
     @NotNull
     default Flowable<?> rxa_selectMood(@NotNull final Engine<?> ENGINE,
                                        @NotNull Mood mood) {
-        LogUtil.printft("Selecting mood %s", mood);
+        HPLog.printft("Selecting mood %s", mood);
 
         if (ENGINE instanceof AndroidEngine) {
             return rxe_mood(ENGINE, mood).flatMap(ENGINE::rxa_click);

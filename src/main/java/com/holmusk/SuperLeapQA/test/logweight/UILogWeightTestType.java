@@ -14,7 +14,7 @@ import org.swiften.javautilities.number.HPNumbers;
 import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.javautilities.rx.HPReactives;
-import org.swiften.javautilities.util.LogUtil;
+import org.swiften.javautilities.util.HPLog;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.Test;
 
@@ -127,7 +127,7 @@ public interface UILogWeightTestType extends
             rxe_fieldValue(E, ChoiceInput.START_WEIGHT)
                 .compose(HPReactives.removeFromString(LOCALIZER, "uom_title_kg", "uom_title_lbs", " "))
                 .map(Double::valueOf)
-                .doOnNext(a -> LogUtil.printft("Initial weight: %s", a))
+                .doOnNext(a -> HPLog.printft("Initial weight: %s", a))
                 .flatMap(a -> Flowable.concatArray(
                     /* Click back twice to go back to main settings page */
                     THIS.rxa_clickBackButton(E).repeat(2),
@@ -138,7 +138,7 @@ public interface UILogWeightTestType extends
                         THIS.rxe_weightProgress(E, WeightProgress.PREVIOUS),
                         THIS.rxe_weightProgress(E, WeightProgress.CHANGE),
                         HPNumbers::sum
-                    ).doOnNext(b -> LogUtil.printft(
+                    ).doOnNext(b -> HPLog.printft(
                         "Initial weight should be %s, but is %s", b, a)
                     ).filter(b -> b.equals(a)
                     ).switchIfEmpty(E.rxv_error()))

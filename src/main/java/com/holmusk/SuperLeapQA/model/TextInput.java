@@ -6,7 +6,7 @@ import org.swiften.javautilities.collection.HPIterables;
 import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.javautilities.number.HPNumbers;
 import org.swiften.javautilities.string.HPStrings;
-import org.swiften.javautilities.util.LogUtil;
+import org.swiften.javautilities.util.HPLog;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.ios.IOSView;
@@ -125,7 +125,7 @@ public enum TextInput implements ErrorProviderType, HMTextType {
                 break;
 
             default:
-                LogUtil.printlnt(this);
+                HPLog.printlnt(this);
                 throw new RuntimeException(NOT_AVAILABLE);
         }
 
@@ -237,7 +237,7 @@ public enum TextInput implements ErrorProviderType, HMTextType {
                 return "mealLog_title_abbv_comment";
 
             default:
-                LogUtil.println(this);
+                HPLog.println(this);
                 throw new RuntimeException(NOT_AVAILABLE);
         }
     }
