@@ -21,9 +21,6 @@ public interface InvalidAgeActionType extends BaseActionType, InvalidAgeValidati
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxa_randomInputs(Engine, List)
-     * @see TextInput#EMAIL
-     * @see TextInput#NAME
-     * @see TextInput#PHONE
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -38,8 +35,6 @@ public interface InvalidAgeActionType extends BaseActionType, InvalidAgeValidati
      * Confirm email subscription for future program expansion.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
-     * @see HPObjects#nonNull(Object)
      * @see #invalidAgeInputProgressDelay(Engine)
      * @see #rxa_watchProgressBar(Engine)
      * @see #rxe_invalidAgeSubmit(Engine)
@@ -57,7 +52,6 @@ public interface InvalidAgeActionType extends BaseActionType, InvalidAgeValidati
      * Enter and confirm invalid age inputs.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see HPObjects#nonNull(Object)
      * @see #rxa_enterInvalidAgeInputs(Engine)
      * @see #rxa_confirmInvalidAgeInputs(Engine)
      */

@@ -9,7 +9,6 @@ import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
@@ -50,9 +49,6 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
      * {@link Factory} for the constructor.
      * @param MODE {@link UserMode} instance.
      * @param INPUT {@link TextInput} instance.
-     * @see HPObjects#nonNull(Object)
-     * @see Screen#SPLASH
-     * @see Screen#INVALID_AGE
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #generalUserModeProvider()
@@ -102,10 +98,6 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
      * clicked, the user should be brought to the confirm screen and
      * {@link Screen#REGISTER}.
      * @param mode {@link UserMode} instance.
-     * @see Engine#rxa_click(WebElement)
-     * @see HPObjects#nonNull(Object)
-     * @see Screen#INVALID_AGE
-     * @see Screen#REGISTER
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #generalUserModeProvider()

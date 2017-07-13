@@ -8,7 +8,6 @@ import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.test.photopicker.PhotoPickerActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.HPIterables;
 import org.swiften.javautilities.number.HPNumbers;
@@ -31,11 +30,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @param ENGINE {@link Engine} instance.
      * @param mood {@link Mood} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#middleCoordinate(WebElement)
-     * @see Engine#rxa_click(WebElement)
-     * @see Engine#rxa_tap(Point)
      * @see #rxe_mood(Engine, Mood)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_selectMood(@NotNull final Engine<?> ENGINE,
@@ -57,8 +52,6 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * Select a random {@link Mood} from all available {@link Mood}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see HPIterables#randomElement(Object[])
-     * @see Mood#values()
      * @see #rxa_selectMood(Engine, Mood)
      */
     @NotNull
@@ -73,7 +66,6 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @param ENGINE {@link Engine} instance.
      * @param index {@link Integer} value representing the pick index.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #rxe_photoPicker(Engine, int)
      */
     @NotNull
@@ -92,8 +84,6 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Config#MAX_PHOTO_COUNT
-     * @see HPNumbers#randomBetween(int, int)
-     * @see HPObjects#nonNull(Object)
      * @see #rxa_openPhotoPicker(Engine, int)
      * @see #rxa_selectLibraryPhotos(Engine, int)
      * @see #rxa_confirmPhoto(Engine)
@@ -133,9 +123,6 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * {@link WebElement} is already in focus.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#middleCoordinate(WebElement)
-     * @see Engine#rxa_tap(Point)
-     * @see TextInput#MEAL_DESCRIPTION
      * @see #rxe_editField(Engine, HMInputType)
      */
     @NotNull
@@ -157,7 +144,6 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * to be confirmed.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see Engine#rxe_containsText(String...)
      */
     @NotNull
@@ -177,7 +163,6 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * Open the meal time picker.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #generalDelay(Engine)
      * @see #rxe_mealTime(Engine)
      */
@@ -219,7 +204,6 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * Confirm meal time selection.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #generalDelay(Engine)
      * @see #rxe_mealTimeConfirm(Engine)
      */
@@ -248,7 +232,6 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * Submit the current meal log.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #cssLogProgressDelay(Engine)
      * @see #rxe_mealConfirm(Engine)
      */
@@ -263,8 +246,6 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * Log a new meal with random information.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see HPObjects#nonNull(Object)
-     * @see TextInput#MEAL_DESCRIPTION
      * @see #randomSelectableTime()
      * @see #rxa_selectMealPhotos(Engine)
      * @see #rxa_selectRandomMood(Engine)

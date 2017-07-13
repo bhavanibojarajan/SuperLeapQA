@@ -46,7 +46,7 @@ public enum Screen implements ScreenInitializationType {
      * @see #rxn_dashboardTutorialInitialized(Engine)
      * @see #rxn_mealPageInitialized(Engine)
      * @see #rxn_photoPickerInitialized(Engine)
-     * @see #rxn_useAppNowInitialized(Engine)
+     * @see #rxn_useAppInitialized(Engine)
      * @see #rxn_weightEntryInitialized(Engine)
      */
     @NotNull
@@ -67,7 +67,7 @@ public enum Screen implements ScreenInitializationType {
                 return a -> THIS.rxn_weightEntryInitialized(ENGINE);
 
             case USE_APP_NOW:
-                return a -> THIS.rxn_useAppNowInitialized(ENGINE);
+                return a -> THIS.rxn_useAppInitialized(ENGINE);
 
             default:
                 return a -> Flowable.just(true);

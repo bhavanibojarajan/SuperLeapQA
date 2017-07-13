@@ -9,14 +9,12 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.HPObjects;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.javautilities.protocol.ClassNameProviderType;
-import org.swiften.xtestkitcomponents.xpath.AttributeType;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
 
@@ -84,13 +82,8 @@ public interface LogMealValidationType extends BaseValidationType {
      * Get the meal time display text view.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
-     * @see CompoundAttribute.Builder#withIndex(Integer)
      * @see Engine#rxe_withXPath(XPath...)
      * @see Engine#rxe_containsID(String...)
-     * @see XPath.Builder#addAttribute(AttributeType)
-     * @see IOSView.Type#UI_STATIC_TEXT
-     * @see IOSView.Type#UI_TABLE_VIEW_CELL
      */
     @NotNull
     default Flowable<WebElement> rxe_mealTime(@NotNull Engine<?> engine) {
@@ -126,9 +119,6 @@ public interface LogMealValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_ofClass(ClassNameProviderType[])
-     * @see AndroidView.Type#SWITCH
-     * @see IOSView.Type#UI_SWITCH
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_mealLocSwitch(@NotNull Engine<?> engine) {
@@ -152,15 +142,8 @@ public interface LogMealValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @param index {@link Integer} value representing the current pick index.
      * @return {@link Flowable} instance.
-     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
-     * @see CompoundAttribute.Builder#withIndex(Integer)
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_withXPath(XPath...)
-     * @see XPath.Builder#addAttribute(AttributeType)
-     * @see IOSView.Type#UI_BUTTON
-     * @see IOSView.Type#UI_TABLE_VIEW_CELL
-     * @see Platform#IOS
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_photoPicker(@NotNull Engine<?> engine, int index) {
@@ -195,7 +178,6 @@ public interface LogMealValidationType extends BaseValidationType {
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsText(String...)
      * @see #rxe_mealTime(Engine)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_mealTimeConfirm(@NotNull Engine<?> engine) {
@@ -218,9 +200,6 @@ public interface LogMealValidationType extends BaseValidationType {
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Config#MAX_PHOTO_COUNT
-     * @see Mood#values()
-     * @see HPObjects#nonNull(Object)
-     * @see TextInput#MEAL_DESCRIPTION
      * @see #rxe_editField(Engine, HMInputType)
      * @see #rxe_mealCancel(Engine)
      * @see #rxe_mealConfirm(Engine)

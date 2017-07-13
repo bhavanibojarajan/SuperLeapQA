@@ -1,12 +1,11 @@
 package com.holmusk.SuperLeapQA.test.forgotpassword;
 
-import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.HMUITestKit.model.HMTextType;
+import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import com.holmusk.SuperLeapQA.test.login.LoginActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.base.Engine;
 
@@ -24,7 +23,6 @@ public interface ForgotPasswordActionType extends
      * Enter forgot password inputs. Should only take {@link TextInput#EMAIL}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see TextInput#EMAIL
      * @see #rxa_randomInputs(Engine, HMTextType...)
      */
     @NotNull
@@ -36,8 +34,6 @@ public interface ForgotPasswordActionType extends
      * Confirm forgot password inputs.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
-     * @see HPObjects#nonNull(Object)
      * @see #forgotPasswordProgressDelay(Engine)
      * @see #rxa_watchProgressBar(Engine)
      * @see #rxe_forgotPasswordSubmit(Engine)
@@ -55,7 +51,6 @@ public interface ForgotPasswordActionType extends
      * Enter and confirm forgot password inputs.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see HPObjects#nonNull(Object)
      * @see #rxa_enterPassRecoveryInputs(Engine)
      * @see #rxa_confirmPassRecovery(Engine)
      */
@@ -74,7 +69,6 @@ public interface ForgotPasswordActionType extends
      * Dismiss the email sent confirmation dialog.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #generalDelay(Engine)
      * @see #rxe_emailSentConfirm(Engine)
      */

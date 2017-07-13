@@ -17,9 +17,6 @@ public interface UIForgotPasswordTestType extends UIBaseTestType, ForgotPassword
     /**
      * Verify that the forgot password input succeeds in sending an email
      * and display a notification to the user.
-     * @see Screen#SPLASH
-     * @see Screen#FORGOT_PASSWORD
-     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #generalDelay(Engine)

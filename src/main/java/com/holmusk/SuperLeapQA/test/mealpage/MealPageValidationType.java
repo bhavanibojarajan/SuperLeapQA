@@ -27,10 +27,7 @@ public interface MealPageValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @param date {@link Date} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#localizer()
      * @see Engine#rxe_containsText(String...)
-     * @see LocalizerType#localize(String)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxv_hasMealTime(@NotNull Engine<?> engine, @NotNull Date date) {
@@ -69,9 +66,6 @@ public interface MealPageValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_ofClass(ClassNameProviderType[])
-     * @see AndroidView.Type#IMAGE_VIEW
-     * @see IOSView.Type#UI_IMAGE_VIEW
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_mealImage(@NotNull Engine<?> engine) {

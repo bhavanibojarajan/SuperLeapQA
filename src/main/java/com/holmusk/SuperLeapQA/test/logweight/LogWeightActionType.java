@@ -4,7 +4,6 @@ import com.holmusk.HMUITestKit.test.circlescrollselector.HMCircleScrollActionTyp
 import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.base.Engine;
 
 /**
@@ -20,7 +19,6 @@ public interface LogWeightActionType extends
      * @param E {@link Engine} instance.
      * @param ON {@link Boolean} value.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #rxe_weightLocSwitch(Engine)
      */
     @NotNull

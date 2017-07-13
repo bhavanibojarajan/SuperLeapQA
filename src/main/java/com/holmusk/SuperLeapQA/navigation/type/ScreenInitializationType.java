@@ -27,7 +27,7 @@ public interface ScreenInitializationType extends DashboardActionType, MealPageA
      * @see #rxa_dismissTrackerPopup(Engine)
      */
     @NotNull
-    default Flowable<?> rxn_useAppNowInitialized(@NotNull Engine<?> engine) {
+    default Flowable<?> rxn_useAppInitialized(@NotNull Engine<?> engine) {
         if (engine instanceof AndroidEngine) {
             return rxa_dismissTrackerPopup(engine);
         } else if (engine instanceof IOSEngine) {
@@ -47,11 +47,11 @@ public interface ScreenInitializationType extends DashboardActionType, MealPageA
      * the dialog here.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see #rxn_useAppNowInitialized(Engine)
+     * @see #rxn_useAppInitialized(Engine)
      */
     @NotNull
     default Flowable<?> rxn_dashboardTutorialInitialized(@NotNull Engine<?> engine) {
-        return rxn_useAppNowInitialized(engine);
+        return rxn_useAppInitialized(engine);
     }
 
     /**

@@ -22,11 +22,6 @@ import java.util.List;
  * Created by haipham on 13/6/17.
  */
 public interface UICSSValueTestType extends UIBaseTestType, CSSValueActionType {
-    /**
-     * {@link org.testng.annotations.DataProvider} for
-     * {@link #test_logCSS_shouldStartFromPreviousCSSValue(UserMode, Screen, Screen, HMCSSInputType)}
-     * @return {@link Iterator} instance.
-     */
     @NotNull
     @DataProvider
     static Iterator<Object[]> cssDataProvider() {

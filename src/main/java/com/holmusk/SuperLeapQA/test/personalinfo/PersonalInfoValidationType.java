@@ -13,10 +13,7 @@ import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
-import org.swiften.xtestkitcomponents.xpath.AttributeType;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
@@ -33,17 +30,8 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Attributes#containsText(String)
-     * @see Attributes#of(PlatformProviderType)
-     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
-     * @see Engine#localizer()
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_withXPath(XPath...)
-     * @see LocalizerType#localize(String)
-     * @see XPath.Builder#addAttribute(CompoundAttribute)
-     * @see IOSView.Type#UI_BUTTON
-     * @see Platform#IOS
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -71,13 +59,8 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
      * Get the Terms and Conditions checkbox.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see CompoundAttribute#forClass(ClassNameProviderType)
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_withXPath(XPath...)
-     * @see IOSView.Type#UI_BUTTON
-     * @see XPath.Builder#addAttribute(AttributeType)
-     * @see Platform#IOS
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_TCCheckBox(@NotNull Engine<?> engine) {
@@ -120,8 +103,6 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
      * {@link WebElement}.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see HPObjects#nonNull(Object)
-     * @see UserMode#personalInfo(PlatformType)
      * @see #rxe_editField(Engine, HMInputType)
      * @see #rxe_personalInfoSubmit(Engine)
      */
@@ -133,7 +114,8 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
         final PlatformType PLATFORM = ENGINE.platform();
 
         return Flowable.concatArray(
-            Flowable.fromIterable(mode.personalInfo(PLATFORM))
+            Flowable
+                .fromIterable(mode.personalInfo(PLATFORM))
                 .flatMap(a -> THIS.rxe_editField(ENGINE, a)),
 
             rxe_personalInfoSubmit(ENGINE)

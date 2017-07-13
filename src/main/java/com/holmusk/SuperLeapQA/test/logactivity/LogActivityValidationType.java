@@ -12,17 +12,12 @@ import org.swiften.xtestkit.base.Engine;
 /**
  * Created by haipham on 12/6/17.
  */
-public interface LogActivityValidationType extends
-    BaseValidationType,
-    HMCircleScrollValidationType
-{
+public interface LogActivityValidationType extends BaseValidationType, HMCircleScrollValidationType {
     /**
      * Validate
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#ACTIVITY_ENTRY}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see HPObjects#nonNull(Object)
-     * @see CSSInput#ACTIVITY
      * @see #rxe_CSSValueDisplay(Engine, HMCSSInputType)
      * @see #rxe_CSSLogTime(Engine, HMCSSInputType)
      * @see #rxe_CSSDetailEntrySubmit(Engine, HMCSSInputType)

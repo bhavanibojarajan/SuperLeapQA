@@ -9,13 +9,12 @@ import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.javautilities.object.HPObjects;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.javautilities.protocol.ClassNameProviderType;
-import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
 import org.swiften.xtestkitcomponents.xpath.*;
 
 /**
@@ -27,15 +26,7 @@ public interface LoginValidationType extends BaseValidationType {
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Attributes#containsText(String)
-     * @see Attributes#of(PlatformProviderType)
-     * @see CompoundAttribute#single(AttributeType)
-     * @see CompoundAttribute#withClass(ClassNameProviderType)
      * @see Engine#rxe_withXPath(XPath...)
-     * @see LocalizerType#localize(String)
-     * @see XPath.Builder#addAttribute(AttributeType)
-     * @see AndroidView.Type#BUTTON
-     * @see IOSView.Type#UI_BUTTON
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_submit(@NotNull final Engine<?> ENGINE) {
@@ -83,16 +74,8 @@ public interface LoginValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Attributes#containsText(String)
-     * @see Attributes#of(PlatformProviderType)
-     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
-     * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
-     * @see Engine#localizer()
      * @see Engine#rxe_containsText(LCFormat...)
      * @see Engine#rxe_withXPath(XPath...)
-     * @see IOSView.Type#UI_LINK
-     * @see LocalizerType#localize(String)
-     * @see XPath.Builder#addAttribute(AttributeType)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_loginRegister(@NotNull Engine<?> engine) {
@@ -124,9 +107,6 @@ public interface LoginValidationType extends BaseValidationType {
      * Validate {@link com.holmusk.SuperLeapQA.navigation.Screen#LOGIN}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see HPObjects#nonNull(Object)
-     * @see TextInput#EMAIL
-     * @see TextInput#PASSWORD
      * @see #rxe_editField(Engine, HMInputType)
      * @see #rxe_loginRegister(Engine)
      * @see #rxe_submit(Engine)

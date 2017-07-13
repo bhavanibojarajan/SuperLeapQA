@@ -23,11 +23,6 @@ public interface UILoginTestType extends
 {
     /**
      * Login with predefined credentials and verify that it works correctly.
-     * @see HPObjects#nonNull(Object)
-     * @see UserMode#defaultUserMode()
-     * @see UserMode#loginCredentials()
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_login(Engine, List)
@@ -59,10 +54,6 @@ public interface UILoginTestType extends
 
     /**
      * Verify that the register page can be accessed from the login page.
-     * @see UserMode#defaultUserMode()
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
-     * @see Screen#REGISTER
      * @see #assertCorrectness(TestSubscriber)
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxv_registerScreen(Engine)

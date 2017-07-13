@@ -25,11 +25,6 @@ import java.util.Date;
 public interface UILogActivityTestType extends UIBaseTestType, LogActivityActionType {
     /**
      * Log a new activity and verify that the process works correctly.
-     * @see HPObjects#nonNull(Object)
-     * @see CSSInput#ACTIVITY
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
-     * @see Screen#ACTIVITY_ENTRY
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #randomSelectableTime()
@@ -73,17 +68,6 @@ public interface UILogActivityTestType extends UIBaseTestType, LogActivityAction
     /**
      * Log a new activity and confirm that step calculations are correct. This
      * is only relevant for {@link UserMode#isTeen()}.
-     * @see Double#intValue()
-     * @see Engine#rxv_error()
-     * @see UserMode#defaultTeenUserMode()
-     * @see ActivityValue#TODAY
-     * @see Config#STEP_PER_MIN
-     * @see CSSInput#ACTIVITY
-     * @see DashboardMode#ACTIVITY
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
-     * @see Screen#DASHBOARD
-     * @see Screen#ACTIVITY_ENTRY
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)

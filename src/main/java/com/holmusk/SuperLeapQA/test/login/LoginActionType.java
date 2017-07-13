@@ -6,7 +6,6 @@ import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.functional.Tuple;
 import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.android.AndroidEngine;
@@ -21,11 +20,9 @@ import java.util.concurrent.TimeUnit;
  */
 public interface LoginActionType extends BaseActionType, LoginValidationType {
     /**
-     * Navigate to
-     * {@link com.holmusk.SuperLeapQA.navigation.Screen#FORGOT_PASSWORD}.
+     * Navigate to {@link com.holmusk.SuperLeapQA.navigation.Screen#FORGOT_PASSWORD}.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #rxe_forgotPassword(Engine)
      */
     @NotNull
@@ -34,13 +31,10 @@ public interface LoginActionType extends BaseActionType, LoginValidationType {
     }
 
     /**
-     * Navigate to
-     * {@link com.holmusk.SuperLeapQA.navigation.Screen#REGISTER}.
+     * Navigate to {@link com.holmusk.SuperLeapQA.navigation.Screen#REGISTER}.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #rxe_loginRegister(Engine)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_registerFromLogin(@NotNull final Engine<?> ENGINE) {
@@ -59,9 +53,7 @@ public interface LoginActionType extends BaseActionType, LoginValidationType {
      * Confirm login inputs.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see Engine#rxa_watchUntilHidden(Flowable)
-     * @see HPObjects#nonNull(Object)
      * @see #loginProgressDelay(Engine)
      * @see #rxe_submit(Engine)
      */
@@ -78,8 +70,6 @@ public interface LoginActionType extends BaseActionType, LoginValidationType {
      * Enter random login credentials.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see TextInput#EMAIL
-     * @see TextInput#PASSWORD
      * @see #rxa_randomInputs(Engine, List)
      */
     @NotNull
@@ -92,7 +82,6 @@ public interface LoginActionType extends BaseActionType, LoginValidationType {
      * @param engine {@link Engine} instance.
      * @param inputs {@link List} of {@link Tuple}.
      * @return {@link Flowable} instance.
-     * @see HPObjects#nonNull(Object)
      * @see #rxa_inputs(Engine, List)
      * @see #rxa_confirmLogin(Engine)
      */
@@ -110,7 +99,6 @@ public interface LoginActionType extends BaseActionType, LoginValidationType {
      * {@link UserMode#loginCredentials()}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see UserMode#loginCredentials()
      * @see #rxa_login(Engine, List)
      */
     @NotNull

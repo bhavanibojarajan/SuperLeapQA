@@ -10,7 +10,6 @@ import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.param.DirectionParam;
 import org.swiften.xtestkitcomponents.direction.Direction;
-import org.swiften.xtestkitcomponents.direction.DirectionProviderType;
 
 /**
  * Created by haipham on 31/5/17.
@@ -26,8 +25,6 @@ public interface MealPageActionType extends
      * the error.
      * @param E {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see HPBooleans#toTrue(Object)
-     * @see Engine#rxa_click(WebElement)
      * @see #rxe_mealImageTutDismiss(Engine)
      */
     @NotNull
@@ -46,14 +43,6 @@ public interface MealPageActionType extends
      * from {@link #rxe_editToggle(Engine)} can be clicked.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_swipeGeneric(WebElement, DirectionProviderType)
-     * @see Engine#rxe_window()
-     * @see com.holmusk.SuperLeapQA.navigation.Screen#MEAL_PAGE
-     * @see com.holmusk.SuperLeapQA.navigation.Screen#SEARCH
-     * @see Direction#UP_DOWN
-     * @see DirectionParam.Builder#withDirection(Direction)
-     * @see DirectionParam.Builder#withStartRatio(double)
-     * @see DirectionParam.Builder#withEndRatio(double)
      * @see #rxe_mealImage(Engine)
      */
     @NotNull
@@ -68,12 +57,10 @@ public interface MealPageActionType extends
     }
 
     /**
-     * Navigate back to
-     * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD} after
-     * searching for and deleting a meal.
-     * This is only applicable to
-     * {@link org.swiften.xtestkit.mobile.Platform#ANDROID} whereby
-     * {@link com.holmusk.SuperLeapQA.navigation.Screen#SEARCH} is still
+     * Navigate back to {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}
+     * after searching for and deleting a meal.
+     * This is only applicable to {@link org.swiften.xtestkit.mobile.Platform#ANDROID}
+     * whereby {@link com.holmusk.SuperLeapQA.navigation.Screen#SEARCH} is still
      * visible after {@link com.holmusk.SuperLeapQA.navigation.Screen#MEAL_PAGE}
      * is dismissed.
      * @param engine {@link Engine} instance.

@@ -21,8 +21,6 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
      * @param ENGINE {@link Engine} instance.
      * @param MODE {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see DOBPickerValidationType#rxv_validAgeScreen(Engine)
-     * @see Engine#rxe_containsText(String...)
      * @see #rxe_editField(Engine, HMInputType)
      */
     @NotNull
@@ -74,9 +72,8 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
      * Validate the confirmation screen after unacceptable age input is
      * submitted.
      * @return {@link Flowable} instance.
-     * @see #rxe_invalidAgeOk(Engine)
      * @see Engine#rxe_containsText(String...)
-     * @see HPObjects#nonNull(Object)
+     * @see #rxe_invalidAgeOk(Engine)
      */
     @NotNull
     @SuppressWarnings("unchecked")

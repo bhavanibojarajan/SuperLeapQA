@@ -12,14 +12,12 @@ import com.holmusk.SuperLeapQA.test.mealpage.MealPageActionType;
 import com.holmusk.SuperLeapQA.test.search.SearchActionType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
-import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.HPBooleans;
 import org.swiften.javautilities.collection.HPIterables;
 import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
-import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.testng.annotations.Test;
 
@@ -137,12 +135,6 @@ public interface UILogMealTestType extends
      * from {@link Screen#SEARCH}), when {@link Screen#MEAL_PAGE} dismisses,
      * the search result view is refreshed to reflect the deletion. Only
      * applicable to {@link org.swiften.xtestkit.mobile.Platform#ANDROID}.
-     * @see TextInput#randomInput(InputHelperType)
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
-     * @see Screen#MEAL_ENTRY
-     * @see TextInput#MEAL_DESCRIPTION
-     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
@@ -206,19 +198,7 @@ public interface UILogMealTestType extends
      * We then verify that the messages can be searched from
      * {@link Screen#SEARCH}, but will not be so after we delete the meal from
      * the database.
-     * @see HPBooleans#toTrue(Object)
      * @see Engine#rxa_clearSearchBar()
-     * @see Engine#rxa_click(WebElement)
-     * @see Engine#rxv_error()
-     * @see HPObjects#nonNull(Object)
-     * @see TextInput#randomInput(InputHelperType)
-     * @see Screen#SPLASH
-     * @see Screen#LOGIN
-     * @see Screen#MEAL_PAGE
-     * @see Screen#CHAT
-     * @see Screen#SEARCH
-     * @see TextInput#MEAL_COMMENT
-     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)

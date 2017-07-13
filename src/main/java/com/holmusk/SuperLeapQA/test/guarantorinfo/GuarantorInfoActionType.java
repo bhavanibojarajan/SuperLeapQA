@@ -5,7 +5,6 @@ import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
@@ -22,9 +21,6 @@ public interface GuarantorInfoActionType extends BaseActionType, GuarantorInfoVa
      * @param ENGINE {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
-     * @see HPObjects#nonNull(Object)
-     * @see UserMode#requiresGuarantor()
      * @see #registerProgressDelay(Engine)
      * @see #rxa_watchProgressBar(Engine)
      * @see #rxe_guarantorInfoSubmit(Engine)
@@ -49,9 +45,6 @@ public interface GuarantorInfoActionType extends BaseActionType, GuarantorInfoVa
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#platform()
-     * @see UserMode#guarantorInfo(PlatformType)
-     * @see UserMode#requiresGuarantor()
      * @see #rxa_randomInput(Engine, HMTextType)
      */
     @NotNull
@@ -70,7 +63,6 @@ public interface GuarantorInfoActionType extends BaseActionType, GuarantorInfoVa
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see HPObjects#nonNull(Object)
      * @see #rxa_enterGuarantorInfo(Engine, UserMode)
      * @see #rxa_confirmGuarantorInfo(Engine, UserMode)
      */

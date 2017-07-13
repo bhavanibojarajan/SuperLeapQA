@@ -23,9 +23,6 @@ public interface LogWeightValidationType extends HMCircleScrollValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_ofClass(ClassNameProviderType[])
-     * @see AndroidView.Type#SWITCH
-     * @see IOSView.Type#UI_SWITCH
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_weightLocSwitch(@NotNull Engine<?> engine) {
@@ -49,8 +46,6 @@ public interface LogWeightValidationType extends HMCircleScrollValidationType {
      * weight entry screen.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see HPObjects#nonNull(Object)
-     * @see CSSInput#WEIGHT
      * @see #rxe_CSSValueDisplay(Engine, HMCSSInputType)
      * @see #rxe_CSSDetailEntrySubmit(Engine, HMCSSInputType)
      * @see #rxe_weightLocSwitch(Engine)

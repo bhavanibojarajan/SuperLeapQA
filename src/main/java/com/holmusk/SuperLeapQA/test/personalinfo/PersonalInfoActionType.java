@@ -6,7 +6,6 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
-import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.mobile.Platform;
@@ -25,8 +24,6 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @param ACCEPTED {@link Boolean} value.
      * @return {@link Flowable} instance.
      * @see #rxe_TCCheckBox(Engine)
-     * @see Engine#toggleCheckBox(WebElement, boolean)
-     * @see Engine#click(WebElement)
      */
     @NotNull
     default Flowable<?> rxa_toggleTC(@NotNull final Engine<?> ENGINE,
@@ -38,9 +35,6 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * Enter random personal info inputs in order to access the next screen.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_hideKeyboard()
-     * @see HPObjects#nonNull(Object)
-     * @see UserMode#personalInfo(PlatformType)
      * @see #rxa_randomInputs(Engine, List)
      * @see #rxa_toggleTC(Engine, boolean)
      */
@@ -63,8 +57,6 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * Click the submit button to confirm personal info inputs.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
-     * @see HPObjects#nonNull(Object)
      * @see #personalInfoProgressDelay(Engine)
      * @see #rxa_watchProgressBar(Engine)
      * @see #rxe_personalInfoSubmit(Engine)
@@ -83,7 +75,6 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see HPObjects#nonNull(Object)
      * @see #rxa_enterPersonalInfo(Engine, UserMode)
      * @see #rxa_confirmPersonalInfo(Engine)
      */
@@ -109,12 +100,6 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * browser.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_tap(Point)
-     * @see Dimension#getHeight()
-     * @see Point#getX()
-     * @see Point#getY()
-     * @see WebElement#getLocation()
-     * @see WebElement#getSize()
      * @see #webViewDelay(Engine)
      * @see #rxe_TCAcceptanceLabel(Engine)
      */

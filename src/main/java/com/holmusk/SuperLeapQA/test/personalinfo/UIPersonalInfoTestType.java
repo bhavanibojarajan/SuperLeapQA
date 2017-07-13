@@ -60,7 +60,6 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * {@link Platform#IOS} there is no way to reveal the password content.
      * @see Engine#isShowingPassword(WebElement)
      * @see Engine#rxa_togglePasswordMask(WebElement)
-     * @see UserMode#defaultUserMode()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
@@ -226,6 +225,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * @see #rxa_randomInputs(Engine, List)
      * @see #rxa_confirmGuarantorInfo(Engine, UserMode)
      * @see #rxe_progressBar(Engine)
+     * @see #rxn_useAppInitialized(Engine)
      * @see #rxv_useAppNow(Engine)
      */
     @SuppressWarnings("unchecked")
@@ -244,6 +244,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
             rxa_navigate(MODE, Screen.SPLASH, Screen.GUARANTOR_INFO),
             rxa_randomInputs(engine, INPUTS),
             rxa_confirmGuarantorInfo(engine, MODE),
+            rxn_useAppInitialized(engine),
             rxv_useAppNow(engine)
         ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
