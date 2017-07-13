@@ -2,7 +2,7 @@ package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.HMUITestKit.model.HMTextChoiceType;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.collection.CollectionUtil;
+import org.swiften.javautilities.collection.HPIterables;
 import org.swiften.javautilities.localizer.LocalizerType;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
@@ -65,13 +65,13 @@ public enum ChoiceInput implements HMTextChoiceType {
     public List<? extends HMTextChoiceType.Item> allTextChoices() {
         switch (this) {
             case GENDER:
-                return CollectionUtil.asList(Gender.values());
+                return HPIterables.asList(Gender.values());
 
             case ETHNICITY:
-                return CollectionUtil.asList(Ethnicity.values());
+                return HPIterables.asList(Ethnicity.values());
 
             case COACH_PREF:
-                return CollectionUtil.asList(CoachPref.values());
+                return HPIterables.asList(CoachPref.values());
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);

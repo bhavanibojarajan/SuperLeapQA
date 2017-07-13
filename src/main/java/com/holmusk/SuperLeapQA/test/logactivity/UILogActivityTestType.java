@@ -12,7 +12,7 @@ import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.util.LogUtil;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.Test;
@@ -25,7 +25,7 @@ import java.util.Date;
 public interface UILogActivityTestType extends UIBaseTestType, LogActivityActionType {
     /**
      * Log a new activity and verify that the process works correctly.
-     * @see ObjectUtil#nonNull(Object) 
+     * @see HPObjects#nonNull(Object)
      * @see CSSInput#ACTIVITY
      * @see Screen#SPLASH
      * @see Screen#LOGIN
@@ -62,7 +62,7 @@ public interface UILogActivityTestType extends UIBaseTestType, LogActivityAction
             rxa_confirmCSSTime(engine, input),
             rxa_submitCSSEntry(engine, input),
             rxv_hasCSSTime(engine, time)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -131,7 +131,7 @@ public interface UILogActivityTestType extends UIBaseTestType, LogActivityAction
                                 .filter(c -> c % STEP_PER_MIN == 0)
                                 .switchIfEmpty(ENGINE.rxv_error("Steps do not match"))
                         ))))
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

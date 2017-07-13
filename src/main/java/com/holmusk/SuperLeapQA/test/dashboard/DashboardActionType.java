@@ -8,9 +8,9 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.object.ObjectUtil;
-import org.swiften.javautilities.rx.RxUtil;
+import org.swiften.javautilities.bool.HPBooleans;
+import org.swiften.javautilities.object.HPObjects;
+import org.swiften.javautilities.rx.HPReactives;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.element.swipe.SwipeParam;
@@ -33,7 +33,7 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      * Dismiss the tracker change popup. We declare "Not now" by default.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see BooleanUtil#toTrue(Object)
+     * @see HPBooleans#toTrue(Object)
      * @see Engine#rxa_click(WebElement)
      * @see Engine#rxe_containsText(String...)
      */
@@ -44,7 +44,7 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
             .firstElement()
             .toFlowable()
             .flatMap(ENGINE::rxa_click)
-            .map(BooleanUtil::toTrue)
+            .map(HPBooleans::toTrue)
             .onErrorReturnItem(true);
     }
 
@@ -83,7 +83,7 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      * after a period of inactivity.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see BooleanUtil#toTrue(Object)
+     * @see HPBooleans#toTrue(Object)
      * @see DirectionParam.Builder#withAnchorRLPosition(RLPositionType)
      * @see DirectionParam.Builder#withDirection(Direction)
      * @see DirectionParam.Builder#withEndRatio(double)
@@ -134,7 +134,7 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
                 rxa_revealCardAdd(ENGINE),
                 rxe_addCard(ENGINE).flatMap(ENGINE::rxa_click)
             )
-            .all(ObjectUtil::nonNull).toFlowable()
+            .all(HPObjects::nonNull).toFlowable()
             .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 
@@ -180,14 +180,14 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
         return Flowable.concatArray(
             rxe_cardSelector(ENGINE, card).flatMap(ENGINE::rxa_click),
             rxa_dismissCardIntro(ENGINE)
-        ).all(ObjectUtil::nonNull).toFlowable();
+        ).all(HPObjects::nonNull).toFlowable();
     }
 
     /**
      * Dismiss the card intro popup, if it is present on the screen.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see BooleanUtil#toTrue(Object)
+     * @see HPBooleans#toTrue(Object)
      * @see Engine#rxa_click(WebElement)
      * @see #generalDelay(Engine)
      * @see #rxe_cardIntroDismiss(Engine)
@@ -197,7 +197,7 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
         return rxe_cardIntroDismiss(ENGINE)
             .flatMap(ENGINE::rxa_click)
             .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
-            .map(BooleanUtil::toTrue)
+            .map(HPBooleans::toTrue)
             .onErrorReturnItem(false);
     }
 
@@ -214,8 +214,8 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      * this does is simply opening up the menu then closing it.
      * @param E {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
-     * @see RxUtil#concatDelayEach(long, Flowable[])
+     * @see HPObjects#nonNull(Object)
+     * @see HPReactives#concatDelayEach(long, Flowable[])
      * @see #generalDelay(Engine)
      * @see #rxa_openCardAddMenu(Engine)
      * @see #rxa_dismissCardAddMenu(Engine)
@@ -230,16 +230,16 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
         if (E instanceof AndroidEngine) {
             return E.rxe_containsText("dashboard_title_tapToMakeFirstEntry")
                 .flatMap(a -> THIS.rxa_dismissCardAddMenu(E))
-                .map(BooleanUtil::toTrue)
+                .map(HPBooleans::toTrue)
                 .onErrorReturnItem(true);
         } else if (E instanceof IOSEngine) {
-            return RxUtil
+            return HPReactives
                 .concatDelayEach(
                     generalDelay(E),
                     rxa_openCardAddMenu(E).ofType(Object.class),
                     rxa_dismissCardAddMenu(E).ofType(Object.class)
                 )
-                .all(ObjectUtil::nonNull)
+                .all(HPObjects::nonNull)
                 .toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);

@@ -8,7 +8,7 @@ import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.DataProvider;
@@ -92,9 +92,9 @@ public interface UICSSValueTestType extends UIBaseTestType, CSSValueActionType {
                             .switchIfEmpty(ENGINE.rxv_error()),
 
                         THIS.rxa_dashboardFromCSSEntry(ENGINE)
-                    ).all(ObjectUtil::nonNull).toFlowable())
-            ).all(ObjectUtil::nonNull).toFlowable().repeat(3)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+                    ).all(HPObjects::nonNull).toFlowable())
+            ).all(HPObjects::nonNull).toFlowable().repeat(3)
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

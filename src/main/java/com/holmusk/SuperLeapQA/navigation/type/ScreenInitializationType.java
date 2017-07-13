@@ -5,8 +5,8 @@ import com.holmusk.SuperLeapQA.test.dashboard.DashboardActionType;
 import com.holmusk.SuperLeapQA.test.mealpage.MealPageActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.bool.HPBooleans;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
@@ -34,7 +34,7 @@ public interface ScreenInitializationType extends DashboardActionType, MealPageA
             return Flowable.concatArray(
                 engine.rxa_acceptAlert(),
                 rxa_dismissTrackerPopup(engine)
-            ).all(ObjectUtil::nonNull).toFlowable();
+            ).all(HPObjects::nonNull).toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -72,7 +72,7 @@ public interface ScreenInitializationType extends DashboardActionType, MealPageA
             .timer(photoPickerScreenDelay(ENGINE), TimeUnit.MILLISECONDS)
             .flatMap(a -> Flowable.range(0, 3))
             .concatMap(a -> ENGINE.rxa_acceptAlert())
-            .all(BooleanUtil::isTrue)
+            .all(HPBooleans::isTrue)
             .toFlowable();
     }
 

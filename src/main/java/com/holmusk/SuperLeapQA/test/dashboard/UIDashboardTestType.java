@@ -8,9 +8,9 @@ import com.holmusk.SuperLeapQA.test.card.CardItemHelperType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
-import org.swiften.javautilities.test.TestNGUtil;
+import org.swiften.javautilities.test.TestNGs;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -28,7 +28,7 @@ public interface UIDashboardTestType extends
     /**
      * Provide {@link CardType} that can be deleted.
      * @return {@link Iterator} instance.
-     * @see TestNGUtil#oneFromEach(Object[]...)
+     * @see TestNGs#oneFromEach(Object[]...)
      * @see CardType#MEAL
      * @see CardType#WEIGHT
      * @see UserMode#PARENT
@@ -37,7 +37,7 @@ public interface UIDashboardTestType extends
     @NotNull
     @DataProvider
     static Iterator<Object[]> deletableCardProvider() {
-        return TestNGUtil.oneFromEach(
+        return TestNGs.oneFromEach(
             new Object[] {
                 UserMode.PARENT
 //                UserMode.TEEN_A18
@@ -57,7 +57,7 @@ public interface UIDashboardTestType extends
      * much faster.
      * @param mode {@link UserMode} instance.
      * @param card {@link CardType} instance.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see Screen#SPLASH
      * @see Screen#DASHBOARD
      * @see #deletableCardProvider()
@@ -80,7 +80,7 @@ public interface UIDashboardTestType extends
         Flowable.concatArray(
             rxa_navigate(mode, Screen.SPLASH, Screen.DASHBOARD),
             rxa_revealAndDeleteCardItems(engine, card)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

@@ -13,9 +13,9 @@ import com.holmusk.SuperLeapQA.test.search.SearchActionType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.collection.CollectionUtil;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.bool.HPBooleans;
+import org.swiften.javautilities.collection.HPIterables;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
@@ -74,7 +74,7 @@ public interface UILogMealTestType extends
         Date time = randomSelectableTime();
         TextInput dscInput = TextInput.MEAL_DESCRIPTION;
         String description = dscInput.randomInput(engine);
-        Mood mood = CollectionUtil.randomElement(Mood.values());
+        Mood mood = HPIterables.randomElement(Mood.values());
         UserMode mode = UserMode.defaultUserMode();
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
@@ -84,7 +84,7 @@ public interface UILogMealTestType extends
                 engine.rxe_containsText(description),
                 rxv_hasMealTime(engine, time)
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
 
         // When
@@ -121,10 +121,10 @@ public interface UILogMealTestType extends
             /* At this stage, the meal should have been cleared from the
              * search result. If it is still present, throw an error */
             rxe_searchResult(engine, description)
-                .map(BooleanUtil::toTrue)
+                .map(HPBooleans::toTrue)
                 .flatMap(b -> engine.rxv_error())
                 .onErrorReturnItem(true)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -192,7 +192,7 @@ public interface UILogMealTestType extends
             rxa_openEditMenu(ENGINE),
             rxa_deleteFromMenu(ENGINE),
             rxv_searchResultMustBeEmpty(ENGINE)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -206,11 +206,11 @@ public interface UILogMealTestType extends
      * We then verify that the messages can be searched from
      * {@link Screen#SEARCH}, but will not be so after we delete the meal from
      * the database.
-     * @see BooleanUtil#toTrue(Object)
+     * @see HPBooleans#toTrue(Object)
      * @see Engine#rxa_clearSearchBar()
      * @see Engine#rxa_click(WebElement)
      * @see Engine#rxv_error()
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see TextInput#randomInput(InputHelperType)
      * @see Screen#SPLASH
      * @see Screen#LOGIN
@@ -297,7 +297,7 @@ public interface UILogMealTestType extends
                     THIS.rxv_searchResultMustBeEmpty(ENGINE),
                     ENGINE.rxa_clearSearchBar())
                 )
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

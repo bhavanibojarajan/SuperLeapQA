@@ -6,7 +6,7 @@ import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.bool.HPBooleans;
 import org.swiften.javautilities.util.LogUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
@@ -43,7 +43,7 @@ public interface SettingActionType extends BaseActionType, SettingValidationType
      * @param ENGINE {@link Engine} instance.
      * @param unit {@link UnitSystem} instance.
      * @return {@link Flowable} instance.
-     * @see BooleanUtil#isTrue(Object)
+     * @see HPBooleans#isTrue(Object)
      * @see CompoundAttribute#forClass(ClassNameProviderType)
      * @see CompoundAttribute.Builder#withClass(ClassNameProviderType)
      * @see CompoundAttribute.Builder#withIndex(Integer)
@@ -64,7 +64,7 @@ public interface SettingActionType extends BaseActionType, SettingValidationType
         int index = unitSystemSettingIndex(ENGINE, unit);
 
         if (ENGINE instanceof AndroidEngine) {
-            String value = String.valueOf(BooleanUtil.isTrue(index));
+            String value = String.valueOf(HPBooleans.isTrue(index));
             String onValue = ENGINE.switcherOnValue();
             final boolean ON = value.equals(onValue);
 

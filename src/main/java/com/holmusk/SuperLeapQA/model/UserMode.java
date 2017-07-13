@@ -4,8 +4,8 @@ import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.HMUITestKit.model.HMTextType;
 import com.holmusk.SuperLeapQA.navigation.Screen;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.collection.CollectionUtil;
-import org.swiften.javautilities.collection.Zip;
+import org.swiften.javautilities.collection.HPIterables;
+import org.swiften.javautilities.functional.Tuple;
 import org.swiften.xtestkitcomponents.common.ErrorProviderType;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 import org.swiften.xtestkit.mobile.Platform;
@@ -96,22 +96,22 @@ public enum UserMode implements ErrorProviderType, ValueRangeConverterType<Integ
 
     /**
      * Get the default login credentials for the current {@link UserMode}.
-     * @return {@link List} of {@link Zip}.
+     * @return {@link List} of {@link Tuple}.
      */
     @NotNull
-    public List<Zip<HMTextType,String>> loginCredentials() {
+    public List<Tuple<HMTextType,String>> loginCredentials() {
         switch (this) {
             case PARENT:
                 return Arrays.asList(
-                    Zip.of(TextInput.EMAIL, "haipham-parent@gmail.com"),
-                    Zip.of(TextInput.PASSWORD, "12345678")
+                    Tuple.of(TextInput.EMAIL, "haipham-parent@gmail.com"),
+                    Tuple.of(TextInput.PASSWORD, "12345678")
                 );
 
             case TEEN_A18:
             case TEEN_U18:
                 return Arrays.asList(
-                    Zip.of(TextInput.EMAIL, "haipham-teen@gmail.com"),
-                    Zip.of(TextInput.PASSWORD, "12345678")
+                    Tuple.of(TextInput.EMAIL, "haipham-teen@gmail.com"),
+                    Tuple.of(TextInput.PASSWORD, "12345678")
                 );
 
             default:
@@ -129,7 +129,7 @@ public enum UserMode implements ErrorProviderType, ValueRangeConverterType<Integ
     @NotNull
     public List<HMTextType> validAgeInfo(@NotNull PlatformType platform) {
         if (isParent()) {
-            return CollectionUtil.asList(
+            return HPIterables.asList(
                 TextInput.CHILD_NAME,
                 TextInput.CHILD_NRIC
             );

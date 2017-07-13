@@ -2,7 +2,7 @@ package com.holmusk.SuperLeapQA.test.invalidage;
 
 import com.holmusk.HMUITestKit.model.HMInputType;
 import com.holmusk.SuperLeapQA.test.dob.DOBPickerValidationType;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
@@ -38,7 +38,7 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
                 rxe_editField(ENGINE, TextInput.PHONE),
                 rxe_editField(ENGINE, TextInput.EMAIL)
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 
@@ -76,7 +76,7 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
      * @return {@link Flowable} instance.
      * @see #rxe_invalidAgeOk(Engine)
      * @see Engine#rxe_containsText(String...)
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -87,7 +87,7 @@ public interface InvalidAgeValidationType extends DOBPickerValidationType {
                 ENGINE.rxe_containsText("register_title_thanksForInterest"),
                 ENGINE.rxe_containsText("register_title_notifyOnLaunch")
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 }

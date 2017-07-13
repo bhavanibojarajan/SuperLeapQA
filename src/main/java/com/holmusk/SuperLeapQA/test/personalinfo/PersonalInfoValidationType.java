@@ -7,7 +7,7 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.localizer.LocalizerType;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
@@ -120,7 +120,7 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
      * {@link WebElement}.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see UserMode#personalInfo(PlatformType)
      * @see #rxe_editField(Engine, HMInputType)
      * @see #rxe_personalInfoSubmit(Engine)
@@ -137,6 +137,6 @@ public interface PersonalInfoValidationType extends ValidAgeValidationType {
                 .flatMap(a -> THIS.rxe_editField(ENGINE, a)),
 
             rxe_personalInfoSubmit(ENGINE)
-        ).all(ObjectUtil::nonNull).toFlowable();
+        ).all(HPObjects::nonNull).toFlowable();
     }
 }

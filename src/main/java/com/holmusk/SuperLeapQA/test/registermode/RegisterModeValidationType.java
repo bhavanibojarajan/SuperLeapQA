@@ -5,8 +5,8 @@ import com.holmusk.SuperLeapQA.test.welcome.WelcomeValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.object.ObjectUtil;
-import org.swiften.javautilities.rx.RxUtil;
+import org.swiften.javautilities.object.HPObjects;
+import org.swiften.javautilities.rx.HPReactives;
 import org.swiften.xtestkit.base.Engine;
 
 /**
@@ -20,7 +20,7 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
      * @return {@link Flowable} instance.
      * @see UserMode#registerButtonText()
      * @see Engine#rxe_containsText(String...)
-     * @see RxUtil#error(String)
+     * @see HPReactives#error(String)
      */
     @NotNull
     default Flowable<WebElement> rxe_signUpMode(@NotNull Engine<?> engine,
@@ -52,7 +52,7 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
      * @see Engine#rxe_containsText(String...)
      * @see #rxe_signUpMode(Engine, UserMode)
      * @see #rxe_backButtonTitle(Engine)
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -69,7 +69,7 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
                 rxe_signUpMode(engine, UserMode.TEEN_U18),
                 rxe_backButtonTitle(engine)
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 }

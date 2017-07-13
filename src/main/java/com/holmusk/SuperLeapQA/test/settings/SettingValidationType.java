@@ -6,7 +6,7 @@ import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputHelperType;
@@ -36,7 +36,7 @@ public interface SettingValidationType extends BaseValidationType {
      * Validate {@link com.holmusk.SuperLeapQA.navigation.Screen#SETTINGS}.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see Setting#values()
      * @see #rxe_backButton(Engine)
      * @see #rxe_setting(Engine, Setting)
@@ -51,7 +51,7 @@ public interface SettingValidationType extends BaseValidationType {
                 .flatMap(a -> THIS.rxe_setting(ENGINE, a)),
 
             rxe_backButton(ENGINE)
-        ).all(ObjectUtil::nonNull).toFlowable();
+        ).all(HPObjects::nonNull).toFlowable();
     }
 
     /**

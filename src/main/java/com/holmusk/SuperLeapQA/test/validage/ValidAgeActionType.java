@@ -12,10 +12,10 @@ import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.collection.CollectionUtil;
-import org.swiften.javautilities.collection.Zip;
-import org.swiften.javautilities.object.ObjectUtil;
-import org.swiften.javautilities.rx.RxUtil;
+import org.swiften.javautilities.collection.HPIterables;
+import org.swiften.javautilities.functional.Tuple;
+import org.swiften.javautilities.object.HPObjects;
+import org.swiften.javautilities.rx.HPReactives;
 import org.swiften.javautilities.util.LogUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
@@ -40,7 +40,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @return {@link Flowable} instance.
      * @see ChoiceInput#GENDER
      * @see Gender#stringValue(InputHelperType)
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see #rxa_clickInput(Engine, HMInputType)
      * @see #rxa_selectChoice(Engine, HMChoiceType, String)
      * @see #rxa_confirmTextChoice(Engine)
@@ -61,7 +61,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
                     rxa_selectChoice(engine, choice, genderString),
                     rxa_confirmTextChoice(engine)
                 )
-                .all(ObjectUtil::nonNull)
+                .all(HPObjects::nonNull)
                 .toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
@@ -91,7 +91,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @param choice {@link HMChoiceType} instance.
      * @param numeric {@link SLNumericChoiceType} instance.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see #rxa_clickInput(Engine, HMInputType)
      * @see #NOT_AVAILABLE
      */
@@ -103,22 +103,22 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
         @NotNull SLNumericChoiceType numeric
     ) {
         if (engine instanceof AndroidEngine) {
-            return RxUtil
+            return HPReactives
                 .concatDelayEach(
                     generalDelay(engine),
                     rxa_clickInput(engine, numeric),
                     rxa_clickInput(engine, choice)
                 )
-                .all(ObjectUtil::nonNull)
+                .all(HPObjects::nonNull)
                 .toFlowable();
         } else if (engine instanceof IOSEngine) {
-            return RxUtil
+            return HPReactives
                 .concatDelayEach(
                     generalDelay(engine),
                     rxa_clickInput(engine, choice),
                     rxa_clickInput(engine, numeric)
                 )
-                .all(ObjectUtil::nonNull)
+                .all(HPObjects::nonNull)
                 .toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
@@ -150,7 +150,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * the user is already in the acceptable age input screen.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see #validAgeInputProgressDelay(Engine)
      * @see #rxa_watchProgressBar(Engine)
      * @see #rxe_validAgeConfirm(Engine)
@@ -161,7 +161,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
             rxe_validAgeConfirm(ENGINE).flatMap(ENGINE::rxa_click),
             Flowable.timer(validAgeInputProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
             rxa_watchProgressBar(ENGINE)
-        ).all(ObjectUtil::nonNull).toFlowable();
+        ).all(HPObjects::nonNull).toFlowable();
     }
 
     /**
@@ -181,7 +181,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @see BMIResult#weight()
      * @see BMIUtil#findBMIResult(PlatformType, UserMode, UnitSystem, BMIParam, boolean)
      * @see CoachPref#values()
-     * @see CollectionUtil#randomElement(Object[])
+     * @see HPIterables#randomElement(Object[])
      * @see Ethnicity#values()
      * @see Gender#values()
      * @see Height#randomValue(UserMode)
@@ -192,7 +192,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @see ChoiceInput#HEIGHT
      * @see ChoiceInput#WEIGHT
      * @see com.holmusk.SuperLeapQA.navigation.Screen#PERSONAL_INFO
-     * @see Zip#A
+     * @see Tuple#A
      * @see #rxa_selectGender(Engine, Gender)
      * @see #rxa_clickInput(Engine, HMInputType)
      * @see #rxa_selectChoice(Engine, HMChoiceType, String)
@@ -207,10 +207,10 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
                                                 @NotNull UserMode mode,
                                                 boolean validBMI) {
         PlatformType platform = engine.platform();
-        UnitSystem unit = CollectionUtil.randomElement(UnitSystem.values());
-        Gender gender = CollectionUtil.randomElement(Gender.values());
-        Ethnicity ethnicity = CollectionUtil.randomElement(Ethnicity.values());
-        CoachPref coachPref = CollectionUtil.randomElement(CoachPref.values());
+        UnitSystem unit = HPIterables.randomElement(UnitSystem.values());
+        Gender gender = HPIterables.randomElement(Gender.values());
+        Ethnicity ethnicity = HPIterables.randomElement(Ethnicity.values());
+        CoachPref coachPref = HPIterables.randomElement(CoachPref.values());
         ChoiceInput cHeight = ChoiceInput.HEIGHT;
         ChoiceInput cWeight = ChoiceInput.WEIGHT;
         ChoiceInput cEthnicity = ChoiceInput.ETHNICITY;
@@ -218,8 +218,8 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
 
         BMIParam param = BMIParam.builder().withEthnicity(ethnicity).withGender(gender).build();
         BMIResult result = BMIUtil.findBMIResult(platform, mode, unit, param, validBMI);
-        List<Zip<Height,String>> height = result.height();
-        List<Zip<Weight,String>> weight = result.weight();
+        List<Tuple<Height,String>> height = result.height();
+        List<Tuple<Weight,String>> weight = result.weight();
         Height hMode = height.get(0).A;
         Weight wMode = weight.get(0).A;
 
@@ -252,7 +252,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
                 rxa_selectChoice(engine, cCoach, coachPref.stringValue(engine)),
                 rxa_confirmTextChoice(engine)
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 
@@ -263,7 +263,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @param validBMI {@link Boolean} value.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_navigateBackOnce()
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see #rxa_enterValidAgeInputs(Engine, UserMode, boolean)
      * @see #rxa_scrollToBottom(Engine)
      * @see #rxa_confirmValidAgeInputs(Engine)
@@ -287,7 +287,7 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
                     }),
                 rxa_confirmValidAgeInputs(ENGINE)
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 

@@ -6,7 +6,7 @@ import com.holmusk.SuperLeapQA.model.CSSInput;
 import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.base.Engine;
 
 /**
@@ -21,7 +21,7 @@ public interface LogActivityValidationType extends
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#ACTIVITY_ENTRY}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see CSSInput#ACTIVITY
      * @see #rxe_CSSValueDisplay(Engine, HMCSSInputType)
      * @see #rxe_CSSLogTime(Engine, HMCSSInputType)
@@ -38,7 +38,7 @@ public interface LogActivityValidationType extends
                 rxe_CSSLogTime(engine, input),
                 rxe_CSSDetailEntrySubmit(engine, input)
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 }

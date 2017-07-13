@@ -28,8 +28,8 @@ import com.holmusk.SuperLeapQA.test.welcome.WelcomeActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.collection.CollectionUtil;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.collection.HPIterables;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.base.Engine;
 
 import java.util.List;
@@ -176,7 +176,7 @@ public interface ForwardNavigationType extends
             rxa_openDoBPicker(engine),
             rxa_selectDoBToBeOfAge(engine, age),
             rxa_confirmDoB(engine)
-        ).all(ObjectUtil::nonNull).toFlowable();
+        ).all(HPObjects::nonNull).toFlowable();
     }
 
     /**
@@ -207,7 +207,7 @@ public interface ForwardNavigationType extends
     default Flowable<?> rxn_DoBPicker_validAge(@NotNull Engine<?> engine,
                                                @NotNull UserMode mode) {
         List<Integer> range = mode.validAgeRange();
-        int age = CollectionUtil.randomElement(range);
+        int age = HPIterables.randomElement(range);
         return rxn_DoBPicker_ageInput(engine, age);
     }
 

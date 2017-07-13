@@ -5,9 +5,9 @@ import com.holmusk.SuperLeapQA.navigation.type.ScreenInitializationType;
 import com.holmusk.SuperLeapQA.test.dashboard.DashboardActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.object.ObjectUtil;
-import org.swiften.javautilities.rx.RxUtil;
+import org.swiften.javautilities.bool.HPBooleans;
+import org.swiften.javautilities.object.HPObjects;
+import org.swiften.javautilities.rx.HPReactives;
 import org.swiften.xtestkit.base.Engine;
 
 /**
@@ -32,7 +32,7 @@ public interface CardItemHelperType extends DashboardActionType, ScreenInitializ
             rxn_cardItemPageInitialized(engine, card),
             rxa_openEditMenu(engine),
             rxa_deleteFromMenu(engine)
-        ).all(ObjectUtil::nonNull).toFlowable();
+        ).all(HPObjects::nonNull).toFlowable();
     }
 
     /**
@@ -40,7 +40,7 @@ public interface CardItemHelperType extends DashboardActionType, ScreenInitializ
      * @param engine {@link Engine} instance.
      * @param card {@link CardType} instance.
      * @return {@link Flowable} instance.
-     * @see RxUtil#doWhile(Flowable, Flowable, Object)
+     * @see HPReactives#doWhile(Flowable, Flowable, Object)
      * @see #rxa_deleteFirstCardItem(Engine, CardType)
      * @see #rxv_cardListEmpty(Engine, CardType)
      * @see #rxv_cardListNotEmpty(Engine, CardType)
@@ -49,15 +49,15 @@ public interface CardItemHelperType extends DashboardActionType, ScreenInitializ
     default Flowable<?> rxa_deleteAllCardItems(@NotNull Engine<?> engine,
                                                @NotNull CardType card) {
         return Flowable.concatArray(
-            RxUtil.doWhile(
+            HPReactives.doWhile(
                 rxa_deleteFirstCardItem(engine, card),
                 rxv_cardListNotEmpty(engine, card)
             ),
 
             rxv_cardListEmpty(engine, card)
-                .filter(BooleanUtil::isTrue)
+                .filter(HPBooleans::isTrue)
                 .switchIfEmpty(engine.rxv_error())
-        ).all(ObjectUtil::nonNull).toFlowable();
+        ).all(HPObjects::nonNull).toFlowable();
     }
 
     /**
@@ -76,6 +76,6 @@ public interface CardItemHelperType extends DashboardActionType, ScreenInitializ
             rxa_revealCardList(engine),
             rxa_dashboardCardTab(engine, card),
             rxa_deleteAllCardItems(engine, card)
-        ).all(ObjectUtil::nonNull).toFlowable();
+        ).all(HPObjects::nonNull).toFlowable();
     }
 }

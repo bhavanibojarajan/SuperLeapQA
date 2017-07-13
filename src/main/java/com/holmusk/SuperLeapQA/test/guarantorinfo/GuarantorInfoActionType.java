@@ -6,7 +6,7 @@ import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 
@@ -23,7 +23,7 @@ public interface GuarantorInfoActionType extends BaseActionType, GuarantorInfoVa
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see UserMode#requiresGuarantor()
      * @see #registerProgressDelay(Engine)
      * @see #rxa_watchProgressBar(Engine)
@@ -37,7 +37,7 @@ public interface GuarantorInfoActionType extends BaseActionType, GuarantorInfoVa
                 rxe_guarantorInfoSubmit(ENGINE).flatMap(ENGINE::rxa_click),
                 Flowable.timer(registerProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
                 rxa_watchProgressBar(ENGINE)
-            ).all(ObjectUtil::nonNull).toFlowable();
+            ).all(HPObjects::nonNull).toFlowable();
         } else {
             return Flowable.just(true);
         }
@@ -70,7 +70,7 @@ public interface GuarantorInfoActionType extends BaseActionType, GuarantorInfoVa
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see #rxa_enterGuarantorInfo(Engine, UserMode)
      * @see #rxa_confirmGuarantorInfo(Engine, UserMode)
      */
@@ -82,7 +82,7 @@ public interface GuarantorInfoActionType extends BaseActionType, GuarantorInfoVa
                 rxa_enterGuarantorInfo(engine, mode),
                 rxa_confirmGuarantorInfo(engine, mode)
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 }

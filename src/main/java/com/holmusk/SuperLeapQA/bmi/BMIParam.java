@@ -5,7 +5,7 @@ import com.holmusk.HMUITestKit.model.UnitSystem;
 import com.holmusk.SuperLeapQA.model.Ethnicity;
 import com.holmusk.SuperLeapQA.model.Gender;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.collection.Zip;
+import org.swiften.javautilities.functional.Tuple;
 import org.swiften.xtestkitcomponents.common.ErrorProviderType;
 
 import java.util.List;
@@ -176,19 +176,19 @@ public final class BMIParam {
 
         /**
          * Set {@link #heightM} using inputs acquired via randomization.
-         * @param inputs {@link List} of {@link Zip}.
+         * @param inputs {@link List} of {@link Tuple}.
          * @param <T> Generics parameter.
          * @return {@link Builder} instance.
          * @see #withHeight(UnitSystem, double, double)
          */
         @NotNull
         public <T extends HMUnitSystemConvertibleType> Builder withHeight(
-            @NotNull List<Zip<T,String>> inputs
+            @NotNull List<Tuple<T,String>> inputs
         ) {
             int size = inputs.size();
 
             if (size > 0) {
-                Zip<T,String> primary = inputs.get(0);
+                Tuple<T,String> primary = inputs.get(0);
                 T mode = primary.A;
                 UnitSystem unit = mode.unitSystem();
                 double primaryValue = Double.valueOf(primary.B);
@@ -196,7 +196,7 @@ public final class BMIParam {
                 double secondaryValue;
 
                 if (size > 1) {
-                    Zip<T, String> secondary = inputs.get(1);
+                    Tuple<T, String> secondary = inputs.get(1);
                     secondaryValue = Double.valueOf(secondary.B);
                 } else {
                     secondaryValue = 0d;
@@ -234,19 +234,19 @@ public final class BMIParam {
 
         /**
          * Set {@link #weightKG} using inputs acquired via randomization.
-         * @param inputs {@link List} of {@link Zip}.
+         * @param inputs {@link List} of {@link Tuple}.
          * @param <T> Generics parameter.
          * @return {@link Builder} instance.
          * @see #withWeight(UnitSystem, double, double)
          */
         @NotNull
         public <T extends HMUnitSystemConvertibleType> Builder withWeight(
-            @NotNull List<Zip<T,String>> inputs
+            @NotNull List<Tuple<T,String>> inputs
         ) {
             int size = inputs.size();
 
             if (size > 0) {
-                Zip<T,String> primary = inputs.get(0);
+                Tuple<T,String> primary = inputs.get(0);
                 T mode = primary.A;
                 UnitSystem unit = mode.unitSystem();
                 double primaryValue = Double.valueOf(primary.B);
@@ -254,7 +254,7 @@ public final class BMIParam {
                 double secondaryValue;
 
                 if (size > 1) {
-                    Zip<T, String> secondary = inputs.get(1);
+                    Tuple<T, String> secondary = inputs.get(1);
                     secondaryValue = Double.valueOf(secondary.B);
                 } else {
                     secondaryValue = 0d;

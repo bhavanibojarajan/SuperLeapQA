@@ -12,10 +12,10 @@ import com.holmusk.SuperLeapQA.model.*;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.collection.Zip;
-import org.swiften.javautilities.object.ObjectUtil;
-import org.swiften.javautilities.rx.RxUtil;
+import org.swiften.javautilities.bool.HPBooleans;
+import org.swiften.javautilities.functional.Tuple;
+import org.swiften.javautilities.object.HPObjects;
+import org.swiften.javautilities.rx.HPReactives;
 import org.swiften.javautilities.util.LogUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
@@ -104,14 +104,14 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
     @NotNull
     @SuppressWarnings("ConstantConditions")
     default Flowable<?> rxa_inputs(@NotNull final Engine<?> ENGINE,
-                                   @NotNull List<Zip<HMTextType,String>> inputs) {
+                                   @NotNull List<Tuple<HMTextType,String>> inputs) {
         final BaseActionType THIS = this;
 
         return Flowable.fromIterable(inputs)
             .concatMap(a -> Flowable.concatArray(
                 THIS.rxa_input(ENGINE, a.A, a.B),
                 THIS.rxa_makeNextInputVisible(ENGINE)
-            )).all(ObjectUtil::nonNull).toFlowable();
+            )).all(HPObjects::nonNull).toFlowable();
     }
 
     /**
@@ -144,7 +144,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
             .concatMap(a -> Flowable.concatArray(
                 THIS.rxa_randomInput(ENGINE, a),
                 THIS.rxa_makeNextInputVisible(ENGINE)
-            )).all(ObjectUtil::nonNull).toFlowable();
+            )).all(HPObjects::nonNull).toFlowable();
     }
 
     /**
@@ -281,7 +281,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * {@link SLNumericChoiceType} (e.g. {@link Height#CM} and
      * {@link Height#CM_DEC}).
      * @param ENGINE {@link Engine} instance.
-     * @param inputs {@link List} of {@link Zip} instances.
+     * @param inputs {@link List} of {@link Tuple} instances.
      * @return {@link Flowable} instance.
      * @see #rxa_selectChoice(Engine, HMChoiceType, String)
      */
@@ -289,13 +289,13 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
     @SuppressWarnings("ConstantConditions")
     default <P extends HMChoiceType> Flowable<?> rxa_selectChoice(
         @NotNull final Engine<?> ENGINE,
-        @NotNull List<Zip<P,String>> inputs
+        @NotNull List<Tuple<P,String>> inputs
     ) {
         final BaseActionType THIS = this;
 
         return Flowable.fromIterable(inputs)
             .concatMap(a -> THIS.rxa_selectChoice(ENGINE, a.A, a.B))
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 
@@ -435,7 +435,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
     default Flowable<?> rxa_dismissMealImageTutorial(@NotNull final Engine<?> E) {
         return rxe_mealImageTutDismiss(E)
             .flatMap(E::rxa_click)
-            .map(BooleanUtil::toTrue)
+            .map(HPBooleans::toTrue)
             .onErrorReturnItem(true);
     }
 
@@ -465,13 +465,13 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
     @NotNull
     @SuppressWarnings("unchecked")
     default Flowable<?> rxa_deleteFromMenu(@NotNull final Engine<?> ENGINE) {
-        return RxUtil
+        return HPReactives
             .concatDelayEach(
                 generalDelay(ENGINE),
                 rxe_menuDelete(ENGINE).flatMap(ENGINE::rxa_click),
                 rxe_menuDeleteConfirm(ENGINE).flatMap(ENGINE::rxa_click)
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable()
             .delay(contentDeleteProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
     }

@@ -11,9 +11,9 @@ import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.collection.CollectionUtil;
-import org.swiften.javautilities.collection.Zip;
-import org.swiften.javautilities.test.TestNGUtil;
+import org.swiften.javautilities.collection.HPIterables;
+import org.swiften.javautilities.functional.Tuple;
+import org.swiften.javautilities.test.TestNGs;
 import org.swiften.javautilities.util.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputHelperType;
@@ -44,7 +44,7 @@ public final class GeneralTest {
     @NotNull
     @DataProvider(parallel = true)
     public static Iterator<Object[]> bmiDataProvider() {
-        return TestNGUtil.oneFromEach(
+        return TestNGs.oneFromEach(
             Platform.values(),
             UserMode.values(),
             UnitSystem.values(),
@@ -56,13 +56,13 @@ public final class GeneralTest {
     @NotNull
     @DataProvider(parallel = true)
     public static Iterator<Object[]> findBmiDataProvider() {
-        return TestNGUtil.oneFromEach(
+        return TestNGs.oneFromEach(
             Platform.values(),
             UserMode.values(),
             UnitSystem.values(),
             Ethnicity.values(),
             Gender.values(),
-            CollectionUtil.asList(true, false).toArray()
+            HPIterables.asList(true, false).toArray()
         ).iterator();
     }
 
@@ -186,11 +186,11 @@ public final class GeneralTest {
                                           @NotNull Ethnicity ethnicity,
                                           @NotNull Gender gender) {
         // Setup
-        List<Zip<Height,String>> height = Height.random(
+        List<Tuple<Height,String>> height = Height.random(
             platform, mode, system
         );
 
-        List<Zip<Weight,String>> weight = Weight.random(
+        List<Tuple<Weight,String>> weight = Weight.random(
             platform, mode, system
         );
 
@@ -202,8 +202,8 @@ public final class GeneralTest {
             .build();
 
         // When
-        Zip<Double,Double> tightestInvalid = BMIUtil.tightestInvalidRange(mode, param1);
-        Zip<Double,Double> widestInvalid = BMIUtil.widestInvalidRange(mode, param1);
+        Tuple<Double,Double> tightestInvalid = BMIUtil.tightestInvalidRange(mode, param1);
+        Tuple<Double,Double> widestInvalid = BMIUtil.widestInvalidRange(mode, param1);
         double bmi = param1.bmi();
 
         // Then

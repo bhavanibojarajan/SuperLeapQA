@@ -4,8 +4,8 @@ import com.holmusk.SuperLeapQA.model.Height;
 import com.holmusk.SuperLeapQA.model.Weight;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.swiften.javautilities.collection.Zip;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.functional.Tuple;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkitcomponents.common.ErrorProviderType;
 
 import java.util.Collections;
@@ -24,8 +24,8 @@ public final class BMIResult implements ErrorProviderType {
     }
 
     @Nullable private BMIParam requestParam;
-    @NotNull private List<Zip<Height,String>> height;
-    @NotNull private List<Zip<Weight,String>> weight;
+    @NotNull private List<Tuple<Height,String>> height;
+    @NotNull private List<Tuple<Weight,String>> weight;
 
     private BMIResult() {
         height = Collections.emptyList();
@@ -38,7 +38,7 @@ public final class BMIResult implements ErrorProviderType {
      */
     @NotNull
     public BMIParam requestParam() {
-        if (ObjectUtil.nonNull(requestParam)) {
+        if (HPObjects.nonNull(requestParam)) {
             return requestParam;
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
@@ -47,19 +47,19 @@ public final class BMIResult implements ErrorProviderType {
 
     /**
      * Get {@link #height}.
-     * @return {@link List} of {@link Zip}.
+     * @return {@link List} of {@link Tuple}.
      */
     @NotNull
-    public List<Zip<Height,String>> height() {
+    public List<Tuple<Height,String>> height() {
         return height;
     }
 
     /**
      * Get {@link #weight}.
-     * @return {@link List} of {@link Zip}.
+     * @return {@link List} of {@link Tuple}.
      */
     @NotNull
-    public List<Zip<Weight,String>> weight() {
+    public List<Tuple<Weight,String>> weight() {
         return weight;
     }
 
@@ -86,22 +86,22 @@ public final class BMIResult implements ErrorProviderType {
 
         /**
          * Set {@link #height} instance.
-         * @param height {@link List} of {@link Zip}.
+         * @param height {@link List} of {@link Tuple}.
          * @return {@link Builder} instance.
          */
         @NotNull
-        public Builder withHeight(@NotNull List<Zip<Height,String>> height) {
+        public Builder withHeight(@NotNull List<Tuple<Height,String>> height) {
             RESULT.height = height;
             return this;
         }
 
         /**
          * Set {@link #weight} instance.
-         * @param weight {@link List} of {@link Zip}.
+         * @param weight {@link List} of {@link Tuple}.
          * @return {@link Builder} instance.
          */
         @NotNull
-        public Builder withWeight(@NotNull List<Zip<Weight,String>> weight) {
+        public Builder withWeight(@NotNull List<Tuple<Weight,String>> weight) {
             RESULT.weight = weight;
             return this;
         }

@@ -5,7 +5,7 @@ import com.holmusk.SuperLeapQA.test.search.SearchActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.bool.HPBooleans;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.param.DirectionParam;
@@ -26,7 +26,7 @@ public interface MealPageActionType extends
      * the error.
      * @param E {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see BooleanUtil#toTrue(Object)
+     * @see HPBooleans#toTrue(Object)
      * @see Engine#rxa_click(WebElement)
      * @see #rxe_mealImageTutDismiss(Engine)
      */
@@ -34,7 +34,7 @@ public interface MealPageActionType extends
     default Flowable<?> rxa_dismissMealImageTutorial(@NotNull final Engine<?> E) {
         return rxe_mealImageTutDismiss(E)
             .flatMap(E::rxa_click)
-            .map(BooleanUtil::toTrue)
+            .map(HPBooleans::toTrue)
             .onErrorReturnItem(true);
     }
 

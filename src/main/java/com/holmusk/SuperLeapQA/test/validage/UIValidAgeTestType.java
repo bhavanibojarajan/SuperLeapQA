@@ -6,7 +6,7 @@ import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.DataProvider;
@@ -49,7 +49,7 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
      * {@link com.holmusk.SuperLeapQA.model.Height#INCH} is converted to
      * {@link com.holmusk.SuperLeapQA.model.Height#FT}.
      * @param mode {@link UserMode} instance.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see Screen#SPLASH
      * @see Screen#VALID_AGE
      * @see #engine()
@@ -72,7 +72,7 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
         Flowable.concatArray(
             rxa_navigate(mode, Screen.SPLASH, Screen.VALID_AGE),
             rxh_inchToFootRecursive(engine, mode)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -86,7 +86,7 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
      * so by deliberating selecting height/weight so that BMI calculations
      * return a healthy figure.
      * @param mode {@link UserMode} instance.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see Screen#SPLASH
      * @see Screen#VALID_AGE
      * @see #assertCorrectness(TestSubscriber)
@@ -109,7 +109,7 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
             rxa_navigate(mode, Screen.SPLASH, Screen.VALID_AGE),
             rxa_completeValidAgeInputs(engine, mode, false),
             rxv_unqualifiedBMI(engine)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

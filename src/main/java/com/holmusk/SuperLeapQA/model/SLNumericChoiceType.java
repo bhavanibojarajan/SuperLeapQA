@@ -2,7 +2,7 @@ package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.HMUITestKit.model.HMNumericChoiceType;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.collection.CollectionUtil;
+import org.swiften.javautilities.collection.HPIterables;
 
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +65,7 @@ public interface SLNumericChoiceType extends HMNumericChoiceType {
 
         Optional<Integer> optional = numericRangeLimit();
         int limit = optional.orElseGet(values::size);
-        return CollectionUtil.subList(values, 0, limit);
+        return HPIterables.subList(values, 0, limit);
     }
 
     /**
@@ -75,7 +75,7 @@ public interface SLNumericChoiceType extends HMNumericChoiceType {
      */
     default int randomValue(@NotNull UserMode mode) {
         List<Integer> selectableRange = selectableRange(mode);
-        return CollectionUtil.randomElement(selectableRange);
+        return HPIterables.randomElement(selectableRange);
     }
     //endregion
 }

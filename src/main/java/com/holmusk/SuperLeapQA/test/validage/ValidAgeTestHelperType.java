@@ -9,7 +9,7 @@ import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.HMUITestKit.model.HMInputType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.collection.Zip;
+import org.swiften.javautilities.functional.Tuple;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 
@@ -46,9 +46,9 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
         PlatformType platform = ENGINE.platform();
         UnitSystem unit = UnitSystem.IMPERIAL;
 
-        final List<Zip<Height,String>> INPUTS = Arrays.asList(
-            Zip.of(Height.FT, String.valueOf(FT)),
-            Zip.of(Height.INCH, String.valueOf(0))
+        final List<Tuple<Height,String>> INPUTS = Arrays.asList(
+            Tuple.of(Height.FT, String.valueOf(FT)),
+            Tuple.of(Height.INCH, String.valueOf(0))
         );
 
         final String STR = Height.stringValue(platform, unit, INPUTS);

@@ -10,7 +10,7 @@ import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.DataProvider;
@@ -50,7 +50,7 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
      * {@link Factory} for the constructor.
      * @param MODE {@link UserMode} instance.
      * @param INPUT {@link TextInput} instance.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see Screen#SPLASH
      * @see Screen#INVALID_AGE
      * @see #assertCorrectness(TestSubscriber)
@@ -88,7 +88,7 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
             rxa_confirmInvalidAgeInputs(ENGINE),
             rxv_invalidAgeInputConfirmed(ENGINE),
             rxa_acknowledgeSubscription(ENGINE)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -103,7 +103,7 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
      * {@link Screen#REGISTER}.
      * @param mode {@link UserMode} instance.
      * @see Engine#rxa_click(WebElement)
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see Screen#INVALID_AGE
      * @see Screen#REGISTER
      * @see #assertCorrectness(TestSubscriber)
@@ -133,7 +133,7 @@ public interface UIInvalidAgeTestType extends UIBaseTestType {
             rxv_invalidAgeInputConfirmed(engine),
             rxa_acknowledgeSubscription(engine),
             rxv_welcomeScreen(engine)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

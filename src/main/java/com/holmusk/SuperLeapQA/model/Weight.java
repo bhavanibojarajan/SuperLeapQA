@@ -3,7 +3,7 @@ package com.holmusk.SuperLeapQA.model;
 import com.holmusk.HMUITestKit.model.HMUnitSystemConvertibleType;
 import com.holmusk.HMUITestKit.model.UnitSystem;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.collection.Zip;
+import org.swiften.javautilities.functional.Tuple;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.ios.IOSView;
@@ -74,15 +74,15 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @param platform {@link PlatformType} instance.
      * @param MODE {@link UserMode} instance.
      * @param unit {@link UnitSystem} instance.
-     * @return {@link List} of {@link Zip}.
+     * @return {@link List} of {@link Tuple}.
      * @see #instances(PlatformType, UnitSystem)
      */
     @NotNull
-    public static List<Zip<Weight,String>> random(@NotNull PlatformType platform,
-                                                  @NotNull final UserMode MODE,
-                                                  @NotNull UnitSystem unit) {
+    public static List<Tuple<Weight,String>> random(@NotNull PlatformType platform,
+                                                    @NotNull final UserMode MODE,
+                                                    @NotNull UnitSystem unit) {
         return instances(platform, unit).stream()
-            .map(a -> Zip.of(a, String.valueOf(a.randomValue(MODE))))
+            .map(a -> Tuple.of(a, String.valueOf(a.randomValue(MODE))))
             .collect(Collectors.toList());
     }
 
@@ -91,14 +91,14 @@ public enum Weight implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * on {@link UnitSystem}.
      * @param platform {@link PlatformType} instance.
      * @param unit {@link UnitSystem} instance.
-     * @param inputs {@link List} of {@link Zip}.
+     * @param inputs {@link List} of {@link Tuple}.
      * @return {@link String} value.
      */
     @NotNull
     @SuppressWarnings("ConstantConditions")
     public static String stringValue(@NotNull PlatformType platform,
                                      @NotNull UnitSystem unit,
-                                     @NotNull List<Zip<Weight,String>> inputs) {
+                                     @NotNull List<Tuple<Weight,String>> inputs) {
         double a = Double.valueOf(inputs.get(0).B);
         double b = Double.valueOf(inputs.size() > 1 ? inputs.get(1).B : "0");
 

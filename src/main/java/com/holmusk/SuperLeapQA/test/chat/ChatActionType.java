@@ -6,7 +6,7 @@ import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.base.Engine;
 
 /**
@@ -62,7 +62,7 @@ public interface ChatActionType extends BaseActionType, ChatValidationType {
 
         return Flowable
             .concatArray(rxa_input(engine, input, msg), rxa_sendChat(engine))
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 

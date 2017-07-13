@@ -10,10 +10,10 @@ import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.collection.CollectionUtil;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.collection.HPIterables;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
-import org.swiften.javautilities.test.TestNGUtil;
+import org.swiften.javautilities.test.TestNGs;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputType;
@@ -42,13 +42,13 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
     @NotNull
     @DataProvider
     static Iterator<Object[]> parentPersonalInfoProvider() {
-        return TestNGUtil
+        return TestNGs
             .oneFromEach(
                 new Object[] { TextInput.PARENT_NAME },
                 new Object[] { TextInput.PARENT_EMAIL, TextInput.PARENT_MOBILE }
             )
             .stream()
-            .map(CollectionUtil::asList)
+            .map(HPIterables::asList)
             .map(a -> new Object[] { a })
             .collect(Collectors.toList())
             .iterator();
@@ -91,7 +91,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
                     .flatMap(b -> ENGINE.rxa_togglePasswordMask(a))
                     .filter(b -> ENGINE.isShowingPassword(b))
                     .switchIfEmpty(ENGINE.rxv_error()))
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -162,7 +162,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
             Flowable.fromIterable(TEXT_INFO).flatMap(a ->
                 THIS.rxv_fieldHasValue(ENGINE, a, INPUTS.get(a.toString()))
             )
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -204,7 +204,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
             /* If the check box is present, that means we haven't left the
              * current screen yet */
             rxe_TCCheckBox(engine)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -245,7 +245,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
             rxa_randomInputs(engine, INPUTS),
             rxa_confirmGuarantorInfo(engine, MODE),
             rxv_useAppNow(engine)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

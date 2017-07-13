@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.localizer.LCFormat;
 import org.swiften.javautilities.localizer.LocalizerType;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
@@ -124,7 +124,7 @@ public interface LoginValidationType extends BaseValidationType {
      * Validate {@link com.holmusk.SuperLeapQA.navigation.Screen#LOGIN}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see TextInput#EMAIL
      * @see TextInput#PASSWORD
      * @see #rxe_editField(Engine, HMInputType)
@@ -143,7 +143,7 @@ public interface LoginValidationType extends BaseValidationType {
                 rxe_submit(engine),
                 rxe_forgotPassword(engine)
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 }

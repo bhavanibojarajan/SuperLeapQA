@@ -4,7 +4,7 @@ import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.number.NumberUtil;
+import org.swiften.javautilities.number.HPNumbers;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
@@ -130,13 +130,13 @@ public interface SearchValidationType extends BaseValidationType {
      * Verify that the search result is empty.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see NumberUtil#isZero(Number)
+     * @see HPNumbers#isZero(Number)
      * @see #rxe_searchResults(Engine)
      */
     @NotNull
     default Flowable<Boolean> rxv_emptySearchResult(@NotNull Engine<?> engine) {
         return rxe_searchResults(engine).count()
-            .map(NumberUtil::isZero)
+            .map(HPNumbers::isZero)
             .toFlowable()
             .onErrorReturnItem(true);
     }

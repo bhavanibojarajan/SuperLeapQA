@@ -11,10 +11,10 @@ import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.collection.CollectionUtil;
-import org.swiften.javautilities.collection.Zip;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.bool.HPBooleans;
+import org.swiften.javautilities.collection.HPIterables;
+import org.swiften.javautilities.functional.Tuple;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
@@ -52,7 +52,7 @@ public interface UIScreenValidationTestType extends
         Flowable.concatArray(
             rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN),
             rxv_loginScreen(ENGINE)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -81,7 +81,7 @@ public interface UIScreenValidationTestType extends
         Flowable.concatArray(
             rxa_navigate(mode, Screen.SPLASH, Screen.FORGOT_PASSWORD),
             rxv_forgotPassword(engine)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -114,7 +114,7 @@ public interface UIScreenValidationTestType extends
             rxv_registerScreen(engine),
             rxa_clickBackButton(engine),
             rxv_welcomeScreen(engine)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -155,11 +155,11 @@ public interface UIScreenValidationTestType extends
                     "parentSignUp_title_whatIsYourChild",
                     "teenSignUp_title_whatIsYour"
                 )
-            ).all(ObjectUtil::nonNull).toFlowable(),
+            ).all(HPObjects::nonNull).toFlowable(),
 
             rxa_openDoBPicker(engine),
             engine.rxa_navigateBackOnce()
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -195,7 +195,7 @@ public interface UIScreenValidationTestType extends
             rxa_navigate(mode, Screen.SPLASH, Screen.INVALID_AGE),
             rxa_confirmInvalidAgeInputs(ENGINE),
             rxa_clickInput(ENGINE, TextInput.NAME)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -238,16 +238,16 @@ public interface UIScreenValidationTestType extends
         UnitSystem metric = UnitSystem.METRIC;
         UnitSystem imperial = UnitSystem.IMPERIAL;
         List<HMTextType> inputs = MODE.validAgeInfo(platform);
-        List<Zip<Height,String>> heightM = Height.random(platform, MODE, metric);
-        List<Zip<Height,String>> heightI = Height.random(platform, MODE, imperial);
-        List<Zip<Weight,String>> weightM = Weight.random(platform, MODE, metric);
-        List<Zip<Weight,String>> weightI = Weight.random(platform, MODE, imperial);
+        List<Tuple<Height,String>> heightM = Height.random(platform, MODE, metric);
+        List<Tuple<Height,String>> heightI = Height.random(platform, MODE, imperial);
+        List<Tuple<Weight,String>> weightM = Weight.random(platform, MODE, metric);
+        List<Tuple<Weight,String>> weightI = Weight.random(platform, MODE, imperial);
         String heightMStr = Height.stringValue(platform, metric, heightM);
         String heightIStr = Height.stringValue(platform, imperial, heightI);
         String weightMStr = Weight.stringValue(platform, metric, weightM);
         String weightIStr = Weight.stringValue(platform, imperial, weightI);
-        Ethnicity ethnicity = CollectionUtil.randomElement(Ethnicity.values());
-        CoachPref coachPref = CollectionUtil.randomElement(CoachPref.values());
+        Ethnicity ethnicity = HPIterables.randomElement(Ethnicity.values());
+        CoachPref coachPref = HPIterables.randomElement(CoachPref.values());
         String selectedEth = ethnicity.stringValue(engine);
         String selectedCP = coachPref.stringValue(engine);
         TestSubscriber subscriber = CustomTestSubscriber.create();
@@ -293,7 +293,7 @@ public interface UIScreenValidationTestType extends
             rxa_clickInput(engine, ChoiceInput.COACH_PREF),
             rxa_selectChoice(engine, ChoiceInput.COACH_PREF, selectedCP),
             rxa_confirmTextChoice(engine)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -338,7 +338,7 @@ public interface UIScreenValidationTestType extends
                     THIS.rxa_randomInput(ENGINE, a),
                     THIS.rxa_makeNextInputVisible(ENGINE)
                 ))
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -379,7 +379,7 @@ public interface UIScreenValidationTestType extends
             rxv_dashboardBMI(engine),
             rxa_dashboardMode(engine, DashboardMode.ACTIVITY),
             rxv_dashboardActivity(engine, mode)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -418,7 +418,7 @@ public interface UIScreenValidationTestType extends
             rxv_dashboardBMI(engine),
             rxa_dashboardMode(engine, DashboardMode.ACTIVITY),
             rxv_dashboardActivity(engine, MODE)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -450,9 +450,9 @@ public interface UIScreenValidationTestType extends
             rxa_toggleDrawer(engine, false),
 
             rxv_isDrawerOpen(engine)
-                .filter(BooleanUtil::isFalse)
+                .filter(HPBooleans::isFalse)
                 .switchIfEmpty(engine.rxv_error())
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -479,7 +479,7 @@ public interface UIScreenValidationTestType extends
         Flowable.concatArray(
             rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.MEAL_ENTRY),
             rxv_mealLog(engine)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -508,7 +508,7 @@ public interface UIScreenValidationTestType extends
         Flowable.concatArray(
             rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.WEIGHT_VALUE),
             rxv_CSSValue(engine, CSSInput.WEIGHT)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -535,7 +535,7 @@ public interface UIScreenValidationTestType extends
         Flowable.concatArray(
             rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.WEIGHT_ENTRY),
             rxv_weightEntry(engine)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -566,7 +566,7 @@ public interface UIScreenValidationTestType extends
         Flowable.concatArray(
             rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.ACTIVITY_VALUE),
             rxv_CSSValue(engine, CSSInput.ACTIVITY)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -597,7 +597,7 @@ public interface UIScreenValidationTestType extends
         Flowable.concatArray(
             rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.ACTIVITY_ENTRY),
             rxv_activityEntry(engine)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -630,7 +630,7 @@ public interface UIScreenValidationTestType extends
             rxv_settings(ENGINE),
             rxa_toggleSetting(ENGINE, Setting.UNITS),
             Flowable.fromArray(units).concatMap(a -> THIS.rxa_changeUnitSystem(ENGINE, a))
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

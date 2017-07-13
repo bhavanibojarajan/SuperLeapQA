@@ -4,7 +4,7 @@ import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.bool.HPBooleans;
 import org.swiften.xtestkit.base.Engine;
 
 /**
@@ -18,7 +18,7 @@ public interface SHAActionType extends SHAValidationType {
      * @param mode {@link UserMode} instance.
      * @param PARTICIPATING {@link Boolean} value.
      * @return {@link Flowable} instance.
-     * @see BooleanUtil#toTrue(Object)
+     * @see HPBooleans#toTrue(Object)
      * @see Engine#rxa_click(WebElement)
      * @see UserMode#isTeen()
      * @see #rxe_shaYes(Engine)
@@ -40,7 +40,7 @@ public interface SHAActionType extends SHAValidationType {
                 }
             })
             .flatMap(ENGINE::rxa_click)
-            .map(BooleanUtil::toTrue)
+            .map(HPBooleans::toTrue)
             .defaultIfEmpty(true)
 
             /* On iOS, the app's state is saved between different runs, so

@@ -5,7 +5,7 @@ import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.base.Engine;
 
 import java.util.List;
@@ -39,7 +39,7 @@ public interface InvalidAgeActionType extends BaseActionType, InvalidAgeValidati
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see #invalidAgeInputProgressDelay(Engine)
      * @see #rxa_watchProgressBar(Engine)
      * @see #rxe_invalidAgeSubmit(Engine)
@@ -50,14 +50,14 @@ public interface InvalidAgeActionType extends BaseActionType, InvalidAgeValidati
             rxe_invalidAgeSubmit(ENGINE).flatMap(ENGINE::rxa_click),
             Flowable.timer(invalidAgeInputProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
             rxa_watchProgressBar(ENGINE)
-        ).all(ObjectUtil::nonNull).toFlowable();
+        ).all(HPObjects::nonNull).toFlowable();
     }
 
     /**
      * Enter and confirm invalid age inputs.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see #rxa_enterInvalidAgeInputs(Engine)
      * @see #rxa_confirmInvalidAgeInputs(Engine)
      */
@@ -68,7 +68,7 @@ public interface InvalidAgeActionType extends BaseActionType, InvalidAgeValidati
                 rxa_enterInvalidAgeInputs(engine),
                 rxa_confirmInvalidAgeInputs(engine)
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
 
     }

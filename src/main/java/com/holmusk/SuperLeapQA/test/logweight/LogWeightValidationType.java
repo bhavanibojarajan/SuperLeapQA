@@ -6,7 +6,7 @@ import com.holmusk.SuperLeapQA.model.CSSInput;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
@@ -49,7 +49,7 @@ public interface LogWeightValidationType extends HMCircleScrollValidationType {
      * weight entry screen.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see CSSInput#WEIGHT
      * @see #rxe_CSSValueDisplay(Engine, HMCSSInputType)
      * @see #rxe_CSSDetailEntrySubmit(Engine, HMCSSInputType)
@@ -68,7 +68,7 @@ public interface LogWeightValidationType extends HMCircleScrollValidationType {
                 rxe_weightLocSwitch(engine),
                 rxe_CSSDetailEntrySubmit(engine, input)
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 }

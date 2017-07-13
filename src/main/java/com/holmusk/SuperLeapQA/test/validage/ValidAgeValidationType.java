@@ -11,8 +11,8 @@ import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.bool.HPBooleans;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 
@@ -39,7 +39,7 @@ public interface ValidAgeValidationType extends BaseValidationType, DOBPickerVal
      * for the program.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see ChoiceInput#COACH_PREF
      * @see ChoiceInput#ETHNICITY
      * @see ChoiceInput#HEIGHT
@@ -81,7 +81,7 @@ public interface ValidAgeValidationType extends BaseValidationType, DOBPickerVal
                     rxe_editField(ENGINE, Weight.KG)
                 ))
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 
@@ -90,7 +90,7 @@ public interface ValidAgeValidationType extends BaseValidationType, DOBPickerVal
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsText(String...)
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -103,7 +103,7 @@ public interface ValidAgeValidationType extends BaseValidationType, DOBPickerVal
                     "register_title_close"
                 )
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 
@@ -113,7 +113,7 @@ public interface ValidAgeValidationType extends BaseValidationType, DOBPickerVal
      * may accidentally open up a picker dialog.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see BooleanUtil#isFalse(boolean)
+     * @see HPBooleans#isFalse(boolean)
      * @see Engine#rxe_containsID(String...)
      */
     @NotNull
@@ -122,7 +122,7 @@ public interface ValidAgeValidationType extends BaseValidationType, DOBPickerVal
             return engine
                 .rxe_containsID("select_dialog_listview", "btnDone")
                 .isEmpty()
-                .map(BooleanUtil::isFalse)
+                .map(HPBooleans::isFalse)
                 .onErrorReturnItem(false)
                 .toFlowable();
         } else {

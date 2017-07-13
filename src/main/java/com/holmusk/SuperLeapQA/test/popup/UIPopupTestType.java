@@ -5,7 +5,7 @@ import com.holmusk.SuperLeapQA.navigation.Screen;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
@@ -23,7 +23,7 @@ public interface UIPopupTestType extends UIBaseTestType {
      * This is only relevant for {@link org.swiften.xtestkit.mobile.Platform#IOS}.
      * Under normal circumstances, this test should be disabled since it's just
      * used to check the correctness of the polling.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see UserMode#defaultUserMode()
      * @see Screen#SPLASH
      * @see Screen#LOGIN
@@ -48,7 +48,7 @@ public interface UIPopupTestType extends UIBaseTestType {
         Flowable.concatArray(
             rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.DASHBOARD),
             Flowable.timer(100000, TimeUnit.MILLISECONDS)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

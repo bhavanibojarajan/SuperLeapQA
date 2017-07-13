@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
@@ -39,7 +39,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_hideKeyboard()
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see UserMode#personalInfo(PlatformType)
      * @see #rxa_randomInputs(Engine, List)
      * @see #rxa_toggleTC(Engine, boolean)
@@ -55,7 +55,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
                 rxa_randomInputs(engine, mode.personalInfo(platform)),
                 rxa_toggleTC(engine, true)
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 
@@ -64,7 +64,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see #personalInfoProgressDelay(Engine)
      * @see #rxa_watchProgressBar(Engine)
      * @see #rxe_personalInfoSubmit(Engine)
@@ -75,7 +75,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
             rxe_personalInfoSubmit(ENGINE).flatMap(ENGINE::rxa_click),
             Flowable.timer(personalInfoProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
             rxa_watchProgressBar(ENGINE)
-        ).all(ObjectUtil::nonNull).toFlowable();
+        ).all(HPObjects::nonNull).toFlowable();
     }
 
     /**
@@ -83,7 +83,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see #rxa_enterPersonalInfo(Engine, UserMode)
      * @see #rxa_confirmPersonalInfo(Engine)
      */
@@ -95,7 +95,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
                 rxa_enterPersonalInfo(engine, mode),
                 rxa_confirmPersonalInfo(engine)
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 

@@ -7,7 +7,7 @@ import com.holmusk.SuperLeapQA.test.login.LoginActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.base.Engine;
 
 import java.util.concurrent.TimeUnit;
@@ -37,7 +37,7 @@ public interface ForgotPasswordActionType extends
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see #forgotPasswordProgressDelay(Engine)
      * @see #rxa_watchProgressBar(Engine)
      * @see #rxe_forgotPasswordSubmit(Engine)
@@ -55,7 +55,7 @@ public interface ForgotPasswordActionType extends
      * Enter and confirm forgot password inputs.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see #rxa_enterPassRecoveryInputs(Engine)
      * @see #rxa_confirmPassRecovery(Engine)
      */
@@ -66,7 +66,7 @@ public interface ForgotPasswordActionType extends
                 rxa_enterPassRecoveryInputs(engine),
                 rxa_confirmPassRecovery(engine)
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 

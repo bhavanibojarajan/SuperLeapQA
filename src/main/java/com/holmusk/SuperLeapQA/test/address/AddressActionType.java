@@ -5,8 +5,8 @@ import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.collection.CollectionUtil;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.collection.HPIterables;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.base.Engine;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public interface AddressActionType extends BaseActionType, AddressValidationType
             rxe_addressSubmit(ENGINE).flatMap(ENGINE::rxa_click),
             Flowable.timer(addressInfoProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
             rxa_watchProgressBar(ENGINE)
-        ).all(ObjectUtil::nonNull).toFlowable();
+        ).all(HPObjects::nonNull).toFlowable();
     }
 
     /**
@@ -41,7 +41,7 @@ public interface AddressActionType extends BaseActionType, AddressValidationType
      */
     @NotNull
     default Flowable<?> rxa_enterAddressInfo(@NotNull final Engine<?> ENGINE) {
-        List<HMTextType> inputs = CollectionUtil.asList(
+        List<HMTextType> inputs = HPIterables.asList(
             TextInput.POSTAL_CODE,
             TextInput.UNIT_NUMBER
         );
@@ -61,6 +61,6 @@ public interface AddressActionType extends BaseActionType, AddressValidationType
         return Flowable.concatArray(
             rxa_enterAddressInfo(engine),
             rxa_submitAddress(engine)
-        ).all(ObjectUtil::nonNull).toFlowable();
+        ).all(HPObjects::nonNull).toFlowable();
     }
 }

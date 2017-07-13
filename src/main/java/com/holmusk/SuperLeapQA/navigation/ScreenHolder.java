@@ -5,7 +5,7 @@ import com.holmusk.SuperLeapQA.navigation.type.BackwardNavigationType;
 import com.holmusk.SuperLeapQA.navigation.type.ForwardNavigationType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.swiften.javautilities.collection.CollectionUtil;
+import org.swiften.javautilities.collection.HPIterables;
 import org.swiften.javautilities.util.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.navigation.NavigationSupplier;
@@ -93,7 +93,7 @@ public final class ScreenHolder implements
 
         switch (SCREEN) {
             case SPLASH:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.WELCOME, MODE),
                         a -> THIS.rxn_splash_welcome(ENGINE),
@@ -102,7 +102,7 @@ public final class ScreenHolder implements
                 );
 
             case WELCOME:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.LOGIN, MODE),
                         a -> THIS.rxn_welcome_login(ENGINE),
@@ -116,7 +116,7 @@ public final class ScreenHolder implements
                 );
 
             case LOGIN:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.FORGOT_PASSWORD, MODE),
                         a -> THIS.rxn_login_forgotPassword(ENGINE),
@@ -135,10 +135,10 @@ public final class ScreenHolder implements
                 );
 
             case FORGOT_PASSWORD:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case REGISTER:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.SHA, MODE),
                         a -> THIS.rxn_register_sha(ENGINE, MODE),
@@ -147,7 +147,7 @@ public final class ScreenHolder implements
                 );
 
             case SHA:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.DOB, MODE),
                         a -> THIS.rxn_sha_DoBPicker(ENGINE, MODE),
@@ -156,7 +156,7 @@ public final class ScreenHolder implements
                 );
 
             case DOB:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.INVALID_AGE, MODE),
                         a -> THIS.rxn_DoBPicker_invalidAge(ENGINE, MODE),
@@ -170,10 +170,10 @@ public final class ScreenHolder implements
                 );
 
             case INVALID_AGE:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case VALID_AGE:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.PERSONAL_INFO, MODE),
                         a -> THIS.rxn_validAge_personalInfo(ENGINE, MODE),
@@ -182,7 +182,7 @@ public final class ScreenHolder implements
                 );
 
             case PERSONAL_INFO:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.ADDRESS_INFO, MODE),
                         a -> THIS.rxn_personalInfo_addressInfo(ENGINE, MODE),
@@ -191,7 +191,7 @@ public final class ScreenHolder implements
                 );
 
             case ADDRESS_INFO:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.GUARANTOR_INFO, MODE),
                         a -> THIS.rxn_addressInfo_guarantorInfo(ENGINE),
@@ -200,7 +200,7 @@ public final class ScreenHolder implements
                 );
 
             case GUARANTOR_INFO:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.USE_APP_NOW, MODE),
                         a -> THIS.rxn_guarantorInfo_useApp(ENGINE, MODE),
@@ -209,7 +209,7 @@ public final class ScreenHolder implements
                 );
 
             case USE_APP_NOW:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.DASHBOARD_TUTORIAL, MODE),
                         a -> THIS.rxn_useApp_tutorial(ENGINE),
@@ -218,7 +218,7 @@ public final class ScreenHolder implements
                 );
 
             case DASHBOARD_TUTORIAL:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.DASHBOARD, MODE),
                         a -> THIS.rxn_tutorial_dashboard(ENGINE),
@@ -227,7 +227,7 @@ public final class ScreenHolder implements
                 );
 
             case DASHBOARD:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.ADD_CARD, MODE),
                         a -> THIS.rxn_dashboard_addCard(ENGINE),
@@ -246,10 +246,10 @@ public final class ScreenHolder implements
                 );
 
             case SEARCH:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case ADD_CARD:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.PHOTO_PICKER, MODE),
                         a -> THIS.rxn_addCard_photoPicker(ENGINE),
@@ -268,7 +268,7 @@ public final class ScreenHolder implements
                 );
 
             case PHOTO_PICKER:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.MEAL_ENTRY, MODE),
                         a -> THIS.rxn_photoPicker_logMeal(ENGINE),
@@ -277,7 +277,7 @@ public final class ScreenHolder implements
                 );
 
             case MEAL_ENTRY:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.MEAL_PAGE, MODE),
                         a -> THIS.rxn_logMeal_mealPage(ENGINE),
@@ -286,7 +286,7 @@ public final class ScreenHolder implements
                 );
 
             case MEAL_PAGE:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.CHAT, MODE),
                         a -> THIS.rxn_mealPage_chat(ENGINE),
@@ -295,10 +295,10 @@ public final class ScreenHolder implements
                 );
 
             case CHAT:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case WEIGHT_VALUE:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.WEIGHT_ENTRY, MODE),
                         a -> THIS.rxn_weightValue_weightEntry(ENGINE),
@@ -307,7 +307,7 @@ public final class ScreenHolder implements
                 );
 
             case WEIGHT_ENTRY:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.WEIGHT_PAGE, MODE),
                         a -> THIS.rxn_weightEntry_weightPage(ENGINE),
@@ -316,10 +316,10 @@ public final class ScreenHolder implements
                 );
 
             case WEIGHT_PAGE:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case ACTIVITY_VALUE:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.ACTIVITY_ENTRY, MODE),
                         a -> THIS.rxn_activityValue_activityEntry(ENGINE),
@@ -328,10 +328,10 @@ public final class ScreenHolder implements
                 );
 
             case ACTIVITY_ENTRY:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case SETTINGS:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             default:
                 LogUtil.println(this);
@@ -354,13 +354,13 @@ public final class ScreenHolder implements
 
         switch (SCREEN) {
             case SPLASH:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case WELCOME:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case LOGIN:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.WELCOME, MODE),
                         a -> THIS.rxn_login_welcome(ENGINE),
@@ -369,10 +369,10 @@ public final class ScreenHolder implements
                 );
 
             case FORGOT_PASSWORD:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case REGISTER:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.WELCOME, MODE),
                         a -> THIS.rxn_register_welcome(ENGINE),
@@ -381,13 +381,13 @@ public final class ScreenHolder implements
                 );
 
             case SHA:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case DOB:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case INVALID_AGE:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.DOB, MODE),
                         a -> THIS.rxn_invalidAge_DOBPicker(ENGINE),
@@ -401,7 +401,7 @@ public final class ScreenHolder implements
                 );
 
             case VALID_AGE:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.DOB, MODE),
                         a -> THIS.rxn_validAge_DoB(ENGINE),
@@ -410,7 +410,7 @@ public final class ScreenHolder implements
                 );
 
             case PERSONAL_INFO:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.VALID_AGE, MODE),
                         a -> THIS.rxn_personalInfo_validAge(ENGINE),
@@ -419,10 +419,10 @@ public final class ScreenHolder implements
                 );
 
             case ADDRESS_INFO:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case GUARANTOR_INFO:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.ADDRESS_INFO, MODE),
                         a -> THIS.rxn_guarantorInfo_addressInfo(ENGINE, MODE),
@@ -431,16 +431,16 @@ public final class ScreenHolder implements
                 );
 
             case USE_APP_NOW:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case DASHBOARD_TUTORIAL:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case DASHBOARD:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case SEARCH:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.DASHBOARD, MODE),
                         a -> THIS.rxn_search_dashboard(ENGINE),
@@ -449,19 +449,19 @@ public final class ScreenHolder implements
                 );
 
             case ADD_CARD:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case PHOTO_PICKER:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case MEAL_ENTRY:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case MEAL_PAGE:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case CHAT:
-                return CollectionUtil.asList(
+                return HPIterables.asList(
                     new Direction(
                         ScreenHolder.of(ENGINE, Screen.MEAL_PAGE, MODE),
                         a -> THIS.rxn_chat_mealPage(ENGINE),
@@ -470,22 +470,22 @@ public final class ScreenHolder implements
                 );
 
             case WEIGHT_VALUE:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case WEIGHT_ENTRY:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case WEIGHT_PAGE:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case ACTIVITY_VALUE:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case ACTIVITY_ENTRY:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             case SETTINGS:
-                return CollectionUtil.asList();
+                return HPIterables.asList();
 
             default:
                 LogUtil.println(this);

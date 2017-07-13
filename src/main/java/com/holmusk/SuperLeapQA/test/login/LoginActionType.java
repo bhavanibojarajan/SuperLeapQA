@@ -7,8 +7,8 @@ import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.collection.Zip;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.functional.Tuple;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
@@ -61,7 +61,7 @@ public interface LoginActionType extends BaseActionType, LoginValidationType {
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
      * @see Engine#rxa_watchUntilHidden(Flowable)
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see #loginProgressDelay(Engine)
      * @see #rxe_submit(Engine)
      */
@@ -71,7 +71,7 @@ public interface LoginActionType extends BaseActionType, LoginValidationType {
             rxe_submit(ENGINE).flatMap(ENGINE::rxa_click),
             Flowable.timer(loginProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
             rxa_watchProgressBar(ENGINE)
-        ).all(ObjectUtil::nonNull).toFlowable();
+        ).all(HPObjects::nonNull).toFlowable();
     }
 
     /**
@@ -90,18 +90,18 @@ public interface LoginActionType extends BaseActionType, LoginValidationType {
     /**
      * Enter and confirm login credentials.
      * @param engine {@link Engine} instance.
-     * @param inputs {@link List} of {@link Zip}.
+     * @param inputs {@link List} of {@link Tuple}.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see #rxa_inputs(Engine, List)
      * @see #rxa_confirmLogin(Engine)
      */
     @NotNull
     default Flowable<?> rxa_login(@NotNull Engine<?> engine,
-                                  @NotNull List<Zip<HMTextType,String>> inputs) {
+                                  @NotNull List<Tuple<HMTextType,String>> inputs) {
         return Flowable
             .concatArray(rxa_inputs(engine, inputs), rxa_confirmLogin(engine))
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 

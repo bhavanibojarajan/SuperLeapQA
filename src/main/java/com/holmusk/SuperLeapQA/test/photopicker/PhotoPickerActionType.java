@@ -5,7 +5,7 @@ import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.type.AndroidSDK;
 import org.swiften.xtestkit.base.Engine;
@@ -43,7 +43,7 @@ public interface PhotoPickerActionType extends BaseActionType, PhotoPickerValida
                 .flatMap(b -> ENGINE.rxa_acceptAlert())
                 .onErrorReturnItem(true)
                 .repeat(2)
-                .all(ObjectUtil::nonNull)
+                .all(HPObjects::nonNull)
                 .toFlowable();
         } else if (ENGINE instanceof IOSEngine) {
             return rxe_pickerMode(ENGINE, MODE).flatMap(ENGINE::rxa_click);
@@ -58,7 +58,7 @@ public interface PhotoPickerActionType extends BaseActionType, PhotoPickerValida
      * @return {@link Flowable} instance.
      * @see Engine#rxa_click(WebElement)
      * @see Long#intValue()
-     * @see ObjectUtil#eq(Object)
+     * @see HPObjects#eq(Object)
      * @see Random#nextInt(int)
      * @see #rxe_imageViews(Engine)
      */
@@ -80,7 +80,7 @@ public interface PhotoPickerActionType extends BaseActionType, PhotoPickerValida
      * @param ENGINE {@link Engine} instance.
      * @param PHOTO_COUNT {@link Integer} value.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see PhotoPickerMode#LIBRARY
      * @see #rxa_selectPickerMode(Engine, PhotoPickerMode)
      * @see #rxa_selectRandomPhoto(Engine)
@@ -93,7 +93,7 @@ public interface PhotoPickerActionType extends BaseActionType, PhotoPickerValida
         return rxa_selectPickerMode(ENGINE, PhotoPickerMode.LIBRARY)
             .flatMap(a -> Flowable.range(0, PHOTO_COUNT)
                 .concatMap(b -> THIS.rxa_selectRandomPhoto(ENGINE))
-                .all(ObjectUtil::nonNull)
+                .all(HPObjects::nonNull)
                 .toFlowable());
     }
 

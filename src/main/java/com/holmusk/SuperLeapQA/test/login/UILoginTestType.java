@@ -6,7 +6,7 @@ import com.holmusk.SuperLeapQA.navigation.type.ScreenInitializationType;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.Test;
@@ -23,7 +23,7 @@ public interface UILoginTestType extends
 {
     /**
      * Login with predefined credentials and verify that it works correctly.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see UserMode#defaultUserMode()
      * @see UserMode#loginCredentials()
      * @see Screen#SPLASH
@@ -49,7 +49,7 @@ public interface UILoginTestType extends
 
             /* Call this method to make sure all alerts are dismissed */
             rxn_dashboardTutorialInitialized(engine)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -79,7 +79,7 @@ public interface UILoginTestType extends
         Flowable.concatArray(
             rxa_navigate(mode, Screen.SPLASH, Screen.LOGIN, Screen.REGISTER),
             rxv_registerScreen(engine)
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

@@ -10,9 +10,9 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.collection.CollectionUtil;
-import org.swiften.javautilities.number.NumberUtil;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.collection.HPIterables;
+import org.swiften.javautilities.number.HPNumbers;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.util.LogUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
@@ -57,13 +57,13 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * Select a random {@link Mood} from all available {@link Mood}.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see CollectionUtil#randomElement(Object[])
+     * @see HPIterables#randomElement(Object[])
      * @see Mood#values()
      * @see #rxa_selectMood(Engine, Mood)
      */
     @NotNull
     default Flowable<?> rxa_selectRandomMood(@NotNull Engine<?> engine) {
-        Mood mood = CollectionUtil.randomElement(Mood.values());
+        Mood mood = HPIterables.randomElement(Mood.values());
         return rxa_selectMood(engine, mood);
     }
 
@@ -92,8 +92,8 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Config#MAX_PHOTO_COUNT
-     * @see NumberUtil#randomBetween(int, int)
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPNumbers#randomBetween(int, int)
+     * @see HPObjects#nonNull(Object)
      * @see #rxa_openPhotoPicker(Engine, int)
      * @see #rxa_selectLibraryPhotos(Engine, int)
      * @see #rxa_confirmPhoto(Engine)
@@ -102,7 +102,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
     @NotNull
     default Flowable<?> rxa_selectMealPhotos(@NotNull final Engine<?> ENGINE) {
         final LogMealActionType THIS = this;
-        final int COUNT = NumberUtil.randomBetween(1, Config.MAX_PHOTO_COUNT);
+        final int COUNT = HPNumbers.randomBetween(1, Config.MAX_PHOTO_COUNT);
 
         if (ENGINE instanceof AndroidEngine) {
             return Flowable.range(0, COUNT)
@@ -111,7 +111,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
                     THIS.rxa_openPhotoPicker(ENGINE, a),
                     THIS.rxa_selectLibraryPhotos(ENGINE, 1),
                     THIS.rxa_confirmPhoto(ENGINE)
-                ).all(ObjectUtil::nonNull).toFlowable());
+                ).all(HPObjects::nonNull).toFlowable());
         } else if (ENGINE instanceof IOSEngine) {
             return Flowable
                 .concatArray(
@@ -119,7 +119,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
                     rxa_selectLibraryPhotos(ENGINE, COUNT),
                     rxa_confirmPhoto(ENGINE)
                 )
-                .all(ObjectUtil::nonNull)
+                .all(HPObjects::nonNull)
                 .toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
@@ -263,7 +263,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * Log a new meal with random information.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see TextInput#MEAL_DESCRIPTION
      * @see #randomSelectableTime()
      * @see #rxa_selectMealPhotos(Engine)
@@ -291,7 +291,7 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
 //                rxa_confirmMealTime(ENGINE),
                 rxa_submitMeal(engine)
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 }

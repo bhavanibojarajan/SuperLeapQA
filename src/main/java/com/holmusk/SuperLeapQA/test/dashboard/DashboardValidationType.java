@@ -8,10 +8,10 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.bool.HPBooleans;
 import org.swiften.javautilities.util.LogUtil;
-import org.swiften.javautilities.number.NumberUtil;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.number.HPNumbers;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
@@ -194,7 +194,7 @@ public interface DashboardValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @param card {@link CardType} instance.
      * @return {@link Flowable} instance.
-     * @see NumberUtil#largerThanZero(Number)
+     * @see HPNumbers#largerThanZero(Number)
      * @see #rxe_cardItems(Engine, CardType)
      */
     @NotNull
@@ -203,7 +203,7 @@ public interface DashboardValidationType extends BaseValidationType {
         return rxe_cardItems(engine, card)
             .count().toFlowable()
             .doOnNext(a -> LogUtil.printft("%s items currently", a))
-            .map(NumberUtil::isZero)
+            .map(HPNumbers::isZero)
             .onErrorReturnItem(true);
     }
 
@@ -217,7 +217,7 @@ public interface DashboardValidationType extends BaseValidationType {
     @NotNull
     default Flowable<Boolean> rxv_cardListNotEmpty(@NotNull Engine<?> engine,
                                                    @NotNull CardType card) {
-        return rxv_cardListEmpty(engine, card).map(BooleanUtil::isFalse);
+        return rxv_cardListEmpty(engine, card).map(HPBooleans::isFalse);
     }
 
     /**
@@ -320,7 +320,7 @@ public interface DashboardValidationType extends BaseValidationType {
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsText(String...)
      * @see #rxe_useAppNow(Engine)
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -333,7 +333,7 @@ public interface DashboardValidationType extends BaseValidationType {
                 engine.rxe_containsText("dashboard_title_rememberCheckEmail"),
                 THIS.rxe_useAppNow(engine)
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 
@@ -353,7 +353,7 @@ public interface DashboardValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsText(String...)
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -365,7 +365,7 @@ public interface DashboardValidationType extends BaseValidationType {
                 engine.rxe_containsText("dashboard_bmi_title_start"),
                 engine.rxe_containsText("dashboard_bmi_title_recommended")
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 
@@ -375,7 +375,7 @@ public interface DashboardValidationType extends BaseValidationType {
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsText(String...)
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see UserMode#dashboardActivityKeyword()
      */
     @NotNull
@@ -390,7 +390,7 @@ public interface DashboardValidationType extends BaseValidationType {
                 engine.rxe_containsText("dashboard_activity_title_today"),
                 engine.rxe_containsText(mode.dashboardActivityKeyword())
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 
@@ -398,7 +398,7 @@ public interface DashboardValidationType extends BaseValidationType {
      * Validate the dashboard screen's card list view.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see #rxe_dashboardModeSwitcher(Engine)
      * @see #rxe_logMeal(Engine)
      * @see #rxe_logWeight(Engine)
@@ -411,7 +411,7 @@ public interface DashboardValidationType extends BaseValidationType {
                 rxe_logWeight(engine),
                 rxe_dashboardModeSwitcher(engine)
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 }

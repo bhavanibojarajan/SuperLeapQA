@@ -8,12 +8,12 @@ import com.holmusk.SuperLeapQA.test.card.CardItemHelperType;
 import com.holmusk.SuperLeapQA.test.weightpage.WeightPageActionType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
-import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.bool.HPBooleans;
 import org.swiften.javautilities.localizer.LocalizerType;
-import org.swiften.javautilities.number.NumberUtil;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.number.HPNumbers;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
-import org.swiften.javautilities.rx.RxUtil;
+import org.swiften.javautilities.rx.HPReactives;
 import org.swiften.javautilities.util.LogUtil;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.Test;
@@ -71,11 +71,11 @@ public interface UILogWeightTestType extends
                     /* If the weight is deleted, it should not appear as a card
                      * in the dashboard */
                     ENGINE.rxe_containsText(a)
-                        .map(BooleanUtil::toTrue)
+                        .map(HPBooleans::toTrue)
                         .flatMap(c -> ENGINE.rxv_error())
                         .onErrorReturnItem(true))
                 )
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 
@@ -125,7 +125,7 @@ public interface UILogWeightTestType extends
              * value is not directly readable from the meal page screen on
              * Android. */
             rxe_fieldValue(E, ChoiceInput.START_WEIGHT)
-                .compose(RxUtil.removeFromString(LOCALIZER, "uom_title_kg", "uom_title_lbs", " "))
+                .compose(HPReactives.removeFromString(LOCALIZER, "uom_title_kg", "uom_title_lbs", " "))
                 .map(Double::valueOf)
                 .doOnNext(a -> LogUtil.printft("Initial weight: %s", a))
                 .flatMap(a -> Flowable.concatArray(
@@ -137,13 +137,13 @@ public interface UILogWeightTestType extends
                     Flowable.zip(
                         THIS.rxe_weightProgress(E, WeightProgress.PREVIOUS),
                         THIS.rxe_weightProgress(E, WeightProgress.CHANGE),
-                        NumberUtil::sum
+                        HPNumbers::sum
                     ).doOnNext(b -> LogUtil.printft(
                         "Initial weight should be %s, but is %s", b, a)
                     ).filter(b -> b.equals(a)
                     ).switchIfEmpty(E.rxv_error()))
                 )
-        ).all(ObjectUtil::nonNull).toFlowable().subscribe(subscriber);
+        ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
 

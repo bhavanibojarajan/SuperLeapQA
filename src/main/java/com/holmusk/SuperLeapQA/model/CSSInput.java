@@ -2,7 +2,7 @@ package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.HMUITestKit.model.HMCSSInputType;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.collection.CollectionUtil;
+import org.swiften.javautilities.collection.HPIterables;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.mobile.Platform;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
@@ -111,7 +111,7 @@ public enum CSSInput implements HMCSSInputType {
     public Collection<String> uom(@NotNull InputHelperType helper) {
         switch (this) {
             case ACTIVITY:
-                return CollectionUtil.asList("activityLog_title_minutes");
+                return HPIterables.asList("activityLog_title_minutes");
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);

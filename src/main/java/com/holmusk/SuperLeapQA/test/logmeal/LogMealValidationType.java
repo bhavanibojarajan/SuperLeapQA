@@ -8,7 +8,7 @@ import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.AndroidView;
 import org.swiften.xtestkit.base.Engine;
@@ -219,7 +219,7 @@ public interface LogMealValidationType extends BaseValidationType {
      * @return {@link Flowable} instance.
      * @see Config#MAX_PHOTO_COUNT
      * @see Mood#values()
-     * @see ObjectUtil#nonNull(Object)
+     * @see HPObjects#nonNull(Object)
      * @see TextInput#MEAL_DESCRIPTION
      * @see #rxe_editField(Engine, HMInputType)
      * @see #rxe_mealCancel(Engine)
@@ -247,7 +247,7 @@ public interface LogMealValidationType extends BaseValidationType {
                     .map(a -> a + 1)
                     .flatMap(a -> rxe_photoPicker(ENGINE, a))
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 }

@@ -9,9 +9,9 @@ import com.holmusk.SuperLeapQA.model.DrawerItem;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.bool.BooleanUtil;
+import org.swiften.javautilities.bool.HPBooleans;
 import org.swiften.javautilities.localizer.LocalizerType;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.javautilities.util.LogUtil;
 import org.swiften.xtestkit.android.AndroidEngine;
@@ -135,7 +135,7 @@ public interface BaseValidationType extends ErrorProviderType, AppDelayType {
             .filter(a -> a.toLowerCase().equals(VALUE.toLowerCase()))
             .switchIfEmpty(ENGINE.rxv_error(String.format(
                 "Value for %s does not equal %s", INPUT, VALUE)))
-            .map(BooleanUtil::toTrue);
+            .map(HPBooleans::toTrue);
     }
 
     /**
@@ -237,7 +237,7 @@ public interface BaseValidationType extends ErrorProviderType, AppDelayType {
         return Flowable
             .fromArray(DrawerItem.values())
             .flatMap(a -> THIS.rxe_drawerItem(ENGINE, a))
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 
@@ -249,7 +249,7 @@ public interface BaseValidationType extends ErrorProviderType, AppDelayType {
      */
     @NotNull
     default Flowable<Boolean> rxv_isDrawerOpen(@NotNull Engine<?> engine) {
-        return rxv_drawer(engine).map(BooleanUtil::isTrue).onErrorReturnItem(false);
+        return rxv_drawer(engine).map(HPBooleans::isTrue).onErrorReturnItem(false);
     }
 
     /**

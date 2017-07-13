@@ -10,9 +10,9 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.protocol.RetryProviderType;
+import org.swiften.javautilities.rx.HPReactives;
 import org.swiften.javautilities.util.LogUtil;
-import org.swiften.javautilities.rx.RxUtil;
-import org.swiften.javautilities.test.TestNGUtil;
+import org.swiften.javautilities.test.TestNGs;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.kit.TestKit;
 import org.swiften.xtestkit.test.BaseTestType;
@@ -58,7 +58,7 @@ public interface UIBaseTestType extends
     @NotNull
     @DataProvider
     static Iterator<Object[]> generalUserModeProvider() {
-        return TestNGUtil.oneFromEach(
+        return TestNGs.oneFromEach(
             UserMode.PARENT,
 //            UserMode.TEEN_A18,
             UserMode.TEEN_U18
@@ -75,7 +75,7 @@ public interface UIBaseTestType extends
     @NotNull
     @DataProvider
     static Iterator<Object[]> guarantorSpecificUserModeProvider() {
-        return TestNGUtil.oneFromEach(
+        return TestNGs.oneFromEach(
             UserMode.TEEN_U18,
             UserMode.TEEN_A18
         ).iterator();
@@ -100,7 +100,7 @@ public interface UIBaseTestType extends
         subscriber.assertSubscribed();
         subscriber.assertNoErrors();
         subscriber.assertComplete();
-        LogUtil.printft("Test results: %s", RxUtil.nextEvents(subscriber));
+        LogUtil.printft("Test results: %s", HPReactives.nextEvents(subscriber));
     }
 
     @BeforeSuite

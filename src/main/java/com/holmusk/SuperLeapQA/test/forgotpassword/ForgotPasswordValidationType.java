@@ -6,7 +6,7 @@ import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
-import org.swiften.javautilities.object.ObjectUtil;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.base.Engine;
 
 /**
@@ -46,7 +46,7 @@ public interface ForgotPasswordValidationType extends BaseValidationType {
                 rxe_forgotPasswordSubmit(engine),
                 rxe_editField(engine, TextInput.EMAIL)
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 
@@ -97,7 +97,7 @@ public interface ForgotPasswordValidationType extends BaseValidationType {
                 rxe_emailSentConfirm(engine),
                 rxe_emailSentMessage(engine)
             )
-            .all(ObjectUtil::nonNull)
+            .all(HPObjects::nonNull)
             .toFlowable();
     }
 }

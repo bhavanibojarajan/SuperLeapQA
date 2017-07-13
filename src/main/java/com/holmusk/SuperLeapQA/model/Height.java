@@ -3,8 +3,8 @@ package com.holmusk.SuperLeapQA.model;
 import com.holmusk.HMUITestKit.model.HMUnitSystemConvertibleType;
 import com.holmusk.HMUITestKit.model.UnitSystem;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.collection.CollectionUtil;
-import org.swiften.javautilities.collection.Zip;
+import org.swiften.javautilities.collection.HPIterables;
+import org.swiften.javautilities.functional.Tuple;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
 import org.swiften.xtestkit.ios.IOSView;
@@ -36,9 +36,9 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
     @NotNull
     public static List<Height> metric(@NotNull PlatformType platform) {
         if (platform.equals(Platform.ANDROID)) {
-            return CollectionUtil.asList(CM);
+            return HPIterables.asList(CM);
         } else {
-            return CollectionUtil.asList(CM, CM_DEC);
+            return HPIterables.asList(CM, CM_DEC);
         }
     }
 
@@ -49,7 +49,7 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      */
     @NotNull
     public static List<Height> imperial(@NotNull PlatformType platform) {
-        return CollectionUtil.asList(FT, INCH);
+        return HPIterables.asList(FT, INCH);
     }
 
     /**
@@ -79,20 +79,20 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * @param platform {@link PlatformType} instance.
      * @param MODE {@link UserMode} instance.
      * @param unit {@link UnitSystem} instance.
-     * @return {@link List} of {@link Zip}.
+     * @return {@link List} of {@link Tuple}.
      * @see #instances(PlatformType, UnitSystem)
      */
     @NotNull
-    public static List<Zip<Height,String>> random(@NotNull PlatformType platform,
-                                                  @NotNull final UserMode MODE,
-                                                  @NotNull UnitSystem unit) {
+    public static List<Tuple<Height,String>> random(@NotNull PlatformType platform,
+                                                    @NotNull final UserMode MODE,
+                                                    @NotNull UnitSystem unit) {
         return instances(platform, unit).stream()
-            .map(a -> Zip.of(a, String.valueOf(a.randomValue(MODE))))
+            .map(a -> Tuple.of(a, String.valueOf(a.randomValue(MODE))))
             .collect(Collectors.toList());
     }
 
     /**
-     * Get the {@link String} format to process a {@link List} of {@link Zip}
+     * Get the {@link String} format to process a {@link List} of {@link Tuple}
      * {@link Height}.
      * @param platform {@link PlatformType} instance.
      * @return {@link String} value.
@@ -116,7 +116,7 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
      * on {@link UnitSystem}.
      * @param platform {@link PlatformType} instance.
      * @param unit {@link UnitSystem} instance.
-     * @param inputs {@link List} of {@link Zip}.
+     * @param inputs {@link List} of {@link Tuple}.
      * @return {@link String} value.
      * @see #imperialFormat(PlatformType)
      */
@@ -124,7 +124,7 @@ public enum Height implements SLNumericChoiceType, HMUnitSystemConvertibleType {
     @SuppressWarnings("ConstantConditions")
     public static String stringValue(@NotNull PlatformType platform,
                                      @NotNull UnitSystem unit,
-                                     @NotNull List<Zip<Height,String>> inputs) {
+                                     @NotNull List<Tuple<Height,String>> inputs) {
         double a = Double.valueOf(inputs.get(0).B);
         double b = Double.valueOf(inputs.size() > 1 ? inputs.get(1).B : "0");
 

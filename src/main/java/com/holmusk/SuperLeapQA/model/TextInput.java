@@ -2,10 +2,10 @@ package com.holmusk.SuperLeapQA.model;
 
 import com.holmusk.HMUITestKit.model.HMTextType;
 import org.jetbrains.annotations.NotNull;
-import org.swiften.javautilities.collection.CollectionUtil;
+import org.swiften.javautilities.collection.HPIterables;
 import org.swiften.javautilities.localizer.LocalizerType;
-import org.swiften.javautilities.number.NumberUtil;
-import org.swiften.javautilities.string.StringUtil;
+import org.swiften.javautilities.number.HPNumbers;
+import org.swiften.javautilities.string.HPStrings;
 import org.swiften.javautilities.util.LogUtil;
 import org.swiften.xtestkit.base.model.InputHelperType;
 import org.swiften.xtestkit.base.model.InputType;
@@ -165,7 +165,7 @@ public enum TextInput implements ErrorProviderType, HMTextType {
                     .build();
 
             default:
-                List<AttributeType> clsAttrs = CollectionUtil
+                List<AttributeType> clsAttrs = HPIterables
                     .asList(
                         IOSView.Type.UI_SECURE_TEXT_FIELD,
                         IOSView.Type.UI_TEXT_VIEW,
@@ -256,11 +256,11 @@ public enum TextInput implements ErrorProviderType, HMTextType {
             case NAME:
             case PARENT_NAME:
             case PASSWORD:
-                return "testQA-" + StringUtil.randomString(10);
+                return "testQA-" + HPStrings.randomString(10);
 
             case CHILD_NRIC:
             case NRIC:
-                String suffix = CollectionUtil.randomElement(
+                String suffix = HPIterables.randomElement(
                     "A",
                     "B",
                     "C",
@@ -273,30 +273,30 @@ public enum TextInput implements ErrorProviderType, HMTextType {
                     "Z",
                     "J");
 
-                String digits  = StringUtil.randomDigitString(7);
+                String digits  = HPStrings.randomDigitString(7);
                 return "S" + digits + suffix;
-//                return StringUtil.randomDigitString(7);
+//                return HPStrings.randomDigitString(7);
 
             case MOBILE:
             case PARENT_MOBILE:
             case PHONE:
-                return StringUtil.randomDigitString(8);
+                return HPStrings.randomDigitString(8);
 
             case POSTAL_CODE:
                 return "139951"; // Blk 71 Ayer Rajah Crescent
 
             case EMAIL:
             case PARENT_EMAIL:
-                return "testQA-" + StringUtil.randomString(10) + "@gmail.com";
+                return "testQA-" + HPStrings.randomString(10) + "@gmail.com";
 
             case UNIT_NUMBER:
-                int floor = NumberUtil.randomBetween(1, 9);
-                int unit = NumberUtil.randomBetween(1, 9);
+                int floor = HPNumbers.randomBetween(1, 9);
+                int unit = HPNumbers.randomBetween(1, 9);
                 return String.format("#%02d-%02d", floor, unit);
 
             case MEAL_COMMENT:
             case MEAL_DESCRIPTION:
-                return StringUtil.randomString(20);
+                return HPStrings.randomString(20);
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
