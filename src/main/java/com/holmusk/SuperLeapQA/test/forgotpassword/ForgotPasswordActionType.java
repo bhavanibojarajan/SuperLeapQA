@@ -3,7 +3,6 @@ package com.holmusk.SuperLeapQA.test.forgotpassword;
 import com.holmusk.HMUITestKit.model.HMTextType;
 import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.test.base.BaseActionType;
-import com.holmusk.SuperLeapQA.test.login.LoginActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.object.HPObjects;
@@ -14,11 +13,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by haipham on 5/26/17.
  */
-public interface ForgotPasswordActionType extends
-    BaseActionType,
-    ForgotPasswordValidationType,
-    LoginActionType
-{
+public interface ForgotPasswordActionType extends BaseActionType, ForgotPasswordValidationType {
     /**
      * Enter forgot password inputs. Should only take {@link TextInput#EMAIL}.
      * @param engine {@link Engine} instance.
@@ -44,7 +39,7 @@ public interface ForgotPasswordActionType extends
             rxe_forgotPasswordSubmit(ENGINE).flatMap(ENGINE::rxa_click),
             Flowable.timer(forgotPasswordProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
             rxa_watchProgressBar(ENGINE)
-        );
+        ).all(HPObjects::nonNull).toFlowable();
     }
 
     /**
@@ -56,13 +51,10 @@ public interface ForgotPasswordActionType extends
      */
     @NotNull
     default Flowable<?> rxa_recoverPassword(@NotNull Engine<?> engine) {
-        return Flowable
-            .concatArray(
-                rxa_enterPassRecoveryInputs(engine),
-                rxa_confirmPassRecovery(engine)
-            )
-            .all(HPObjects::nonNull)
-            .toFlowable();
+        return Flowable.concatArray(
+            rxa_enterPassRecoveryInputs(engine),
+            rxa_confirmPassRecovery(engine)
+        ).all(HPObjects::nonNull).toFlowable();
     }
 
     /**

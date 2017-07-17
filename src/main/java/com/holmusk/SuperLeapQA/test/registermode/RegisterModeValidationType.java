@@ -6,7 +6,6 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.HPObjects;
-import org.swiften.javautilities.rx.HPReactives;
 import org.swiften.xtestkit.base.Engine;
 
 /**
@@ -18,9 +17,7 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
      * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see UserMode#registerButtonText()
      * @see Engine#rxe_containsText(String...)
-     * @see HPReactives#error(String)
      */
     @NotNull
     default Flowable<WebElement> rxe_signUpMode(@NotNull Engine<?> engine,
@@ -52,7 +49,6 @@ public interface RegisterModeValidationType extends WelcomeValidationType {
      * @see Engine#rxe_containsText(String...)
      * @see #rxe_signUpMode(Engine, UserMode)
      * @see #rxe_backButtonTitle(Engine)
-     * @see HPObjects#nonNull(Object)
      */
     @NotNull
     @SuppressWarnings("unchecked")

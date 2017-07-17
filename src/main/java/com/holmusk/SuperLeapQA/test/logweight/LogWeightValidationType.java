@@ -56,14 +56,11 @@ public interface LogWeightValidationType extends HMCircleScrollValidationType {
     default Flowable<?> rxv_weightEntry(@NotNull Engine<?> engine) {
         HMCSSInputType input = CSSInput.WEIGHT;
 
-        return Flowable
-            .mergeArray(
-                rxe_CSSValueDisplay(engine, input),
-                rxe_CSSLogTime(engine, input),
-                rxe_weightLocSwitch(engine),
-                rxe_CSSDetailEntrySubmit(engine, input)
-            )
-            .all(HPObjects::nonNull)
-            .toFlowable();
+        return Flowable.mergeArray(
+            rxe_CSSValueDisplay(engine, input),
+            rxe_CSSLogTime(engine, input),
+            rxe_weightLocSwitch(engine),
+            rxe_CSSDetailEntrySubmit(engine, input)
+        ).all(HPObjects::nonNull).toFlowable();
     }
 }

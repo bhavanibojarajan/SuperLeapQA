@@ -1,7 +1,7 @@
 package com.holmusk.SuperLeapQA.test.card;
 
 import com.holmusk.SuperLeapQA.model.CardType;
-import com.holmusk.SuperLeapQA.navigation.type.ScreenInitializationType;
+import com.holmusk.SuperLeapQA.navigation.type.ScreenInitType;
 import com.holmusk.SuperLeapQA.test.dashboard.DashboardActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +13,7 @@ import org.swiften.xtestkit.base.Engine;
 /**
  * Created by haipham on 6/20/17.
  */
-public interface CardItemHelperType extends DashboardActionType, ScreenInitializationType {
+public interface CardItemHelperType extends DashboardActionType, ScreenInitType {
     /**
      * Complete steps to delete the first item corresponding to {@link CardType}.
      * @param engine {@link Engine} instance.

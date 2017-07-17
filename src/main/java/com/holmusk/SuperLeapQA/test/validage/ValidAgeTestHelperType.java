@@ -10,6 +10,7 @@ import com.holmusk.HMUITestKit.model.HMInputType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.functional.Tuple;
+import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkitcomponents.platform.PlatformType;
 
@@ -27,12 +28,6 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
      * @param ENGINE {@link Engine} instance.
      * @param FT {@link Height#FT} value to be selected.
      * @return {@link Flowable} instance.
-     * @see ChoiceInput#HEIGHT
-     * @see Engine#platform()
-     * @see Height#FT
-     * @see Height#INCH
-     * @see Height#stringValue(PlatformType, UnitSystem, List)
-     * @see UnitSystem#IMPERIAL
      * @see #rxa_selectChoice(Engine, List)
      * @see #rxa_confirmNumericChoice(Engine)
      * @see #rxa_selectUnitSystemPicker(Engine, HMChoiceType, SLNumericChoiceType)
@@ -40,23 +35,24 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
      */
     @NotNull
     default Flowable<?> rxh_inchToFoot(@NotNull final Engine<?> ENGINE, final int FT) {
-        final ValidAgeTestHelperType THIS = this;
-        final ChoiceInput C_HEIGHT = ChoiceInput.HEIGHT;
-        final Height H_FT = Height.FT;
+        final ChoiceInput cHeight = ChoiceInput.HEIGHT;
+        final Height hFeet = Height.FT;
         PlatformType platform = ENGINE.platform();
         UnitSystem unit = UnitSystem.IMPERIAL;
 
-        final List<Tuple<Height,String>> INPUTS = Arrays.asList(
+        List<Tuple<Height,String>> inputs = Arrays.asList(
             Tuple.of(Height.FT, String.valueOf(FT)),
             Tuple.of(Height.INCH, String.valueOf(0))
         );
 
-        final String STR = Height.stringValue(platform, unit, INPUTS);
+        final String hString = Height.stringValue(platform, unit, inputs);
 
-        return rxa_selectUnitSystemPicker(ENGINE, C_HEIGHT, H_FT)
-            .flatMap(a -> THIS.rxa_selectChoice(ENGINE, INPUTS))
-            .flatMap(a -> THIS.rxa_confirmNumericChoice(ENGINE))
-            .flatMap(a -> THIS.rxv_fieldHasValue(ENGINE, C_HEIGHT, STR));
+        return Flowable.concatArray(
+            rxa_selectUnitSystemPicker(ENGINE, cHeight, hFeet),
+            rxa_selectChoice(ENGINE, inputs),
+            rxa_confirmNumericChoice(ENGINE),
+            rxv_fieldHasValue(ENGINE, cHeight, hString)
+        ).all(HPObjects::nonNull).toFlowable();
     }
 
     /**
@@ -66,8 +62,6 @@ public interface ValidAgeTestHelperType extends ValidAgeActionType {
      * @param ENGINE {@link Engine} instance.
      * @param MODE {@link UserMode} instance.
      * @return {@link Flowable} instance.
-     * @see Height#FT
-     * @see Height#selectableRange(UserMode)
      * @see #rxh_inchToFoot(Engine, int)
      */
     @NotNull

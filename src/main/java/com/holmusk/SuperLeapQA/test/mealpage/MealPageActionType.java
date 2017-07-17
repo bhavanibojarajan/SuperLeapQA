@@ -23,14 +23,14 @@ public interface MealPageActionType extends
      * Dismiss the meal image tutorial. However, if this is not the first time
      * the user is logging a meal and there is no such tutorial, simply swallow
      * the error.
-     * @param E {@link Engine} instance.
+     * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_mealImageTutDismiss(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_dismissMealImageTutorial(@NotNull final Engine<?> E) {
-        return rxe_mealImageTutDismiss(E)
-            .flatMap(E::rxa_click)
+    default Flowable<?> rxa_dismissMealImageTutorial(@NotNull final Engine<?> ENGINE) {
+        return rxe_mealImageTutDismiss(ENGINE)
+            .flatMap(ENGINE::rxa_click)
             .map(HPBooleans::toTrue)
             .onErrorReturnItem(true);
     }

@@ -24,8 +24,7 @@ public interface DOBPickerValidationType extends WelcomeValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      */
-    @NotNull
-    Flowable<?> rxv_validAgeScreen(@NotNull Engine<?> engine);
+    @NotNull Flowable<?> rxv_validAgeScreen(@NotNull Engine<?> engine);
 
     /**
      * Validate the unacceptable age screen, after the user picks DoB. This

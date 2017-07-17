@@ -2,7 +2,7 @@ package com.holmusk.SuperLeapQA.test.login;
 
 import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.Screen;
-import com.holmusk.SuperLeapQA.navigation.type.ScreenInitializationType;
+import com.holmusk.SuperLeapQA.navigation.type.ScreenInitType;
 import com.holmusk.SuperLeapQA.test.base.UIBaseTestType;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
@@ -16,11 +16,7 @@ import java.util.List;
 /**
  * Created by haipham on 5/26/17.
  */
-public interface UILoginTestType extends
-    UIBaseTestType,
-    ScreenInitializationType,
-    LoginActionType
-{
+public interface UILoginTestType extends UIBaseTestType, ScreenInitType, LoginActionType {
     /**
      * Login with predefined credentials and verify that it works correctly.
      * @see #assertCorrectness(TestSubscriber)

@@ -28,11 +28,6 @@ public interface UIDashboardTestType extends
     /**
      * Provide {@link CardType} that can be deleted.
      * @return {@link Iterator} instance.
-     * @see TestNGs#oneFromEach(Object[]...)
-     * @see CardType#MEAL
-     * @see CardType#WEIGHT
-     * @see UserMode#PARENT
-     * @see UserMode#TEEN_A18
      */
     @NotNull
     @DataProvider
@@ -57,9 +52,6 @@ public interface UIDashboardTestType extends
      * much faster.
      * @param mode {@link UserMode} instance.
      * @param card {@link CardType} instance.
-     * @see HPObjects#nonNull(Object)
-     * @see Screen#SPLASH
-     * @see Screen#DASHBOARD
      * @see #deletableCardProvider()
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)

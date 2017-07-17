@@ -5,13 +5,11 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.number.HPNumbers;
+import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.IOSView;
-import org.swiften.javautilities.protocol.ClassNameProviderType;
-import org.swiften.xtestkitcomponents.platform.PlatformProviderType;
-import org.swiften.xtestkitcomponents.xpath.AttributeType;
 import org.swiften.xtestkitcomponents.xpath.Attributes;
 import org.swiften.xtestkitcomponents.xpath.CompoundAttribute;
 import org.swiften.xtestkitcomponents.xpath.XPath;
@@ -26,7 +24,6 @@ public interface SearchValidationType extends BaseValidationType {
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsText(String...)
      * @see #rxe_backButton(Engine)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_searchCancel(@NotNull Engine<?> engine) {
@@ -48,8 +45,6 @@ public interface SearchValidationType extends BaseValidationType {
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_ofClass(ClassNameProviderType[])
-     * @see IOSView.Type#UI_SEARCH_BAR
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_searchBar(@NotNull Engine<?> engine) {
@@ -73,15 +68,7 @@ public interface SearchValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Attributes#containsID(String)
-     * @see Attributes#of(PlatformProviderType)
-     * @see CompoundAttribute#forClass(ClassNameProviderType)
-     * @see CompoundAttribute.Builder#addAttribute(AttributeType)
      * @see Engine#rxe_withXPath(XPath...)
-     * @see XPath.Builder#addAttribute(CompoundAttribute)
-     * @see IOSView.Type#UI_TABLE_VIEW
-     * @see IOSView.Type#UI_TABLE_VIEW_CELL
-     * @see IOSView.Type#UI_STATIC_TEXT
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_searchResults(@NotNull Engine<?> engine) {
@@ -114,9 +101,7 @@ public interface SearchValidationType extends BaseValidationType {
      * @param ENGINE {@link Engine} instance.
      * @param QUERY {@link String} value.
      * @return {@link Flowable} instance.
-     * @see Engine#getText(WebElement)
      * @see #rxe_searchResults(Engine)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_searchResult(@NotNull final Engine<?> ENGINE,
@@ -130,7 +115,6 @@ public interface SearchValidationType extends BaseValidationType {
      * Verify that the search result is empty.
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see HPNumbers#isZero(Number)
      * @see #rxe_searchResults(Engine)
      */
     @NotNull
@@ -143,20 +127,18 @@ public interface SearchValidationType extends BaseValidationType {
 
     /**
      * Check if the search result is empty. Throw an error otherwise.
-     * @param E {@link Engine} instance.
+     * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxv_error()
      * @see #rxv_emptySearchResult(Engine)
      */
     @NotNull
-    default Flowable<?> rxv_searchResultMustBeEmpty(@NotNull final Engine<?> E) {
-        return rxv_emptySearchResult(E)
-            .flatMap(a -> {
-                if (a) {
-                    return Flowable.just(true);
-                } else {
-                    return E.rxv_error();
-                }
-            });
+    default Flowable<?> rxv_searchResultMustBeEmpty(@NotNull final Engine<?> ENGINE) {
+        return rxv_emptySearchResult(ENGINE).flatMap(a -> {
+            if (a) {
+                return Flowable.just(true);
+            } else {
+                return ENGINE.rxv_error();
+            }
+        });
     }
 }

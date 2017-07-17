@@ -5,7 +5,7 @@ import com.holmusk.SuperLeapQA.model.UserMode;
 import com.holmusk.SuperLeapQA.navigation.type.BackwardNavigationType;
 import com.holmusk.SuperLeapQA.navigation.type.ForwardNavigationType;
 import com.holmusk.SuperLeapQA.navigation.type.SLScreenManagerType;
-import com.holmusk.SuperLeapQA.navigation.type.ScreenInitializationType;
+import com.holmusk.SuperLeapQA.navigation.type.ScreenInitType;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +29,7 @@ public interface UIBaseTestType extends
     BaseTestType,
     BackwardNavigationType,
     ForwardNavigationType,
-    ScreenInitializationType,
+    ScreenInitType,
     SLScreenManagerType
 {
     /**

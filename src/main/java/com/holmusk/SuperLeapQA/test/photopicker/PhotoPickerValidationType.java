@@ -17,7 +17,6 @@ public interface PhotoPickerValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @param mode {@link PhotoPickerMode} instance.
      * @return {@link Flowable} instance.
-     * @see PhotoPickerMode#title()
      * @see Engine#rxe_containsText(String...)
      */
     @NotNull
@@ -60,7 +59,6 @@ public interface PhotoPickerValidationType extends BaseValidationType {
      * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_imageViews()
-     * @see com.holmusk.SuperLeapQA.model.PhotoPickerMode#LIBRARY
      */
     @NotNull
     default Flowable<WebElement> rxe_imageViews(@NotNull Engine<?> engine) {

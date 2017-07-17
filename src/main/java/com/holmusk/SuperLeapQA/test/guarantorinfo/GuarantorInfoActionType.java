@@ -69,12 +69,9 @@ public interface GuarantorInfoActionType extends BaseActionType, GuarantorInfoVa
     @NotNull
     default Flowable<?> rxa_completeGuarantorInfo(@NotNull Engine<?> engine,
                                                   @NotNull UserMode mode) {
-        return Flowable
-            .concatArray(
-                rxa_enterGuarantorInfo(engine, mode),
-                rxa_confirmGuarantorInfo(engine, mode)
-            )
-            .all(HPObjects::nonNull)
-            .toFlowable();
+        return Flowable.concatArray(
+            rxa_enterGuarantorInfo(engine, mode),
+            rxa_confirmGuarantorInfo(engine, mode)
+        ).all(HPObjects::nonNull).toFlowable();
     }
 }

@@ -37,8 +37,6 @@ public interface WeightPageValidationType extends BaseValidationType {
      * @param ENGINE {@link Engine} instance.
      * @param WP {@link WeightProgress} instance.
      * @return {@link Flowable} instance.
-     * @see Double#valueOf(String)
-     * @see Engine#getText(WebElement)
      * @see #rxe_weightProgressDisplay(Engine, WeightProgress)
      */
     @NotNull

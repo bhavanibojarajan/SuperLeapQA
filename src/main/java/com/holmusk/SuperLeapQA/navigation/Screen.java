@@ -1,6 +1,6 @@
 package com.holmusk.SuperLeapQA.navigation;
 
-import com.holmusk.SuperLeapQA.navigation.type.ScreenInitializationType;
+import com.holmusk.SuperLeapQA.navigation.type.ScreenInitType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.xtestkit.base.Engine;
@@ -9,7 +9,7 @@ import org.swiften.xtestkit.navigation.NavigationSupplier;
 /**
  * Created by haipham on 5/21/17.
  */
-public enum Screen implements ScreenInitializationType {
+public enum Screen implements ScreenInitType {
     SPLASH,
     WELCOME,
     LOGIN,

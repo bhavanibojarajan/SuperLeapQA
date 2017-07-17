@@ -3,7 +3,6 @@ package com.holmusk.SuperLeapQA.test.search;
 import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.base.Engine;
 
 import java.util.concurrent.TimeUnit;
@@ -16,7 +15,6 @@ public interface SearchActionType extends BaseActionType, SearchValidationType {
      * Cancel search.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #rxe_searchCancel(Engine)
      */
     @NotNull
@@ -29,8 +27,6 @@ public interface SearchActionType extends BaseActionType, SearchValidationType {
      * @param ENGINE {@link Engine} instance.
      * @param QUERY {@link String} value.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
-     * @see Engine#rxa_sendValue(WebElement, String)
      * @see #searchProgressDelay(Engine)
      * @see #rxe_searchBar(Engine)
      */
@@ -50,7 +46,6 @@ public interface SearchActionType extends BaseActionType, SearchValidationType {
      * @param ENGINE {@link Engine} instance.
      * @param query {@link String} value.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #generalDelay(Engine)
      * @see #rxe_searchResult(Engine, String)
      */

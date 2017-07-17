@@ -3,7 +3,6 @@ package com.holmusk.SuperLeapQA.test.dob;
 import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.util.HPLog;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.android.element.date.AndroidDatePickerType;
@@ -15,7 +14,6 @@ import org.swiften.xtestkit.base.element.date.DateProviderType;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.ios.element.date.IOSDatePickerType;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.javautilities.protocol.DelayProviderType;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -35,8 +33,6 @@ public interface DOBPickerActionType extends BaseActionType, DOBPickerValidation
      * immediately upon entering the screen.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
-     * @see Engine#rxa_implicitlyWait(DelayProviderType)
      * @see #generalDelay(Engine)
      * @see #rxe_DoBEditField(Engine)
      */
@@ -55,7 +51,6 @@ public interface DOBPickerActionType extends BaseActionType, DOBPickerValidation
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsText(String...)
-     * @see Engine#rxa_click(WebElement)
      * @see #generalDelay(Engine)
      */
     @NotNull
@@ -78,17 +73,7 @@ public interface DOBPickerActionType extends BaseActionType, DOBPickerValidation
      * @param engine {@link Engine} instance.
      * @param DATE {@link Date} instance.
      * @return {@link Flowable} instance.
-     * @see AndroidEngine#androidSDK()
-     * @see AndroidSDK#isAtLeastLollipop()
-     * @see AndroidSDK#isAtLeastM()
      * @see Engine#rxa_selectDate(DateProviderType)
-     * @see DateParam.Builder#withDate(Date)
-     * @see DateParam.Builder#withDatePickerUnits()
-     * @see AndroidDatePickerType#DATE_CALENDAR_PICKER
-     * @see AndroidDatePickerType#DATE_CALENDAR_PICKER_M
-     * @see AndroidDatePickerType#DATE_NUMBER_PICKER_MMM_dd_yyyy
-     * @see IOSDatePickerType#PICKER_WHEEL_MMMM_d_yyyy
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_selectDoB(@NotNull Engine<?> engine,

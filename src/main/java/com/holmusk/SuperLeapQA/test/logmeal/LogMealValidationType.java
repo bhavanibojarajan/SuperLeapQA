@@ -8,6 +8,7 @@ import com.holmusk.SuperLeapQA.test.base.BaseValidationType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
+import org.swiften.javautilities.number.HPNumbers;
 import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.protocol.ClassNameProviderType;
 import org.swiften.xtestkit.android.AndroidEngine;
@@ -28,7 +29,6 @@ public interface LogMealValidationType extends BaseValidationType {
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsID(String...)
      * @see Engine#rxe_containsText(String...)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<WebElement> rxe_mealCancel(@NotNull Engine<?> engine) {
@@ -55,10 +55,7 @@ public interface LogMealValidationType extends BaseValidationType {
      */
     @NotNull
     default Flowable<WebElement> rxe_mealConfirm(@NotNull Engine<?> engine) {
-        return engine
-            .rxe_containsText("mealLog_title_submit")
-            .firstElement()
-            .toFlowable();
+        return engine.rxe_containsText("mealLog_title_submit").firstElement().toFlowable();
     }
 
     /**
@@ -67,15 +64,10 @@ public interface LogMealValidationType extends BaseValidationType {
      * @param mood {@link Mood} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsText(String...)
-     * @see Mood#title()
      */
     @NotNull
-    default Flowable<WebElement> rxe_mood(@NotNull Engine<?> engine,
-                                          @NotNull Mood mood) {
-        return engine
-            .rxe_containsText(mood.title())
-            .firstElement()
-            .toFlowable();
+    default Flowable<WebElement> rxe_mood(@NotNull Engine<?> engine, @NotNull Mood mood) {
+        return engine.rxe_containsText(mood.title()).firstElement().toFlowable();
     }
 
     /**
@@ -187,9 +179,7 @@ public interface LogMealValidationType extends BaseValidationType {
             return rxe_mealTime(engine);
         } else if (engine instanceof IOSEngine) {
             return engine
-                .rxe_containsText("mealLog_title_save")
-                .firstElement()
-                .toFlowable();
+                .rxe_containsText("mealLog_title_save").firstElement().toFlowable();
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -212,21 +202,18 @@ public interface LogMealValidationType extends BaseValidationType {
     default Flowable<?> rxv_mealLog(@NotNull final Engine<?> ENGINE) {
         final LogMealValidationType THIS = this;
 
-        return Flowable
-            .mergeArray(
-                rxe_mealCancel(ENGINE),
-                rxe_mealConfirm(ENGINE),
-                rxe_mealLocSwitch(ENGINE),
-                rxe_editField(ENGINE, TextInput.MEAL_DESCRIPTION),
+        return Flowable.mergeArray(
+            rxe_mealCancel(ENGINE),
+            rxe_mealConfirm(ENGINE),
+            rxe_mealLocSwitch(ENGINE),
+            rxe_editField(ENGINE, TextInput.MEAL_DESCRIPTION),
 
-                Flowable.fromArray(Mood.values())
-                    .flatMap(a -> THIS.rxe_mood(ENGINE, a)),
+            Flowable.fromArray(Mood.values())
+                .flatMap(a -> THIS.rxe_mood(ENGINE, a)),
 
-                Flowable.range(0, Config.MAX_PHOTO_COUNT)
-                    .map(a -> a + 1)
-                    .flatMap(a -> rxe_photoPicker(ENGINE, a))
-            )
-            .all(HPObjects::nonNull)
-            .toFlowable();
+            Flowable.range(0, Config.MAX_PHOTO_COUNT)
+                .map(HPNumbers::incrementByOne)
+                .flatMap(a -> rxe_photoPicker(ENGINE, a))
+        ).all(HPObjects::nonNull).toFlowable();
     }
 }

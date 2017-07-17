@@ -4,7 +4,6 @@ import com.holmusk.SuperLeapQA.model.TextInput;
 import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.base.Engine;
 
@@ -72,7 +71,6 @@ public interface InvalidAgeActionType extends BaseActionType, InvalidAgeValidati
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_invalidAgeOk(Engine)
-     * @see Engine#rxa_click(WebElement)
      */
     @NotNull
     default Flowable<?> rxa_acknowledgeSubscription(@NotNull final Engine<?> ENGINE) {

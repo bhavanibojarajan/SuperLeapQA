@@ -3,7 +3,6 @@ package com.holmusk.SuperLeapQA.test.welcome;
 import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.WebElement;
 import org.swiften.xtestkit.base.Engine;
 
 /**
@@ -14,7 +13,6 @@ public interface WelcomeActionType extends BaseActionType, WelcomeValidationType
      * Navigate to {@link com.holmusk.SuperLeapQA.navigation.Screen#LOGIN}.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #rxe_welcomeLogin(Engine)
      */
     @NotNull
@@ -26,7 +24,6 @@ public interface WelcomeActionType extends BaseActionType, WelcomeValidationType
      * Navigate to {@link com.holmusk.SuperLeapQA.navigation.Screen#REGISTER}.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #rxe_welcomeRegister(Engine)
      */
     @NotNull

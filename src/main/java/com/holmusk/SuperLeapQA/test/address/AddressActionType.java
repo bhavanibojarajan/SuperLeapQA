@@ -58,9 +58,8 @@ public interface AddressActionType extends BaseActionType, AddressValidationType
      */
     @NotNull
     default Flowable<?> rxa_completeAddressInfo(@NotNull Engine<?> engine) {
-        return Flowable.concatArray(
-            rxa_enterAddressInfo(engine),
-            rxa_submitAddress(engine)
-        ).all(HPObjects::nonNull).toFlowable();
+        return Flowable
+            .concatArray(rxa_enterAddressInfo(engine), rxa_submitAddress(engine))
+            .all(HPObjects::nonNull).toFlowable();
     }
 }

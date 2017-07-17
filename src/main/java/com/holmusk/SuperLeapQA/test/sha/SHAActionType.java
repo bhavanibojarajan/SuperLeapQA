@@ -3,7 +3,6 @@ package com.holmusk.SuperLeapQA.test.sha;
 import com.holmusk.SuperLeapQA.model.UserMode;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.HPBooleans;
 import org.swiften.xtestkit.base.Engine;
 
@@ -18,9 +17,6 @@ public interface SHAActionType extends SHAValidationType {
      * @param mode {@link UserMode} instance.
      * @param PARTICIPATING {@link Boolean} value.
      * @return {@link Flowable} instance.
-     * @see HPBooleans#toTrue(Object)
-     * @see Engine#rxa_click(WebElement)
-     * @see UserMode#isTeen()
      * @see #rxe_shaYes(Engine)
      * @see #rxe_shaNo(Engine)
      */

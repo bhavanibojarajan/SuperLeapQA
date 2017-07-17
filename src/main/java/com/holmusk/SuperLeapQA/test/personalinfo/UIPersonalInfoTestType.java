@@ -86,10 +86,13 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
             rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO),
 
             rxa_randomInput(ENGINE, TextInput.PASSWORD)
-                .flatMap(a -> THIS.rxa_confirmTextInput(ENGINE)
-                    .flatMap(b -> ENGINE.rxa_togglePasswordMask(a))
-                    .filter(b -> ENGINE.isShowingPassword(b))
-                    .switchIfEmpty(ENGINE.rxv_error()))
+                .flatMap(a -> Flowable.concatArray(
+                    THIS.rxa_confirmTextInput(ENGINE),
+
+                    ENGINE.rxa_togglePasswordMask(a)
+                        .filter(ENGINE::isShowingPassword)
+                        .switchIfEmpty(ENGINE.rxv_error())
+                ))
         ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();

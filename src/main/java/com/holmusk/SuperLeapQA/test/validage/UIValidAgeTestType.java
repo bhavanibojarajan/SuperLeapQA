@@ -25,7 +25,6 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
      * {@link UserMode} requires such a check.
      * @return {@link Iterator}.
      * @see UserMode#requiresBMICheck()
-     * @see UserMode#values()
      */
     @NotNull
     @DataProvider
@@ -49,14 +48,11 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
      * {@link com.holmusk.SuperLeapQA.model.Height#INCH} is converted to
      * {@link com.holmusk.SuperLeapQA.model.Height#FT}.
      * @param mode {@link UserMode} instance.
-     * @see HPObjects#nonNull(Object)
-     * @see Screen#SPLASH
-     * @see Screen#VALID_AGE
+     * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
+     * @see #generalUserModeProvider()
      * @see #rxa_navigate(UserMode, Screen...)
      * @see #rxh_inchToFootRecursive(Engine, UserMode)
-     * @see #generalUserModeProvider()
-     * @see #assertCorrectness(TestSubscriber)
      */
     @SuppressWarnings("unchecked")
     @Test(
@@ -86,9 +82,6 @@ public interface UIValidAgeTestType extends UIBaseTestType, ValidAgeTestHelperTy
      * so by deliberating selecting height/weight so that BMI calculations
      * return a healthy figure.
      * @param mode {@link UserMode} instance.
-     * @see HPObjects#nonNull(Object)
-     * @see Screen#SPLASH
-     * @see Screen#VALID_AGE
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_completeValidAgeInputs(Engine, UserMode, boolean)

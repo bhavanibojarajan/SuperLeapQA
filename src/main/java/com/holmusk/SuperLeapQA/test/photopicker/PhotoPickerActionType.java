@@ -29,10 +29,7 @@ public interface PhotoPickerActionType extends BaseActionType, PhotoPickerValida
      * @param ENGINE {@link Engine} instance.
      * @param MODE {@link PhotoPickerMode} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
-     * @see Engine#rxa_acceptAlert()
      * @see #rxe_pickerMode(Engine, PhotoPickerMode)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_selectPickerMode(@NotNull final Engine<?> ENGINE,
@@ -56,10 +53,6 @@ public interface PhotoPickerActionType extends BaseActionType, PhotoPickerValida
      * Randomly select a photo from {@link PhotoPickerMode#LIBRARY}.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
-     * @see Long#intValue()
-     * @see HPObjects#eq(Object)
-     * @see Random#nextInt(int)
      * @see #rxe_imageViews(Engine)
      */
     @NotNull
@@ -80,8 +73,6 @@ public interface PhotoPickerActionType extends BaseActionType, PhotoPickerValida
      * @param ENGINE {@link Engine} instance.
      * @param PHOTO_COUNT {@link Integer} value.
      * @return {@link Flowable} instance.
-     * @see HPObjects#nonNull(Object)
-     * @see PhotoPickerMode#LIBRARY
      * @see #rxa_selectPickerMode(Engine, PhotoPickerMode)
      * @see #rxa_selectRandomPhoto(Engine)
      */
@@ -101,7 +92,6 @@ public interface PhotoPickerActionType extends BaseActionType, PhotoPickerValida
      * Confirm photo selection.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #rxe_usePhoto(Engine)
      */
     @NotNull

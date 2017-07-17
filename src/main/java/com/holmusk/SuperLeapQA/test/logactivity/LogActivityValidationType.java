@@ -27,13 +27,10 @@ public interface LogActivityValidationType extends BaseValidationType, HMCircleS
     default Flowable<?> rxv_activityEntry(@NotNull Engine<?> engine) {
         HMCSSInputType input = CSSInput.ACTIVITY;
 
-        return Flowable
-            .mergeArray(
-                rxe_CSSValueDisplay(engine, input),
-                rxe_CSSLogTime(engine, input),
-                rxe_CSSDetailEntrySubmit(engine, input)
-            )
-            .all(HPObjects::nonNull)
-            .toFlowable();
+        return Flowable.mergeArray(
+            rxe_CSSValueDisplay(engine, input),
+            rxe_CSSLogTime(engine, input),
+            rxe_CSSDetailEntrySubmit(engine, input)
+        ).all(HPObjects::nonNull).toFlowable();
     }
 }
