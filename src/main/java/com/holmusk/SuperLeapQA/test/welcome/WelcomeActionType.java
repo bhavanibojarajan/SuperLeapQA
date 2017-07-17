@@ -11,23 +11,23 @@ import org.swiften.xtestkit.base.Engine;
 public interface WelcomeActionType extends BaseActionType, WelcomeValidationType {
     /**
      * Navigate to {@link com.holmusk.SuperLeapQA.navigation.Screen#LOGIN}.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_welcomeLogin(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_loginFromWelcome(@NotNull final Engine<?> ENGINE) {
-        return rxe_welcomeLogin(ENGINE).flatMap(ENGINE::rxa_click);
+    default Flowable<?> rxa_loginFromWelcome(@NotNull Engine<?> engine) {
+        return rxe_welcomeLogin(engine).compose(engine.clickFn());
     }
 
     /**
      * Navigate to {@link com.holmusk.SuperLeapQA.navigation.Screen#REGISTER}.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_welcomeRegister(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_registerFromWelcome(@NotNull final Engine<?> ENGINE) {
-        return rxe_welcomeRegister(ENGINE).flatMap(ENGINE::rxa_click);
+    default Flowable<?> rxa_registerFromWelcome(@NotNull Engine<?> engine) {
+        return rxe_welcomeRegister(engine).compose(engine.clickFn());
     }
 }

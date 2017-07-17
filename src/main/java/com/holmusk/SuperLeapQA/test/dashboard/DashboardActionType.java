@@ -6,7 +6,6 @@ import com.holmusk.SuperLeapQA.test.base.BaseActionType;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.bool.HPBooleans;
 import org.swiften.javautilities.object.HPObjects;
@@ -17,9 +16,7 @@ import org.swiften.xtestkit.base.element.swipe.SwipeParam;
 import org.swiften.xtestkit.base.param.DirectionParam;
 import org.swiften.xtestkit.ios.IOSEngine;
 import org.swiften.xtestkit.mobile.Platform;
-import org.swiften.javautilities.protocol.RepeatProviderType;
 import org.swiften.xtestkitcomponents.coordinate.RLPoint;
-import org.swiften.xtestkitcomponents.coordinate.RLPositionType;
 import org.swiften.xtestkitcomponents.direction.Direction;
 import org.swiften.xtestkitcomponents.direction.DirectionProviderType;
 
@@ -31,50 +28,46 @@ import java.util.concurrent.TimeUnit;
 public interface DashboardActionType extends BaseActionType, DashboardValidationType {
     /**
      * Dismiss the tracker change popup. We declare "Not now" by default.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see HPBooleans#toTrue(Object)
-     * @see Engine#rxa_click(WebElement)
      * @see Engine#rxe_containsText(String...)
      */
     @NotNull
-    default Flowable<?> rxa_dismissTrackerPopup(@NotNull final Engine<?> ENGINE) {
-        return ENGINE
+    default Flowable<?> rxa_dismissTrackerPopup(@NotNull final Engine<?> engine) {
+        return engine
             .rxe_containsText("dashboard_title_notNow")
             .firstElement()
             .toFlowable()
-            .flatMap(ENGINE::rxa_click)
+            .compose(engine.clickFn())
             .map(HPBooleans::toTrue)
             .onErrorReturnItem(true);
     }
 
     /**
      * Click the Use App Now button.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #rxe_useAppNow(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_useAppNow(@NotNull final Engine<?> ENGINE) {
-        return rxe_useAppNow(ENGINE).flatMap(ENGINE::rxa_click);
+    default Flowable<?> rxa_useAppNow(@NotNull Engine<?> engine) {
+        return rxe_useAppNow(engine).compose(engine.clickFn());
     }
 
     /**
      * Switch tab to one corresponding to {@link CardType}.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @param card {@link CardType} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #generalDelay(Engine)
      * @see #rxe_dashboardCardTab(Engine, CardType)
      */
     @NotNull
-    default Flowable<?> rxa_dashboardCardTab(@NotNull final Engine<?> ENGINE,
+    default Flowable<?> rxa_dashboardCardTab(@NotNull final Engine<?> engine,
                                              @NotNull CardType card) {
-        return rxe_dashboardCardTab(ENGINE, card)
-            .flatMap(ENGINE::rxa_click)
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
+        return rxe_dashboardCardTab(engine, card)
+            .compose(engine.clickFn())
+            .delay(generalDelay(engine), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -83,15 +76,7 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      * after a period of inactivity.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see HPBooleans#toTrue(Object)
-     * @see DirectionParam.Builder#withAnchorRLPosition(RLPositionType)
-     * @see DirectionParam.Builder#withDirection(Direction)
-     * @see DirectionParam.Builder#withEndRatio(double)
-     * @see DirectionParam.Builder#withStartRatio(double)
-     * @see DirectionParam.Builder#withTimes(int)
      * @see Engine#rxa_swipeThenReverse(DirectionProviderType)
-     * @see Direction#DOWN_UP
-     * @see RLPoint#MID
      * @see #rxe_addCard(Engine)
      */
     @NotNull
@@ -120,35 +105,28 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
     /**
      * Click the add card button to open
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#ADD_CARD}.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #generalDelay(Engine)
      * @see #rxa_revealCardAdd(Engine)
      * @see #rxe_addCard(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_openCardAddMenu(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_openCardAddMenu(@NotNull Engine<?> engine) {
         return Flowable
             .concatArray(
-                rxa_revealCardAdd(ENGINE),
-                rxe_addCard(ENGINE).flatMap(ENGINE::rxa_click)
+                rxa_revealCardAdd(engine),
+                rxe_addCard(engine).compose(engine.clickFn())
             )
             .all(HPObjects::nonNull).toFlowable()
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
+            .delay(generalDelay(engine), TimeUnit.MILLISECONDS);
     }
 
     /**
      * Dismiss {@link com.holmusk.SuperLeapQA.navigation.Screen#ADD_CARD}.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_navigateBackOnce()
-     * @see Engine#rxa_tap(Point)
-     * @see Engine#rxe_window()
-     * @see org.openqa.selenium.Point#moveBy(int, int)
-     * @see WebElement#getLocation()
      * @see #generalDelay(Engine)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     default Flowable<?> rxa_dismissCardAddMenu(@NotNull final Engine<?> ENGINE) {
@@ -158,7 +136,7 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
             return ENGINE.rxe_window()
                 .map(WebElement::getLocation)
                 .map(a -> a.moveBy(20, 20))
-                .flatMap(ENGINE::rxa_tap)
+                .compose(ENGINE.tapPointFn())
                 .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
@@ -167,36 +145,33 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
 
     /**
      * Navigate to the screen associated with a {@link CardType}.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @param card {@link CardType} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #rxa_dismissCardIntro(Engine)
      * @see #rxe_cardSelector(Engine, CardType)
      */
     @NotNull
-    default Flowable<?> rxa_addCard(@NotNull final Engine<?> ENGINE,
+    default Flowable<?> rxa_addCard(@NotNull Engine<?> engine,
                                     @NotNull CardType card) {
         return Flowable.concatArray(
-            rxe_cardSelector(ENGINE, card).flatMap(ENGINE::rxa_click),
-            rxa_dismissCardIntro(ENGINE)
+            rxe_cardSelector(engine, card).compose(engine.clickFn()),
+            rxa_dismissCardIntro(engine)
         ).all(HPObjects::nonNull).toFlowable();
     }
 
     /**
      * Dismiss the card intro popup, if it is present on the screen.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see HPBooleans#toTrue(Object)
-     * @see Engine#rxa_click(WebElement)
      * @see #generalDelay(Engine)
      * @see #rxe_cardIntroDismiss(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_dismissCardIntro(@NotNull final Engine<?> ENGINE) {
-        return rxe_cardIntroDismiss(ENGINE)
-            .flatMap(ENGINE::rxa_click)
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS)
+    default Flowable<?> rxa_dismissCardIntro(@NotNull Engine<?> engine) {
+        return rxe_cardIntroDismiss(engine)
+            .compose(engine.clickFn())
+            .delay(generalDelay(engine), TimeUnit.MILLISECONDS)
             .map(HPBooleans::toTrue)
             .onErrorReturnItem(false);
     }
@@ -214,13 +189,10 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      * this does is simply opening up the menu then closing it.
      * @param E {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see HPObjects#nonNull(Object)
-     * @see HPReactives#concatDelayEach(long, Flowable[])
      * @see #generalDelay(Engine)
      * @see #rxa_openCardAddMenu(Engine)
      * @see #rxa_dismissCardAddMenu(Engine)
      * @see #rxe_addCard(Engine)
-     * @see #NOT_AVAILABLE
      */
     @NotNull
     @SuppressWarnings("unchecked")
@@ -249,14 +221,13 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
     /**
      * Toggle the search menu from
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #rxe_dashboardSearch(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_toggleDashboardSearch(@NotNull final Engine<?> ENGINE) {
-        return rxe_dashboardSearch(ENGINE).flatMap(ENGINE::rxa_click);
+    default Flowable<?> rxa_toggleDashboardSearch(@NotNull Engine<?> engine) {
+        return rxe_dashboardSearch(engine).compose(engine.clickFn());
     }
 
     /**
@@ -264,13 +235,6 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      * @param ENGINE {@link Engine} instance.
      * @param mode {@link DashboardMode} instance.
      * @return {@link Flowable} instance.
-     * @see DashboardMode#swipeDirection()
-     * @see Engine#rxa_swipeGeneric(WebElement, DirectionProviderType)
-     * @see DirectionParam.Builder#withDirection(Direction)
-     * @see DirectionParam.Builder#withDuration(int)
-     * @see DirectionParam.Builder#withEndRatio(double)
-     * @see DirectionParam.Builder#withStartRatio(double)
-     * @see DirectionParam.Builder#withTimes(int)
      * @see #generalDelay(Engine)
      * @see #rxe_dashboardModeSwitcher(Engine)
      */
@@ -294,19 +258,6 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
      * list view.
      * @param ENGINE {@link Engine} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#coordinate(WebElement, RLPositionType, RLPositionType)
-     * @see Engine#rxa_swipe(RepeatProviderType)
-     * @see Point#getY()
-     * @see Point#moveBy(int, int)
-     * @see SwipeParam.Builder#withStartX(int)
-     * @see SwipeParam.Builder#withEndX(int)
-     * @see SwipeParam.Builder#withStartY(int)
-     * @see SwipeParam.Builder#withEndY(int)
-     * @see SwipeParam.Builder#withTimes(int)
-     * @see CardType#ALL
-     * @see RLPoint#MIN
-     * @see RLPoint#MID
-     * @see RLPoint#MAX
      * @see #generalDelay(Engine)
      * @see #rxe_dashboardCardTab(Engine, CardType)
      * @see #rxe_dashboardModeSwitcher(Engine)
@@ -340,18 +291,17 @@ public interface DashboardActionType extends BaseActionType, DashboardValidation
     /**
      * Navigate to the first content page corresponding to the first
      * {@link CardType} item.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @param card {@link CardType} instance.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_click(WebElement)
      * @see #generalDelay(Engine)
      * @see #rxe_firstCardItem(Engine, CardType)
      */
     @NotNull
-    default Flowable<?> rxa_firstCardItem(@NotNull final Engine<?> ENGINE,
+    default Flowable<?> rxa_firstCardItem(@NotNull Engine<?> engine,
                                           @NotNull CardType card) {
-        return rxe_firstCardItem(ENGINE, card)
-            .flatMap(ENGINE::rxa_click)
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
+        return rxe_firstCardItem(engine, card)
+            .compose(engine.clickFn())
+            .delay(generalDelay(engine), TimeUnit.MILLISECONDS);
     }
 }

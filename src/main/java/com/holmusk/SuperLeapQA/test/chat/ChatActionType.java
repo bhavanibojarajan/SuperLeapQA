@@ -15,36 +15,36 @@ import org.swiften.xtestkit.base.Engine;
 public interface ChatActionType extends BaseActionType, ChatValidationType {
     /**
      * Open the chat window.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_editField(Engine, HMInputType)
      */
     @NotNull
-    default Flowable<?> rxa_openChatWindow(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_openChatWindow(@NotNull Engine<?> engine) {
         HMTextType input = TextInput.MEAL_COMMENT;
-        return rxe_editField(ENGINE, input).flatMap(ENGINE::rxa_click);
+        return rxe_editField(engine, input).compose(engine.clickFn());
     }
 
     /**
      * Dismiss the chat window.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_chatListView(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_dismissChatWindow(@NotNull final Engine<?> ENGINE) {
-        return rxe_chatListView(ENGINE).flatMap(ENGINE::rxa_click);
+    default Flowable<?> rxa_dismissChatWindow(@NotNull Engine<?> engine) {
+        return rxe_chatListView(engine).compose(engine.clickFn());
     }
 
     /**
      * Confirm a chat message.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_chatSend(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_sendChat(@NotNull final Engine<?> ENGINE) {
-        return rxe_chatSend(ENGINE).flatMap(ENGINE::rxa_click);
+    default Flowable<?> rxa_sendChat(@NotNull Engine<?> engine) {
+        return rxe_chatSend(engine).compose(engine.clickFn());
     }
 
     /**

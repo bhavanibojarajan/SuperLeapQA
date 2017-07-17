@@ -32,18 +32,18 @@ public interface InvalidAgeActionType extends BaseActionType, InvalidAgeValidati
 
     /**
      * Confirm email subscription for future program expansion.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #invalidAgeInputProgressDelay(Engine)
      * @see #rxa_watchProgressBar(Engine)
      * @see #rxe_invalidAgeSubmit(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_confirmInvalidAgeInputs(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_confirmInvalidAgeInputs(@NotNull Engine<?> engine) {
         return Flowable.concatArray(
-            rxe_invalidAgeSubmit(ENGINE).flatMap(ENGINE::rxa_click),
-            Flowable.timer(invalidAgeInputProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
-            rxa_watchProgressBar(ENGINE)
+            rxe_invalidAgeSubmit(engine).compose(engine.clickFn()),
+            Flowable.timer(invalidAgeInputProgressDelay(engine), TimeUnit.MILLISECONDS),
+            rxa_watchProgressBar(engine)
         ).all(HPObjects::nonNull).toFlowable();
     }
 
@@ -56,24 +56,21 @@ public interface InvalidAgeActionType extends BaseActionType, InvalidAgeValidati
      */
     @NotNull
     default Flowable<?> rxa_completeInvalidAgeInputs(@NotNull Engine<?> engine) {
-        return Flowable
-            .concatArray(
-                rxa_enterInvalidAgeInputs(engine),
-                rxa_confirmInvalidAgeInputs(engine)
-            )
-            .all(HPObjects::nonNull)
-            .toFlowable();
+        return Flowable.concatArray(
+            rxa_enterInvalidAgeInputs(engine),
+            rxa_confirmInvalidAgeInputs(engine)
+        ).all(HPObjects::nonNull).toFlowable();
 
     }
 
     /**
      * Press the ok button after unacceptable age inputs have been completed.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_invalidAgeOk(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_acknowledgeSubscription(@NotNull final Engine<?> ENGINE) {
-        return rxe_invalidAgeOk(ENGINE).flatMap(ENGINE::rxa_click);
+    default Flowable<?> rxa_acknowledgeSubscription(@NotNull Engine<?> engine) {
+        return rxe_invalidAgeOk(engine).compose(engine.clickFn());
     }
 }

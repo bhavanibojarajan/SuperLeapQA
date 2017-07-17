@@ -35,7 +35,7 @@ public interface SHAActionType extends SHAValidationType {
                     return THIS.rxe_shaNo(ENGINE);
                 }
             })
-            .flatMap(ENGINE::rxa_click)
+            .compose(ENGINE.clickFn())
             .map(HPBooleans::toTrue)
             .defaultIfEmpty(true)
 

@@ -27,22 +27,20 @@ import java.util.concurrent.TimeUnit;
 public interface LogMealActionType extends LogMealValidationType, PhotoPickerActionType {
     /**
      * Select a {@link Mood}.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @param mood {@link Mood} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_mood(Engine, Mood)
      */
     @NotNull
-    default Flowable<?> rxa_selectMood(@NotNull final Engine<?> ENGINE,
+    default Flowable<?> rxa_selectMood(@NotNull Engine<?> engine,
                                        @NotNull Mood mood) {
         HPLog.printft("Selecting mood %s", mood);
 
-        if (ENGINE instanceof AndroidEngine) {
-            return rxe_mood(ENGINE, mood).flatMap(ENGINE::rxa_click);
-        } else if (ENGINE instanceof IOSEngine) {
-            return rxe_mood(ENGINE, mood)
-                .map(ENGINE::middleCoordinate)
-                .flatMap(ENGINE::rxa_tap);
+        if (engine instanceof AndroidEngine) {
+            return rxe_mood(engine, mood).compose(engine.clickFn());
+        } else if (engine instanceof IOSEngine) {
+            return rxe_mood(engine, mood).compose(engine.tapMiddleFn());
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -63,14 +61,14 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
     /**
      * Open {@link com.holmusk.SuperLeapQA.navigation.Screen#PHOTO_PICKER}
      * from {@link com.holmusk.SuperLeapQA.navigation.Screen#MEAL_ENTRY}.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @param index {@link Integer} value representing the pick index.
      * @return {@link Flowable} instance.
      * @see #rxe_photoPicker(Engine, int)
      */
     @NotNull
-    default Flowable<?> rxa_openPhotoPicker(@NotNull final Engine<?> ENGINE, int index) {
-        return rxe_photoPicker(ENGINE, index).flatMap(ENGINE::rxa_click);
+    default Flowable<?> rxa_openPhotoPicker(@NotNull Engine<?> engine, int index) {
+        return rxe_photoPicker(engine, index).compose(engine.clickFn());
     }
 
     /**
@@ -121,18 +119,15 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * only applicable on {@link Platform#IOS} because
      * {@link Engine#sendValue(WebElement, String)} does not work unless the
      * {@link WebElement} is already in focus.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_editField(Engine, HMInputType)
      */
     @NotNull
-    default Flowable<?> rxa_openMealDescription(@NotNull final Engine<?> ENGINE) {
-        if (ENGINE instanceof IOSEngine) {
+    default Flowable<?> rxa_openMealDescription(@NotNull Engine<?> engine) {
+        if (engine instanceof IOSEngine) {
             TextInput input = TextInput.MEAL_DESCRIPTION;
-
-            return rxe_editField(ENGINE, input)
-                .map(ENGINE::middleCoordinate)
-                .flatMap(ENGINE::rxa_tap);
+            return rxe_editField(engine, input).compose(engine.tapMiddleFn());
         } else {
             return Flowable.just(true);
         }
@@ -142,18 +137,18 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
      * Confirm meal description. This is only relevant for {@link Platform#IOS}
      * because the meal description entry requires an Ok button to be pressed
      * to be confirmed.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsText(String...)
      */
     @NotNull
-    default Flowable<?> rxa_confirmMealDescription(@NotNull final Engine<?> ENGINE) {
-        if (ENGINE instanceof IOSEngine) {
-            return ENGINE
+    default Flowable<?> rxa_confirmMealDescription(@NotNull Engine<?> engine) {
+        if (engine instanceof IOSEngine) {
+            return engine
                 .rxe_containsText("mealLog_title_ok")
                 .firstElement()
                 .toFlowable()
-                .flatMap(ENGINE::rxa_click);
+                .compose(engine.clickFn());
         } else {
             return Flowable.just(true);
         }
@@ -161,17 +156,17 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
 
     /**
      * Open the meal time picker.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #generalDelay(Engine)
      * @see #rxe_mealTime(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_openMealTimePicker(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_openMealTimePicker(@NotNull Engine<?> engine) {
         /* We delay by some time for the time picker to fully appear */
-        return rxe_mealTime(ENGINE)
-            .flatMap(ENGINE::rxa_click)
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
+        return rxe_mealTime(engine)
+            .compose(engine.clickFn())
+            .delay(generalDelay(engine), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -202,44 +197,42 @@ public interface LogMealActionType extends LogMealValidationType, PhotoPickerAct
 
     /**
      * Confirm meal time selection.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #generalDelay(Engine)
      * @see #rxe_mealTimeConfirm(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_confirmMealTime(@NotNull final Engine<?> ENGINE) {
-        return rxe_mealTimeConfirm(ENGINE)
-            .flatMap(ENGINE::rxa_click)
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
+    default Flowable<?> rxa_confirmMealTime(@NotNull Engine<?> engine) {
+        return rxe_mealTimeConfirm(engine)
+            .compose(engine.clickFn())
+            .delay(generalDelay(engine), TimeUnit.MILLISECONDS);
     }
 
     /**
      * Toggle location on or off.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @param ON {@link Boolean} value.
      * @return {@link Flowable} instance.
-     * @see Engine#rxa_toggleSwitch(WebElement, boolean)
      * @see #rxe_mealLocSwitch(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_toggleMealLocation(@NotNull final Engine<?> ENGINE,
-                                               final boolean ON) {
-        return rxe_mealLocSwitch(ENGINE).flatMap(a -> ENGINE.rxa_toggleSwitch(a, ON));
+    default Flowable<?> rxa_toggleMealLoc(@NotNull Engine<?> engine, boolean ON) {
+        return rxe_mealLocSwitch(engine).compose(engine.toggleSwitchFn(ON));
     }
 
     /**
      * Submit the current meal log.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #cssLogProgressDelay(Engine)
      * @see #rxe_mealConfirm(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_submitMeal(@NotNull final Engine<?> ENGINE) {
-        return rxe_mealConfirm(ENGINE)
-            .flatMap(ENGINE::rxa_click)
-            .delay(cssLogProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+    default Flowable<?> rxa_submitMeal(@NotNull final Engine<?> engine) {
+        return rxe_mealConfirm(engine)
+            .compose(engine.clickFn())
+            .delay(cssLogProgressDelay(engine), TimeUnit.MILLISECONDS);
     }
 
     /**

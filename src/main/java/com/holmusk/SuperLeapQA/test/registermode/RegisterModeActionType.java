@@ -13,20 +13,20 @@ import org.swiften.xtestkit.ios.IOSEngine;
 public interface RegisterModeActionType extends RegisterModeValidationType {
     /**
      * Navigate to {@link com.holmusk.SuperLeapQA.navigation.Screen#SHA}.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_signUpMode(Engine, UserMode)
      */
     @NotNull
-    default Flowable<?> rxa_SHAFromRegister(@NotNull final Engine<?> ENGINE,
+    default Flowable<?> rxa_SHAFromRegister(@NotNull Engine<?> engine,
                                             @NotNull UserMode mode) {
-        if (ENGINE instanceof AndroidEngine) {
-            return rxe_signUpMode(ENGINE, mode).flatMap(ENGINE::rxa_click);
-        } else if (ENGINE instanceof IOSEngine) {
+        if (engine instanceof AndroidEngine) {
+            return rxe_signUpMode(engine, mode).compose(engine.clickFn());
+        } else if (engine instanceof IOSEngine) {
             /* On iOS, tapping on the element can be rather flaky. Therefore,
              * we tap on its middle coordinate instead. */
-            return rxe_signUpMode(ENGINE, mode).flatMap(ENGINE::rxa_tapMiddle);
+            return rxe_signUpMode(engine, mode).compose(engine.tapMiddleFn());
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

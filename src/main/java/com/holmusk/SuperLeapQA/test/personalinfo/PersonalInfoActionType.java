@@ -20,15 +20,14 @@ import java.util.concurrent.TimeUnit;
 public interface PersonalInfoActionType extends PersonalInfoValidationType, ValidAgeActionType {
     /**
      * Toggle the TOC checkbox to be accepted/rejected.
-     * @param ENGINE {@link Engine} instance.
-     * @param ACCEPTED {@link Boolean} value.
+     * @param engine {@link Engine} instance.
+     * @param accepted {@link Boolean} value.
      * @return {@link Flowable} instance.
      * @see #rxe_TCCheckBox(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_toggleTC(@NotNull final Engine<?> ENGINE,
-                                     final boolean ACCEPTED) {
-        return rxe_TCCheckBox(ENGINE).flatMap(a -> ENGINE.toggleCheckBox(a, ACCEPTED));
+    default Flowable<?> rxa_toggleTC(@NotNull Engine<?> engine, boolean accepted) {
+        return rxe_TCCheckBox(engine).compose(engine.toggleCheckBoxFn(accepted));
     }
 
     /**
@@ -55,18 +54,18 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
 
     /**
      * Click the submit button to confirm personal info inputs.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #personalInfoProgressDelay(Engine)
      * @see #rxa_watchProgressBar(Engine)
      * @see #rxe_personalInfoSubmit(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_confirmPersonalInfo(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_confirmPersonalInfo(@NotNull Engine<?> engine) {
         return Flowable.concatArray(
-            rxe_personalInfoSubmit(ENGINE).flatMap(ENGINE::rxa_click),
-            Flowable.timer(personalInfoProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
-            rxa_watchProgressBar(ENGINE)
+            rxe_personalInfoSubmit(engine).compose(engine.clickFn()),
+            Flowable.timer(personalInfoProgressDelay(engine), TimeUnit.MILLISECONDS),
+            rxa_watchProgressBar(engine)
         ).all(HPObjects::nonNull).toFlowable();
     }
 
@@ -112,7 +111,7 @@ public interface PersonalInfoActionType extends PersonalInfoValidationType, Vali
                 int x = point.getX(), y = point.getY(), h = size.getHeight();
                 return new Point(x + 10, y + h - 3);
             })
-            .flatMap(ENGINE::rxa_tap)
+            .compose(ENGINE.tapPointFn())
             .delay(webViewDelay(ENGINE), TimeUnit.MILLISECONDS);
     }
 }

@@ -48,21 +48,21 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
     /**
      * Navigate backwards by clicking the back button.
      * @return {@link Flowable} instance.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @see #generalDelay(Engine)
      * @see #rxe_backButton(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_clickBackButton(@NotNull final Engine<?> ENGINE) {
-        if (ENGINE instanceof AndroidEngine) {
-            return rxe_backButton(ENGINE)
-                .flatMap(ENGINE::rxa_click)
-                .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
-        } else if (ENGINE instanceof IOSEngine) {
+    default Flowable<?> rxa_clickBackButton(@NotNull Engine<?> engine) {
+        if (engine instanceof AndroidEngine) {
+            return rxe_backButton(engine)
+                .compose(engine.clickFn())
+                .delay(generalDelay(engine), TimeUnit.MILLISECONDS);
+        } else if (engine instanceof IOSEngine) {
             /* Click on the coordinates directly to avoid flakiness */
-            return rxe_backButton(ENGINE)
-                .flatMap(ENGINE::rxa_tapMiddle)
-                .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
+            return rxe_backButton(engine)
+                .compose(engine.tapMiddleFn())
+                .delay(generalDelay(engine), TimeUnit.MILLISECONDS);
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -82,15 +82,15 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
     /**
      * Enter an input for {@link TextInput}.
      * @param input {@link TextInputType} instance.
-     * @param TEXT {@link String} value.
+     * @param text {@link String} value.
      * @return {@link Flowable} instance.
      * @see #rxe_editField(Engine, HMInputType)
      */
     @NotNull
-    default Flowable<WebElement> rxa_input(@NotNull final Engine<?> ENGINE,
-                                           @NotNull HMInputType input,
-                                           @NotNull final String TEXT) {
-        return rxe_editField(ENGINE, input).flatMap(a -> ENGINE.rxa_sendValue(a, TEXT));
+    default Flowable<Boolean> rxa_input(@NotNull Engine<?> engine,
+                                        @NotNull HMInputType input,
+                                        @NotNull String text) {
+        return rxe_editField(engine, input).compose(engine.sendValueFn(text));
     }
 
     /**
@@ -122,8 +122,8 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @see #rxa_input(Engine, HMInputType, String)
      */
     @NotNull
-    default Flowable<WebElement> rxa_randomInput(@NotNull Engine<?> engine,
-                                                 @NotNull HMTextType input) {
+    default Flowable<Boolean> rxa_randomInput(@NotNull Engine<?> engine,
+                                              @NotNull HMTextType input) {
         return rxa_input(engine, input, input.randomInput(engine));
     }
 
@@ -169,23 +169,23 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      * @see #rxe_editField(Engine, HMInputType)
      */
     @NotNull
-    default Flowable<WebElement> rxa_clickInput(@NotNull final Engine<?> ENGINE,
-                                                @NotNull HMInputType input) {
-        return rxe_editField(ENGINE, input).flatMap(ENGINE::rxa_click);
+    default Flowable<Boolean> rxa_clickInput(@NotNull Engine<?> engine,
+                                             @NotNull HMInputType input) {
+        return rxe_editField(engine, input).compose(engine.clickFn());
     }
 
     /**
      * Confirm a text input.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Attributes#containsText(String)
      */
     @NotNull
-    default Flowable<?> rxa_confirmTextInput(@NotNull final Engine<?> ENGINE) {
-        if (ENGINE instanceof IOSEngine) {
+    default Flowable<?> rxa_confirmTextInput(@NotNull final Engine<?> engine) {
+        if (engine instanceof IOSEngine) {
             String done = "input_title_done";
-            String localized = ENGINE.localizer().localize(done);
-            Attributes attrs = Attributes.of(ENGINE);
+            String localized = engine.localizer().localize(done);
+            Attributes attrs = Attributes.of(engine);
 
             Attribute attribute = attrs.containsText(localized);
 
@@ -193,7 +193,7 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
                 .withClass(IOSView.Type.UI_BUTTON);
 
             XPath xpath = XPath.builder().addAttribute(cAttr).build();
-            return ENGINE.rxe_withXPath(xpath).flatMap(ENGINE::rxa_click);
+            return engine.rxe_withXPath(xpath).compose(engine.clickFn());
         } else {
             return Flowable.just(true);
         }
@@ -220,31 +220,31 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
 
     /**
      * Toggle the next input for an input-based {@link WebElement}.
-     * @param E {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @param element {@link WebElement} instance.
      * @return {@link Flowable} instance.
      */
     @NotNull
-    default Flowable<?> rxa_toggleNextInput(@NotNull final Engine<?> E,
+    default Flowable<?> rxa_toggleNextInput(@NotNull Engine<?> engine,
                                             @NotNull WebElement element) {
         /* In this case, each input will have up/down keyboard accessories
          * that we can use to navigate to the previous/next input fields */
-        return E.rxe_containsID("ob downArrow").flatMap(E::rxa_click);
+        return engine.rxe_containsID("ob downArrow").compose(engine.clickFn());
     }
 
     /**
      * Toggle the previous input for an input-based {@link WebElement}. This
      * is only relevant for {@link Platform#IOS} since it has up/down arrow
      * buttons.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @param element {@link WebElement} instance.
      * @return {@link Flowable} instance.
      */
     @NotNull
-    default Flowable<?> rxa_togglePreviousInput(@NotNull final Engine<?> ENGINE,
+    default Flowable<?> rxa_togglePreviousInput(@NotNull Engine<?> engine,
                                                 @NotNull WebElement element) {
-        if (ENGINE instanceof IOSEngine) {
-            return ENGINE.rxe_containsID("ob upArrow").flatMap(ENGINE::rxa_click);
+        if (engine instanceof IOSEngine) {
+            return engine.rxe_containsID("ob upArrow").compose(engine.clickFn());
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -318,13 +318,13 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
 
     /**
      * Open the drawer.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_drawerToggle(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_openDrawer(@NotNull final Engine<?> ENGINE) {
-        return rxe_drawerToggle(ENGINE).flatMap(ENGINE::rxa_click);
+    default Flowable<?> rxa_openDrawer(@NotNull Engine<?> engine) {
+        return rxe_drawerToggle(engine).compose(engine.clickFn());
     }
 
     /**
@@ -341,13 +341,13 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
                 .toFlowable()
                 .map(a -> ENGINE.coordinate(a, RLPoint.MAX, RLPoint.MID))
                 .map(a -> a.moveBy(-20, -20))
-                .flatMap(ENGINE::rxa_tap);
+                .compose(ENGINE.tapPointFn());
         } else if (ENGINE instanceof IOSEngine) {
             return ENGINE
                 .rxe_containsID("reward close")
                 .firstElement()
                 .toFlowable()
-                .flatMap(ENGINE::rxa_click);
+                .compose(ENGINE.clickFn());
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -384,78 +384,81 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
 
     /**
      * Select {@link DrawerItem}.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @param item {@link DrawerItem} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_drawerItem(Engine, DrawerItem)
      */
     @NotNull
-    default Flowable<?> rxa_selectDrawerItem(@NotNull final Engine<?> ENGINE,
+    default Flowable<?> rxa_selectDrawerItem(@NotNull Engine<?> engine,
                                              @NotNull DrawerItem item) {
-        return rxe_drawerItem(ENGINE, item).flatMap(ENGINE::rxa_click);
+        return rxe_drawerItem(engine, item).compose(engine.clickFn());
     }
 
     /**
      * Open the drawer and select {@link DrawerItem}.
-     * @param E {@link Engine} instance.
-     * @param DI {@link DrawerItem} instance.
+     * @param ENGINE {@link Engine} instance.
+     * @param ITEM {@link DrawerItem} instance.
      * @return {@link Flowable} instance.
      * @see #rxa_selectDrawerItem(Engine, DrawerItem)
      * @see #rxa_toggleDrawer(Engine, boolean)
      */
     @NotNull
-    default Flowable<?> rxa_openDrawerAndSelect(@NotNull final Engine<?> E,
-                                                @NotNull final DrawerItem DI) {
+    default Flowable<?> rxa_openDrawerAndSelect(@NotNull final Engine<?> ENGINE,
+                                                @NotNull final DrawerItem ITEM) {
         final BaseActionType THIS = this;
-        return rxa_toggleDrawer(E, true).flatMap(a -> THIS.rxa_selectDrawerItem(E, DI));
+
+        return THIS
+            .rxa_toggleDrawer(ENGINE, true)
+            .flatMap(a -> THIS.rxa_selectDrawerItem(ENGINE, ITEM));
     }
 
     /**
      * Navigate back to
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#DASHBOARD}
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_dashboardBack(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_backToDashboard(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_backToDashboard(@NotNull Engine<?> engine) {
         HPLog.printlnt("Going back to dashboard");
-        return rxe_dashboardBack(ENGINE).flatMap(ENGINE::rxa_click);
+        return rxe_dashboardBack(engine).compose(engine.clickFn());
     }
 
     /**
      * Dismiss the meal image tutorial. However, if this is not the first time
      * the user is logging a meal and there is no such tutorial, simply swallow
      * the error.
-     * @param E {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_mealImageTutDismiss(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_dismissMealImageTutorial(@NotNull final Engine<?> E) {
-        return rxe_mealImageTutDismiss(E)
-            .flatMap(E::rxa_click)
+    default Flowable<?> rxa_dismissMealImageTutorial(@NotNull Engine<?> engine) {
+        return rxe_mealImageTutDismiss(engine)
+            .compose(engine.clickFn())
             .map(HPBooleans::toTrue)
             .onErrorReturnItem(true);
     }
 
     /**
      * Toggle edit mode, then delay for a while for the menu to fully appear.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #generalDelay(Engine)
      * @see #rxe_editToggle(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_openEditMenu(@NotNull final Engine<?> ENGINE) {
-        return rxe_editToggle(ENGINE)
-            .flatMap(ENGINE::rxa_click)
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
+    default Flowable<?> rxa_openEditMenu(@NotNull Engine<?> engine) {
+        return rxe_editToggle(engine)
+            .compose(engine.clickFn())
+            .delay(generalDelay(engine), TimeUnit.MILLISECONDS);
     }
 
     /**
      * Delete some content from the item menu.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #generalDelay(Engine)
      * @see #contentDeleteProgressDelay(Engine)
@@ -464,15 +467,15 @@ public interface BaseActionType extends BaseValidationType, HMDateTimeActionType
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    default Flowable<?> rxa_deleteFromMenu(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_deleteFromMenu(@NotNull Engine<?> engine) {
         return HPReactives
             .concatDelayEach(
-                generalDelay(ENGINE),
-                rxe_menuDelete(ENGINE).flatMap(ENGINE::rxa_click),
-                rxe_menuDeleteConfirm(ENGINE).flatMap(ENGINE::rxa_click)
+                generalDelay(engine),
+                rxe_menuDelete(engine).compose(engine.clickFn()),
+                rxe_menuDeleteConfirm(engine).compose(engine.clickFn())
             )
             .all(HPObjects::nonNull)
             .toFlowable()
-            .delay(contentDeleteProgressDelay(ENGINE), TimeUnit.MILLISECONDS);
+            .delay(contentDeleteProgressDelay(engine), TimeUnit.MILLISECONDS);
     }
 }

@@ -18,18 +18,18 @@ import java.util.concurrent.TimeUnit;
 public interface AddressActionType extends BaseActionType, AddressValidationType {
     /**
      * Submit address information.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #addressInfoProgressDelay(Engine)
      * @see #rxa_watchProgressBar(Engine)
      * @see #rxe_addressSubmit(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_submitAddress(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_submitAddress(@NotNull Engine<?> engine) {
         return Flowable.concatArray(
-            rxe_addressSubmit(ENGINE).flatMap(ENGINE::rxa_click),
-            Flowable.timer(addressInfoProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
-            rxa_watchProgressBar(ENGINE)
+            rxe_addressSubmit(engine).compose(engine.clickFn()),
+            Flowable.timer(addressInfoProgressDelay(engine), TimeUnit.MILLISECONDS),
+            rxa_watchProgressBar(engine)
         ).all(HPObjects::nonNull).toFlowable();
     }
 

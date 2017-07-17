@@ -16,14 +16,13 @@ public interface LogWeightActionType extends
 {
     /**
      * Toggle weight location.
-     * @param ENGINE {@link Engine} instance.
-     * @param ON {@link Boolean} value.
+     * @param engine {@link Engine} instance.
+     * @param on {@link Boolean} value.
      * @return {@link Flowable} instance.
      * @see #rxe_weightLocSwitch(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_toggleWeightLocation(@NotNull final Engine<?> ENGINE,
-                                                 final boolean ON) {
-        return rxe_weightLocSwitch(ENGINE).flatMap(a -> ENGINE.rxa_toggleSwitch(a, ON));
+    default Flowable<?> rxa_toggleWeightLoc(@NotNull Engine<?> engine, boolean on) {
+        return rxe_weightLocSwitch(engine).compose(engine.toggleSwitchFn(on));
     }
 }

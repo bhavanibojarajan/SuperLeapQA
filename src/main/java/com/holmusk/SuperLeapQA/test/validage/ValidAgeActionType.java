@@ -63,13 +63,13 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
 
     /**
      * Confirm numeric choice input (e.g. for {@link Height} and {@link Weight}).
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_numericChoiceConfirm(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_confirmNumericChoice(@NotNull final Engine<?> ENGINE) {
-        return rxe_numericChoiceConfirm(ENGINE).flatMap(ENGINE::rxa_click);
+    default Flowable<?> rxa_confirmNumericChoice(@NotNull Engine<?> engine) {
+        return rxe_numericChoiceConfirm(engine).compose(engine.clickFn());
     }
 
     /**
@@ -121,14 +121,14 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * This is only relevant for {@link Platform#IOS} since we need to
      * click on a Done button. On {@link Platform#ANDROID}, clicking the target
      * item automatically dismisses the picker dialog.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_textChoiceConfirm(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_confirmTextChoice(@NotNull final Engine<?> ENGINE) {
-        if (ENGINE instanceof IOSEngine) {
-            return rxe_textChoiceConfirm(ENGINE).flatMap(ENGINE::rxa_click);
+    default Flowable<?> rxa_confirmTextChoice(@NotNull Engine<?> engine) {
+        if (engine instanceof IOSEngine) {
+            return rxe_textChoiceConfirm(engine).compose(engine.clickFn());
         } else {
             return Flowable.just(true);
         }
@@ -143,11 +143,11 @@ public interface ValidAgeActionType extends BaseActionType, ValidAgeValidationTy
      * @see #rxe_validAgeConfirm(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_confirmValidAgeInputs(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_confirmValidAgeInputs(@NotNull Engine<?> engine) {
         return Flowable.concatArray(
-            rxe_validAgeConfirm(ENGINE).flatMap(ENGINE::rxa_click),
-            Flowable.timer(validAgeInputProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
-            rxa_watchProgressBar(ENGINE)
+            rxe_validAgeConfirm(engine).compose(engine.clickFn()),
+            Flowable.timer(validAgeInputProgressDelay(engine), TimeUnit.MILLISECONDS),
+            rxa_watchProgressBar(engine)
         ).all(HPObjects::nonNull).toFlowable();
     }
 

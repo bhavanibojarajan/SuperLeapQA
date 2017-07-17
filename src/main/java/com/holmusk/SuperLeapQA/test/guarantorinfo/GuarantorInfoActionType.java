@@ -18,7 +18,7 @@ public interface GuarantorInfoActionType extends BaseActionType, GuarantorInfoVa
     /**
      * Confirm additional personal inputs. This is only relevant to
      * {@link UserMode#requiresGuarantor()}.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @param mode {@link UserMode} instance.
      * @return {@link Flowable} instance.
      * @see #registerProgressDelay(Engine)
@@ -26,13 +26,13 @@ public interface GuarantorInfoActionType extends BaseActionType, GuarantorInfoVa
      * @see #rxe_guarantorInfoSubmit(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_confirmGuarantorInfo(@NotNull final Engine<?> ENGINE,
+    default Flowable<?> rxa_confirmGuarantorInfo(@NotNull Engine<?> engine,
                                                  @NotNull UserMode mode) {
         if (mode.requiresGuarantor()) {
             return Flowable.concatArray(
-                rxe_guarantorInfoSubmit(ENGINE).flatMap(ENGINE::rxa_click),
-                Flowable.timer(registerProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
-                rxa_watchProgressBar(ENGINE)
+                rxe_guarantorInfoSubmit(engine).compose(engine.clickFn()),
+                Flowable.timer(registerProgressDelay(engine), TimeUnit.MILLISECONDS),
+                rxa_watchProgressBar(engine)
             ).all(HPObjects::nonNull).toFlowable();
         } else {
             return Flowable.just(true);

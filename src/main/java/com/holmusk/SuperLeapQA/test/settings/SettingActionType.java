@@ -24,43 +24,43 @@ public interface SettingActionType extends BaseActionType, SettingValidationType
     /**
      * Toggle {@link Setting} by clicking the corresponding
      * {@link org.openqa.selenium.WebElement}.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @param setting {@link Setting} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_setting(Engine, Setting)
      */
     @NotNull
-    default Flowable<?> rxa_toggleSetting(@NotNull final Engine<?> ENGINE,
+    default Flowable<?> rxa_toggleSetting(@NotNull Engine<?> engine,
                                           @NotNull Setting setting) {
-        return rxe_setting(ENGINE, setting).flatMap(ENGINE::rxa_click);
+        return rxe_setting(engine, setting).compose(engine.clickFn());
     }
 
     /**
      * Change the current {@link UnitSystem}.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @param unit {@link UnitSystem} instance.
      * @return {@link Flowable} instance.
      * @see #unitSystemChangeDelay(Engine)
      * @see #unitSystemSettingIndex(Engine, UnitSystem)
      */
     @NotNull
-    default Flowable<?> rxa_changeUnitSystem(@NotNull final Engine<?> ENGINE,
+    default Flowable<?> rxa_changeUnitSystem(@NotNull final Engine<?> engine,
                                              @NotNull UnitSystem unit) {
         HPLog.printft("Changing unit system to %s", unit);
-        int index = unitSystemSettingIndex(ENGINE, unit);
+        int index = unitSystemSettingIndex(engine, unit);
 
-        if (ENGINE instanceof AndroidEngine) {
+        if (engine instanceof AndroidEngine) {
             String value = String.valueOf(HPBooleans.isTrue(index));
-            String onValue = ENGINE.switcherOnValue();
+            String onValue = engine.switcherOnValue();
             final boolean ON = value.equals(onValue);
 
-            return ENGINE
+            return engine
                 .rxe_ofClass(AndroidView.Type.SWITCH)
                 .firstElement()
                 .toFlowable()
-                .flatMap(a -> ENGINE.rxa_toggleSwitch(a, ON))
-                .delay(unitSystemChangeDelay(ENGINE), TimeUnit.MILLISECONDS);
-        } else if (ENGINE instanceof IOSEngine) {
+                .compose(engine.toggleSwitchFn(ON))
+                .delay(unitSystemChangeDelay(engine), TimeUnit.MILLISECONDS);
+        } else if (engine instanceof IOSEngine) {
             XPath xpath = XPath.builder()
                 .addAttribute(CompoundAttribute.forClass(IOSView.Type.UI_SEGMENTED_CONTROL))
                 .addAttribute(CompoundAttribute.builder()
@@ -69,12 +69,12 @@ public interface SettingActionType extends BaseActionType, SettingValidationType
                     .build())
                 .build();
 
-            return ENGINE
+            return engine
                 .rxe_withXPath(xpath)
                 .firstElement()
                 .toFlowable()
-                .flatMap(ENGINE::rxa_click)
-                .delay(unitSystemChangeDelay(ENGINE), TimeUnit.MILLISECONDS);
+                .compose(engine.clickFn())
+                .delay(unitSystemChangeDelay(engine), TimeUnit.MILLISECONDS);
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }

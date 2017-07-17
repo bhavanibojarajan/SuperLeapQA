@@ -31,16 +31,16 @@ public interface DOBPickerActionType extends BaseActionType, DOBPickerValidation
      * DoB picker to be opened. On
      * {@link Platform#IOS}, the picker is visible
      * immediately upon entering the screen.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #generalDelay(Engine)
      * @see #rxe_DoBEditField(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_openDoBPicker(@NotNull Engine<?> ENGINE) {
-        return rxe_DoBEditField(ENGINE)
-            .flatMap(ENGINE::rxa_click)
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
+    default Flowable<?> rxa_openDoBPicker(@NotNull Engine<?> engine) {
+        return rxe_DoBEditField(engine)
+            .compose(engine.clickFn())
+            .delay(generalDelay(engine), TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -48,14 +48,14 @@ public interface DOBPickerActionType extends BaseActionType, DOBPickerValidation
      * DoB dialog. On Android, this action will bring the user directly to
      * the next screen, so if we want to check whether the date was properly
      * stored in the DoB text field, we need to navigate back once.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxe_containsText(String...)
      * @see #generalDelay(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_confirmDoB(@NotNull final Engine<?> ENGINE) {
-        return ENGINE
+    default Flowable<?> rxa_confirmDoB(@NotNull Engine<?> engine) {
+        return engine
             .rxe_containsText(
                 "register_title_ok",
                 "register_title_submit",
@@ -63,8 +63,8 @@ public interface DOBPickerActionType extends BaseActionType, DOBPickerValidation
             )
             .firstElement()
             .toFlowable()
-            .flatMap(ENGINE::rxa_click)
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
+            .compose(engine.clickFn())
+            .delay(generalDelay(engine), TimeUnit.MILLISECONDS);
     }
 
     /**

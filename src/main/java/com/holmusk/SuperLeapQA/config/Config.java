@@ -63,21 +63,21 @@ public final class Config {
 //            .withTestMode(TestMode.SIMULATED)
 //            .build());
 //
-//        ENGINES.add(HMAndroidEngine.builder()
-//            .withSDK(AndroidSDK.SDK_18)
-//            .withAppActivity(ANDROID_APP_ACTIVITY)
-//            .withAppPackage(ANDROID_APP_PACKAGE)
-//            .withDeviceName("Nexus_4_API_18")
-//            .withTestMode(TestMode.SIMULATED)
-//            .build());
-//
         ENGINES.add(HMAndroidEngine.builder()
-            .withSDK(AndroidSDK.SDK_22)
+            .withSDK(AndroidSDK.SDK_18)
             .withAppActivity(ANDROID_APP_ACTIVITY)
             .withAppPackage(ANDROID_APP_PACKAGE)
-            .withDeviceName("Nexus_4_API_22")
+            .withDeviceName("Nexus_4_API_18")
             .withTestMode(TestMode.SIMULATED)
             .build());
+//
+//        ENGINES.add(HMAndroidEngine.builder()
+//            .withSDK(AndroidSDK.SDK_22)
+//            .withAppActivity(ANDROID_APP_ACTIVITY)
+//            .withAppPackage(ANDROID_APP_PACKAGE)
+//            .withDeviceName("Nexus_4_API_22")
+//            .withTestMode(TestMode.SIMULATED)
+//            .build());
 
 //        ENGINES.add(HMAndroidEngine.builder()
 //            .withSDK(AndroidSDK.SDK_23)

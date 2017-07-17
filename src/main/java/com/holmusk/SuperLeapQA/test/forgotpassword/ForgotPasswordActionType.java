@@ -27,18 +27,18 @@ public interface ForgotPasswordActionType extends BaseActionType, ForgotPassword
 
     /**
      * Confirm forgot password inputs.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #forgotPasswordProgressDelay(Engine)
      * @see #rxa_watchProgressBar(Engine)
      * @see #rxe_forgotPasswordSubmit(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_confirmPassRecovery(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_confirmPassRecovery(@NotNull Engine<?> engine) {
         return Flowable.concatArray(
-            rxe_forgotPasswordSubmit(ENGINE).flatMap(ENGINE::rxa_click),
-            Flowable.timer(forgotPasswordProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
-            rxa_watchProgressBar(ENGINE)
+            rxe_forgotPasswordSubmit(engine).compose(engine.clickFn()),
+            Flowable.timer(forgotPasswordProgressDelay(engine), TimeUnit.MILLISECONDS),
+            rxa_watchProgressBar(engine)
         ).all(HPObjects::nonNull).toFlowable();
     }
 
@@ -59,15 +59,15 @@ public interface ForgotPasswordActionType extends BaseActionType, ForgotPassword
 
     /**
      * Dismiss the email sent confirmation dialog.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #generalDelay(Engine)
      * @see #rxe_emailSentConfirm(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_confirmEmailSent(@NotNull final Engine<?> ENGINE) {
-        return rxe_emailSentConfirm(ENGINE)
-            .flatMap(ENGINE::rxa_click)
-            .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS);
+    default Flowable<?> rxa_confirmEmailSent(@NotNull Engine<?> engine) {
+        return rxe_emailSentConfirm(engine)
+            .compose(engine.clickFn())
+            .delay(generalDelay(engine), TimeUnit.MILLISECONDS);
     }
 }

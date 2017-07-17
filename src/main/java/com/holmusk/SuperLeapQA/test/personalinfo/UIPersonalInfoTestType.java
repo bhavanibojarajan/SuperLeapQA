@@ -59,7 +59,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
      * password. It is only applicable to {@link Platform#ANDROID} since on
      * {@link Platform#IOS} there is no way to reveal the password content.
      * @see Engine#isShowingPassword(WebElement)
-     * @see Engine#rxa_togglePasswordMask(WebElement)
+     * @see Engine#togglePasswordMaskFn() 
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #rxa_navigate(UserMode, Screen...)
@@ -77,22 +77,22 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
             return;
         }
 
-        final UIPersonalInfoTestType THIS = this;
-        final UserMode MODE = UserMode.defaultUserMode();
+        UserMode mode = UserMode.defaultUserMode();
+        TextInput input = TextInput.PASSWORD;
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         Flowable.concatArray(
-            rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO),
+            rxa_navigate(mode, Screen.SPLASH, Screen.PERSONAL_INFO),
 
-            rxa_randomInput(ENGINE, TextInput.PASSWORD)
-                .flatMap(a -> Flowable.concatArray(
-                    THIS.rxa_confirmTextInput(ENGINE),
+            rxa_randomInput(ENGINE, TextInput.PASSWORD),
+            rxa_confirmTextInput(ENGINE),
 
-                    ENGINE.rxa_togglePasswordMask(a)
-                        .filter(ENGINE::isShowingPassword)
-                        .switchIfEmpty(ENGINE.rxv_error())
-                ))
+            rxe_editField(ENGINE, input).compose(ENGINE.togglePasswordMaskFn()),
+
+            rxe_editField(ENGINE, input)
+                .filter(ENGINE::isShowingPassword)
+                .switchIfEmpty(ENGINE.rxv_error())
         ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
@@ -133,19 +133,19 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
         final Map<String,String> INPUTS = new HashMap<>();
         List<HMTextType> info = MODE.personalInfo(PLATFORM);
 
-        final List<HMTextType> TEXT_INFO = info.stream()
+        List<HMTextType> textInfo = info.stream()
             .filter(TextInputType.class::isInstance)
             .map(HMTextType.class::cast)
             .collect(Collectors.toList());
 
-        TEXT_INFO.forEach(a -> INPUTS.put(a.toString(), a.randomInput(ENGINE)));
+        textInfo.forEach(a -> INPUTS.put(a.toString(), a.randomInput(ENGINE)));
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         // When
         Flowable.concatArray(
             rxa_navigate(MODE, Screen.SPLASH, Screen.PERSONAL_INFO),
 
-            Flowable.fromIterable(TEXT_INFO)
+            Flowable.fromIterable(textInfo)
                 .concatMap(a -> Flowable.concatArray(
                     THIS.rxa_input(ENGINE, a, INPUTS.get(a.toString())),
                     THIS.rxa_makeNextInputVisible(ENGINE)
@@ -154,14 +154,13 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
             /* We need to unmask the password field so that later its text
              * can be verified. Otherwise, the text returned will be empty */
             rxe_editField(ENGINE, TextInput.PASSWORD)
-                .flatMap(ENGINE::rxa_togglePasswordMask)
+                .compose(ENGINE.togglePasswordMaskFn())
                 .delay(generalDelay(ENGINE), TimeUnit.MILLISECONDS),
 
             rxa_openTC(ENGINE),
-
             ENGINE.rxa_navigateBackOnce(),
 
-            Flowable.fromIterable(TEXT_INFO).flatMap(a ->
+            Flowable.fromIterable(textInfo).flatMap(a ->
                 THIS.rxv_fieldHasValue(ENGINE, a, INPUTS.get(a.toString()))
             )
         ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);

@@ -27,23 +27,23 @@ public interface PhotoPickerActionType extends BaseActionType, PhotoPickerValida
      * instead the user needs to accept a permission dialog, then click on
      * that {@link WebElement} again).
      * @param ENGINE {@link Engine} instance.
-     * @param MODE {@link PhotoPickerMode} instance.
+     * @param mode {@link PhotoPickerMode} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_pickerMode(Engine, PhotoPickerMode)
      */
     @NotNull
     default Flowable<?> rxa_selectPickerMode(@NotNull final Engine<?> ENGINE,
-                                             @NotNull final PhotoPickerMode MODE) {
+                                             @NotNull PhotoPickerMode mode) {
         if (ENGINE instanceof AndroidEngine) {
-            return rxe_pickerMode(ENGINE, MODE)
-                .flatMap(ENGINE::rxa_click)
+            return rxe_pickerMode(ENGINE, mode)
+                .compose(ENGINE.clickFn())
                 .flatMap(b -> ENGINE.rxa_acceptAlert())
                 .onErrorReturnItem(true)
                 .repeat(2)
                 .all(HPObjects::nonNull)
                 .toFlowable();
         } else if (ENGINE instanceof IOSEngine) {
-            return rxe_pickerMode(ENGINE, MODE).flatMap(ENGINE::rxa_click);
+            return rxe_pickerMode(ENGINE, mode).compose(ENGINE.clickFn());
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -64,7 +64,7 @@ public interface PhotoPickerActionType extends BaseActionType, PhotoPickerValida
                 .toFlowable(),
 
             rxe_imageViews(ENGINE).toList().toFlowable(),
-            (a, b) -> ENGINE.rxa_click(b.get(a))
+            (a, b) -> Flowable.just(b.get(a)).compose(ENGINE.clickFn())
         ).flatMap(a -> a);
     }
 
@@ -90,12 +90,12 @@ public interface PhotoPickerActionType extends BaseActionType, PhotoPickerValida
 
     /**
      * Confirm photo selection.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_usePhoto(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_confirmPhoto(@NotNull final Engine<?> ENGINE) {
-        return rxe_usePhoto(ENGINE).flatMap(ENGINE::rxa_click);
+    default Flowable<?> rxa_confirmPhoto(@NotNull Engine<?> engine) {
+        return rxe_usePhoto(engine).compose(engine.clickFn());
     }
 }

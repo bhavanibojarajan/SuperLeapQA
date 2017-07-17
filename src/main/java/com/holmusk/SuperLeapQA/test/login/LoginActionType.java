@@ -21,29 +21,27 @@ import java.util.concurrent.TimeUnit;
 public interface LoginActionType extends BaseActionType, LoginValidationType {
     /**
      * Navigate to {@link com.holmusk.SuperLeapQA.navigation.Screen#FORGOT_PASSWORD}.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_forgotPassword(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_forgotPasswordFromLogin(@NotNull final Engine<?> ENGINE) {
-        return rxe_forgotPassword(ENGINE).flatMap(ENGINE::rxa_click);
+    default Flowable<?> rxa_forgotPasswordFromLogin(@NotNull Engine<?> engine) {
+        return rxe_forgotPassword(engine).compose(engine.clickFn());
     }
 
     /**
      * Navigate to {@link com.holmusk.SuperLeapQA.navigation.Screen#REGISTER}.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_loginRegister(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_registerFromLogin(@NotNull final Engine<?> ENGINE) {
-        if (ENGINE instanceof AndroidEngine) {
-            return rxe_loginRegister(ENGINE).flatMap(ENGINE::rxa_click);
-        } else if (ENGINE instanceof IOSEngine) {
-            return rxe_loginRegister(ENGINE)
-                .map(ENGINE::middleCoordinate)
-                .flatMap(ENGINE::rxa_tap);
+    default Flowable<?> rxa_registerFromLogin(@NotNull Engine<?> engine) {
+        if (engine instanceof AndroidEngine) {
+            return rxe_loginRegister(engine).compose(engine.clickFn());
+        } else if (engine instanceof IOSEngine) {
+            return rxe_loginRegister(engine).compose(engine.tapMiddleFn());
         } else {
             throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -51,18 +49,18 @@ public interface LoginActionType extends BaseActionType, LoginValidationType {
 
     /**
      * Confirm login inputs.
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see Engine#rxa_watchUntilHidden(Flowable)
      * @see #loginProgressDelay(Engine)
      * @see #rxe_submit(Engine)
      */
     @NotNull
-    default Flowable<?> rxa_confirmLogin(@NotNull final Engine<?> ENGINE) {
+    default Flowable<?> rxa_confirmLogin(@NotNull Engine<?> engine) {
         return Flowable.concatArray(
-            rxe_submit(ENGINE).flatMap(ENGINE::rxa_click),
-            Flowable.timer(loginProgressDelay(ENGINE), TimeUnit.MILLISECONDS),
-            rxa_watchProgressBar(ENGINE)
+            rxe_submit(engine).compose(engine.clickFn()),
+            Flowable.timer(loginProgressDelay(engine), TimeUnit.MILLISECONDS),
+            rxa_watchProgressBar(engine)
         ).all(HPObjects::nonNull).toFlowable();
     }
 

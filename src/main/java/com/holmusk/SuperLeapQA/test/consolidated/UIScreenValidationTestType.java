@@ -307,7 +307,7 @@ public interface UIScreenValidationTestType extends
      * visibility and interacting with each of them.
      * @param MODE {@link UserMode} instance.
      * @see Engine#isShowingPassword(WebElement)
-     * @see Engine#rxa_togglePasswordMask(WebElement)
+     * @see Engine#togglePasswordMaskFn()
      * @see #assertCorrectness(TestSubscriber)
      * @see #engine()
      * @see #generalUserModeProvider()

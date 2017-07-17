@@ -27,7 +27,6 @@ import com.holmusk.SuperLeapQA.test.validage.ValidAgeActionType;
 import com.holmusk.SuperLeapQA.test.welcome.WelcomeActionType;
 import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
-import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.HPIterables;
 import org.swiften.javautilities.object.HPObjects;
 import org.swiften.xtestkit.base.Engine;
@@ -151,7 +150,6 @@ public interface ForwardNavigationType extends
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#DOB}
      * @return {@link Flowable} instance.
      * @see #rxe_signUpMode(Engine, UserMode)
-     * @see Engine#rxa_click(WebElement)
      */
     @NotNull
     default Flowable<?> rxn_sha_DoBPicker(@NotNull Engine<?> engine,
@@ -338,13 +336,13 @@ public interface ForwardNavigationType extends
      * We skip photo selection by default.
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#PHOTO_PICKER}
      * {@link com.holmusk.SuperLeapQA.navigation.Screen#MEAL_ENTRY}
-     * @param ENGINE {@link Engine} instance.
+     * @param engine {@link Engine} instance.
      * @return {@link Flowable} instance.
      * @see #rxe_skipPhoto(Engine)
      */
     @NotNull
-    default Flowable<?> rxn_photoPicker_logMeal(@NotNull final Engine<?> ENGINE) {
-        return rxe_skipPhoto(ENGINE).flatMap(ENGINE::rxa_click);
+    default Flowable<?> rxn_photoPicker_logMeal(@NotNull Engine<?> engine) {
+        return rxe_skipPhoto(engine).compose(engine.clickFn());
     }
 
     /**
