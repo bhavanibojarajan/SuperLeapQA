@@ -10,7 +10,7 @@ import io.reactivex.subscribers.TestSubscriber;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
-import org.swiften.javautilities.test.TestNGs;
+import org.swiften.javautilities.test.HPTestNGs;
 import org.swiften.xtestkit.base.Engine;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -32,7 +32,7 @@ public interface UIDashboardTestType extends
     @NotNull
     @DataProvider
     static Iterator<Object[]> deletableCardProvider() {
-        return TestNGs.oneFromEach(
+        return HPTestNGs.oneFromEach(
             new Object[] {
                 UserMode.PARENT
 //                UserMode.TEEN_A18

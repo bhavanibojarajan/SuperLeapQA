@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.protocol.RetryProviderType;
 import org.swiften.javautilities.rx.HPReactives;
 import org.swiften.javautilities.util.HPLog;
-import org.swiften.javautilities.test.TestNGs;
+import org.swiften.javautilities.test.HPTestNGs;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.kit.TestKit;
 import org.swiften.xtestkit.test.BaseTestType;
@@ -58,7 +58,7 @@ public interface UIBaseTestType extends
     @NotNull
     @DataProvider
     static Iterator<Object[]> generalUserModeProvider() {
-        return TestNGs.oneFromEach(
+        return HPTestNGs.oneFromEach(
 //            UserMode.PARENT,
 //            UserMode.TEEN_A18,
             UserMode.TEEN_U18
@@ -75,7 +75,7 @@ public interface UIBaseTestType extends
     @NotNull
     @DataProvider
     static Iterator<Object[]> guarantorSpecificUserModeProvider() {
-        return TestNGs.oneFromEach(
+        return HPTestNGs.oneFromEach(
             UserMode.TEEN_U18,
             UserMode.TEEN_A18
         ).iterator();

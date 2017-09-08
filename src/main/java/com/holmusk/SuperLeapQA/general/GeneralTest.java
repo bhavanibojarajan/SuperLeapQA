@@ -13,7 +13,7 @@ import io.reactivex.Flowable;
 import org.jetbrains.annotations.NotNull;
 import org.swiften.javautilities.collection.HPIterables;
 import org.swiften.javautilities.functional.Tuple;
-import org.swiften.javautilities.test.TestNGs;
+import org.swiften.javautilities.test.HPTestNGs;
 import org.swiften.javautilities.util.HPLog;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputHelperType;
@@ -44,7 +44,7 @@ public final class GeneralTest {
     @NotNull
     @DataProvider(parallel = true)
     public static Iterator<Object[]> bmiDataProvider() {
-        return TestNGs.oneFromEach(
+        return HPTestNGs.oneFromEach(
             Platform.values(),
             UserMode.values(),
             UnitSystem.values(),
@@ -56,7 +56,7 @@ public final class GeneralTest {
     @NotNull
     @DataProvider(parallel = true)
     public static Iterator<Object[]> findBmiDataProvider() {
-        return TestNGs.oneFromEach(
+        return HPTestNGs.oneFromEach(
             Platform.values(),
             UserMode.values(),
             UnitSystem.values(),

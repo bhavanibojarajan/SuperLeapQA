@@ -63,30 +63,31 @@ public final class Config {
 //            .withTestMode(TestMode.SIMULATED)
 //            .build());
 //
-        ENGINES.add(HMAndroidEngine.builder()
-            .withSDK(AndroidSDK.SDK_18)
+//        ENGINES.add(HMAndroidEngine.builder()
+//            .withSDK(AndroidSDK.SDK_18)
+//            .withAppActivity(ANDROID_APP_ACTIVITY)
+//            .withAppPackage(ANDROID_APP_PACKAGE)
+//            .withDeviceName("Nexus_4_API_18")
+//            .withTestMode(TestMode.SIMULATED)
+//            .build());
+//
+       ENGINES.add(HMAndroidEngine.builder()
+            .withSDK(AndroidSDK.SDK_22)
             .withAppActivity(ANDROID_APP_ACTIVITY)
             .withAppPackage(ANDROID_APP_PACKAGE)
-            .withDeviceName("Nexus_4_API_18")
+            .withDeviceName("Nexus_4_API_22")
             .withTestMode(TestMode.SIMULATED)
-            .build());
-//
-//        ENGINES.add(HMAndroidEngine.builder()
-//            .withSDK(AndroidSDK.SDK_22)
-//            .withAppActivity(ANDROID_APP_ACTIVITY)
-//            .withAppPackage(ANDROID_APP_PACKAGE)
-//            .withDeviceName("Nexus_4_API_22")
-//            .withTestMode(TestMode.SIMULATED)
-//            .build());
+           .build());
 
-//        ENGINES.add(HMAndroidEngine.builder()
-//            .withSDK(AndroidSDK.SDK_23)
-//            .withAppActivity(ANDROID_APP_ACTIVITY)
-//            .withAppPackage(ANDROID_APP_PACKAGE)
-//            .withApp(ANDROID_APP_PATH)
-//            .withDeviceName("Nexus_4_API_23")
-//            .withTestMode(TestMode.SIMULATED)
-//            .build());
+
+ //       ENGINES.add(HMAndroidEngine.builder()
+ //       .withSDK(AndroidSDK.SDK_23)
+ //         .withAppActivity(ANDROID_APP_ACTIVITY)
+ //       .withAppPackage(ANDROID_APP_PACKAGE).withApp(ANDROID_APP_PATH)
+ //           .withDeviceName("Nexus_4_API_23")
+ //           .withTestMode(TestMode.SIMULATED)
+        The ser
+  //          .build());
 
         TEST_KIT = TestKit.builder()
             .withEngines(ENGINES)

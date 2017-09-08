@@ -13,7 +13,7 @@ import org.openqa.selenium.WebElement;
 import org.swiften.javautilities.collection.HPIterables;
 import org.swiften.javautilities.object.HPObjects;
 import org.swiften.javautilities.rx.CustomTestSubscriber;
-import org.swiften.javautilities.test.TestNGs;
+import org.swiften.javautilities.test.HPTestNGs;
 import org.swiften.xtestkit.android.AndroidEngine;
 import org.swiften.xtestkit.base.Engine;
 import org.swiften.xtestkit.base.model.InputType;
@@ -42,7 +42,7 @@ public interface UIPersonalInfoTestType extends UIBaseTestType, PersonalInfoActi
     @NotNull
     @DataProvider
     static Iterator<Object[]> parentPersonalInfoProvider() {
-        return TestNGs
+        return HPTestNGs
             .oneFromEach(
                 new Object[] { TextInput.PARENT_NAME },
                 new Object[] { TextInput.PARENT_EMAIL, TextInput.PARENT_MOBILE }
