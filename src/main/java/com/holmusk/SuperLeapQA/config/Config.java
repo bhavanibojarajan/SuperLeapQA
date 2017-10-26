@@ -30,7 +30,7 @@ public final class Config {
     static {
         ANDROID_APP_PACKAGE = "com.holmusk.superleap";
         ANDROID_APP_ACTIVITY = ".ui.activity.SplashActivity";
-        ANDROID_APP_PATH = Paths.get("app", "app-debug.apk").toString();
+        ANDROID_APP_PATH = Paths.get("app", "SuperLeap119.apk").toString();
         IOS_APP_PACKAGE = "com.holmusk.superleap";
         IOS_APP_PATH = Paths.get("app", "Superleap.app").toString();
 
@@ -86,7 +86,7 @@ public final class Config {
  //       .withAppPackage(ANDROID_APP_PACKAGE).withApp(ANDROID_APP_PATH)
  //           .withDeviceName("Nexus_4_API_23")
  //           .withTestMode(TestMode.SIMULATED)
-        The ser
+
   //          .build());
 
         TEST_KIT = TestKit.builder()

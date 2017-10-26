@@ -22,7 +22,8 @@ public enum ChoiceInput implements HMTextChoiceType {
     WEIGHT,
     ETHNICITY,
     COACH_PREF,
-    START_WEIGHT;
+    START_WEIGHT,
+    INSTITUTE;
 
     /**
      * Get the title {@link String} corresponding to the current
@@ -50,6 +51,10 @@ public enum ChoiceInput implements HMTextChoiceType {
             case START_WEIGHT:
                 return "user_profile_title_startWeight";
 
+            case INSTITUTE:
+                return "user_title_institute";
+
+
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
         }
@@ -72,6 +77,9 @@ public enum ChoiceInput implements HMTextChoiceType {
 
             case COACH_PREF:
                 return HPIterables.asList(CoachPref.values());
+
+            case INSTITUTE:
+                return HPIterables.asList(Institute.values());
 
             default:
                 throw new RuntimeException(NOT_AVAILABLE);
@@ -134,6 +142,10 @@ public enum ChoiceInput implements HMTextChoiceType {
 
             case START_WEIGHT:
                 ID = "tv_start_weight";
+                break;
+
+            case INSTITUTE:
+                ID="et_i";
                 break;
 
             default:

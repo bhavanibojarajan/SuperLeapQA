@@ -248,8 +248,10 @@ public interface UIScreenValidationTestType extends
         String weightIStr = Weight.stringValue(platform, imperial, weightI);
         Ethnicity ethnicity = HPIterables.randomElement(Ethnicity.values());
         CoachPref coachPref = HPIterables.randomElement(CoachPref.values());
-        String selectedEth = ethnicity.stringValue(engine);
+        Institute institute =HPIterables.randomElement(Institute.values());
+                String selectedEth = ethnicity.stringValue(engine);
         String selectedCP = coachPref.stringValue(engine);
+        String selectedIN=institute.stringValue(engine);
         TestSubscriber subscriber = CustomTestSubscriber.create();
 
         Flowable.concatArray(
@@ -292,7 +294,13 @@ public interface UIScreenValidationTestType extends
             /* Select coach preference */
             rxa_clickInput(engine, ChoiceInput.COACH_PREF),
             rxa_selectChoice(engine, ChoiceInput.COACH_PREF, selectedCP),
-            rxa_confirmTextChoice(engine)
+            rxa_confirmTextChoice(engine),
+
+                /* Select Institute */
+                rxa_clickInput(engine, ChoiceInput.INSTITUTE),
+                rxa_selectChoice(engine, ChoiceInput.INSTITUTE, selectedIN),
+                rxa_confirmTextChoice(engine)
+
         ).all(HPObjects::nonNull).toFlowable().subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
